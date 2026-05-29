@@ -594,6 +594,12 @@
           <a href="#sec-a1" class="nav-link active" onclick="showSection(event, 'sec-a1')"
             >The Ask &amp; Cost</a
           >
+          <a href="#sec-a-pricing" class="nav-link" onclick="showSection(event, 'sec-a-pricing')"
+            >OpenAI Model Pricing</a
+          >
+          <a href="#sec-a-ollama" class="nav-link" onclick="showSection(event, 'sec-a-ollama')"
+            >Ollama &mdash; Free Local Alternative</a
+          >
           <a href="#sec-a2" class="nav-link" onclick="showSection(event, 'sec-a2')"
             >How It Stays Safe</a
           >
@@ -670,6 +676,250 @@
             OpenAI public pricing for <code>gpt-4o-mini</code>. Tentative until verified in the
             pilot.
           </p>
+        </section>
+
+        <section id="sec-a-pricing" class="section">
+          <h2>OpenAI Model Pricing</h2>
+          <p class="section-subtitle">
+            The current OpenAI catalogue at a glance, with token pricing and what each model is best
+            suited for &mdash; the broader context for why we recommend GPT-4o Mini for the Luma
+            chatbot.
+          </p>
+
+          <h3>How OpenAI bills you</h3>
+          <p>
+            OpenAI APIs charge per <strong>token</strong> &mdash; roughly
+            <strong>&frac34; of a word</strong>. Every request is billed as
+            <em>input tokens</em> (the system prompt + grounding docs + the user question) plus
+            <em>output tokens</em> (the answer the model produces). All prices below are per
+            <strong>1 million tokens</strong>.
+          </p>
+
+          <h3>Model catalogue &amp; per-token pricing</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Best for</th>
+                <th class="num">Input&nbsp;/ 1M</th>
+                <th class="num">Output&nbsp;/ 1M</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="alt-recommended">
+                <td><strong>GPT-4o mini</strong><br /><em>(recommended for Luma)</em></td>
+                <td>Cheap, fast Q&amp;A grounded on documentation</td>
+                <td class="num">$0.15</td>
+                <td class="num">$0.60</td>
+              </tr>
+              <tr>
+                <td><strong>GPT-4.1 nano</strong></td>
+                <td>Ultra-low cost; simple completions, short replies</td>
+                <td class="num">$0.10</td>
+                <td class="num">$0.40</td>
+              </tr>
+              <tr>
+                <td><strong>GPT-4.1 mini</strong></td>
+                <td>Balanced quality step-up from 4o mini</td>
+                <td class="num">$0.40</td>
+                <td class="num">$1.60</td>
+              </tr>
+              <tr>
+                <td><strong>GPT-4.1</strong></td>
+                <td>Flagship general-purpose model</td>
+                <td class="num">$2.00</td>
+                <td class="num">$8.00</td>
+              </tr>
+              <tr>
+                <td><strong>GPT-4o</strong></td>
+                <td>Production-grade multimodal (text + image + audio)</td>
+                <td class="num">$2.50</td>
+                <td class="num">$10.00</td>
+              </tr>
+              <tr>
+                <td><strong>GPT-3.5 Turbo</strong> <em>(legacy)</em></td>
+                <td>Older fallback; superseded by 4o mini for chat</td>
+                <td class="num">$0.50</td>
+                <td class="num">$1.50</td>
+              </tr>
+              <tr>
+                <td><strong>o3-mini</strong></td>
+                <td>Reasoning model &mdash; planning, math, code</td>
+                <td class="num">$1.10</td>
+                <td class="num">$4.40</td>
+              </tr>
+              <tr>
+                <td><strong>o1 / o3</strong> <em>(reasoning)</em></td>
+                <td>Hard reasoning tasks &mdash; overkill for a doc Q&amp;A chatbot</td>
+                <td class="num">$15.00</td>
+                <td class="num">$60.00</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="footnote">
+            Indicative public pricing. Verify current rates at
+            <code>openai.com/api/pricing</code> before purchase &mdash; OpenAI revises pricing
+            periodically and prices vary by region / volume tier.
+          </p>
+
+          <h3>What this means for the Luma chatbot</h3>
+          <p>
+            A typical Luma chatbot question costs about <strong>2,000 input tokens</strong>
+            (system prompt + retrieved Luma docs + the user question) and
+            <strong>600 output tokens</strong> (the answer). Applying the catalogue above to a
+            moderate-usage scenario of <strong>10,000 questions per month</strong>:
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th class="num">Cost / question</th>
+                <th class="num">10,000 questions / month</th>
+                <th class="num">vs GPT-4o mini</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="alt-recommended">
+                <td><strong>GPT-4o mini</strong> <em>(recommended)</em></td>
+                <td class="num">~$0.0007</td>
+                <td class="num">~$7</td>
+                <td class="num">1&times;</td>
+              </tr>
+              <tr>
+                <td>GPT-4.1 nano</td>
+                <td class="num">~$0.0004</td>
+                <td class="num">~$4</td>
+                <td class="num">0.6&times;</td>
+              </tr>
+              <tr>
+                <td>GPT-4.1 mini</td>
+                <td class="num">~$0.0018</td>
+                <td class="num">~$18</td>
+                <td class="num">2.7&times;</td>
+              </tr>
+              <tr>
+                <td>GPT-4.1</td>
+                <td class="num">~$0.0088</td>
+                <td class="num">~$88</td>
+                <td class="num">13&times;</td>
+              </tr>
+              <tr>
+                <td>GPT-4o</td>
+                <td class="num">~$0.011</td>
+                <td class="num">~$110</td>
+                <td class="num">17&times;</td>
+              </tr>
+              <tr>
+                <td>o1 / o3 (reasoning)</td>
+                <td class="num">~$0.066</td>
+                <td class="num">~$660</td>
+                <td class="num">100&times;</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="footnote italic">
+            Cost = (2,000 input tokens &times; input&nbsp;rate + 600 output tokens &times;
+            output&nbsp;rate) &div; 1,000,000. Rounded to two significant figures.
+          </p>
+
+          <div class="card brand">
+            <div class="card-title">Why GPT-4o mini</div>
+            For documentation Q&amp;A, GPT-4o mini delivers
+            <strong>flagship-class answer quality at ~17&times; lower cost</strong> than GPT-4o and
+            ~100&times; lower than the reasoning models. Even cheaper nano-class models exist, but
+            answer quality drops on multi-clause questions like &ldquo;outline button with
+            <code>themeColor=&quot;error&quot;</code> in Angular with a Tabler icon&rdquo;. GPT-4o
+            mini hits the sweet spot &mdash; strong answers, predictable spend, comfortably inside
+            the $50/month cap.
+          </div>
+        </section>
+
+        <section id="sec-a-ollama" class="section">
+          <h2>Ollama &mdash; Free Local Alternative</h2>
+          <p class="section-subtitle">
+            Ollama is a free, open-source way to run Large Language Models on your own machine. We
+            already use it for development &mdash; this section explains why it can&rsquo;t be the
+            production answer for Luma, and how the two fit together.
+          </p>
+
+          <p>
+            <strong>What Ollama is.</strong>
+            <a href="https://ollama.com" target="_blank" rel="noopener"><code>ollama.com</code></a>
+            is an open-source runtime that lets a developer download and run a Large Language Model
+            (Llama 3, Mistral, Phi, and others) directly on their laptop or workstation.
+            <strong>No API key, no per-question cost, and no data ever leaves the machine.</strong>
+          </p>
+
+          <p>
+            <strong>What we already use it for.</strong> The Luma AI Assistant prototype is wired to
+            both Ollama and OpenAI-compatible APIs out of the box. Any developer can run the chatbot
+            against Ollama locally &mdash; no budget required &mdash; which is great for prompt
+            iteration, testing, and exploration without burning API spend.
+          </p>
+
+          <div class="stats">
+            <div class="stat accent">
+              <div class="label">API cost</div>
+              <div class="value">$0</div>
+            </div>
+            <div class="stat">
+              <div class="label">Where it runs</div>
+              <div class="value">Local machine</div>
+            </div>
+            <div class="stat">
+              <div class="label">Model size to download</div>
+              <div class="value">~2 &ndash; 8 GB</div>
+            </div>
+            <div class="stat">
+              <div class="label">Production-ready?</div>
+              <div class="value" style="color: #b91c1c">No</div>
+            </div>
+          </div>
+
+          <h3>Why Ollama can&rsquo;t be the production deployment</h3>
+          <div class="compare">
+            <div class="col future">
+              <h4>What Ollama is great for</h4>
+              <ul>
+                <li>Runs entirely on the developer&rsquo;s own machine</li>
+                <li>Free &mdash; no API key, no per-question cost</li>
+                <li>Data stays local; never leaves the laptop</li>
+                <li>Perfect for prompt iteration and offline exploration</li>
+                <li>Bypasses network / Zscaler restrictions completely</li>
+              </ul>
+            </div>
+            <div class="col today">
+              <h4>Why it falls short for production</h4>
+              <ul>
+                <li>
+                  Every Luma consumer would need to install Ollama + download a ~2&ndash;8 GB model
+                  &mdash; impractical
+                </li>
+                <li>
+                  Performance depends on each user&rsquo;s machine (CPU/GPU/RAM); answers can take
+                  10&ndash;30 seconds on a typical laptop
+                </li>
+                <li>
+                  Smaller open models give noticeably lower answer quality than GPT-4o Mini for the
+                  same prompt
+                </li>
+                <li>
+                  Hosting Ollama centrally on a shared server brings back ops + GPU costs that far
+                  exceed the $50/month API budget
+                </li>
+                <li>No vendor SLA, no audit tooling, no managed updates</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card brand">
+            <div class="card-title">How both fit together</div>
+            Use <strong>Ollama free for local development</strong> and prompt iteration. Use the
+            low-cost <strong>GPT-4o Mini API for the production chatbot</strong> served inside Luma
+            Storybook. The codebase already supports both &mdash; switching providers is a one-line
+            URL change, so we keep the freedom to revisit later as open models improve.
+          </div>
         </section>
 
         <section id="sec-a2" class="section">
