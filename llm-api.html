@@ -594,17 +594,20 @@
           <a href="#sec-a1" class="nav-link active" onclick="showSection(event, 'sec-a1')"
             >The Ask &amp; Cost</a
           >
+          <a href="#sec-a3" class="nav-link" onclick="showSection(event, 'sec-a3')"
+            >Why It Matters</a
+          >
+          <a href="#sec-a-scope" class="nav-link" onclick="showSection(event, 'sec-a-scope')"
+            >Scope of this Ask</a
+          >
+          <a href="#sec-a2" class="nav-link" onclick="showSection(event, 'sec-a2')"
+            >How It Stays Safe</a
+          >
           <a href="#sec-a-pricing" class="nav-link" onclick="showSection(event, 'sec-a-pricing')"
             >OpenAI Model Pricing</a
           >
           <a href="#sec-a-ollama" class="nav-link" onclick="showSection(event, 'sec-a-ollama')"
             >Ollama &mdash; Free Local Alternative</a
-          >
-          <a href="#sec-a2" class="nav-link" onclick="showSection(event, 'sec-a2')"
-            >How It Stays Safe</a
-          >
-          <a href="#sec-a3" class="nav-link" onclick="showSection(event, 'sec-a3')"
-            >Why It Matters</a
           >
         </div>
 
@@ -617,15 +620,18 @@
           <a href="#sec-02" class="nav-link" onclick="showSection(event, 'sec-02')"
             >Proposed Solution</a
           >
+          <a href="#sec-04" class="nav-link" onclick="showSection(event, 'sec-04')">How It Helps</a>
           <a href="#sec-03" class="nav-link" onclick="showSection(event, 'sec-03')"
             >Alternatives Considered</a
           >
-          <a href="#sec-04" class="nav-link" onclick="showSection(event, 'sec-04')">How It Helps</a>
           <a href="#sec-05" class="nav-link" onclick="showSection(event, 'sec-05')"
             >Cost of the LLM API</a
           >
           <a href="#sec-06" class="nav-link" onclick="showSection(event, 'sec-06')"
             >Manpower &amp; Time Savings</a
+          >
+          <a href="#sec-measure" class="nav-link" onclick="showSection(event, 'sec-measure')"
+            >How We&rsquo;ll Measure the Savings</a
           >
           <a href="#sec-07" class="nav-link" onclick="showSection(event, 'sec-07')"
             >Security &amp; Cost Controls</a
@@ -642,40 +648,89 @@
           <h2>The Ask &amp; Cost</h2>
           <p class="section-subtitle">
             Enable controlled access to one low-cost Large Language Model API (recommended: GPT-4o
-            Mini) so teams can build, measure, and learn from real AI use cases. The Luma AI
-            Assistant in this document is the first.
+            Mini or an approved alternative) so teams can build, measure, and learn from real AI use
+            cases. Today&rsquo;s network restrictions make even a small, safe pilot hard. The Luma
+            AI Assistant in this document is the first use case.
           </p>
 
-          <div class="card warning">
-            <span class="card-label">Original suggestion to management</span>
-            Enable controlled access to a lightweight, cost-effective Large Language Model API
-            (GPT-4o Mini or an approved alternative). Today&rsquo;s network restrictions make it
-            hard to explore practical use cases &mdash; even at a small, safe pilot scale.
+          <p>
+            Typical spend is <strong>~$1&ndash;$30 per use case per month</strong> under a
+            <strong>$50/month hard cap</strong>. Token rates, model catalogue, and cost comparison
+            are in
+            <a href="#sec-a-pricing" onclick="showSection(event, 'sec-a-pricing')"
+              >OpenAI Model Pricing</a
+            >.
+          </p>
+
+          <h3>Beyond the Luma chatbot</h3>
+          <p>
+            The same controlled API key powers more than the Luma chatbot. Each future vetted use
+            case rides the <strong>same key</strong>, the <strong>same $50/month cap</strong>, and
+            the <strong>same guardrails</strong> &mdash; so the marginal cost of the next approved
+            use case is near zero. Whether it pays off is measured per use case (see
+            <a href="#sec-measure" onclick="showSection(event, 'sec-measure')"
+              >How We&rsquo;ll Measure the Savings</a
+            >
+            in the Luma proposal); the Luma chatbot is the first such measurement.
+          </p>
+        </section>
+
+        <section id="sec-a-scope" class="section">
+          <h2>Scope of this Ask</h2>
+          <p class="section-subtitle">
+            What we&rsquo;re asking management to approve &mdash; and what we are explicitly
+            <em>not</em> asking for. Network policy (Zscaler) and existing security controls still
+            apply.
+          </p>
+
+          <p>
+            To avoid any scope confusion: this is a tightly bounded enablement &mdash;
+            <strong>one approved outbound API endpoint, used server-side</strong> by the Luma AI
+            Assistant chatbot. It is not a request to lift network policy, and it is separate from
+            any conversation about personal AI tooling (Copilot, Claude, ChatGPT).
+          </p>
+
+          <div class="compare">
+            <div class="col future">
+              <h4>What this proposal asks for</h4>
+              <ul>
+                <li>
+                  Outbound access to <strong>one approved API endpoint</strong> &mdash; server-side;
+                  Luma chatbot first.
+                </li>
+                <li>
+                  A Zscaler exception via the
+                  <strong>standard Security exception process</strong> for that one URL.
+                </li>
+                <li>
+                  A <strong>reusable pattern</strong> so future vetted use cases can share the same
+                  enablement (operational guardrails in
+                  <a href="#sec-a2" onclick="showSection(event, 'sec-a2')">How It Stays Safe</a>).
+                </li>
+              </ul>
+            </div>
+            <div class="col today">
+              <h4>What this proposal does <em>not</em> ask for</h4>
+              <ul>
+                <li>Per-engineer or per-laptop API keys.</li>
+                <li>
+                  GitHub Copilot, Claude desktop, or ChatGPT in the browser &mdash;
+                  <strong>separate decisions</strong> with different trade-offs.
+                </li>
+                <li>A blanket lift of Zscaler or any company-wide network policy.</li>
+                <li>Access to multiple vendors at once &mdash; one vendor, one URL, reviewed.</li>
+              </ul>
+            </div>
           </div>
 
-          <h3>GPT-4o Mini &mdash; what it costs</h3>
-          <div class="stats">
-            <div class="stat">
-              <div class="label">Input tokens</div>
-              <div class="value">$0.15 / 1M</div>
-            </div>
-            <div class="stat">
-              <div class="label">Output tokens</div>
-              <div class="value">$0.60 / 1M</div>
-            </div>
-            <div class="stat accent">
-              <div class="label">Typical question</div>
-              <div class="value">~$0.0006</div>
-            </div>
-            <div class="stat accent">
-              <div class="label">Per use case, per month</div>
-              <div class="value">~$1 &ndash; $30</div>
-            </div>
+          <div class="card brand">
+            <div class="card-title">On Zscaler / network policy</div>
+            We are <strong>not</strong> bypassing Zscaler. We use the
+            <strong>same exception process</strong> as other approved SaaS APIs to allow
+            <strong>one</strong> outbound URL for <strong>one</strong> reviewed use case. Network
+            policy continues to apply everywhere else. Personal AI tooling remains a separate
+            conversation &mdash; this proposal does not pre-decide it.
           </div>
-          <p class="footnote">
-            OpenAI public pricing for <code>gpt-4o-mini</code>. Tentative until verified in the
-            pilot.
-          </p>
         </section>
 
         <section id="sec-a-pricing" class="section">
@@ -844,49 +899,22 @@
           </p>
 
           <p>
-            <strong>What Ollama is.</strong>
             <a href="https://ollama.com" target="_blank" rel="noopener"><code>ollama.com</code></a>
-            is an open-source runtime that lets a developer download and run a Large Language Model
-            (Llama 3, Mistral, Phi, and others) directly on their laptop or workstation.
-            <strong>No API key, no per-question cost, and no data ever leaves the machine.</strong>
+            runs open models (Llama 3, Mistral, Phi, etc.) on a developer&rsquo;s machine &mdash; no
+            API key, no per-question cost, data never leaves the laptop. The Luma prototype already
+            supports Ollama and OpenAI-compatible APIs for local prompt work without API spend.
           </p>
-
-          <p>
-            <strong>What we already use it for.</strong> The Luma AI Assistant prototype is wired to
-            both Ollama and OpenAI-compatible APIs out of the box. Any developer can run the chatbot
-            against Ollama locally &mdash; no budget required &mdash; which is great for prompt
-            iteration, testing, and exploration without burning API spend.
-          </p>
-
-          <div class="stats">
-            <div class="stat accent">
-              <div class="label">API cost</div>
-              <div class="value">$0</div>
-            </div>
-            <div class="stat">
-              <div class="label">Where it runs</div>
-              <div class="value">Local machine</div>
-            </div>
-            <div class="stat">
-              <div class="label">Model size to download</div>
-              <div class="value">~2 &ndash; 8 GB</div>
-            </div>
-            <div class="stat">
-              <div class="label">Production-ready?</div>
-              <div class="value" style="color: #b91c1c">No</div>
-            </div>
-          </div>
 
           <h3>Why Ollama can&rsquo;t be the production deployment</h3>
           <div class="compare">
             <div class="col future">
               <h4>What Ollama is great for</h4>
               <ul>
-                <li>Runs entirely on the developer&rsquo;s own machine</li>
-                <li>Free &mdash; no API key, no per-question cost</li>
-                <li>Data stays local; never leaves the laptop</li>
-                <li>Perfect for prompt iteration and offline exploration</li>
-                <li>Bypasses network / Zscaler restrictions completely</li>
+                <li>Prompt iteration and offline exploration on your own hardware</li>
+                <li>
+                  Useful when outbound API access is blocked &mdash; entirely local, no Zscaler
+                  exception needed
+                </li>
               </ul>
             </div>
             <div class="col today">
@@ -958,7 +986,7 @@
                 <td><strong>Sign-off per use case</strong></td>
                 <td>
                   One-page intent doc (owner, data classification, spend cap, success metric) signed
-                  off by Security &amp; Architecture before going live.
+                  off by Security, Platform, and Luma before going live.
                 </td>
               </tr>
             </tbody>
@@ -992,9 +1020,8 @@
 
           <div class="card brand">
             <div class="card-title">Bottom line</div>
-            Approve the Luma AI Assistant (Sections 01&ndash;09) and you&rsquo;ve approved the first
-            step of a small, measured, reversible Large Language Model access programme &mdash;
-            under $50/month to start.
+            Approving the Luma chatbot (Sections 01&ndash;09) is the first step of a small,
+            measured, reversible programme &mdash; real usage data before any wider rollout.
           </div>
         </section>
 
@@ -1488,6 +1515,110 @@
               pilot.
             </p>
           </div>
+        </section>
+
+        <section id="sec-measure" class="section">
+          <h2>How We&rsquo;ll Measure the Savings</h2>
+          <p class="section-subtitle">
+            The savings above are a directional estimate. This section is how we prove them &mdash;
+            or stop, cleanly, if they don&rsquo;t hold up. Baseline first, then weekly tracking,
+            then an explicit go / no-go review at week 4.
+          </p>
+
+          <h3>The four phases</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Phase</th>
+                <th>When</th>
+                <th>What we measure</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. Baseline</strong></td>
+                <td>Week 0 &mdash; before pilot starts</td>
+                <td>
+                  Luma-related questions per week (Slack / Teams / DMs); Luma team self-reported
+                  support time; topic mix (component, install, theming, &hellip;).
+                </td>
+              </tr>
+              <tr>
+                <td><strong>2. Pilot tracking</strong></td>
+                <td>Weeks 1 &ndash; 4</td>
+                <td>
+                  Same questions count (has it dropped?); chatbot usage; weekly
+                  <strong>accuracy spot-check</strong> on a sample of 20 answers; API spend;
+                  hours-saved estimate.
+                </td>
+              </tr>
+              <tr class="alt-recommended">
+                <td><strong>3. Decision gate</strong></td>
+                <td>End of week 4</td>
+                <td>
+                  Explicit <strong>go / no-go</strong> against the thresholds below. If thresholds
+                  aren&rsquo;t met, the chatbot is turned off and the API key is revoked.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>4. Open-rollout tracking</strong></td>
+                <td>Weeks 5 &ndash; 8</td>
+                <td>
+                  Same metrics across all Luma developers; confirm the pattern scales; final
+                  hours-saved and ROI reported to management at week 8.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Decision gate &mdash; end of week 4</h3>
+          <p>
+            Concrete, written-down thresholds. We continue
+            <strong>only if all three</strong> are met:
+          </p>
+          <div class="stats">
+            <div class="stat accent">
+              <div class="label">Hours saved / month</div>
+              <div class="value">&ge; 8 hrs</div>
+            </div>
+            <div class="stat accent">
+              <div class="label">Answer accuracy</div>
+              <div class="value">&ge; 70%</div>
+            </div>
+            <div class="stat accent">
+              <div class="label">API spend</div>
+              <div class="value">&le; $50 cap</div>
+            </div>
+          </div>
+          <p class="footnote">
+            &ldquo;Hours saved&rdquo; = drop in Luma-team support time vs the week-0 baseline.
+            &ldquo;Accuracy&rdquo; = % of sampled answers the Luma team rates as
+            <em>correct and grounded in our docs</em> (random 20-answer sample, weekly).
+          </p>
+
+          <div class="card brand">
+            <div class="card-title">If the numbers don&rsquo;t hold up</div>
+            The chatbot is switched off at the end of week 4, the API key is revoked, and the
+            proposal is closed. Sunk cost is capped at <strong>~$50</strong> in API spend over the
+            pilot &mdash; no infrastructure, no licensing, no headcount commitments. This decision
+            gate is in writing so it&rsquo;s real, not aspirational.
+          </div>
+
+          <h3>What gets reported to management</h3>
+          <ul>
+            <li>
+              <strong>Weekly during pilot</strong>: one-line status &mdash; questions count, chatbot
+              usage, accuracy sample, spend-to-date.
+            </li>
+            <li>
+              <strong>End of week 4</strong>: written go / no-go memo against the three thresholds
+              above.
+            </li>
+            <li>
+              <strong>End of week 8</strong>: final ROI report &mdash; baseline vs measured
+              hours-saved, actual API spend, and recommendation on next use cases.
+            </li>
+          </ul>
         </section>
 
         <section id="sec-07" class="section">
