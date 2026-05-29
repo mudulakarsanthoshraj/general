@@ -8,7 +8,7 @@
       name="description"
       content="Proposal for management review: a low-cost AI Assistant Chatbot inside Luma Storybook, grounded in our own documentation, that handles repeat developer questions and scales Luma adoption."
     />
-    <meta name="theme-color" content="#f5f6f8" />
+    <meta name="theme-color" content="#ffffff" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="AI Assistant Chatbot for the Luma Design System" />
     <meta
@@ -24,591 +24,430 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <style>
       * {
+        margin: 0;
+        padding: 0;
         box-sizing: border-box;
       }
+
+      :root {
+        --color-brand: #d85614;
+        --color-brand-soft: rgba(216, 86, 20, 0.06);
+        --color-brand-line: rgba(216, 86, 20, 0.12);
+        --color-brand-tint: rgba(216, 86, 20, 0.15);
+        --bg-canvas: #ffffff;
+        --bg-surface: #f9fafb;
+        --bg-elevated: #f3f4f6;
+        --border-default: #e5e7eb;
+        --text-primary: #111827;
+        --text-secondary: #1f2937;
+        --text-tertiary: #374151;
+        --text-muted: #6b7280;
+        --sidebar-width: 300px;
+        --spacing-6: 24px;
+        --spacing-3: 12px;
+      }
+
       body {
-        margin: 0;
         font-family:
           "Noto Sans",
           -apple-system,
           BlinkMacSystemFont,
           "Segoe UI",
-          Roboto,
-          Arial,
           sans-serif;
-        font-size: 16px;
-        line-height: 1.65;
-        color: #0f172a;
-        background: #f5f6f8;
+        background-color: var(--bg-canvas);
+        color: var(--text-primary);
+        line-height: 1.6;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
-      .page {
-        max-width: 880px;
-        margin: 0 auto;
-        padding: 48px 36px 64px;
+
+      .layout {
+        display: flex;
+        min-height: 100vh;
       }
 
-      /* ───────────────────────── Two-pane layout ───────────────────────── */
-      .shell {
-        max-width: none;
-        width: 100%;
-        margin: 0;
-        display: grid;
-        grid-template-columns: 300px 1fr;
-        gap: 28px;
-        padding: 20px 28px 40px;
-        align-items: start;
-      }
+      /* ─────────────────────── Sidebar ─────────────────────── */
       .sidebar {
-        position: sticky;
-        top: 20px;
-        background: #fff;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 18px 14px 22px;
-        font-size: 15px;
-        max-height: calc(100vh - 40px);
+        width: var(--sidebar-width);
+        background-color: var(--bg-surface);
+        border-right: 1px solid var(--border-default);
+        position: fixed;
+        height: 100vh;
         overflow-y: auto;
-        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+        padding: var(--spacing-6) var(--spacing-3);
       }
-      .sidebar .sb-brand {
-        font-size: 13px;
-        font-weight: 700;
-        text-transform: uppercase;
-        color: #0f172a;
-        margin: 0 0 6px 6px;
+
+      .sidebar-header {
+        padding: 0 1rem 0.85rem;
+        border-bottom: 1px solid var(--border-default);
+        margin-bottom: 0.5rem;
       }
-      .sidebar .sb-brand-sub {
-        font-size: 12px;
-        color: #64748b;
-        margin: 0 0 14px 6px;
-      }
-      .sidebar .sb-section-label {
-        font-size: 11px;
-        font-weight: 700;
-        text-transform: uppercase;
-        color: #475569;
-        margin: 14px 0 6px 6px;
-      }
-      .nav-option {
-        width: 100%;
-        display: flex;
-        gap: 12px;
-        align-items: flex-start;
-        text-align: left;
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        padding: 10px 12px;
-        margin-bottom: 8px;
-        cursor: pointer;
-        font: inherit;
-        color: #0f172a;
-        transition:
-          border-color 0.15s,
-          background 0.15s,
-          box-shadow 0.15s;
-      }
-      .nav-option:hover {
-        border-color: #cbd5e1;
-        background: #f8fafc;
-      }
-      .nav-option.active {
-        border-color: #2563eb;
-        background: #eff6ff;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
-      }
-      .nav-option .num {
-        flex: 0 0 28px;
-        height: 28px;
-        border-radius: 6px;
-        background: #f1f5f9;
-        color: #475569;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 11px;
-        font-weight: 700;
-      }
-      .nav-option.active .num {
-        background: #2563eb;
-        color: #fff;
-      }
-      .nav-option[data-target="appendix"].active .num {
-        background: #7c3aed;
-      }
-      .nav-option[data-target="appendix"].active {
-        border-color: #7c3aed;
-        background: #faf5ff;
-        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.08);
-      }
-      .nav-option .opt-title {
-        font-size: 14px;
-        font-weight: 700;
-        color: #0f172a;
+
+      .sidebar-header h1 {
+        font-size: 1rem;
+        font-weight: 800;
+        color: var(--color-brand);
+        margin-bottom: 0.15rem;
         line-height: 1.3;
       }
-      .nav-option .opt-desc {
-        font-size: 12.5px;
-        color: #6b7280;
-        margin-top: 2px;
-        line-height: 1.35;
-      }
-      .subnav {
-        margin: 2px 0 6px 12px;
-        padding-left: 12px;
-        border-left: 1px dashed #e5e7eb;
-        display: flex;
-        flex-direction: column;
-        gap: 1px;
-      }
-      .subnav[hidden] {
-        display: none;
-      }
-      .subnav a {
-        display: block;
-        padding: 5px 8px;
-        font-size: 13px;
-        color: #4b5563;
-        text-decoration: none;
-        border-radius: 4px;
-        line-height: 1.35;
-      }
-      .subnav a:hover {
-        background: #f1f5f9;
-        color: #0f172a;
-      }
-      .subnav a.active {
-        background: #eff6ff;
-        color: #1d4ed8;
-        font-weight: 600;
-      }
-      .subnav[data-for="appendix"] a.active {
-        background: #faf5ff;
-        color: #6d28d9;
-      }
-      .content {
-        min-width: 0;
-        max-width: 1100px;
-      }
-      .pane {
-        display: block;
-      }
-      /* In the new layout each section is toggled individually via
-         [data-section].active — every section is hidden by default. */
-      [data-section] {
-        display: none;
-      }
-      [data-section].active {
-        display: block;
+
+      .sidebar-header p {
+        font-size: 0.78rem;
+        color: var(--text-muted);
       }
 
-      /* ───────── Flat item-list sidebar ───────── */
-      .sb-group-label {
-        font-size: 13px;
-        font-weight: 700;
-        color: #c2410c;
-        margin: 18px 0 8px 6px;
-        padding-bottom: 6px;
-        border-bottom: 1px solid #fed7aa;
-      }
-      .sb-group-label:first-of-type {
-        margin-top: 6px;
-      }
-      .section-list {
-        margin: 0 0 6px;
-        padding: 0;
-        list-style: none;
-      }
-      .section-list li {
-        margin: 0;
-      }
-      .section-item {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        text-align: left;
-        background: transparent;
-        border: 1px solid transparent;
-        border-left: 3px solid transparent;
-        border-radius: 8px;
-        padding: 9px 12px;
-        margin: 2px 0;
-        gap: 2px;
-        cursor: pointer;
-        font: inherit;
-        color: #1e293b;
-        font-size: 14.5px;
-        line-height: 1.4;
-        font-weight: 500;
-        transition:
-          background 0.12s,
-          color 0.12s,
-          border-color 0.12s;
-      }
-      .section-item:hover {
-        background: #f1f5f9;
-        color: #0f172a;
-      }
-      .section-item:focus-visible {
-        outline: 2px solid #2563eb;
-        outline-offset: 2px;
-      }
-      .section-item.active {
-        background: #eff6ff;
-        border-left-color: #2563eb;
-        color: #1d4ed8;
-        font-weight: 700;
-        display: flex;
-        align-items: center;
-        gap: 2px;
-      }
-      .section-item .item-num {
-        flex: 0 0 auto;
-        min-width: 24px;
-        color: #64748b;
-        font-weight: 700;
-        font-variant-numeric: tabular-nums;
-        font-size: 12px;
-      }
-      .section-item:hover .item-num {
-        color: #334155;
-      }
-      .section-item.active .item-num {
-        color: #1d4ed8;
-      }
-      .section-item.appendix .item-num {
-        color: #7c3aed;
-      }
-      .section-item.appendix:hover {
-        background: #faf5ff;
-        color: #6d28d9;
-      }
-      .section-item.appendix:hover .item-num {
-        color: #6d28d9;
-      }
-      .section-item.appendix.active {
-        background: #faf5ff;
-        border-color: #ddd6fe;
-        border-left-color: #7c3aed;
-        color: #6d28d9;
-      }
-      .section-item.appendix.active .item-num {
-        color: #6d28d9;
-      }
-      .section-item.tldr-item .item-num {
-        color: #0369a1;
-      }
-      .section-item.tldr-item:hover {
-        background: #f0f9ff;
-        color: #075985;
-      }
-      .section-item.tldr-item.active {
-        background: #f0f9ff;
-        border-color: #bae6fd;
-        border-left-color: #0369a1;
-        color: #075985;
-      }
-      .section-item.tldr-item.active .item-num {
-        color: #075985;
+      .nav-section {
+        padding: 0.25rem 0.75rem;
       }
 
-      @media (max-width: 900px) {
-        .shell {
-          grid-template-columns: 1fr;
-          padding: 18px 16px 36px;
-        }
-        .sidebar {
-          position: static;
-          max-height: none;
-        }
-        .content {
-          max-width: none;
-        }
-      }
-      @media print {
-        /* Print / preview view: keep the same single-section layout the user
-           is reading in the browser. This also keeps file-share thumbnails
-           clean (messaging apps and macOS QuickLook generate previews via a
-           print-style render, which otherwise stacked every card on top of
-           each other). */
-        .sidebar {
-          display: none;
-        }
-        .shell {
-          display: block;
-          padding: 0;
-          max-width: 100%;
-        }
-        .content {
-          max-width: 100%;
-        }
-      }
-
-      header.doc-header {
-        margin-bottom: 28px;
-        padding-bottom: 22px;
-        border-bottom: 2px solid #ccc;
-      }
-      .eyebrow {
-        font-size: 12px;
+      .nav-section-title {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--color-brand);
         text-transform: uppercase;
-        color: #475569;
-        margin-bottom: 10px;
-        font-weight: 700;
-      }
-      header h1 {
-        margin: 0 0 16px;
-        font-size: 28px;
-        font-weight: 700;
-        color: #0f172a;
-        line-height: 1.25;
-      }
-      .subtitle {
-        font-size: 16px;
-        color: #334155;
-        margin-bottom: 18px;
-      }
-      .meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 22px;
-        font-size: 14px;
-        color: #334155;
-      }
-      .meta strong {
-        color: #0f172a;
+        padding: 0.85rem 0.5rem 0.35rem;
+        margin-bottom: 0.15rem;
+        border-top: 1px solid var(--border-default);
+        margin-top: 0.25rem;
       }
 
-      section {
-        background: #fff;
-        border: 1px solid #e5e7eb;
+      .nav-section:first-of-type .nav-section-title {
+        border-top: none;
+        margin-top: 0;
+        padding-top: 0.25rem;
+      }
+
+      .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        position: relative;
+        padding: 0.6rem 0.75rem;
+        color: var(--text-tertiary);
+        text-decoration: none;
+        font-size: 0.95rem;
         border-radius: 8px;
-        padding: 24px 28px;
-        margin-bottom: 16px;
+        transition: all 0.15s ease;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      .nav-link:hover {
+        background-color: var(--bg-elevated);
+        color: var(--color-brand);
+      }
+
+      .nav-link.active {
+        background-color: var(--color-brand-soft);
+        color: var(--color-brand);
+        font-weight: 600;
+        border: 1px solid var(--color-brand-line);
+        border-radius: 12px;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02) inset;
+        padding-left: calc(0.6rem + 10px);
+      }
+
+      .nav-link.active::before {
+        content: "";
+        position: absolute;
+        left: -1px;
+        top: 8px;
+        bottom: 8px;
+        width: 3px;
+        background: var(--color-brand);
+        border-radius: 6px;
+      }
+
+      /* ─────────────────────── Main content ─────────────────────── */
+      .main {
+        flex: 1;
+        margin-left: var(--sidebar-width);
+        padding: 2rem 3rem;
+        max-width: 100%;
+      }
+
+      .section {
+        display: none;
+        animation: fadeIn 0.3s ease;
+      }
+
+      .section.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       h2 {
-        margin: 0 0 12px;
-        font-size: 19px;
-        font-weight: 700;
-        color: #0f172a;
-        display: flex;
-        align-items: baseline;
-        gap: 10px;
+        font-size: 1.75rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        color: var(--color-brand);
+        line-height: 1.25;
       }
-      h2 .n {
-        color: #2563eb;
-        font-size: 13px;
-        font-weight: 700;
-      }
+
       h3 {
-        margin: 18px 0 8px;
-        font-size: 15px;
+        font-size: 1.2rem;
         font-weight: 700;
-        color: #0f172a;
+        margin: 2rem 0 0.85rem;
+        color: var(--color-brand);
       }
+
+      h4 {
+        font-size: 1rem;
+        font-weight: 700;
+        margin: 1.4rem 0 0.6rem;
+        color: var(--text-primary);
+      }
+
+      .section-subtitle {
+        color: var(--text-muted);
+        font-size: 1rem;
+        margin-bottom: 1.75rem;
+        max-width: 70ch;
+      }
+
       p {
-        margin: 0 0 12px;
-        color: #1e293b;
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+        font-weight: 400;
       }
+
       ul,
       ol {
-        margin: 0 0 12px;
-        padding-left: 22px;
-        color: #1e293b;
+        color: var(--text-secondary);
+        padding-left: 1.4rem;
+        margin-bottom: 1rem;
       }
-      ul li,
-      ol li {
-        margin-bottom: 6px;
+
+      li {
+        margin-bottom: 0.45rem;
       }
+
       strong {
-        color: #0f172a;
+        color: var(--text-primary);
         font-weight: 600;
       }
+
       em {
-        color: #4b5563;
+        color: var(--text-tertiary);
         font-style: italic;
       }
 
-      .pullquote {
-        background: #fef9c3;
-        border-left: 4px solid #ca8a04;
-        padding: 14px 18px;
-        border-radius: 0 6px 6px 0;
-        margin: 12px 0;
-        font-size: 15px;
-        color: #1f2937;
+      code {
+        background-color: var(--bg-elevated);
+        padding: 0.18rem 0.4rem;
+        border-radius: 4px;
+        font-family: "JetBrains Mono", "Fira Code", monospace;
+        font-size: 0.85em;
+        color: var(--color-brand);
       }
-      .pullquote .label {
-        font-size: 11px;
+
+      .footnote {
+        color: var(--text-muted);
+        font-size: 0.82rem;
+        margin: 0.5rem 0 1rem;
+      }
+
+      .footnote.italic {
+        font-style: italic;
+      }
+
+      /* ─────────────────────── Cards ─────────────────────── */
+      .card {
+        background-color: var(--bg-elevated);
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+        padding: 1.1rem 1.25rem;
+        margin: 1rem 0;
+      }
+
+      .card-title {
         font-weight: 700;
-        text-transform: uppercase;
-        color: #854d0e;
-        margin-bottom: 4px;
-        display: block;
+        color: var(--text-primary);
+        margin-bottom: 0.45rem;
+        font-size: 0.95rem;
       }
 
-      .keypoint {
-        background: #eff6ff;
-        border-left: 4px solid #2563eb;
-        padding: 14px 18px;
-        border-radius: 0 6px 6px 0;
-        margin: 12px 0;
-        font-size: 15px;
-      }
-      .keypoint > strong:first-child {
-        display: block;
-        margin-bottom: 4px;
-      }
-      .keypoint ul {
-        margin: 6px 0 0;
-        padding-left: 20px;
-      }
-      .keypoint ul li {
-        margin-bottom: 4px;
+      .card.brand {
+        background: var(--color-brand-soft);
+        border-color: var(--color-brand-line);
       }
 
-      .appendix-divider {
-        margin: 36px 0 18px;
-        padding: 0;
-        border: 0;
-        text-align: center;
-        position: relative;
-      }
-      .appendix-divider::before {
-        content: "";
-        display: block;
-        height: 1px;
-        background: #d1d5db;
-        position: absolute;
-        top: 50%;
-        left: 0;
-        right: 0;
-      }
-      .appendix-divider span {
-        position: relative;
-        background: #f5f6f8;
-        padding: 0 14px;
-        font-size: 11px;
-        font-weight: 700;
-        text-transform: uppercase;
-        color: #6b7280;
-      }
-      section.appendix h2 .n {
-        color: #7c3aed;
+      .card.brand .card-title {
+        color: var(--color-brand);
       }
 
-      .benefit-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 10px;
-        margin: 10px 0 6px;
-      }
-      .benefit-card {
-        background: #faf5ff;
-        border: 1px solid #e9d5ff;
-        border-radius: 6px;
-        padding: 12px 14px;
-      }
-      .benefit-card .benefit-title {
-        font-size: 12px;
-        font-weight: 700;
-        color: #6b21a8;
-        text-transform: uppercase;
-        margin-bottom: 4px;
-      }
-      .benefit-card .benefit-body {
-        font-size: 14px;
-        color: #374151;
-        line-height: 1.5;
-      }
-
-      .context-line {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-left: 3px solid #0f172a;
-        border-radius: 6px;
-        padding: 14px 20px;
-        margin-bottom: 16px;
-        font-size: 15px;
-        line-height: 1.65;
-        color: #1e293b;
-      }
-      .context-line strong {
-        color: #0f172a;
-        font-weight: 700;
-      }
-
-      .alt-recommended td {
+      .card.success {
         background: #ecfdf5;
-      }
-      .alt-recommended td:first-child {
-        color: #065f46;
-        font-weight: 700;
+        border-color: #a7f3d0;
       }
 
-      .tldr {
-        background: #f0f9ff;
-        border: 1px solid #bae6fd;
-        border-radius: 8px;
-        padding: 18px 22px;
-        margin-bottom: 20px;
+      .card.success .card-title {
+        color: #047857;
       }
-      .tldr h2 {
-        margin: 0 0 10px;
-        font-size: 13px;
+
+      .card.warning {
+        background: #fffbeb;
+        border-color: #fde68a;
+      }
+
+      .card.warning .card-title {
+        color: #92400e;
+      }
+
+      .card.warning .card-label {
+        display: block;
+        font-size: 0.72rem;
         font-weight: 700;
         text-transform: uppercase;
-        color: #0369a1;
-        display: block;
-      }
-      .tldr ul {
-        margin: 0;
-        padding-left: 20px;
-        color: #1e3a5f;
-        font-size: 15px;
-      }
-      .tldr ul li {
-        margin-bottom: 5px;
+        color: #92400e;
+        margin-bottom: 0.3rem;
       }
 
+      .card ul {
+        margin: 0.4rem 0 0;
+        padding-left: 1.2rem;
+      }
+
+      .card ul li {
+        margin-bottom: 0.3rem;
+      }
+
+      /* ─────────────────────── Stat grid ─────────────────────── */
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 0.85rem;
+        margin: 1rem 0 0.5rem;
+      }
+
+      .stat {
+        background-color: var(--bg-elevated);
+        border: 1px solid var(--border-default);
+        border-radius: 8px;
+        padding: 0.95rem 1rem;
+      }
+
+      .stat .label {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+      }
+
+      .stat .value {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+
+      .stat.accent {
+        background: var(--color-brand-soft);
+        border-color: var(--color-brand-line);
+      }
+
+      .stat.accent .label {
+        color: var(--color-brand);
+      }
+
+      .stat.accent .value {
+        color: var(--color-brand);
+      }
+
+      /* ─────────────────────── Compare grid ─────────────────────── */
+      .compare {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+
+      .compare .col {
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+        padding: 1rem 1.15rem;
+        background: var(--bg-elevated);
+      }
+
+      .compare .col.today {
+        background: #fef2f2;
+        border-color: #fecaca;
+      }
+
+      .compare .col.future {
+        background: #ecfdf5;
+        border-color: #a7f3d0;
+      }
+
+      .compare h4 {
+        margin: 0 0 0.5rem;
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--text-tertiary);
+      }
+
+      .compare .col.today h4 {
+        color: #991b1b;
+      }
+
+      .compare .col.future h4 {
+        color: #065f46;
+      }
+
+      .compare ul {
+        margin: 0;
+        padding-left: 1.1rem;
+        font-size: 0.9rem;
+      }
+
+      .compare ul li {
+        margin-bottom: 0.3rem;
+      }
+
+      /* ─────────────────────── Tables ─────────────────────── */
       table {
         width: 100%;
         border-collapse: collapse;
-        margin: 10px 0 14px;
-        font-size: 14.5px;
+        margin: 1rem 0;
+        font-size: 0.9rem;
       }
-      th {
-        text-align: left;
-        font-size: 12px;
-        font-weight: 700;
-        color: #334155;
-        text-transform: uppercase;
-        padding: 10px 11px;
-        border-bottom: 2px solid #cbd5e1;
-        background: #f8fafc;
-      }
+
+      th,
       td {
-        padding: 10px 11px;
-        border-bottom: 1px solid #e5e7eb;
-        color: #1e293b;
+        text-align: left;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid var(--border-default);
         vertical-align: top;
       }
-      tbody tr:last-child td {
-        border-bottom: none;
-      }
-      tr.total td {
-        background: #f9fafb;
+
+      th {
+        background-color: var(--bg-elevated);
+        color: var(--text-muted);
         font-weight: 700;
-        color: #0f172a;
+        font-size: 0.78rem;
+        text-transform: uppercase;
       }
+
+      td {
+        color: var(--text-secondary);
+        font-weight: 400;
+      }
+
       td.num,
       th.num {
         text-align: right;
@@ -616,1055 +455,945 @@
         white-space: nowrap;
       }
 
-      .stats {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-        gap: 10px;
-        margin: 14px 0 4px;
-      }
-      .stat {
-        background: #f9fafb;
-        border: 1px solid #e5e7eb;
-        border-radius: 6px;
-        padding: 12px 14px;
-      }
-      .stat .label {
-        font-size: 12px;
-        color: #475569;
-        text-transform: uppercase;
-        font-weight: 700;
-      }
-      .stat .value {
-        margin-top: 4px;
-        font-size: 19px;
-        font-weight: 700;
-        color: #0f172a;
-      }
-      .stat.accent {
+      tr.alt-recommended td {
         background: #ecfdf5;
-        border-color: #a7f3d0;
-      }
-      .stat.accent .value {
-        color: #047857;
       }
 
-      .compare {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-        margin: 8px 0 6px;
-      }
-      .compare .col {
-        border: 1px solid #e5e7eb;
-        border-radius: 6px;
-        padding: 14px 16px;
-        background: #f9fafb;
-      }
-      .compare .col.today {
-        background: #fef2f2;
-        border-color: #fecaca;
-      }
-      .compare .col.future {
-        background: #ecfdf5;
-        border-color: #a7f3d0;
-      }
-      .compare h4 {
-        margin: 0 0 8px;
-        font-size: 12px;
-        font-weight: 700;
-        text-transform: uppercase;
-        color: #334155;
-      }
-      .compare .col.today h4 {
-        color: #991b1b;
-      }
-      .compare .col.future h4 {
+      tr.alt-recommended td:first-child {
         color: #065f46;
-      }
-      .compare ul {
-        margin: 0;
-        padding-left: 18px;
-        font-size: 14px;
-      }
-      .compare ul li {
-        margin-bottom: 4px;
+        font-weight: 700;
       }
 
+      /* ─────────────────────── Chart card ─────────────────────── */
       .chart-card {
-        margin: 16px 0 6px;
-        padding: 18px 18px 14px;
-        background: #f9fafb;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
+        background-color: var(--bg-elevated);
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+        padding: 1.25rem 1.25rem 1rem;
+        margin: 1.25rem 0 1rem;
       }
+
       .chart-title {
-        font-size: 13px;
+        font-size: 0.95rem;
         font-weight: 700;
-        color: #0f172a;
-        margin: 0 0 4px;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
       }
+
       .chart-sub {
-        font-size: 12px;
-        color: #6b7280;
-        margin: 0 0 10px;
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        margin-bottom: 0.85rem;
       }
+
       .chart-svg {
         width: 100%;
         height: auto;
         display: block;
       }
-      .chart-legend {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 14px;
-        font-size: 12px;
-        color: #374151;
-        margin-top: 8px;
-      }
-      .chart-legend .key {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-      }
-      .chart-legend .swatch {
-        width: 12px;
-        height: 2px;
-        border-radius: 2px;
+
+      .tag-tentative {
         display: inline-block;
-      }
-      .chart-legend .dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        display: inline-block;
+        padding: 0.15rem 0.55rem;
+        background: #fef3c7;
+        color: #92400e;
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        border-radius: 999px;
+        vertical-align: middle;
       }
 
-      footer {
-        margin-top: 20px;
-        padding-top: 16px;
+      .chart-callout {
+        margin-top: 0.85rem;
+        padding: 0.7rem 1rem;
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
+        border-radius: 8px;
+        font-size: 0.88rem;
+        color: #064e3b;
         text-align: center;
-        font-size: 13px;
-        color: #475569;
       }
 
+      .chart-disclaimer {
+        margin: 0.7rem 0 0;
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        text-align: center;
+        font-style: italic;
+      }
+
+      /* ─────────────────────── Footer ─────────────────────── */
+      footer.doc-footer {
+        margin-top: 3rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border-default);
+        text-align: center;
+        font-size: 0.82rem;
+        color: var(--text-muted);
+      }
+
+      /* ─────────────────────── Responsive ─────────────────────── */
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+          border-right: none;
+          border-bottom: 1px solid var(--border-default);
+        }
+        .main {
+          margin-left: 0;
+          padding: 1.5rem;
+        }
+        .layout {
+          flex-direction: column;
+        }
+        .compare {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ─────────────────────── Print ─────────────────────── */
       @media print {
+        .sidebar {
+          display: none;
+        }
+        .main {
+          margin-left: 0;
+          padding: 0;
+        }
         body {
           background: #fff;
         }
-        .page {
-          padding: 0;
-          max-width: 100%;
+        .section {
+          display: block !important;
+          page-break-before: always;
         }
-        section {
-          break-inside: avoid;
+        .section:first-of-type {
+          page-break-before: avoid;
         }
       }
     </style>
   </head>
-
   <body>
-    <div class="shell">
-      <aside class="sidebar" aria-label="Proposal navigation">
-        <div class="sb-brand">LLM APIs Proposal</div>
+    <div class="layout">
+      <!-- ─────────────────────── Sidebar ─────────────────────── -->
+      <nav class="sidebar" aria-label="Proposal navigation">
+        <div class="sidebar-header">
+          <h1>AI Assistant Chatbot</h1>
+          <p>Luma Design System &middot; Proposal</p>
+        </div>
 
-        <div class="sb-group-label">Broader LLM Access</div>
-        <ul class="section-list">
-          <li>
-            <button type="button" class="section-item appendix active" data-section="sec-a1">
-              <span class="item-num">A1</span>
-              <span class="item-label">The Ask &amp; Cost</span>
-            </button>
-          </li>
-          <li>
-            <button type="button" class="section-item appendix" data-section="sec-a2">
-              <span class="item-num">A2</span>
-              <span class="item-label">How It Stays Safe</span>
-            </button>
-          </li>
-          <li>
-            <button type="button" class="section-item appendix" data-section="sec-a3">
-              <span class="item-num">A3</span>
-              <span class="item-label">Why It Matters</span>
-            </button>
-          </li>
-        </ul>
+        <div class="nav-section">
+          <div class="nav-section-title">Broader LLM Access</div>
+          <a href="#sec-a1" class="nav-link active" onclick="showSection(event, 'sec-a1')"
+            >The Ask &amp; Cost</a
+          >
+          <a href="#sec-a2" class="nav-link" onclick="showSection(event, 'sec-a2')"
+            >How It Stays Safe</a
+          >
+          <a href="#sec-a3" class="nav-link" onclick="showSection(event, 'sec-a3')"
+            >Why It Matters</a
+          >
+        </div>
 
-        <div class="sb-group-label">Luma AI Assistant Proposal</div>
-        <ul class="section-list">
-          <li>
-            <button type="button" class="section-item tldr-item" data-section="tldr">
-              <span class="item-num">BRIEF</span>
-              <span class="item-label">At a glance</span>
-            </button>
-          </li>
-          <li>
-            <button type="button" class="section-item" data-section="sec-01">
-              <span class="item-num">01</span>
-              <span class="item-label">Why We Need This</span>
-            </button>
-          </li>
-          <li>
-            <button type="button" class="section-item" data-section="sec-02">
-              <span class="item-num">02</span>
-              <span class="item-label">Proposed Solution</span>
-            </button>
-          </li>
-          <li>
-            <button type="button" class="section-item" data-section="sec-03">
-              <span class="item-num">03</span>
-              <span class="item-label">Alternatives Considered</span>
-            </button>
-          </li>
-          <li>
-            <button type="button" class="section-item" data-section="sec-04">
-              <span class="item-num">04</span>
-              <span class="item-label">How It Helps</span>
-            </button>
-          </li>
-          <li>
-            <button type="button" class="section-item" data-section="sec-05">
-              <span class="item-num">05</span>
-              <span class="item-label">Cost of the LLM API</span>
-            </button>
-          </li>
-          <li>
-            <button type="button" class="section-item" data-section="sec-06">
-              <span class="item-num">06</span>
-              <span class="item-label">Manpower &amp; Time Savings</span>
-            </button>
-          </li>
-          <li>
-            <button type="button" class="section-item" data-section="sec-07">
-              <span class="item-num">07</span>
-              <span class="item-label">Security &amp; Cost Controls</span>
-            </button>
-          </li>
-          <li>
-            <button type="button" class="section-item" data-section="sec-08">
-              <span class="item-num">08</span>
-              <span class="item-label">Rollout Plan</span>
-            </button>
-          </li>
-          <li>
-            <button type="button" class="section-item" data-section="sec-09">
-              <span class="item-num">09</span>
-              <span class="item-label">The Ask</span>
-            </button>
-          </li>
-        </ul>
-      </aside>
+        <div class="nav-section">
+          <div class="nav-section-title">Luma AI Assistant Proposal</div>
+          <a href="#tldr" class="nav-link" onclick="showSection(event, 'tldr')">At a glance</a>
+          <a href="#sec-01" class="nav-link" onclick="showSection(event, 'sec-01')"
+            >Why We Need This</a
+          >
+          <a href="#sec-02" class="nav-link" onclick="showSection(event, 'sec-02')"
+            >Proposed Solution</a
+          >
+          <a href="#sec-03" class="nav-link" onclick="showSection(event, 'sec-03')"
+            >Alternatives Considered</a
+          >
+          <a href="#sec-04" class="nav-link" onclick="showSection(event, 'sec-04')">How It Helps</a>
+          <a href="#sec-05" class="nav-link" onclick="showSection(event, 'sec-05')"
+            >Cost of the LLM API</a
+          >
+          <a href="#sec-06" class="nav-link" onclick="showSection(event, 'sec-06')"
+            >Manpower &amp; Time Savings</a
+          >
+          <a href="#sec-07" class="nav-link" onclick="showSection(event, 'sec-07')"
+            >Security &amp; Cost Controls</a
+          >
+          <a href="#sec-08" class="nav-link" onclick="showSection(event, 'sec-08')">Rollout Plan</a>
+          <a href="#sec-09" class="nav-link" onclick="showSection(event, 'sec-09')">The Ask</a>
+        </div>
+      </nav>
 
-      <main class="content">
-        <header class="doc-header">
-          <div class="eyebrow">Proposal</div>
-          <h1>AI Assistant Chatbot for the Luma Design System</h1>
-          <div class="subtitle">
-            Controlled, low-cost Large Language Model (LLM) API access to cut repeated support work
-            and scale Luma adoption.
-          </div>
-        </header>
+      <!-- ─────────────────────── Main ─────────────────────── -->
+      <main class="main">
+        <!-- ─── Broader LLM Access ─── -->
+        <section id="sec-a1" class="section active">
+          <h2>The Ask &amp; Cost</h2>
+          <p class="section-subtitle">
+            Enable controlled access to one low-cost Large Language Model API (recommended: GPT-4o
+            Mini) so teams can build, measure, and learn from real AI use cases. The Luma AI
+            Assistant in this document is the first.
+          </p>
 
-        <!-- Pane 1: AI Assistant proposal ───────────────────────────────── -->
-        <div class="pane active" id="main-proposal">
-          <div class="context-line" data-section="tldr">
-            <strong>Context:</strong> Luma is Arcadis Digital Intelligence&rsquo;s shared design
-            system, built on Kendo UI &mdash; components and design tokens for React, Angular, and
-            Web Components teams. This proposal upgrades Luma&rsquo;s existing Storybook assistant
-            into a low-cost, AI-grounded chatbot that answers developer questions from our own
-            documentation.
+          <div class="card warning">
+            <span class="card-label">Original suggestion to management</span>
+            Enable controlled access to a lightweight, cost-effective Large Language Model API
+            (GPT-4o Mini or an approved alternative). Today&rsquo;s network restrictions make it
+            hard to explore practical use cases &mdash; even at a small, safe pilot scale.
           </div>
 
-          <section class="tldr" id="tldr" data-section="tldr">
-            <h2>At a glance</h2>
-            <ul>
-              <li>
-                <strong>Problem:</strong> ~4 hours per week lost to repeat developer questions on
-                Slack &mdash; answers already exist in Storybook.
-              </li>
-              <li>
-                <strong>Solution:</strong> Upgrade the Storybook assistant to an AI chatbot grounded
-                in Luma docs (GPT-4o Mini or equivalent).
-              </li>
-              <li>
-                <strong>Cost:</strong> ~$1&ndash;$30 per month in API usage; hard cap
-                <strong>$50 per month</strong>.
-              </li>
-              <li>
-                <strong>Value:</strong> ~14 hours per month of engineering time recovered (~$600 per
-                month).
-              </li>
-              <li>
-                <strong>Timeline:</strong> 2 months &mdash; pilot month 1, open rollout month 2 if
-                successful.
-              </li>
-              <li>
-                <strong>Ask:</strong> Approve LLM API access + $50/month cap + a small review group.
-              </li>
-            </ul>
-          </section>
-
-          <!-- 1. Why we need this -->
-          <section id="sec-01" data-section="sec-01">
-            <h2><span class="n">01</span> Why We Need This</h2>
-            <p>
-              Multiple Arcadis product teams now consume Luma across React, Angular, and Web
-              Component stacks. As adoption grows, the design system team spends an ever-larger
-              share of each day on the
-              <strong>same repeated questions</strong> from those teams.
-            </p>
-
-            <div class="pullquote">
-              <span class="label">Today, on Slack / Teams / DMs</span>
-              &ldquo;How do I use the Button component?&rdquo; &middot; &ldquo;How many variants
-              does it have?&rdquo; &middot; &ldquo;How do I install Luma in Angular?&rdquo; &middot;
-              &ldquo;Which <code>themeColor</code> values are supported?&rdquo; &middot;
-              &ldquo;Where are the design tokens documented?&rdquo;
+          <h3>GPT-4o Mini &mdash; what it costs</h3>
+          <div class="stats">
+            <div class="stat">
+              <div class="label">Input tokens</div>
+              <div class="value">$0.15 / 1M</div>
             </div>
-
-            <p>
-              These questions are <strong>already answered</strong> in our Storybook docs, but
-              consuming teams don&rsquo;t find them, don&rsquo;t know where to look, or find it
-              faster to ping a developer. The result:
-            </p>
-            <ul>
-              <li>
-                Design system engineers lose
-                <strong>about 4 hours every week</strong> to repeat conversations
-              </li>
-              <li>Consuming teams wait minutes or hours for answers that exist in our docs</li>
-              <li>
-                Each new adopting team multiplies the support load &mdash;
-                <strong>support time grows linearly with adoption</strong>
-              </li>
-              <li>Off-hours and cross-region questions wait until the next working day</li>
-            </ul>
-            <p>
-              A static Frequently Asked Questions list isn&rsquo;t enough &mdash; real developer
-              questions come in natural language, with many variations and combinations (for
-              example,
-              <em
-                >&ldquo;an outline button with <code>themeColor=&quot;error&quot;</code> in Angular
-                with a Tabler icon&rdquo;</em
-              >).
-            </p>
-          </section>
-
-          <!-- 2. Proposed Solution -->
-          <section id="sec-02" data-section="sec-02">
-            <h2><span class="n">02</span> Proposed Solution: An AI Assistant Chatbot in Luma</h2>
-            <p>
-              Luma Storybook already ships a basic keyword-matched assistant. We propose
-              <strong>upgrading it</strong> to an <strong>AI Assistant Chatbot</strong> powered by a
-              small, low-cost Large Language Model API &mdash; <strong>GPT-4o Mini</strong>,
-              <strong>Claude Haiku</strong>, or <strong>Gemini Flash</strong>. Same user interface,
-              smarter answers.
-            </p>
-            <p>The chatbot is grounded in our actual documentation:</p>
-            <ul>
-              <li>
-                Luma component stories and <code>argTypes</code> (the source of truth for props)
-              </li>
-              <li>Foundation docs (design tokens, theming, accessibility)</li>
-              <li>Setup guides (React, Angular, Web Components, Tabler icons)</li>
-              <li>Storybook MDX pages</li>
-            </ul>
-            <p>
-              The model only sees these docs &mdash;
-              <strong>no customer data, no business logic, no product source</strong>. It returns a
-              clean, conversational answer with code samples.
-            </p>
-            <p>
-              <strong>Who builds it:</strong> The Luma team. The chatbot user interface already
-              exists in Storybook; this is a focused upgrade (swap the keyword matcher for a model
-              call), not a new product.
-            </p>
-            <p>
-              <strong>Effort to ship:</strong> A working prototype already runs in our local
-              Storybook (grounded retrieval over 174 Luma documentation chunks, Ollama and OpenAI
-              both wired in). Remaining work to pilot:
-              <strong>about 1 week of one engineer</strong> &mdash; audit logging, the personal-data
-              filter, and the review dashboard.
-            </p>
-
-            <div class="compare">
-              <div class="col today">
-                <h4>Today (Manual Support)</h4>
-                <ul>
-                  <li>Same questions asked repeatedly</li>
-                  <li>Developer interrupted multiple times/day</li>
-                  <li>Answers arrive in minutes or hours</li>
-                  <li>Off-hours = no answer</li>
-                  <li>Scales linearly with adoption</li>
-                </ul>
-              </div>
-              <div class="col future">
-                <h4>With AI Assistant Chatbot</h4>
-                <ul>
-                  <li>Instant answers, 24 / 7</li>
-                  <li>Design system team protected from repeated pings</li>
-                  <li>Same quality for 10 or 10,000 users</li>
-                  <li>Stays in sync with docs automatically</li>
-                  <li>Cost scales by usage, not by team size</li>
-                </ul>
-              </div>
+            <div class="stat">
+              <div class="label">Output tokens</div>
+              <div class="value">$0.60 / 1M</div>
             </div>
-          </section>
-
-          <!-- 3. Alternatives Considered -->
-          <section id="sec-03" data-section="sec-03">
-            <h2><span class="n">03</span> Alternatives Considered</h2>
-            <p>
-              Before recommending the AI-grounded chatbot, we evaluated four alternatives &mdash;
-              each weighed on cost, time to deliver, and ability to scale with Luma adoption.
-            </p>
-            <table>
-              <thead>
-                <tr>
-                  <th>Option</th>
-                  <th>What it is</th>
-                  <th>Why it falls short</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>A. Improve documentation only</strong></td>
-                  <td>Continue investing in Storybook docs, tutorials, examples.</td>
-                  <td>
-                    Already in place. Doesn&rsquo;t change the support load &mdash; consuming teams
-                    keep asking the same questions instead of searching the docs.
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>B. Add a dedicated support engineer</strong></td>
-                  <td>Hire one engineer focused on Luma developer support.</td>
-                  <td>
-                    Roughly <strong>$100K+ per year</strong> fully loaded. Support load scales
-                    linearly with adoption &mdash; headcount doesn&rsquo;t.
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>C. Static Frequently Asked Questions chatbot</strong></td>
-                  <td>The keyword-matched assistant we already have in Storybook.</td>
-                  <td>
-                    Can&rsquo;t handle natural-language variations or combinations. Needs constant
-                    manual upkeep.
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>D. Commercial chatbot product</strong></td>
-                  <td>Procure a vendor SaaS chatbot (Intercom, Drift, etc.).</td>
-                  <td>
-                    Typically <strong>$10K&ndash;$50K per year</strong> in licensing. Vendor
-                    lock-in, generic answers, and no native grounding on Luma-specific Storybook
-                    docs.
-                  </td>
-                </tr>
-                <tr class="alt-recommended">
-                  <td>
-                    <strong>E. AI Assistant + low-cost LLM API</strong><br />
-                    <em>(recommended)</em>
-                  </td>
-                  <td>
-                    Upgrade the existing chatbot to call GPT-4o Mini (or equivalent), grounded in
-                    Luma documentation.
-                  </td>
-                  <td>
-                    Lowest cost (~$1&ndash;$30 per month), fastest to ship (~1 week), reuses the
-                    existing user interface, scales by usage not headcount.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
-
-          <!-- 4. How it helps the product -->
-          <section id="sec-04" data-section="sec-04">
-            <h2><span class="n">04</span> How This Helps Luma &amp; Consuming Products</h2>
-            <ul>
-              <li>
-                <strong>Faster Luma adoption.</strong> Consuming teams get unblocked instantly
-                instead of waiting on a person. Lower friction = more teams adopting the design
-                system = more consistent user experience across products.
-              </li>
-              <li>
-                <strong>Better developer experience.</strong> Asking the chatbot is faster than
-                scrolling docs or pinging Slack &mdash; answers in seconds.
-              </li>
-              <li>
-                <strong>Documentation that explains itself.</strong> New components, tokens, or
-                guidelines added to Luma are picked up automatically. No separate Frequently Asked
-                Questions list to maintain.
-              </li>
-              <li>
-                <strong>Consistency across frameworks.</strong> The assistant answers React,
-                Angular, and Web Component questions equally &mdash; hard for any one human to do
-                consistently.
-              </li>
-              <li>
-                <strong>A foundation for AI inside our products.</strong> Once access, cost
-                controls, and security guardrails are proven, the same pattern powers AI features in
-                customer-facing products.
-              </li>
-            </ul>
-          </section>
-
-          <!-- 5. Cost of the API -->
-          <section id="sec-05" data-section="sec-05">
-            <h2><span class="n">05</span> Cost of the LLM API</h2>
-            <p>
-              Large Language Model APIs are priced by usage. Each developer question costs a
-              <strong>fraction of a cent</strong> &mdash; no fixed subscription.
-            </p>
-
-            <div class="stats">
-              <div class="stat">
-                <div class="label">Cost per question</div>
-                <div class="value">~$0.0006</div>
-              </div>
-              <div class="stat accent">
-                <div class="label">Questions per $1</div>
-                <div class="value">~1,600</div>
-              </div>
-              <div class="stat">
-                <div class="label">Expected monthly cost</div>
-                <div class="value">$1 &ndash; $30</div>
-              </div>
-              <div class="stat">
-                <div class="label">Hard budget cap</div>
-                <div class="value">$50 / month</div>
-              </div>
+            <div class="stat accent">
+              <div class="label">Typical question</div>
+              <div class="value">~$0.0006</div>
             </div>
-
-            <h3>Monthly cost by usage level</h3>
-            <table>
-              <thead>
-                <tr>
-                  <th>Usage level</th>
-                  <th class="num">Questions / month</th>
-                  <th class="num">Monthly cost</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Low (early rollout)</td>
-                  <td class="num">2,000</td>
-                  <td class="num">~$1</td>
-                </tr>
-                <tr>
-                  <td>Moderate (broad adoption)</td>
-                  <td class="num">10,000</td>
-                  <td class="num">~$6</td>
-                </tr>
-                <tr>
-                  <td>Heavy (org-wide)</td>
-                  <td class="num">50,000</td>
-                  <td class="num">~$30</td>
-                </tr>
-              </tbody>
-            </table>
-
-            <p style="font-size: 13px; color: #6b7280; margin-top: 6px">
-              <strong>GPT-4o Mini</strong> public pricing: $0.15 / $0.60 per million input / output
-              tokens. One question ≈ 2,600 tokens (prompt + docs + answer).
-            </p>
-
-            <div class="keypoint">
-              <strong>In plain terms</strong>
-              <strong>Pay-as-you-go</strong> &mdash; we pay only for what we use. Expected spend
-              <strong>~$1&ndash;$30 per month</strong>. The API key has a
-              <strong>$50/month safety ceiling</strong> with automatic shut-off, so the worst-case
-              bill is fixed.
+            <div class="stat accent">
+              <div class="label">Per use case, per month</div>
+              <div class="value">~$1 &ndash; $30</div>
             </div>
-          </section>
+          </div>
+          <p class="footnote">
+            OpenAI public pricing for <code>gpt-4o-mini</code>. Tentative until verified in the
+            pilot.
+          </p>
+        </section>
 
-          <!-- 6. Manpower savings -->
-          <section id="sec-06" data-section="sec-06">
-            <h2><span class="n">06</span> Manpower &amp; Time Savings</h2>
-            <p>
-              The Luma team currently spends about <strong>4 hours every week</strong> on repeat
-              questions across Slack, Teams, and DMs. The chatbot can handle ~<strong>80%</strong>
-              instantly &mdash; the answers already exist in our docs.
-            </p>
-            <p style="font-size: 12px; color: #6b7280; font-style: italic; margin: -4px 0 12px">
-              Note &mdash; the numbers below are <strong>tentative estimates</strong> from observed
-              support patterns and public Large Language Model pricing. Directional only; actual
-              values are confirmed during the 4-week pilot.
-            </p>
+        <section id="sec-a2" class="section">
+          <h2>How It Stays Safe</h2>
+          <p class="section-subtitle">
+            Guardrails baked into every use case: one approved model, capped spend, no sensitive
+            data, sign-off per use case.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Guardrail</th>
+                <th>How it works</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>One approved model</strong></td>
+                <td>Start with GPT-4o Mini only. New providers go through Security review.</td>
+              </tr>
+              <tr>
+                <td><strong>Hard budget cap</strong></td>
+                <td>
+                  Pay-as-you-go with a monthly ceiling per use case (for example, $50/month for the
+                  Luma chatbot). Automatic shut-off if exceeded.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>No sensitive data</strong></td>
+                <td>
+                  Public documentation and synthetic data only &mdash; no personal data (names,
+                  emails, employee IDs), no proprietary code, no credentials.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Sign-off per use case</strong></td>
+                <td>
+                  One-page intent doc (owner, data classification, spend cap, success metric) signed
+                  off by Security &amp; Architecture before going live.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
 
-            <div class="stats">
-              <div class="stat">
-                <div class="label">Time lost today</div>
-                <div class="value">~17 hours / month</div>
-              </div>
-              <div class="stat accent">
-                <div class="label">Time recovered</div>
-                <div class="value">~14 hours / month</div>
-              </div>
-              <div class="stat accent">
-                <div class="label">Value recovered</div>
-                <div class="value">~$600 / month</div>
-              </div>
-              <div class="stat">
-                <div class="label">API cost</div>
-                <div class="value">~$1 &ndash; $30 / month</div>
-              </div>
-            </div>
-
-            <p style="margin-top: 10px">
-              For about <strong>$30 per month</strong> in API cost, we recover roughly
-              <strong>$600 per month</strong> of engineering time &mdash; about
-              <strong>20&times;</strong> return. The benefit grows with every Luma maintainer freed
-              from repeat support and every consuming-team developer unblocked faster.
-            </p>
-            <p style="font-size: 13px; color: #6b7280">
-              Value estimate: 14 hours &times; ~$42 per hour loaded engineering cost. Adjust to your
-              org&rsquo;s rate.
-            </p>
-
-            <div class="chart-card">
-              <p class="chart-title">
-                Monthly cost comparison &mdash; human support compared with the Large Language Model
-                chatbot
-                <span
-                  style="
-                    display: inline-block;
-                    margin-left: 6px;
-                    padding: 2px 8px;
-                    background: #fef3c7;
-                    color: #92400e;
-                    font-size: 10px;
-                    font-weight: 700;
-                    text-transform: uppercase;
-                    border-radius: 999px;
-                    vertical-align: middle;
-                  "
-                  >Tentative</span
-                >
-              </p>
-              <p class="chart-sub">
-                What we pay engineers to answer repeat Luma questions today, compared with the same
-                work via the AI Assistant Chatbot.
-              </p>
-
-              <svg
-                class="chart-svg"
-                viewBox="0 0 620 300"
-                xmlns="http://www.w3.org/2000/svg"
-                role="img"
-                aria-label="Bar chart comparing monthly cost of engineer support (~$600) with Large Language Model chatbot (~$30)"
-              >
-                <!-- Grid lines -->
-                <g stroke="#e5e7eb" stroke-width="1">
-                  <line x1="80" y1="50" x2="600" y2="50" />
-                  <line x1="80" y1="100" x2="600" y2="100" />
-                  <line x1="80" y1="150" x2="600" y2="150" />
-                  <line x1="80" y1="200" x2="600" y2="200" />
-                  <line x1="80" y1="250" x2="600" y2="250" />
-                </g>
-
-                <!-- Axes -->
-                <g stroke="#94a3b8" stroke-width="1.2">
-                  <line x1="80" y1="50" x2="80" y2="250" />
-                  <line x1="80" y1="250" x2="600" y2="250" />
-                </g>
-
-                <!-- Y-axis labels (dollars) -->
-                <g
-                  fill="#6b7280"
-                  font-size="11"
-                  font-family="'Noto Sans', -apple-system, sans-serif"
-                >
-                  <text x="72" y="54" text-anchor="end">$800</text>
-                  <text x="72" y="104" text-anchor="end">$600</text>
-                  <text x="72" y="154" text-anchor="end">$400</text>
-                  <text x="72" y="204" text-anchor="end">$200</text>
-                  <text x="72" y="254" text-anchor="end">$0</text>
-                </g>
-
-                <!-- Bar 1: Human support ($600) -->
-                <rect x="180" y="100" width="140" height="150" fill="#dc2626" rx="3" />
-                <text
-                  x="250"
-                  y="92"
-                  fill="#dc2626"
-                  font-size="20"
-                  font-weight="700"
-                  font-family="'Noto Sans', -apple-system, sans-serif"
-                  text-anchor="middle"
-                >
-                  $600
-                </text>
-                <text
-                  x="250"
-                  y="272"
-                  fill="#0f172a"
-                  font-size="12"
-                  font-weight="600"
-                  font-family="'Noto Sans', -apple-system, sans-serif"
-                  text-anchor="middle"
-                >
-                  Human support today
-                </text>
-                <text
-                  x="250"
-                  y="288"
-                  fill="#6b7280"
-                  font-size="11"
-                  font-family="'Noto Sans', -apple-system, sans-serif"
-                  text-anchor="middle"
-                >
-                  14 hours &times; ~$42 per hour
-                </text>
-
-                <!-- Bar 2: LLM chatbot ($30) -->
-                <rect x="380" y="243" width="140" height="7" fill="#047857" rx="2" />
-                <text
-                  x="450"
-                  y="235"
-                  fill="#047857"
-                  font-size="20"
-                  font-weight="700"
-                  font-family="'Noto Sans', -apple-system, sans-serif"
-                  text-anchor="middle"
-                >
-                  $30
-                </text>
-                <text
-                  x="450"
-                  y="272"
-                  fill="#0f172a"
-                  font-size="12"
-                  font-weight="600"
-                  font-family="'Noto Sans', -apple-system, sans-serif"
-                  text-anchor="middle"
-                >
-                  LLM chatbot
-                </text>
-                <text
-                  x="450"
-                  y="288"
-                  fill="#6b7280"
-                  font-size="11"
-                  font-family="'Noto Sans', -apple-system, sans-serif"
-                  text-anchor="middle"
-                >
-                  API usage / month
-                </text>
-
-                <!-- Y-axis title -->
-                <text
-                  x="22"
-                  y="150"
-                  fill="#6b7280"
-                  font-size="11"
-                  font-family="'Noto Sans', -apple-system, sans-serif"
-                  transform="rotate(-90 22 150)"
-                  text-anchor="middle"
-                >
-                  Monthly cost (USD)
-                </text>
-              </svg>
-
-              <div
-                style="
-                  margin-top: 10px;
-                  padding: 10px 14px;
-                  background: #ecfdf5;
-                  border: 1px solid #a7f3d0;
-                  border-radius: 6px;
-                  font-size: 13px;
-                  color: #064e3b;
-                  text-align: center;
-                "
-              >
-                <strong>Net saving: ~$570 per month</strong> &middot; LLM is ~<strong
-                  >20&times;</strong
-                >
-                cheaper than doing the same work manually.
-              </div>
-              <p
-                style="
-                  margin: 10px 0 0;
-                  font-size: 12px;
-                  color: #6b7280;
-                  text-align: center;
-                  font-style: italic;
-                "
-              >
-                All figures are <strong>tentative estimates</strong> from observed support load and
-                public Large Language Model pricing &mdash; actual numbers are measured during the
-                pilot.
-              </p>
-            </div>
-          </section>
-
-          <!-- 7. Security & Controls -->
-          <section id="sec-07" data-section="sec-07">
-            <h2><span class="n">07</span> Security &amp; Cost Controls</h2>
-            <table>
-              <thead>
-                <tr>
-                  <th>Control</th>
-                  <th>How it works</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Hard monthly budget cap</td>
-                  <td>$50 ceiling on the API key; automatic shut-off when reached.</td>
-                </tr>
-                <tr>
-                  <td>Data sent to the model</td>
-                  <td>
-                    Only public Luma docs and the user&rsquo;s question. No customer data, no
-                    product source.
-                  </td>
-                </tr>
-                <tr>
-                  <td>No training on our prompts</td>
-                  <td>Vendor&rsquo;s &ldquo;zero data retention&rdquo; / no-training tier.</td>
-                </tr>
-                <tr>
-                  <td>Approved vendor only</td>
-                  <td>Single vendor, terms reviewed by Security &amp; Legal.</td>
-                </tr>
-                <tr>
-                  <td>Audit trail</td>
-                  <td>All prompts and responses logged 30 days for security review.</td>
-                </tr>
-                <tr>
-                  <td>Personal data filter (names, emails, employee IDs, etc.)</td>
-                  <td>Prompts scanned and blocked when they match known sensitive patterns.</td>
-                </tr>
-                <tr>
-                  <td>Answers grounded in Luma docs only</td>
-                  <td>
-                    Retrieval-Augmented Generation &mdash; the model is fed relevant Storybook
-                    snippets before each answer, so it can&rsquo;t invent components or properties.
-                  </td>
-                </tr>
-                <tr>
-                  <td>Unknown questions &amp; quality review</td>
-                  <td>
-                    Clear &ldquo;I don&rsquo;t know&rdquo; fallback when no doc matches; weekly
-                    answer sampling by the Luma team; user-reportable answers.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
-
-          <!-- 8. Rollout -->
-          <section id="sec-08" data-section="sec-08">
-            <h2><span class="n">08</span> Rollout Plan &mdash; 2 Months</h2>
-            <p>
-              Full rollout fits inside <strong>2 months</strong>, in two clear steps. Each step
-              depends on the previous one &mdash; we can stop at any point if the results
-              don&rsquo;t justify continuing.
-            </p>
-            <table>
-              <thead>
-                <tr>
-                  <th>Step</th>
-                  <th>When</th>
-                  <th>What happens</th>
-                  <th>How we judge success</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>1. Pilot</strong><br /><em>(internal only)</em></td>
-                  <td>Weeks 1&ndash;4</td>
-                  <td>
-                    Enable the AI Assistant Chatbot inside Luma Storybook for the Luma team and
-                    1&ndash;2 invited product teams. They use it for real Luma questions instead of
-                    pinging Slack.
-                  </td>
-                  <td>
-                    &bull; Does it answer correctly?<br />
-                    &bull; Are people actually using it?<br />
-                    &bull; Does Slack traffic to the Luma team drop?
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>2. Open Rollout</strong><br /><em>(all Luma users)</em></td>
-                  <td>Weeks 5&ndash;8</td>
-                  <td>
-                    If the pilot works, open the chatbot to every Luma developer across the
-                    organization. No new infrastructure &mdash; same chatbot, broader audience.
-                  </td>
-                  <td>
-                    &bull; Hours saved per Luma maintainer<br />
-                    &bull; Satisfaction from consuming teams<br />
-                    &bull; Cost stays inside the $50 cap
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="keypoint">
-              <strong>Success targets (by end of month 1)</strong>
+        <section id="sec-a3" class="section">
+          <h2>Why It Matters</h2>
+          <p class="section-subtitle">
+            What changes for the organisation when controlled LLM access is enabled compared with
+            today.
+          </p>
+          <div class="compare">
+            <div class="col today">
+              <h4>Without LLM access</h4>
               <ul>
-                <li>
-                  At least <strong>70%</strong> of common Luma questions answered without a human
-                </li>
-                <li>Measurable drop in repeat Slack / Teams questions to the Luma team</li>
-                <li>Monthly API spend stays under the <strong>$50</strong> cap</li>
+                <li>Luma AI Assistant stays a static answers list.</li>
+                <li>We can&rsquo;t measure cost or quality of AI before committing.</li>
+                <li>Team falls behind on practical AI skills.</li>
               </ul>
             </div>
-            <div class="keypoint">
-              <strong>In one line</strong>
-              Month 1: prove it works with a small group inside Luma. Month 2: if it works, open it
-              to every Luma developer.
+            <div class="col future">
+              <h4>With controlled LLM access</h4>
+              <ul>
+                <li>Luma AI Assistant becomes a real productivity tool.</li>
+                <li>We get real data to guide further AI decisions.</li>
+                <li>Other teams can propose well-scoped use cases.</li>
+              </ul>
             </div>
-          </section>
+          </div>
 
-          <!-- 9. The Ask -->
-          <section id="sec-09" data-section="sec-09">
-            <h2><span class="n">09</span> The Ask</h2>
-            <ol>
-              <li>
-                Approve <strong>controlled outbound access</strong> to one low-cost Large Language
-                Model API (recommended: GPT-4o Mini, or approved equivalent) for the Luma Design
-                System.
-              </li>
-              <li>
-                Approve an <strong>ongoing $50/month budget cap</strong> on the API key.
-                <br />
-                <span style="font-size: 13px; color: #4b5563">
-                  Expected actual spend: <strong>~$1&ndash;$30 per month</strong>. The cap is a
-                  safety ceiling, not a flat bill &mdash; pay-as-you-go, with automatic shut-off if
-                  reached.
-                </span>
-              </li>
-              <li>
-                Assign a small reviewer group (one each from Security, Platform, and the Luma team)
-                to sign off on guardrails and oversee the pilot.
-              </li>
-            </ol>
-            <div class="keypoint">
-              <strong>Bottom line</strong>
-              For a downside capped at $50 per month, we eliminate a recurring drain on engineering
-              time, accelerate Luma adoption, and establish a safe, measured pattern for broader AI
-              adoption.
+          <div class="card brand">
+            <div class="card-title">Bottom line</div>
+            Approve the Luma AI Assistant (Sections 01&ndash;09) and you&rsquo;ve approved the first
+            step of a small, measured, reversible Large Language Model access programme &mdash;
+            under $50/month to start.
+          </div>
+        </section>
+
+        <!-- ─── Luma AI Assistant Proposal ─── -->
+        <section id="tldr" class="section">
+          <h2>At a glance</h2>
+          <p class="section-subtitle">
+            Luma is Arcadis Digital Intelligence&rsquo;s shared design system, built on Kendo UI
+            &mdash; components and design tokens for React, Angular, and Web Components teams. This
+            proposal upgrades Luma&rsquo;s existing Storybook assistant into a low-cost, AI-grounded
+            chatbot that answers developer questions from our own documentation.
+          </p>
+          <ul>
+            <li>
+              <strong>Problem:</strong> ~4 hours per week lost to repeat developer questions on
+              Slack &mdash; answers already exist in Storybook.
+            </li>
+            <li>
+              <strong>Solution:</strong> Upgrade the Storybook assistant to an AI chatbot grounded
+              in Luma docs (GPT-4o Mini or equivalent).
+            </li>
+            <li>
+              <strong>Cost:</strong> ~$1&ndash;$30 per month in API usage; hard cap
+              <strong>$50 per month</strong>.
+            </li>
+            <li>
+              <strong>Value:</strong> ~14 hours per month of engineering time recovered (~$600 per
+              month).
+            </li>
+            <li>
+              <strong>Timeline:</strong> 2 months &mdash; pilot month 1, open rollout month 2 if
+              successful.
+            </li>
+            <li>
+              <strong>Ask:</strong> Approve LLM API access + $50/month cap + a small review group.
+            </li>
+          </ul>
+        </section>
+
+        <section id="sec-01" class="section">
+          <h2>Why We Need This</h2>
+          <p class="section-subtitle">
+            Luma adoption is growing faster than the design system team can answer questions
+            manually.
+          </p>
+          <p>
+            Multiple Arcadis product teams now consume Luma across React, Angular, and Web Component
+            stacks. As adoption grows, the design system team spends an ever-larger share of each
+            day on the
+            <strong>same repeated questions</strong> from those teams.
+          </p>
+
+          <div class="card warning">
+            <span class="card-label">Today, on Slack / Teams / DMs</span>
+            &ldquo;How do I use the Button component?&rdquo; &middot; &ldquo;How many variants does
+            it have?&rdquo; &middot; &ldquo;How do I install Luma in Angular?&rdquo; &middot;
+            &ldquo;Which <code>themeColor</code> values are supported?&rdquo; &middot; &ldquo;Where
+            are the design tokens documented?&rdquo;
+          </div>
+
+          <p>
+            These questions are <strong>already answered</strong> in our Storybook docs, but
+            consuming teams don&rsquo;t find them, don&rsquo;t know where to look, or find it faster
+            to ping a developer. The result:
+          </p>
+          <ul>
+            <li>
+              Design system engineers lose
+              <strong>about 4 hours every week</strong> to repeat conversations
+            </li>
+            <li>Consuming teams wait minutes or hours for answers that exist in our docs</li>
+            <li>
+              Each new adopting team multiplies the support load &mdash;
+              <strong>support time grows linearly with adoption</strong>
+            </li>
+            <li>Off-hours and cross-region questions wait until the next working day</li>
+          </ul>
+          <p>
+            A static Frequently Asked Questions list isn&rsquo;t enough &mdash; real developer
+            questions come in natural language, with many variations and combinations (for example,
+            <em
+              >&ldquo;an outline button with <code>themeColor=&quot;error&quot;</code> in Angular
+              with a Tabler icon&rdquo;</em
+            >).
+          </p>
+        </section>
+
+        <section id="sec-02" class="section">
+          <h2>Proposed Solution</h2>
+          <p class="section-subtitle">
+            An AI Assistant Chatbot inside Luma Storybook, powered by a low-cost LLM API and
+            grounded in our own documentation.
+          </p>
+          <p>
+            Luma Storybook already ships a basic keyword-matched assistant. We propose
+            <strong>upgrading it</strong> to an <strong>AI Assistant Chatbot</strong> powered by a
+            small, low-cost Large Language Model API &mdash; <strong>GPT-4o Mini</strong>,
+            <strong>Claude Haiku</strong>, or <strong>Gemini Flash</strong>. Same user interface,
+            smarter answers.
+          </p>
+          <p>The chatbot is grounded in our actual documentation:</p>
+          <ul>
+            <li>
+              Luma component stories and <code>argTypes</code> (the source of truth for props)
+            </li>
+            <li>Foundation docs (design tokens, theming, accessibility)</li>
+            <li>Setup guides (React, Angular, Web Components, Tabler icons)</li>
+            <li>Storybook MDX pages</li>
+          </ul>
+          <p>
+            The model only sees these docs &mdash;
+            <strong>no customer data, no business logic, no product source</strong>. It returns a
+            clean, conversational answer with code samples.
+          </p>
+          <p>
+            <strong>Who builds it:</strong> The Luma team. The chatbot user interface already exists
+            in Storybook; this is a focused upgrade (swap the keyword matcher for a model call), not
+            a new product.
+          </p>
+          <p>
+            <strong>Effort to ship:</strong> A working prototype already runs in our local Storybook
+            (grounded retrieval over 174 Luma documentation chunks, Ollama and OpenAI both wired
+            in). Remaining work to pilot: <strong>about 1 week of one engineer</strong> &mdash;
+            audit logging, the personal-data filter, and the review dashboard.
+          </p>
+
+          <div class="compare">
+            <div class="col today">
+              <h4>Today (Manual Support)</h4>
+              <ul>
+                <li>Same questions asked repeatedly</li>
+                <li>Developer interrupted multiple times/day</li>
+                <li>Answers arrive in minutes or hours</li>
+                <li>Off-hours = no answer</li>
+                <li>Scales linearly with adoption</li>
+              </ul>
             </div>
-          </section>
-        </div>
-        <!-- /Pane 1 -->
+            <div class="col future">
+              <h4>With AI Assistant Chatbot</h4>
+              <ul>
+                <li>Instant answers, 24 / 7</li>
+                <li>Design system team protected from repeated pings</li>
+                <li>Same quality for 10 or 10,000 users</li>
+                <li>Stays in sync with docs automatically</li>
+                <li>Cost scales by usage, not by team size</li>
+              </ul>
+            </div>
+          </div>
+        </section>
 
-        <!-- Pane 2: Broader proposal / Appendix ─────────────────────────── -->
-        <div class="pane" id="appendix">
-          <section class="appendix active" id="sec-a1" data-section="sec-a1">
-            <h2><span class="n">A1</span> The Ask</h2>
-            <p>
-              Enable
-              <strong>controlled access to one low-cost Large Language Model API</strong>
-              (recommended: <strong>GPT-4o Mini</strong>) so teams can build, measure, and learn
-              from real AI use cases. The Luma AI Assistant in this document is the first.
+        <section id="sec-03" class="section">
+          <h2>Alternatives Considered</h2>
+          <p class="section-subtitle">
+            Four other paths we evaluated &mdash; each weighed on cost, time to deliver, and ability
+            to scale with Luma adoption.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Option</th>
+                <th>What it is</th>
+                <th>Why it falls short</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>A. Improve documentation only</strong></td>
+                <td>Continue investing in Storybook docs, tutorials, examples.</td>
+                <td>
+                  Already in place. Doesn&rsquo;t change the support load &mdash; consuming teams
+                  keep asking the same questions instead of searching the docs.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>B. Add a dedicated support engineer</strong></td>
+                <td>Hire one engineer focused on Luma developer support.</td>
+                <td>
+                  Roughly <strong>$100K+ per year</strong> fully loaded. Support load scales
+                  linearly with adoption &mdash; headcount doesn&rsquo;t.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>C. Static Frequently Asked Questions chatbot</strong></td>
+                <td>The keyword-matched assistant we already have in Storybook.</td>
+                <td>
+                  Can&rsquo;t handle natural-language variations or combinations. Needs constant
+                  manual upkeep.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>D. Commercial chatbot product</strong></td>
+                <td>Procure a vendor SaaS chatbot (Intercom, Drift, etc.).</td>
+                <td>
+                  Typically <strong>$10K&ndash;$50K per year</strong> in licensing. Vendor lock-in,
+                  generic answers, and no native grounding on Luma-specific Storybook docs.
+                </td>
+              </tr>
+              <tr class="alt-recommended">
+                <td>
+                  <strong>E. AI Assistant + low-cost LLM API</strong><br />
+                  <em>(recommended)</em>
+                </td>
+                <td>
+                  Upgrade the existing chatbot to call GPT-4o Mini (or equivalent), grounded in Luma
+                  documentation.
+                </td>
+                <td>
+                  Lowest cost (~$1&ndash;$30 per month), fastest to ship (~1 week), reuses the
+                  existing user interface, scales by usage not headcount.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="sec-04" class="section">
+          <h2>How It Helps</h2>
+          <p class="section-subtitle">
+            Five direct gains for Luma, the design system team, and every product team consuming
+            Luma.
+          </p>
+          <ul>
+            <li>
+              <strong>Faster Luma adoption.</strong> Consuming teams get unblocked instantly instead
+              of waiting on a person. Lower friction = more teams adopting the design system = more
+              consistent user experience across products.
+            </li>
+            <li>
+              <strong>Better developer experience.</strong> Asking the chatbot is faster than
+              scrolling docs or pinging Slack &mdash; answers in seconds.
+            </li>
+            <li>
+              <strong>Documentation that explains itself.</strong> New components, tokens, or
+              guidelines added to Luma are picked up automatically. No separate Frequently Asked
+              Questions list to maintain.
+            </li>
+            <li>
+              <strong>Consistency across frameworks.</strong> The assistant answers React, Angular,
+              and Web Component questions equally &mdash; hard for any one human to do consistently.
+            </li>
+            <li>
+              <strong>A foundation for AI inside our products.</strong> Once access, cost controls,
+              and security guardrails are proven, the same pattern powers AI features in
+              customer-facing products.
+            </li>
+          </ul>
+        </section>
+
+        <section id="sec-05" class="section">
+          <h2>Cost of the LLM API</h2>
+          <p class="section-subtitle">Pay-as-you-go pricing with a hard monthly safety ceiling.</p>
+          <p>
+            Large Language Model APIs are priced by usage. Each developer question costs a
+            <strong>fraction of a cent</strong> &mdash; no fixed subscription.
+          </p>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="label">Cost per question</div>
+              <div class="value">~$0.0006</div>
+            </div>
+            <div class="stat accent">
+              <div class="label">Questions per $1</div>
+              <div class="value">~1,600</div>
+            </div>
+            <div class="stat">
+              <div class="label">Expected monthly cost</div>
+              <div class="value">$1 &ndash; $30</div>
+            </div>
+            <div class="stat">
+              <div class="label">Hard budget cap</div>
+              <div class="value">$50 / month</div>
+            </div>
+          </div>
+
+          <h3>Monthly cost by usage level</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Usage level</th>
+                <th class="num">Questions / month</th>
+                <th class="num">Monthly cost</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Low (early rollout)</td>
+                <td class="num">2,000</td>
+                <td class="num">~$1</td>
+              </tr>
+              <tr>
+                <td>Moderate (broad adoption)</td>
+                <td class="num">10,000</td>
+                <td class="num">~$6</td>
+              </tr>
+              <tr>
+                <td>Heavy (org-wide)</td>
+                <td class="num">50,000</td>
+                <td class="num">~$30</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p class="footnote">
+            <strong>GPT-4o Mini</strong> public pricing: $0.15 / $0.60 per million input / output
+            tokens. One question ≈ 2,600 tokens (prompt + docs + answer).
+          </p>
+
+          <div class="card brand">
+            <div class="card-title">In plain terms</div>
+            <strong>Pay-as-you-go</strong> &mdash; we pay only for what we use. Expected spend
+            <strong>~$1&ndash;$30 per month</strong>. The API key has a
+            <strong>$50/month safety ceiling</strong> with automatic shut-off, so the worst-case
+            bill is fixed.
+          </div>
+        </section>
+
+        <section id="sec-06" class="section">
+          <h2>Manpower &amp; Time Savings</h2>
+          <p class="section-subtitle">
+            About 14 hours/month of engineering time recovered for an API spend of $1&ndash;$30
+            &mdash; roughly a 20&times; return.
+          </p>
+          <p>
+            The Luma team currently spends about <strong>4 hours every week</strong> on repeat
+            questions across Slack, Teams, and DMs. The chatbot can handle ~<strong>80%</strong>
+            instantly &mdash; the answers already exist in our docs.
+          </p>
+          <p class="footnote italic">
+            Note &mdash; the numbers below are <strong>tentative estimates</strong> from observed
+            support patterns and public Large Language Model pricing. Directional only; actual
+            values are confirmed during the 4-week pilot.
+          </p>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="label">Time lost today</div>
+              <div class="value">~17 hours / month</div>
+            </div>
+            <div class="stat accent">
+              <div class="label">Time recovered</div>
+              <div class="value">~14 hours / month</div>
+            </div>
+            <div class="stat accent">
+              <div class="label">Value recovered</div>
+              <div class="value">~$600 / month</div>
+            </div>
+            <div class="stat">
+              <div class="label">API cost</div>
+              <div class="value">~$1 &ndash; $30 / month</div>
+            </div>
+          </div>
+
+          <p style="margin-top: 1rem">
+            For about <strong>$30 per month</strong> in API cost, we recover roughly
+            <strong>$600 per month</strong> of engineering time &mdash; about
+            <strong>20&times;</strong> return. The benefit grows with every Luma maintainer freed
+            from repeat support and every consuming-team developer unblocked faster.
+          </p>
+          <p class="footnote">
+            Value estimate: 14 hours &times; ~$42 per hour loaded engineering cost. Adjust to your
+            org&rsquo;s rate.
+          </p>
+
+          <div class="chart-card">
+            <p class="chart-title">
+              Monthly cost comparison &mdash; human support vs the Large Language Model chatbot
+              <span class="tag-tentative">Tentative</span>
+            </p>
+            <p class="chart-sub">
+              What we pay engineers to answer repeat Luma questions today, compared with the same
+              work via the AI Assistant Chatbot.
             </p>
 
-            <div class="pullquote">
-              <span class="label">Original suggestion to management</span>
-              Enable controlled access to a lightweight, cost-effective Large Language Model API
-              (GPT-4o Mini or an approved alternative). Today&rsquo;s network restrictions make it
-              hard to explore practical use cases &mdash; even at a small, safe pilot scale.
-            </div>
+            <svg
+              class="chart-svg"
+              viewBox="0 0 620 300"
+              xmlns="http://www.w3.org/2000/svg"
+              role="img"
+              aria-label="Bar chart comparing monthly cost of engineer support (~$600) with Large Language Model chatbot (~$30)"
+            >
+              <g stroke="#e5e7eb" stroke-width="1">
+                <line x1="80" y1="50" x2="600" y2="50" />
+                <line x1="80" y1="100" x2="600" y2="100" />
+                <line x1="80" y1="150" x2="600" y2="150" />
+                <line x1="80" y1="200" x2="600" y2="200" />
+                <line x1="80" y1="250" x2="600" y2="250" />
+              </g>
+              <g stroke="#94a3b8" stroke-width="1.2">
+                <line x1="80" y1="50" x2="80" y2="250" />
+                <line x1="80" y1="250" x2="600" y2="250" />
+              </g>
+              <g fill="#6b7280" font-size="11" font-family="'Noto Sans', -apple-system, sans-serif">
+                <text x="72" y="54" text-anchor="end">$800</text>
+                <text x="72" y="104" text-anchor="end">$600</text>
+                <text x="72" y="154" text-anchor="end">$400</text>
+                <text x="72" y="204" text-anchor="end">$200</text>
+                <text x="72" y="254" text-anchor="end">$0</text>
+              </g>
 
-            <h3>GPT-4o Mini &mdash; what it costs</h3>
-            <div class="stats">
-              <div class="stat">
-                <div class="label">Input tokens</div>
-                <div class="value">$0.15 / 1M</div>
-              </div>
-              <div class="stat">
-                <div class="label">Output tokens</div>
-                <div class="value">$0.60 / 1M</div>
-              </div>
-              <div class="stat accent">
-                <div class="label">Typical question</div>
-                <div class="value">~$0.0006</div>
-              </div>
-              <div class="stat accent">
-                <div class="label">Per use case, per month</div>
-                <div class="value">~$1 &ndash; $30</div>
-              </div>
+              <rect x="180" y="100" width="140" height="150" fill="#dc2626" rx="3" />
+              <text
+                x="250"
+                y="92"
+                fill="#dc2626"
+                font-size="20"
+                font-weight="700"
+                font-family="'Noto Sans', -apple-system, sans-serif"
+                text-anchor="middle"
+              >
+                $600
+              </text>
+              <text
+                x="250"
+                y="272"
+                fill="#0f172a"
+                font-size="12"
+                font-weight="600"
+                font-family="'Noto Sans', -apple-system, sans-serif"
+                text-anchor="middle"
+              >
+                Human support today
+              </text>
+              <text
+                x="250"
+                y="288"
+                fill="#6b7280"
+                font-size="11"
+                font-family="'Noto Sans', -apple-system, sans-serif"
+                text-anchor="middle"
+              >
+                14 hours &times; ~$42 per hour
+              </text>
+
+              <rect x="380" y="243" width="140" height="7" fill="#047857" rx="2" />
+              <text
+                x="450"
+                y="235"
+                fill="#047857"
+                font-size="20"
+                font-weight="700"
+                font-family="'Noto Sans', -apple-system, sans-serif"
+                text-anchor="middle"
+              >
+                $30
+              </text>
+              <text
+                x="450"
+                y="272"
+                fill="#0f172a"
+                font-size="12"
+                font-weight="600"
+                font-family="'Noto Sans', -apple-system, sans-serif"
+                text-anchor="middle"
+              >
+                LLM chatbot
+              </text>
+              <text
+                x="450"
+                y="288"
+                fill="#6b7280"
+                font-size="11"
+                font-family="'Noto Sans', -apple-system, sans-serif"
+                text-anchor="middle"
+              >
+                API usage / month
+              </text>
+
+              <text
+                x="22"
+                y="150"
+                fill="#6b7280"
+                font-size="11"
+                font-family="'Noto Sans', -apple-system, sans-serif"
+                transform="rotate(-90 22 150)"
+                text-anchor="middle"
+              >
+                Monthly cost (USD)
+              </text>
+            </svg>
+
+            <div class="chart-callout">
+              <strong>Net saving: ~$570 per month</strong> &middot; LLM is ~<strong
+                >20&times;</strong
+              >
+              cheaper than doing the same work manually.
             </div>
-            <p style="font-size: 13px; color: #6b7280; margin-top: 6px">
-              OpenAI public pricing for <code>gpt-4o-mini</code>. Tentative until verified in the
+            <p class="chart-disclaimer">
+              All figures are <strong>tentative estimates</strong> from observed support load and
+              public Large Language Model pricing &mdash; actual numbers are measured during the
               pilot.
             </p>
-          </section>
+          </div>
+        </section>
 
-          <section class="appendix" id="sec-a2" data-section="sec-a2">
-            <h2><span class="n">A2</span> How It Stays Safe</h2>
-            <table>
-              <thead>
-                <tr>
-                  <th>Guardrail</th>
-                  <th>How it works</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>One approved model</strong></td>
-                  <td>Start with GPT-4o Mini only. New providers go through Security review.</td>
-                </tr>
-                <tr>
-                  <td><strong>Hard budget cap</strong></td>
-                  <td>
-                    Pay-as-you-go with a monthly ceiling per use case (for example, $50/month for
-                    the Luma chatbot). Automatic shut-off if exceeded.
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>No sensitive data</strong></td>
-                  <td>
-                    Public documentation and synthetic data only &mdash; no personal data (names,
-                    emails, employee IDs), no proprietary code, no credentials.
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>Sign-off per use case</strong></td>
-                  <td>
-                    One-page intent doc (owner, data classification, spend cap, success metric)
-                    signed off by Security &amp; Architecture before going live.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </section>
+        <section id="sec-07" class="section">
+          <h2>Security &amp; Cost Controls</h2>
+          <p class="section-subtitle">
+            Eight controls that bound the spend, the data, and the answer quality.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Control</th>
+                <th>How it works</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Hard monthly budget cap</td>
+                <td>$50 ceiling on the API key; automatic shut-off when reached.</td>
+              </tr>
+              <tr>
+                <td>Data sent to the model</td>
+                <td>
+                  Only public Luma docs and the user&rsquo;s question. No customer data, no product
+                  source.
+                </td>
+              </tr>
+              <tr>
+                <td>No training on our prompts</td>
+                <td>Vendor&rsquo;s &ldquo;zero data retention&rdquo; / no-training tier.</td>
+              </tr>
+              <tr>
+                <td>Approved vendor only</td>
+                <td>Single vendor, terms reviewed by Security &amp; Legal.</td>
+              </tr>
+              <tr>
+                <td>Audit trail</td>
+                <td>All prompts and responses logged 30 days for security review.</td>
+              </tr>
+              <tr>
+                <td>Personal data filter (names, emails, employee IDs, etc.)</td>
+                <td>Prompts scanned and blocked when they match known sensitive patterns.</td>
+              </tr>
+              <tr>
+                <td>Answers grounded in Luma docs only</td>
+                <td>
+                  Retrieval-Augmented Generation &mdash; the model is fed relevant Storybook
+                  snippets before each answer, so it can&rsquo;t invent components or properties.
+                </td>
+              </tr>
+              <tr>
+                <td>Unknown questions &amp; quality review</td>
+                <td>
+                  Clear &ldquo;I don&rsquo;t know&rdquo; fallback when no doc matches; weekly answer
+                  sampling by the Luma team; user-reportable answers.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
 
-          <section class="appendix" id="sec-a3" data-section="sec-a3">
-            <h2><span class="n">A3</span> Why It Matters</h2>
-            <div class="compare">
-              <div class="col today">
-                <h4>Without LLM access</h4>
-                <ul>
-                  <li>Luma AI Assistant stays a static answers list.</li>
-                  <li>We can&rsquo;t measure cost or quality of AI before committing.</li>
-                  <li>Team falls behind on practical AI skills.</li>
-                </ul>
-              </div>
-              <div class="col future">
-                <h4>With controlled LLM access</h4>
-                <ul>
-                  <li>Luma AI Assistant becomes a real productivity tool.</li>
-                  <li>We get real data to guide further AI decisions.</li>
-                  <li>Other teams can propose well-scoped use cases.</li>
-                </ul>
-              </div>
-            </div>
+        <section id="sec-08" class="section">
+          <h2>Rollout Plan &mdash; 2 Months</h2>
+          <p class="section-subtitle">
+            Two clear steps over eight weeks. Each step depends on the previous one &mdash; we can
+            stop at any point if the results don&rsquo;t justify continuing.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>When</th>
+                <th>What happens</th>
+                <th>How we judge success</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. Pilot</strong><br /><em>(internal only)</em></td>
+                <td>Weeks 1&ndash;4</td>
+                <td>
+                  Enable the AI Assistant Chatbot inside Luma Storybook for the Luma team and
+                  1&ndash;2 invited product teams. They use it for real Luma questions instead of
+                  pinging Slack.
+                </td>
+                <td>
+                  &bull; Does it answer correctly?<br />
+                  &bull; Are people actually using it?<br />
+                  &bull; Does Slack traffic to the Luma team drop?
+                </td>
+              </tr>
+              <tr>
+                <td><strong>2. Open Rollout</strong><br /><em>(all Luma users)</em></td>
+                <td>Weeks 5&ndash;8</td>
+                <td>
+                  If the pilot works, open the chatbot to every Luma developer across the
+                  organization. No new infrastructure &mdash; same chatbot, broader audience.
+                </td>
+                <td>
+                  &bull; Hours saved per Luma maintainer<br />
+                  &bull; Satisfaction from consuming teams<br />
+                  &bull; Cost stays inside the $50 cap
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
-            <div class="keypoint">
-              <strong>Bottom line</strong>
-              Approve the Luma AI Assistant (Sections 01&ndash;09) and you&rsquo;ve approved the
-              first step of a small, measured, reversible Large Language Model access programme
-              &mdash; under $50/month to start.
-            </div>
-          </section>
-        </div>
-        <!-- /Pane 2 -->
+          <div class="card brand">
+            <div class="card-title">Success targets (by end of month 1)</div>
+            <ul>
+              <li>
+                At least <strong>70%</strong> of common Luma questions answered without a human
+              </li>
+              <li>Measurable drop in repeat Slack / Teams questions to the Luma team</li>
+              <li>Monthly API spend stays under the <strong>$50</strong> cap</li>
+            </ul>
+          </div>
 
-        <footer>
+          <div class="card">
+            <div class="card-title">In one line</div>
+            Month 1: prove it works with a small group inside Luma. Month 2: if it works, open it to
+            every Luma developer.
+          </div>
+        </section>
+
+        <section id="sec-09" class="section">
+          <h2>The Ask</h2>
+          <p class="section-subtitle">Three decisions we&rsquo;re asking management to approve.</p>
+          <ol>
+            <li>
+              Approve <strong>controlled outbound access</strong> to one low-cost Large Language
+              Model API (recommended: GPT-4o Mini, or approved equivalent) for the Luma Design
+              System.
+            </li>
+            <li>
+              Approve an <strong>ongoing $50/month budget cap</strong> on the API key.
+              <br />
+              <span class="footnote" style="margin: 0.3rem 0 0; display: block">
+                Expected actual spend: <strong>~$1&ndash;$30 per month</strong>. The cap is a safety
+                ceiling, not a flat bill &mdash; pay-as-you-go, with automatic shut-off if reached.
+              </span>
+            </li>
+            <li>
+              Assign a small reviewer group (one each from Security, Platform, and the Luma team) to
+              sign off on guardrails and oversee the pilot.
+            </li>
+          </ol>
+
+          <div class="card brand">
+            <div class="card-title">Bottom line</div>
+            For a downside capped at $50 per month, we eliminate a recurring drain on engineering
+            time, accelerate Luma adoption, and establish a safe, measured pattern for broader AI
+            adoption.
+          </div>
+        </section>
+
+        <footer class="doc-footer">
           Prepared for management review &middot; Luma Design System &middot; Arcadis Digital
           Intelligence
         </footer>
@@ -1672,51 +1401,36 @@
     </div>
 
     <script>
-      // Sidebar-driven single-section view.
-      // Clicking a left-hand item shows ONLY that section on the right and
-      // marks the item as active. Hash links (#sec-XX) also work — handy
-      // for sharing a direct link to a specific section.
-      (function () {
-        var items = document.querySelectorAll(".section-item");
-        var sections = document.querySelectorAll("[data-section]");
+      function showSection(ev, sectionId) {
+        if (ev && ev.preventDefault) ev.preventDefault();
 
-        function activate(target) {
-          if (!target) return;
-          var hasMatch = false;
-          sections.forEach(function (sec) {
-            var match = sec.getAttribute("data-section") === target;
-            sec.classList.toggle("active", match);
-            if (match) hasMatch = true;
-          });
-          if (!hasMatch) return;
-
-          items.forEach(function (btn) {
-            btn.classList.toggle("active", btn.dataset.section === target);
-          });
-
-          // Reset content-area scroll so the user always starts at the top
-          // of the selected section.
-          window.scrollTo({ top: 0, behavior: "auto" });
-
-          // Keep the URL hash in sync without adding history entries on
-          // every click (so the back button still works sensibly).
-          if (history.replaceState) {
-            history.replaceState(null, "", "#" + target);
-          }
-        }
-
-        items.forEach(function (btn) {
-          btn.addEventListener("click", function () {
-            activate(btn.dataset.section);
-          });
+        document.querySelectorAll(".section").forEach(function (section) {
+          section.classList.remove("active");
         });
+        var target = document.getElementById(sectionId);
+        if (target) target.classList.add("active");
 
-        // Honour any incoming #hash on page load (e.g. shared deep link).
-        var initial = (window.location.hash || "").replace(/^#/, "");
-        if (initial && document.querySelector('[data-section="' + initial + '"]')) {
-          activate(initial);
+        document.querySelectorAll(".nav-link").forEach(function (link) {
+          link.classList.remove("active");
+        });
+        var activeLink = document.querySelector('.nav-link[href="#' + sectionId + '"]');
+        if (activeLink) activeLink.classList.add("active");
+
+        if (history.replaceState) {
+          history.replaceState(null, "", "#" + sectionId);
+        } else {
+          window.location.hash = sectionId;
         }
-      })();
+
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }
+
+      window.addEventListener("DOMContentLoaded", function () {
+        var hash = (window.location.hash || "").slice(1);
+        if (hash && document.getElementById(hash)) {
+          showSection(null, hash);
+        }
+      });
     </script>
   </body>
 </html>
