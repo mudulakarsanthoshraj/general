@@ -985,6 +985,11 @@
         border-radius: 10px;
         margin-bottom: 1.1rem;
         overflow: hidden;
+        scroll-margin-top: 1.25rem;
+        transition: box-shadow 0.35s ease;
+      }
+      .approach.approach-highlight {
+        box-shadow: 0 0 0 2px var(--color-brand);
       }
       .approach.is-recommended {
         border-color: var(--color-brand);
@@ -1173,6 +1178,187 @@
       @media (max-width: 720px) {
         .approach-pc {
           grid-template-columns: 1fr;
+        }
+      }
+
+      /* Decision tree for the 7 approaches */
+      .dtree {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+        padding: 1.4rem 1.25rem 1.6rem;
+        margin: 0.5rem 0 1.75rem;
+      }
+      .dtree-root {
+        display: flex;
+        justify-content: center;
+      }
+      .dtree-root .node {
+        background: var(--text-primary);
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.9rem;
+        padding: 0.6rem 1.1rem;
+        border-radius: 8px;
+        text-align: center;
+        max-width: 460px;
+      }
+      .dtree-root .node small {
+        display: block;
+        font-weight: 400;
+        font-size: 0.75rem;
+        opacity: 0.8;
+        margin-top: 0.15rem;
+      }
+      /* vertical stem under the root */
+      .dtree-stem {
+        width: 2px;
+        height: 22px;
+        background: var(--border-strong, #cbd5e1);
+        margin: 0 auto;
+      }
+      .dtree-branches {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        position: relative;
+      }
+      /* horizontal connector above the three branches */
+      .dtree-branches::before {
+        content: "";
+        position: absolute;
+        top: -11px;
+        left: 16.66%;
+        right: 16.66%;
+        height: 2px;
+        background: var(--border-strong, #cbd5e1);
+      }
+      .dtree-branch {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+      /* short vertical drop into each family */
+      .dtree-branch::before {
+        content: "";
+        position: absolute;
+        top: -11px;
+        left: 50%;
+        width: 2px;
+        height: 11px;
+        background: var(--border-strong, #cbd5e1);
+      }
+      .dtree-family {
+        border-radius: 8px 8px 0 0;
+        padding: 0.6rem 0.75rem;
+        text-align: center;
+        font-weight: 700;
+        font-size: 0.82rem;
+        color: #fff;
+        line-height: 1.3;
+      }
+      .dtree-family small {
+        display: block;
+        font-weight: 400;
+        font-size: 0.72rem;
+        opacity: 0.9;
+        margin-top: 0.15rem;
+      }
+      .dtree-family.fam-vendor {
+        background: #b91c1c;
+      }
+      .dtree-family.fam-own {
+        background: var(--color-brand);
+      }
+      .dtree-family.fam-partial {
+        background: var(--text-muted);
+      }
+      .dtree-leaves {
+        background: #fff;
+        border: 1px solid var(--border-default);
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        padding: 0.6rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        flex: 1;
+      }
+      .dtree-leaf {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 0.5rem 0.55rem;
+        border: 1px solid var(--border-default);
+        border-left: 3px solid var(--text-muted);
+        border-radius: 6px;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition:
+          background-color 120ms,
+          border-color 120ms;
+      }
+      .dtree-leaf:hover {
+        background: var(--bg-elevated);
+      }
+      .dtree-leaf.lf-vendor {
+        border-left-color: #b91c1c;
+      }
+      .dtree-leaf.lf-own {
+        border-left-color: var(--color-brand);
+      }
+      .dtree-leaf.lf-rec {
+        border-left-color: var(--color-brand);
+        background: var(--color-brand-soft);
+      }
+      .dtree-leaf .lf-num {
+        flex: 0 0 20px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--text-muted);
+        color: #fff;
+        font-size: 0.7rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .dtree-leaf.lf-vendor .lf-num {
+        background: #b91c1c;
+      }
+      .dtree-leaf.lf-own .lf-num,
+      .dtree-leaf.lf-rec .lf-num {
+        background: var(--color-brand);
+      }
+      .dtree-leaf .lf-text strong {
+        display: block;
+        color: var(--text-primary);
+        font-weight: 700;
+        line-height: 1.25;
+      }
+      .dtree-leaf .lf-text span {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+      }
+      .dtree-leaf .lf-star {
+        margin-left: auto;
+        color: var(--color-brand);
+        font-weight: 700;
+        font-size: 0.7rem;
+      }
+      @media (max-width: 760px) {
+        .dtree-branches {
+          grid-template-columns: 1fr;
+          gap: 1.4rem;
+        }
+        .dtree-branches::before {
+          display: none;
+        }
+        .dtree-branch::before {
+          display: none;
         }
       }
 
@@ -3282,8 +3468,109 @@
             <span style="color: #b91c1c; font-weight: 700">red dashed = vendor owns</span>.
           </p>
 
+          <h3>The seven options at a glance</h3>
+          <p>
+            They group into <strong>three families</strong> by one question:
+            <em>who owns the components?</em> Jump to any option below.
+          </p>
+          <div class="dtree">
+            <div class="dtree-root">
+              <div class="node">
+                Build a design system on our brand
+                <small>tokens + design guidelines &mdash; the constant across all options</small>
+              </div>
+            </div>
+            <div class="dtree-stem"></div>
+            <div class="dtree-branches">
+              <!-- Family A: vendor components -->
+              <div class="dtree-branch">
+                <div class="dtree-family fam-vendor">
+                  Use someone else&rsquo;s components
+                  <small>Theme on a vendor &mdash; can skin, can&rsquo;t redesign</small>
+                </div>
+                <div class="dtree-leaves">
+                  <a
+                    class="dtree-leaf lf-vendor"
+                    href="#opt-1"
+                    onclick="scrollToCard(event, 'opt-1')"
+                  >
+                    <span class="lf-num">1</span>
+                    <span class="lf-text"
+                      ><strong>Theme on Kendo</strong><span>Luma today</span></span
+                    >
+                  </a>
+                  <a
+                    class="dtree-leaf lf-vendor"
+                    href="#opt-7"
+                    onclick="scrollToCard(event, 'opt-7')"
+                  >
+                    <span class="lf-num">7</span>
+                    <span class="lf-text"
+                      ><strong>Buy commercial suite</strong
+                      ><span>Syncfusion, AG Grid&hellip;</span></span
+                    >
+                  </a>
+                </div>
+              </div>
+              <!-- Family B: own components -->
+              <div class="dtree-branch">
+                <div class="dtree-family fam-own">
+                  Build components we own
+                  <small>Full control of markup, design &amp; behaviour</small>
+                </div>
+                <div class="dtree-leaves">
+                  <a class="dtree-leaf lf-own" href="#opt-2" onclick="scrollToCard(event, 'opt-2')">
+                    <span class="lf-num">2</span>
+                    <span class="lf-text"
+                      ><strong>Single framework</strong><span>NOVUS Design System</span></span
+                    >
+                  </a>
+                  <a class="dtree-leaf lf-own" href="#opt-3" onclick="scrollToCard(event, 'opt-3')">
+                    <span class="lf-num">3</span>
+                    <span class="lf-text"
+                      ><strong>Library per framework</strong><span>Parallel builds</span></span
+                    >
+                  </a>
+                  <a class="dtree-leaf lf-rec" href="#opt-4" onclick="scrollToCard(event, 'opt-4')">
+                    <span class="lf-num">4</span>
+                    <span class="lf-text"
+                      ><strong>Web components + wrappers</strong
+                      ><span>One codebase, all frameworks</span></span
+                    >
+                    <span class="lf-star">★ Recommended</span>
+                  </a>
+                </div>
+              </div>
+              <!-- Family C: partial -->
+              <div class="dtree-branch">
+                <div class="dtree-family fam-partial">
+                  Style or behaviour only
+                  <small>Partial &mdash; not a full component system alone</small>
+                </div>
+                <div class="dtree-leaves">
+                  <a class="dtree-leaf" href="#opt-5" onclick="scrollToCard(event, 'opt-5')">
+                    <span class="lf-num">5</span>
+                    <span class="lf-text"
+                      ><strong>Tokens + CSS only</strong
+                      ><span>Visual consistency, no JS</span></span
+                    >
+                  </a>
+                  <a class="dtree-leaf" href="#opt-6" onclick="scrollToCard(event, 'opt-6')">
+                    <span class="lf-num">6</span>
+                    <span class="lf-text"
+                      ><strong>Headless + styling</strong
+                      ><span>Behaviour given, you style</span></span
+                    >
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3>Each option in detail</h3>
+
           <!-- 1. Theme on a vendor library (current) -->
-          <div class="approach is-current">
+          <div class="approach is-current" id="opt-1">
             <div class="approach-head">
               <span class="anum">1</span>
               <span class="aname">Theme on a vendor component library</span>
@@ -3344,7 +3631,7 @@
           </div>
 
           <!-- 2. Single-framework component library -->
-          <div class="approach is-novus">
+          <div class="approach is-novus" id="opt-2">
             <div class="approach-head">
               <span class="anum">2</span>
               <span class="aname">Single-framework component library</span>
@@ -3410,7 +3697,7 @@
           </div>
 
           <!-- 3. Parallel native libraries per framework -->
-          <div class="approach">
+          <div class="approach" id="opt-3">
             <div class="approach-head">
               <span class="anum">3</span>
               <span class="aname">Separate native library per framework</span>
@@ -3458,7 +3745,7 @@
           </div>
 
           <!-- 4. Web components + wrappers (recommended) -->
-          <div class="approach is-recommended">
+          <div class="approach is-recommended" id="opt-4">
             <div class="approach-head">
               <span class="anum">4</span>
               <span class="aname">Web-component core + thin framework wrappers</span>
@@ -3510,7 +3797,7 @@
           </div>
 
           <!-- 5. CSS / tokens only -->
-          <div class="approach">
+          <div class="approach" id="opt-5">
             <div class="approach-head">
               <span class="anum">5</span>
               <span class="aname">Tokens + CSS / utility framework (style-only)</span>
@@ -3555,7 +3842,7 @@
           </div>
 
           <!-- 6. Headless + your styling -->
-          <div class="approach">
+          <div class="approach" id="opt-6">
             <div class="approach-head">
               <span class="anum">6</span>
               <span class="aname">Headless components + your own styling</span>
@@ -3619,7 +3906,7 @@
           </div>
 
           <!-- 7. Commercial cross-framework suite -->
-          <div class="approach">
+          <div class="approach" id="opt-7">
             <div class="approach-head">
               <span class="anum">7</span>
               <span class="aname">Buy a commercial component suite</span>
@@ -5198,6 +5485,17 @@ $(<span class="c-str">"&lt;luma-button variant='outline'&gt;Save&lt;/luma-button
         }
 
         window.scrollTo({ top: 0, behavior: "auto" });
+      }
+
+      function scrollToCard(ev, cardId) {
+        if (ev && ev.preventDefault) ev.preventDefault();
+        var el = document.getElementById(cardId);
+        if (!el) return;
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        el.classList.add("approach-highlight");
+        setTimeout(function () {
+          el.classList.remove("approach-highlight");
+        }, 2200);
       }
 
       window.addEventListener("DOMContentLoaded", function () {
