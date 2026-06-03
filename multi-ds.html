@@ -48,6 +48,7 @@
         --text-tertiary: #374151;
         --text-muted: #6b7280;
         --sidebar-width: 300px;
+        --main-h-pad: 64px;
         --spacing-6: 24px;
         --spacing-3: 12px;
       }
@@ -154,7 +155,7 @@
       .main {
         flex: 1;
         margin-left: var(--sidebar-width);
-        padding: 56px 64px 96px;
+        padding: 56px var(--main-h-pad) 96px;
         max-width: 960px;
       }
 
@@ -770,7 +771,7 @@
         color: var(--color-brand);
       }
 
-      /* Two architectures shown side by side — match the page content width */
+      /* Two architectures shown side by side */
       .diagram-compare {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -778,6 +779,17 @@
         align-items: stretch;
         margin: 1.25rem 0 1.5rem;
         width: 100%;
+      }
+      /* Full width of the main column (viewport minus sidebar) */
+      .diagram-compare.diagram-compare--full {
+        width: calc(100vw - var(--sidebar-width));
+        max-width: none;
+        margin-left: calc(-1 * var(--main-h-pad));
+        margin-right: calc(-1 * (100vw - var(--sidebar-width) - 100% - var(--main-h-pad)));
+        padding-left: var(--main-h-pad);
+        padding-right: var(--main-h-pad);
+        box-sizing: border-box;
+        gap: 1.5rem;
       }
       .diagram-compare .diagram {
         margin: 0;
@@ -1352,12 +1364,19 @@
 
       /* ─────────────────────── Responsive ─────────────────────── */
       @media (max-width: 900px) {
+        :root {
+          --main-h-pad: 24px;
+        }
         .sidebar {
           display: none;
         }
         .main {
           margin-left: 0;
-          padding: 32px 24px 64px;
+          padding: 32px var(--main-h-pad) 64px;
+        }
+        .diagram-compare.diagram-compare--full {
+          width: 100vw;
+          margin-right: calc(-1 * (100vw - 100% - var(--main-h-pad)));
         }
         .compare {
           grid-template-columns: 1fr;
@@ -1566,7 +1585,7 @@
             </div>
           </div>
           <div class="card warning">
-            <div class="card-title">A note on effort</div>
+            <div class="card-title">A note on investment</div>
             Web components are not magic &mdash; building ~48 production-grade components
             <strong>from scratch</strong> (our own API and implementation &mdash; not exact copies
             of Kendo or any vendor) with theming, accessibility, tests, and framework wrappers is a
@@ -1581,6 +1600,40 @@
             What this proposal requests now &mdash; and what it deliberately does
             <em>not</em> commit to.
           </p>
+
+          <div class="diagram">
+            <div class="diagram-head">
+              <span class="tag">This ask</span>
+              <span class="label">Phase 1 + 2 now &mdash; Phases 3&ndash;5 only after gates</span>
+            </div>
+            <div class="phase-track">
+              <div class="phase-step now">
+                <span class="phase-num">Phase 1</span>
+                <span class="phase-name">Tokens</span>
+                <span class="phase-out"><code>@arcadis/tokens</code></span>
+                <span class="phase-badge">Approve now</span>
+              </div>
+              <div class="phase-step now">
+                <span class="phase-num">Phase 2</span>
+                <span class="phase-name">Stencil vs Lit</span>
+                <span class="phase-out">Button spike + decision</span>
+                <span class="phase-badge">Approve now</span>
+              </div>
+              <div class="phase-step later gate">
+                <span class="phase-num">Phase 3</span>
+                <span class="phase-name">First components</span>
+                <span class="phase-out">Button, Input, Card</span>
+                <span class="phase-badge">Later</span>
+              </div>
+              <div class="phase-step later gate">
+                <span class="phase-num">Phase 4&ndash;5</span>
+                <span class="phase-name">Full rollout</span>
+                <span class="phase-out">~43 components + more frameworks</span>
+                <span class="phase-badge">Later</span>
+              </div>
+            </div>
+          </div>
+
           <div class="compare">
             <div class="col future">
               <h4>Approving now</h4>
@@ -1654,11 +1707,11 @@
             change flows through the system.
           </p>
 
-          <div class="diagram-compare">
+          <div class="diagram-compare diagram-compare--full">
             <div class="diagram problem">
               <div class="diagram-head">
                 <span class="tag">Today</span>
-                <span class="label">A Kendo design system, rebuilt once per framework</span>
+                <span class="label">Design system on a different base library per framework</span>
               </div>
               <div class="flow">
                 <div class="flow-source">
@@ -1771,6 +1824,48 @@
               >architecture briefing</a
             >; here is the executive view.
           </p>
+
+          <div class="diagram">
+            <div class="diagram-head">
+              <span class="tag">Architecture</span>
+              <span class="label">Four layers, one repository</span>
+            </div>
+            <div class="stack-layers">
+              <div class="stack-layer">
+                <div class="num">4</div>
+                <div class="title">
+                  Documentation
+                  <small>One Storybook for every framework</small>
+                </div>
+                <div class="tech">Storybook</div>
+              </div>
+              <div class="stack-layer">
+                <div class="num">3</div>
+                <div class="title">
+                  Framework wrappers
+                  <small>Thin adapters &mdash; no re-implementation</small>
+                </div>
+                <div class="tech">React / Angular / Vue / Blazor</div>
+              </div>
+              <div class="stack-layer">
+                <div class="num">2</div>
+                <div class="title">
+                  Web components
+                  <small>One <code>&lt;arcadis-button&gt;</code> tag everywhere</small>
+                </div>
+                <div class="tech">Lit or Stencil</div>
+              </div>
+              <div class="stack-layer">
+                <div class="num">1</div>
+                <div class="title">
+                  Design tokens
+                  <small>JSON in &rarr; CSS, SCSS, JS out</small>
+                </div>
+                <div class="tech">Style Dictionary</div>
+              </div>
+            </div>
+          </div>
+
           <table>
             <thead>
               <tr>
@@ -1810,7 +1905,11 @@
           <div class="card brand">
             <div class="card-title">Proof it is mainstream</div>
             Adobe Spectrum, IBM Carbon, Ionic, Shoelace, and Google Material Web all ship this way.
-            See the briefing for comparisons and code samples.
+            See
+            <a href="#overview" onclick="showSection(event, 'overview')"
+              >Overview &mdash; who already does this</a
+            >
+            and the architecture briefing for comparisons and code samples.
           </div>
         </section>
 
@@ -1819,6 +1918,36 @@
           <p class="section-subtitle">
             Four other paths. We recommend the phased web-component approach.
           </p>
+
+          <div class="diagram">
+            <div class="diagram-head">
+              <span class="tag">Options</span>
+              <span class="label">Four paths at a glance</span>
+            </div>
+            <div class="alt-grid">
+              <div class="alt-card">
+                <span class="alt-letter">A</span>
+                <span class="alt-title">Status quo</span>
+                <span class="alt-verdict">Low effort now; cost grows with each new framework</span>
+              </div>
+              <div class="alt-card">
+                <span class="alt-letter">B</span>
+                <span class="alt-title">Separate DS per framework</span>
+                <span class="alt-verdict">~3&times; build, audit, and drift risk</span>
+              </div>
+              <div class="alt-card">
+                <span class="alt-letter">C</span>
+                <span class="alt-title">Buy commercial DS</span>
+                <span class="alt-verdict">Licence cost; weak fit for Arcadis patterns</span>
+              </div>
+              <div class="alt-card recommended">
+                <span class="alt-letter">D</span>
+                <span class="alt-title">Tokens + web components</span>
+                <span class="alt-verdict">Recommended &mdash; one fix ships everywhere</span>
+              </div>
+            </div>
+          </div>
+
           <table>
             <thead>
               <tr>
@@ -1904,17 +2033,16 @@
             </tbody>
           </table>
           <p class="footnote italic">
-            Sizing informed by public design-system retrospectives (Adobe Spectrum, IBM Carbon,
-            Ionic). The Phase&nbsp;2 spike will calibrate these sizes against our specific component
-            shapes before any wider commitment.
+            Complexity bands informed by public design-system retrospectives (Adobe Spectrum, IBM
+            Carbon, Ionic). The Phase&nbsp;2 spike will calibrate scope against our specific
+            component shapes before any wider commitment.
           </p>
 
           <h3>Scenarios for the full migration</h3>
           <p>
             For the ~48 components in the
             <a href="#sec-inventory" onclick="showSection(event, 'sec-inventory')">catalogue</a>,
-            the relative effort depends on team size and whether we include the five heaviest
-            components in v1:
+            timeline and team shape depend on whether we include the five heaviest components in v1:
           </p>
           <table>
             <thead>
@@ -2508,6 +2636,26 @@
             Explicit gates. We continue only when criteria are met &mdash; otherwise we stop with
             limited sunk cost.
           </p>
+
+          <div class="diagram">
+            <div class="diagram-head">
+              <span class="tag">Gates</span>
+              <span class="label">Continue only when each phase passes</span>
+            </div>
+            <div class="gate-flow">
+              <div class="gate-node pass">Phase 1<br /><small>Tokens live</small></div>
+              <span class="gate-arrow">&rarr;</span>
+              <div class="gate-node pass">Phase 2<br /><small>Tool chosen</small></div>
+              <span class="gate-arrow">&rarr;</span>
+              <div class="gate-node pass">Phase 3<br /><small>3 components + feedback</small></div>
+              <span class="gate-arrow">&rarr;</span>
+              <div class="gate-node pass">Phase 4&ndash;5<br /><small>Full rollout</small></div>
+            </div>
+            <p class="flow-caption" style="margin-top: 0.85rem; text-align: center">
+              If any gate fails, stop &mdash; Phase 1 tokens still stand alone.
+            </p>
+          </div>
+
           <h3>Phase 1 gate</h3>
           <div class="stats">
             <div class="stat accent">
@@ -2625,6 +2773,46 @@
           <p class="section-subtitle">
             Five phases. Only the first two are in scope for this approval.
           </p>
+
+          <div class="diagram">
+            <div class="diagram-head">
+              <span class="tag">Rollout</span>
+              <span class="label">Five phases with decision gates</span>
+            </div>
+            <div class="phase-track">
+              <div class="phase-step now">
+                <span class="phase-num">Phase 1</span>
+                <span class="phase-name">Tokens</span>
+                <span class="phase-out"><code>@arcadis/tokens</code> published</span>
+                <span class="phase-badge">This proposal</span>
+              </div>
+              <div class="phase-step now">
+                <span class="phase-num">Phase 2</span>
+                <span class="phase-name">Stencil vs Lit</span>
+                <span class="phase-out">Tool decision on Button</span>
+                <span class="phase-badge">This proposal</span>
+              </div>
+              <div class="phase-step later gate">
+                <span class="phase-num">Phase 3</span>
+                <span class="phase-name">First 3 components</span>
+                <span class="phase-out">Button, Input, Card in React + Angular</span>
+                <span class="phase-badge">After gate</span>
+              </div>
+              <div class="phase-step later gate">
+                <span class="phase-num">Phase 4</span>
+                <span class="phase-name">More frameworks</span>
+                <span class="phase-out">Vue, Blazor, jQuery CDN</span>
+                <span class="phase-badge">After gate</span>
+              </div>
+              <div class="phase-step later gate">
+                <span class="phase-num">Phase 5</span>
+                <span class="phase-name">Migrate rest</span>
+                <span class="phase-out">~43 components; Grid/Gantt/Tree later</span>
+                <span class="phase-badge">After gate</span>
+              </div>
+            </div>
+          </div>
+
           <table>
             <thead>
               <tr>
@@ -3007,6 +3195,38 @@
 
           <h3>How a change flows up the stack</h3>
           <p>Imagine the brand colour changes from <code>#d85614</code> to <code>#e85a16</code>:</p>
+
+          <div class="diagram">
+            <div class="diagram-head">
+              <span class="tag">Change flow</span>
+              <span class="label">One token edit &rarr; every surface updates</span>
+            </div>
+            <div class="stack-layers">
+              <div class="stack-layer">
+                <div class="num">4</div>
+                <div class="title">Storybook<small>Reflects new colour automatically</small></div>
+              </div>
+              <div class="stack-layer">
+                <div class="num">3</div>
+                <div class="title">
+                  Wrappers<small>No code change &mdash; forward to components</small>
+                </div>
+              </div>
+              <div class="stack-layer">
+                <div class="num">2</div>
+                <div class="title">
+                  Web components<small>Read <code>var(--color-brand-primary)</code></small>
+                </div>
+              </div>
+              <div class="stack-layer">
+                <div class="num">1</div>
+                <div class="title">
+                  Tokens<small>Edit <code>brand.primary</code> in JSON; rebuild outputs</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <ol>
             <li>
               <strong>Layer 1</strong>: update <code>brand.primary</code> in
@@ -3072,6 +3292,28 @@
             (open source, Amazon) reads the JSON and emits exactly the formats each platform needs:
           </p>
 
+          <div class="diagram">
+            <div class="diagram-head">
+              <span class="tag">Tokens</span>
+              <span class="label">One JSON source &rarr; many platform outputs</span>
+            </div>
+            <div class="fanout">
+              <div class="fanout-source">
+                tokens.json
+                <small>W3C Design Tokens format</small>
+              </div>
+              <div class="fanout-arrow">&rarr;</div>
+              <div class="fanout-outputs">
+                <div class="fanout-out">CSS variables</div>
+                <div class="fanout-out">SCSS variables</div>
+                <div class="fanout-out">JS / TS</div>
+                <div class="fanout-out">iOS Swift</div>
+                <div class="fanout-out">Android XML</div>
+                <div class="fanout-out">JSON for Figma</div>
+              </div>
+            </div>
+          </div>
+
           <table>
             <thead>
               <tr>
@@ -3131,6 +3373,26 @@
             The single component implementation that every framework consumes. Native to the
             browser; no virtual DOM, no framework lock-in.
           </p>
+
+          <div class="diagram">
+            <div class="diagram-head">
+              <span class="tag">Components</span>
+              <span class="label">One implementation, every consumer</span>
+            </div>
+            <div class="hub-diagram">
+              <div class="hub-core">
+                <code>&lt;arcadis-button&gt;</code>
+                <small>Written once in Lit or Stencil</small>
+              </div>
+              <div class="hub-spokes">
+                <span class="hub-spoke">React</span>
+                <span class="hub-spoke">Angular</span>
+                <span class="hub-spoke">Vue</span>
+                <span class="hub-spoke">Blazor</span>
+                <span class="hub-spoke">jQuery / HTML</span>
+              </div>
+            </div>
+          </div>
 
           <h3>What is a Web Component?</h3>
           <p>
@@ -3575,6 +3837,33 @@ $(<span class="c-str">"&lt;arcadis-button variant='outline'&gt;Save&lt;/arcadis-
 └── package.json               <span class="c-cmt"># workspaces config</span></code></pre>
           </div>
 
+          <div class="diagram">
+            <div class="diagram-head">
+              <span class="tag">Packages</span>
+              <span class="label">What lives in the monorepo vs what ships to registries</span>
+            </div>
+            <div class="repo-viz">
+              <div class="repo-col">
+                <h4>In the repo</h4>
+                <div class="repo-item"><strong>packages/tokens</strong> &mdash; Layer 1</div>
+                <div class="repo-item"><strong>packages/components</strong> &mdash; Layer 2</div>
+                <div class="repo-item">
+                  <strong>packages/react|angular|vue|blazor</strong> &mdash; Layer 3
+                </div>
+                <div class="repo-item"><strong>apps/storybook</strong> &mdash; Layer 4</div>
+                <div class="repo-item"><strong>examples/*</strong> &mdash; reference apps</div>
+              </div>
+              <div class="repo-col">
+                <h4>Published</h4>
+                <div class="repo-item"><strong>@arcadis/tokens</strong> &mdash; npm</div>
+                <div class="repo-item"><strong>@arcadis/components</strong> &mdash; npm / CDN</div>
+                <div class="repo-item"><strong>@arcadis/react</strong> &mdash; npm</div>
+                <div class="repo-item"><strong>@arcadis/angular</strong> &mdash; npm</div>
+                <div class="repo-item"><strong>Blazor NuGet</strong> &mdash; Phase 4</div>
+              </div>
+            </div>
+          </div>
+
           <h3>What gets published where</h3>
           <table>
             <thead>
@@ -3636,67 +3925,117 @@ $(<span class="c-str">"&lt;arcadis-button variant='outline'&gt;Save&lt;/arcadis-
         <section id="real-world" class="section">
           <h2>Real-world examples</h2>
           <p class="section-subtitle">
-            This isn&rsquo;t a theoretical pattern. Every name in the table below ships
-            production-grade UI to multiple frameworks from one codebase.
+            This isn&rsquo;t a theoretical pattern. Every name below ships production-grade UI to
+            multiple frameworks from one codebase. The same card layout appears in
+            <a href="#overview" onclick="showSection(event, 'overview')">Overview</a>.
           </p>
 
-          <table>
-            <thead>
-              <tr>
-                <th>Design system</th>
-                <th>Owner</th>
-                <th>Tech</th>
-                <th>Frameworks supported</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Spectrum Web Components</strong></td>
-                <td>Adobe</td>
-                <td>Lit</td>
-                <td>React, plain HTML, framework-agnostic</td>
-              </tr>
-              <tr>
-                <td><strong>Fluent UI Web Components</strong></td>
-                <td>Microsoft</td>
-                <td>FAST</td>
-                <td>
-                  React, Angular, Vue, Blazor, plain. Fluent UI <strong>v9</strong> (main product)
-                  is React-only; FAST-based WCs are a separate track.
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Carbon Design System</strong></td>
-                <td>IBM</td>
-                <td>Multiple (Lit + bespoke)</td>
-                <td>React, Angular, Vue, Web Components</td>
-              </tr>
-              <tr>
-                <td><strong>Shoelace / Web Awesome</strong></td>
-                <td>Independent</td>
-                <td>Lit</td>
-                <td>Every framework</td>
-              </tr>
-              <tr>
-                <td><strong>Ionic Framework</strong></td>
-                <td>Ionic</td>
-                <td>Stencil</td>
-                <td>React, Angular, Vue, vanilla</td>
-              </tr>
-              <tr>
-                <td><strong>Material Web</strong></td>
-                <td>Google</td>
-                <td>Lit</td>
-                <td>Every framework</td>
-              </tr>
-              <tr>
-                <td><strong>Lightning Web Components</strong></td>
-                <td>Salesforce</td>
-                <td>Bespoke compiler</td>
-                <td>Salesforce platform + LWC OSS</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="proof-pattern">
+            <span class="pp-core">Web components (one codebase)</span>
+            <span class="pp-arrow">&rarr;</span>
+            <span class="pp-fw">React</span>
+            <span class="pp-fw">Angular</span>
+            <span class="pp-fw">Vue</span>
+            <span class="pp-fw">Plain HTML</span>
+            <span class="pp-fw">+ more</span>
+          </div>
+
+          <div class="diagram">
+            <div class="diagram-head">
+              <span class="tag">Industry</span>
+              <span class="label">Production design systems on this architecture</span>
+            </div>
+            <div class="proof-grid">
+              <div class="proof-card">
+                <span class="proof-owner">Adobe</span>
+                <span class="proof-name">Spectrum Web Components</span>
+                <div class="proof-row">
+                  <span class="proof-label">Built with</span>
+                  <span class="proof-tech">Lit</span>
+                </div>
+                <div class="proof-row">
+                  <span class="proof-label">Works in</span>
+                  <span class="proof-frameworks">React, plain HTML, framework-agnostic</span>
+                </div>
+              </div>
+              <div class="proof-card">
+                <span class="proof-owner">Microsoft</span>
+                <span class="proof-name">Fluent UI Web Components</span>
+                <div class="proof-row">
+                  <span class="proof-label">Built with</span>
+                  <span class="proof-tech">FAST</span>
+                </div>
+                <div class="proof-row">
+                  <span class="proof-label">Works in</span>
+                  <span class="proof-frameworks">React, Angular, Vue, Blazor, plain HTML</span>
+                </div>
+                <p class="proof-note">
+                  Fluent UI v9 (main product) is React-only; FAST web components are a separate
+                  track.
+                </p>
+              </div>
+              <div class="proof-card">
+                <span class="proof-owner">IBM</span>
+                <span class="proof-name">Carbon Design System</span>
+                <div class="proof-row">
+                  <span class="proof-label">Built with</span>
+                  <span class="proof-tech">Lit + bespoke</span>
+                </div>
+                <div class="proof-row">
+                  <span class="proof-label">Works in</span>
+                  <span class="proof-frameworks">React, Angular, Vue, Web Components</span>
+                </div>
+              </div>
+              <div class="proof-card">
+                <span class="proof-owner">Google</span>
+                <span class="proof-name">Material Web</span>
+                <div class="proof-row">
+                  <span class="proof-label">Built with</span>
+                  <span class="proof-tech">Lit</span>
+                </div>
+                <div class="proof-row">
+                  <span class="proof-label">Works in</span>
+                  <span class="proof-frameworks">Every major framework</span>
+                </div>
+              </div>
+              <div class="proof-card">
+                <span class="proof-owner">Ionic</span>
+                <span class="proof-name">Ionic Framework</span>
+                <div class="proof-row">
+                  <span class="proof-label">Built with</span>
+                  <span class="proof-tech">Stencil</span>
+                </div>
+                <div class="proof-row">
+                  <span class="proof-label">Works in</span>
+                  <span class="proof-frameworks">React, Angular, Vue, vanilla JS</span>
+                </div>
+              </div>
+              <div class="proof-card">
+                <span class="proof-owner">Independent</span>
+                <span class="proof-name">Shoelace / Web Awesome</span>
+                <div class="proof-row">
+                  <span class="proof-label">Built with</span>
+                  <span class="proof-tech">Lit</span>
+                </div>
+                <div class="proof-row">
+                  <span class="proof-label">Works in</span>
+                  <span class="proof-frameworks">Every major framework</span>
+                </div>
+              </div>
+              <div class="proof-card">
+                <span class="proof-owner">Salesforce</span>
+                <span class="proof-name">Lightning Web Components</span>
+                <div class="proof-row">
+                  <span class="proof-label">Built with</span>
+                  <span class="proof-tech">LWC compiler</span>
+                </div>
+                <div class="proof-row">
+                  <span class="proof-label">Works in</span>
+                  <span class="proof-frameworks">Salesforce platform + LWC open source</span>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <p>
             The common thread: <strong>none</strong> of them maintain parallel React, Angular, and
@@ -3830,6 +4169,41 @@ $(<span class="c-str">"&lt;arcadis-button variant='outline'&gt;Save&lt;/arcadis-
           </p>
 
           <h3>The five phases</h3>
+
+          <div class="diagram">
+            <div class="diagram-head">
+              <span class="tag">Rollout</span>
+              <span class="label">Incremental path &mdash; each phase earns the next</span>
+            </div>
+            <div class="phase-track">
+              <div class="phase-step now">
+                <span class="phase-num">1</span>
+                <span class="phase-name">Tokens</span>
+                <span class="phase-out"><code>@arcadis/tokens</code></span>
+              </div>
+              <div class="phase-step now">
+                <span class="phase-num">2</span>
+                <span class="phase-name">Pick tool</span>
+                <span class="phase-out">Stencil vs Lit on Button</span>
+              </div>
+              <div class="phase-step later">
+                <span class="phase-num">3</span>
+                <span class="phase-name">First 3</span>
+                <span class="phase-out">Button, Input, Card</span>
+              </div>
+              <div class="phase-step later">
+                <span class="phase-num">4</span>
+                <span class="phase-name">More stacks</span>
+                <span class="phase-out">Vue, Blazor, jQuery CDN</span>
+              </div>
+              <div class="phase-step later">
+                <span class="phase-num">5</span>
+                <span class="phase-name">Migrate rest</span>
+                <span class="phase-out">~43 components; Grid/Gantt/Tree later</span>
+              </div>
+            </div>
+          </div>
+
           <table>
             <thead>
               <tr>
