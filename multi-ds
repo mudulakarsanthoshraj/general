@@ -1,0 +1,3158 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Multi-Framework Design System &mdash; Architecture Guide</title>
+    <meta
+      name="description"
+      content="How to build one design system that works natively across React, Angular, Vue, jQuery, .NET, and plain HTML — single codebase, framework-agnostic."
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Multi-Framework Design System &mdash; Architecture Guide" />
+    <meta
+      property="og:description"
+      content="Single codebase, every framework. The architecture used by Adobe Spectrum, Microsoft Fluent, IBM Carbon, Shoelace, and Ionic."
+    />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Multi-Framework Design System &mdash; Architecture Guide" />
+    <meta
+      name="twitter:description"
+      content="Single codebase, every framework. The architecture used by Adobe Spectrum, Microsoft Fluent, IBM Carbon, Shoelace, and Ionic."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --color-brand: #d85614;
+        --color-brand-soft: rgba(216, 86, 20, 0.06);
+        --color-brand-line: rgba(216, 86, 20, 0.12);
+        --color-brand-tint: rgba(216, 86, 20, 0.15);
+        --bg-canvas: #ffffff;
+        --bg-surface: #f9fafb;
+        --bg-elevated: #f3f4f6;
+        --border-default: #e5e7eb;
+        --text-primary: #111827;
+        --text-secondary: #1f2937;
+        --text-tertiary: #374151;
+        --text-muted: #6b7280;
+        --sidebar-width: 300px;
+        --spacing-6: 24px;
+        --spacing-3: 12px;
+      }
+
+      body {
+        font-family:
+          "Noto Sans",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        background-color: var(--bg-canvas);
+        color: var(--text-primary);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .layout {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* ─────────────────────── Sidebar ─────────────────────── */
+      .sidebar {
+        width: var(--sidebar-width);
+        background-color: var(--bg-surface);
+        border-right: 1px solid var(--border-default);
+        position: fixed;
+        height: 100vh;
+        overflow-y: auto;
+        padding: var(--spacing-6) var(--spacing-3);
+      }
+
+      .sidebar-header {
+        padding: 0 1rem 0.85rem;
+        border-bottom: 1px solid var(--border-default);
+        margin-bottom: 0.5rem;
+      }
+
+      .sidebar-header h1 {
+        font-size: 1rem;
+        font-weight: 800;
+        color: var(--color-brand);
+        margin-bottom: 0.15rem;
+        line-height: 1.3;
+      }
+
+      .sidebar-header p {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+      }
+
+      .nav-section {
+        padding: 0.25rem 0.75rem;
+      }
+
+      .nav-section-title {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--color-brand);
+        text-transform: uppercase;
+        padding: 0.85rem 0.5rem 0.35rem;
+        margin-bottom: 0.15rem;
+        border-top: 1px solid var(--border-default);
+        margin-top: 0.25rem;
+      }
+
+      .nav-section:first-of-type .nav-section-title {
+        border-top: none;
+        margin-top: 0;
+        padding-top: 0.65rem;
+      }
+
+      .nav-link {
+        display: block;
+        padding: 0.55rem 0.75rem;
+        color: var(--text-tertiary);
+        text-decoration: none;
+        font-size: 0.85rem;
+        line-height: 1.35;
+        border-left: 2px solid transparent;
+        margin-left: -2px;
+        border-radius: 0 4px 4px 0;
+        transition:
+          color 120ms,
+          background-color 120ms,
+          border-color 120ms;
+      }
+
+      .nav-link:hover {
+        color: var(--color-brand);
+        background-color: var(--color-brand-soft);
+      }
+
+      .nav-link.active {
+        color: var(--color-brand);
+        background-color: var(--color-brand-soft);
+        border-left-color: var(--color-brand);
+        font-weight: 600;
+      }
+
+      /* ─────────────────────── Main content ─────────────────────── */
+      .main {
+        flex: 1;
+        margin-left: var(--sidebar-width);
+        padding: 56px 64px 96px;
+        max-width: 960px;
+      }
+
+      .section {
+        display: none;
+      }
+      .section.active {
+        display: block;
+      }
+
+      h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.6rem;
+        line-height: 1.2;
+      }
+
+      .section-subtitle {
+        font-size: 1.05rem;
+        color: var(--text-muted);
+        margin-bottom: 1.75rem;
+        line-height: 1.55;
+        max-width: 72ch;
+      }
+
+      h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 1.6rem 0 0.6rem;
+      }
+
+      h4 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 1rem 0 0.4rem;
+      }
+
+      p {
+        margin-bottom: 0.85rem;
+        color: var(--text-tertiary);
+      }
+
+      ul,
+      ol {
+        margin: 0 0 1rem 1.25rem;
+        color: var(--text-tertiary);
+      }
+
+      ul li,
+      ol li {
+        margin-bottom: 0.4rem;
+      }
+
+      strong {
+        color: var(--text-primary);
+      }
+
+      a {
+        color: var(--color-brand);
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      code,
+      kbd {
+        font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.86em;
+        background: var(--bg-elevated);
+        color: var(--text-primary);
+        padding: 0.1em 0.4em;
+        border-radius: 3px;
+        border: 1px solid var(--border-default);
+      }
+
+      kbd {
+        font-size: 0.78em;
+        padding: 0.1em 0.45em;
+        background: #fff;
+        box-shadow: 0 1px 0 var(--border-default);
+      }
+
+      /* ─────────────────────── Code blocks ─────────────────────── */
+      .code-card {
+        background: #0f172a;
+        color: #e2e8f0;
+        border-radius: 8px;
+        padding: 0;
+        margin: 0.5rem 0 1.25rem;
+        overflow: hidden;
+        border: 1px solid #1e293b;
+        font-family: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+        font-size: 0.84rem;
+        line-height: 1.55;
+      }
+
+      .code-card-header {
+        background: #1e293b;
+        color: #94a3b8;
+        padding: 0.45rem 0.9rem;
+        font-size: 0.74rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        border-bottom: 1px solid #0f172a;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .code-card-header .badge {
+        background: var(--color-brand);
+        color: #fff;
+        padding: 0.1em 0.55em;
+        border-radius: 999px;
+        font-size: 0.66rem;
+        letter-spacing: 0;
+        text-transform: none;
+      }
+
+      .code-card pre {
+        padding: 0.95rem 1rem;
+        overflow-x: auto;
+        white-space: pre;
+      }
+
+      .code-card code {
+        background: transparent;
+        border: none;
+        padding: 0;
+        color: inherit;
+        font-size: inherit;
+      }
+
+      .code-card .c-cmd {
+        color: #38bdf8;
+      }
+      .code-card .c-flag {
+        color: #fbbf24;
+      }
+      .code-card .c-str {
+        color: #86efac;
+      }
+      .code-card .c-cmt {
+        color: #64748b;
+        font-style: italic;
+      }
+      .code-card .c-var {
+        color: #f472b6;
+      }
+      .code-card .c-tag {
+        color: #f472b6;
+      }
+      .code-card .c-attr {
+        color: #fbbf24;
+      }
+      .code-card .c-kw {
+        color: #c084fc;
+      }
+
+      /* ─────────────────────── Cards ─────────────────────── */
+      .card {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-default);
+        border-left: 3px solid var(--text-muted);
+        padding: 1rem 1.15rem;
+        margin: 1rem 0 1.25rem;
+        border-radius: 0 6px 6px 0;
+        color: var(--text-tertiary);
+      }
+
+      .card .card-title {
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.3rem;
+      }
+
+      .card.brand {
+        background: var(--color-brand-soft);
+        border-color: var(--color-brand-line);
+        border-left-color: var(--color-brand);
+      }
+      .card.brand .card-title {
+        color: var(--color-brand);
+      }
+
+      .card.warning {
+        background: #fff7ed;
+        border-color: #fed7aa;
+        border-left-color: #ea580c;
+      }
+      .card.warning .card-title {
+        color: #9a3412;
+      }
+
+      .card.success {
+        background: #f0fdf4;
+        border-color: #bbf7d0;
+        border-left-color: #16a34a;
+      }
+      .card.success .card-title {
+        color: #14532d;
+      }
+
+      /* ─────────────────────── Stats ─────────────────────── */
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 0.75rem;
+        margin: 0.5rem 0 1.5rem;
+      }
+
+      .stat {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-default);
+        border-radius: 8px;
+        padding: 0.85rem 1rem;
+      }
+
+      .stat .label {
+        font-size: 0.74rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        margin-bottom: 0.2rem;
+      }
+
+      .stat .value {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+
+      .stat.accent {
+        background: var(--color-brand-soft);
+        border-color: var(--color-brand-line);
+      }
+      .stat.accent .value {
+        color: var(--color-brand);
+      }
+
+      /* ─────────────────────── Pills ─────────────────────── */
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: var(--color-brand-soft);
+        color: var(--color-brand);
+        padding: 0.35rem 0.85rem;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 0.85rem;
+      }
+
+      .pill .num {
+        background: var(--color-brand);
+        color: #fff;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.72rem;
+      }
+
+      /* ─────────────────────── Tables ─────────────────────── */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0.5rem 0 1.5rem;
+        font-size: 0.9rem;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 0.65rem 0.85rem;
+        border-bottom: 1px solid var(--border-default);
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--bg-surface);
+        font-weight: 700;
+        color: var(--text-secondary);
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      td code {
+        white-space: nowrap;
+      }
+
+      .recommended td {
+        background: var(--color-brand-soft);
+      }
+      .recommended td:first-child {
+        border-left: 3px solid var(--color-brand);
+      }
+
+      /* ─────────────────────── Compare blocks ─────────────────────── */
+      .compare {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 0.5rem 0 1.5rem;
+      }
+
+      .compare .col {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-default);
+        border-radius: 8px;
+        padding: 1rem 1.15rem;
+      }
+
+      .compare .col.today {
+        border-top: 3px solid #9ca3af;
+      }
+      .compare .col.future {
+        border-top: 3px solid var(--color-brand);
+      }
+
+      .compare h4 {
+        margin: 0 0 0.65rem;
+        font-size: 0.95rem;
+      }
+
+      .compare .col.today h4 {
+        color: var(--text-secondary);
+      }
+      .compare .col.future h4 {
+        color: var(--color-brand);
+      }
+
+      .compare ul {
+        margin: 0 0 0 1rem;
+        font-size: 0.88rem;
+      }
+
+      .compare ul li {
+        margin-bottom: 0.3rem;
+      }
+
+      /* ─────────────────────── Layer diagram ─────────────────────── */
+      .layer-stack {
+        margin: 0.5rem 0 1.75rem;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+        padding: 1.25rem;
+      }
+
+      .layer {
+        background: #fff;
+        border: 1px solid var(--border-default);
+        border-radius: 8px;
+        padding: 0.8rem 1rem;
+        margin-bottom: 0.55rem;
+        display: grid;
+        grid-template-columns: 36px 1fr auto;
+        gap: 0.85rem;
+        align-items: center;
+      }
+
+      .layer:last-child {
+        margin-bottom: 0;
+      }
+
+      .layer .num {
+        background: var(--color-brand-soft);
+        color: var(--color-brand);
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+      }
+
+      .layer .name {
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+
+      .layer .name small {
+        display: block;
+        font-weight: 400;
+        color: var(--text-muted);
+        font-size: 0.82rem;
+        margin-top: 0.1rem;
+      }
+
+      .layer .tech {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        background: var(--bg-elevated);
+        padding: 0.2rem 0.55rem;
+        border-radius: 999px;
+      }
+
+      /* ─────────────────────── Framework chips ─────────────────────── */
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin: 0.4rem 0 1rem;
+      }
+
+      .chip {
+        background: var(--bg-elevated);
+        color: var(--text-tertiary);
+        padding: 0.25rem 0.65rem;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 500;
+        border: 1px solid var(--border-default);
+      }
+
+      .chip.brand {
+        background: var(--color-brand-soft);
+        color: var(--color-brand);
+        border-color: var(--color-brand-line);
+        font-weight: 600;
+      }
+
+      /* ─────────────────────── Footnote ─────────────────────── */
+      .footnote {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        margin: 0.5rem 0 1rem;
+      }
+
+      .footnote.italic {
+        font-style: italic;
+      }
+
+      /* ─────────────────────── Proposal-only styles (merged) ─────────────────────── */
+      .recommended td,
+      .alt-recommended td {
+        background: var(--color-brand-soft);
+      }
+      .recommended td:first-child,
+      .alt-recommended td:first-child {
+        border-left: 3px solid var(--color-brand);
+      }
+      th.num,
+      td.num {
+        text-align: right;
+        white-space: nowrap;
+      }
+
+      /* ─────────────────────── Footer ─────────────────────── */
+      .doc-footer {
+        margin-top: 4rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border-default);
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        text-align: center;
+      }
+
+      /* ─────────────────────── Responsive ─────────────────────── */
+      @media (max-width: 900px) {
+        .sidebar {
+          display: none;
+        }
+        .main {
+          margin-left: 0;
+          padding: 32px 24px 64px;
+        }
+        .compare {
+          grid-template-columns: 1fr;
+        }
+        .layer {
+          grid-template-columns: 32px 1fr;
+        }
+        .layer .tech {
+          grid-column: 2;
+        }
+      }
+
+      /* ─────────────────────── Print ─────────────────────── */
+      @media print {
+        .sidebar {
+          display: none;
+        }
+        .main {
+          margin-left: 0;
+          padding: 0;
+        }
+        body {
+          background: #fff;
+        }
+        .section {
+          display: block !important;
+          page-break-before: always;
+        }
+        .section:first-of-type {
+          page-break-before: avoid;
+        }
+        .code-card {
+          background: #f3f4f6;
+          color: #111827;
+          border-color: #d1d5db;
+        }
+        .code-card-header {
+          background: #e5e7eb;
+          color: #374151;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <!-- ─────────────────────── Sidebar ─────────────────────── -->
+      <nav class="sidebar" aria-label="Guide navigation">
+        <div class="sidebar-header">
+          <h1>Multi-Framework Design System</h1>
+          <p>One codebase &middot; Every framework</p>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Proposal</div>
+          <a href="#tldr" class="nav-link active" onclick="showSection(event, 'tldr')"
+            >At a glance</a
+          >
+          <a href="#sec-ask-scope" class="nav-link" onclick="showSection(event, 'sec-ask-scope')"
+            >Scope of this Ask</a
+          >
+          <a href="#sec-01" class="nav-link" onclick="showSection(event, 'sec-01')"
+            >Why We Need This</a
+          >
+          <a href="#sec-02" class="nav-link" onclick="showSection(event, 'sec-02')"
+            >Proposed Approach</a
+          >
+          <a href="#sec-03" class="nav-link" onclick="showSection(event, 'sec-03')"
+            >Alternatives Considered</a
+          >
+          <a href="#sec-cost" class="nav-link" onclick="showSection(event, 'sec-cost')"
+            >Cost &amp; Effort</a
+          >
+          <a href="#sec-inventory" class="nav-link" onclick="showSection(event, 'sec-inventory')"
+            >Component Inventory</a
+          >
+          <a href="#sec-inaction" class="nav-link" onclick="showSection(event, 'sec-inaction')"
+            >Cost of Inaction</a
+          >
+          <a href="#sec-measure" class="nav-link" onclick="showSection(event, 'sec-measure')"
+            >How We&rsquo;ll Measure Success</a
+          >
+          <a href="#sec-risks" class="nav-link" onclick="showSection(event, 'sec-risks')"
+            >Risks &amp; Mitigations</a
+          >
+          <a href="#sec-08" class="nav-link" onclick="showSection(event, 'sec-08')">Rollout Plan</a>
+          <a href="#sec-09" class="nav-link" onclick="showSection(event, 'sec-09')">The Ask</a>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Architecture &middot; Concept</div>
+          <a href="#overview" class="nav-link" onclick="showSection(event, 'overview')"
+            >At a glance</a
+          >
+          <a href="#why" class="nav-link" onclick="showSection(event, 'why')">Why one codebase?</a>
+          <a href="#architecture" class="nav-link" onclick="showSection(event, 'architecture')"
+            >The 4-layer architecture</a
+          >
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Architecture &middot; The Stack</div>
+          <a href="#layer-1" class="nav-link" onclick="showSection(event, 'layer-1')"
+            >Layer 1 &middot; Design Tokens</a
+          >
+          <a href="#layer-2" class="nav-link" onclick="showSection(event, 'layer-2')"
+            >Layer 2 &middot; Web Components</a
+          >
+          <a href="#layer-3" class="nav-link" onclick="showSection(event, 'layer-3')"
+            >Layer 3 &middot; Framework Wrappers</a
+          >
+          <a href="#layer-4" class="nav-link" onclick="showSection(event, 'layer-4')"
+            >Layer 4 &middot; Documentation</a
+          >
+          <a href="#tooling" class="nav-link" onclick="showSection(event, 'tooling')"
+            >Stencil vs Lit</a
+          >
+          <a href="#repo" class="nav-link" onclick="showSection(event, 'repo')"
+            >Recommended repo structure</a
+          >
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Architecture &middot; Reference</div>
+          <a href="#real-world" class="nav-link" onclick="showSection(event, 'real-world')"
+            >Real-world examples</a
+          >
+          <a href="#tradeoffs" class="nav-link" onclick="showSection(event, 'tradeoffs')"
+            >Trade-offs &amp; gotchas</a
+          >
+          <a href="#for-arcadis" class="nav-link" onclick="showSection(event, 'for-arcadis')"
+            >Phased rollout for the design system</a
+          >
+        </div>
+      </nav>
+
+      <!-- ─────────────────────── Main ─────────────────────── -->
+      <main class="main">
+        <!-- ═════════════════════════════════════════════════════════════════
+             PROPOSAL SECTIONS (management view) — kept at top per request
+             ═════════════════════════════════════════════════════════════════ -->
+
+        <section id="tldr" class="section active">
+          <h2>At a glance</h2>
+          <p class="section-subtitle">
+            The Arcadis Design System is Arcadis Digital Intelligence&rsquo;s shared component
+            library (Kendo UI, React, Angular, Web Components). Product teams also use Vue, jQuery,
+            and .NET. This proposal asks for a <strong>measured, phased path</strong> to one
+            framework-agnostic codebase &mdash; not a big-bang rewrite.
+          </p>
+          <ul>
+            <li>
+              <strong>Problem:</strong> Today&rsquo;s model risks visual and behavioural drift as
+              each stack evolves separately; every change is paid for more than once.
+            </li>
+            <li>
+              <strong>Approach:</strong> Design tokens first, then web components (Lit or Stencil),
+              then thin framework wrappers &mdash; one Storybook.
+            </li>
+            <li>
+              <strong>What this approval funds:</strong>
+              <strong>Phase 1 (tokens, ~4 weeks)</strong> and a
+              <strong>~3-day Stencil-vs-Lit spike</strong>. This is <em>not</em> the full design
+              system &mdash; it is the foundation and a tool decision.
+            </li>
+            <li>
+              <strong>v1 cross-framework scope:</strong> <strong>43 of 48</strong> catalogue
+              components as web components; <strong>5 data-heavy</strong> (Grid, Gantt, Tree family)
+              explicitly out of v1 &mdash; see
+              <a href="#sec-inventory" onclick="showSection(event, 'sec-inventory')"
+                >Component Inventory</a
+              >.
+            </li>
+            <li>
+              <strong>Full multi-framework rollout</strong> for the v1 scope realistically takes
+              <strong>9&ndash;18 months</strong> &mdash; see
+              <a href="#sec-cost" onclick="showSection(event, 'sec-cost')">Cost &amp; Effort</a>
+              and
+              <a href="#sec-inventory" onclick="showSection(event, 'sec-inventory')"
+                >Component Inventory</a
+              >. Phases 3&ndash;5 require separate approval after gate data.
+            </li>
+            <li>
+              <strong>Ask today:</strong> Approve Phase 1 + Phase 2 only. ~<strong
+                >1.5 sprints</strong
+              >
+              of existing team time; no new headcount; no licences.
+            </li>
+          </ul>
+          <div class="stats">
+            <div class="stat accent">
+              <div class="label">This approval</div>
+              <div class="value">Phase 1 + 2</div>
+            </div>
+            <div class="stat">
+              <div class="label">Components in catalogue</div>
+              <div class="value">~48 + 5 shells</div>
+            </div>
+            <div class="stat">
+              <div class="label">First production-ready set</div>
+              <div class="value">~3 months</div>
+            </div>
+            <div class="stat">
+              <div class="label">Full migration</div>
+              <div class="value">9&ndash;18 months</div>
+            </div>
+          </div>
+          <div class="card warning">
+            <div class="card-title">A note on timelines</div>
+            Web components are not magic &mdash; building ~48 production-grade components with
+            theming, accessibility, tests, and framework wrappers takes
+            <strong>real engineering months</strong>. The benefit is not speed-of-build; it is
+            <strong>one fix shipping everywhere afterwards</strong> instead of three.
+          </div>
+        </section>
+
+        <section id="sec-ask-scope" class="section">
+          <h2>Scope of this Ask</h2>
+          <p class="section-subtitle">
+            What this proposal requests now &mdash; and what it deliberately does
+            <em>not</em> commit to.
+          </p>
+          <div class="compare">
+            <div class="col future">
+              <h4>Approving now</h4>
+              <ul>
+                <li>
+                  <strong>Phase 1:</strong> Extract Arcadis Design System tokens to Style
+                  Dictionary; publish <code>@arcadis/tokens</code> (CSS, SCSS, JS).
+                </li>
+                <li>
+                  <strong>Phase 2:</strong> ~3-day spike &mdash; one component (Button) in Stencil
+                  and Lit; pick a tool.
+                </li>
+                <li>
+                  Existing design system team capacity (~1&ndash;2 engineers part-time on this
+                  track).
+                </li>
+              </ul>
+            </div>
+            <div class="col today">
+              <h4>Not approving now</h4>
+              <ul>
+                <li>
+                  Full migration of all 48 catalogue components (including Grid, Gantt, Tree).
+                </li>
+                <li>Treating React-only Grid/Tree implementations as cross-framework delivery.</li>
+                <li>Deprecating Kendo-based React paths overnight.</li>
+                <li>New headcount or a separate &ldquo;platform&rdquo; team.</li>
+                <li>Vue / Blazor / jQuery wrappers (Phase 4, if earlier phases succeed).</li>
+              </ul>
+            </div>
+          </div>
+          <div class="card brand">
+            <div class="card-title">Consuming apps stay safe</div>
+            Phase 1 is additive. Existing React and Angular integrations keep working. Teams adopt
+            tokens when ready; nothing breaks on day one.
+          </div>
+        </section>
+
+        <section id="sec-01" class="section">
+          <h2>Why We Need This</h2>
+          <p class="section-subtitle">
+            The design system already serves multiple frameworks. Without a single component source,
+            cost and inconsistency grow with every new adopting team.
+          </p>
+          <p>
+            Arcadis product teams consume Arcadis Design System from <strong>React</strong>,
+            <strong>Angular</strong>, and <strong>Web Components</strong> today. Additional stacks
+            (Vue, jQuery, .NET / Blazor) appear in roadmaps. Each stack currently depends on
+            Kendo-themed paths and documentation that must stay aligned by hand.
+          </p>
+          <ul>
+            <li>
+              A bug fix or accessibility improvement in one surface may need repeating across
+              framework-specific examples and wrappers.
+            </li>
+            <li>Brand updates (colour, spacing, type) touch SCSS and docs in multiple places.</li>
+            <li>
+              Consuming teams see small visual differences between stacks &mdash; undermining
+              &ldquo;one Arcadis experience.&rdquo;
+            </li>
+            <li>
+              Onboarding a new framework (e.g. Vue) means re-proving patterns instead of reusing a
+              published package.
+            </li>
+          </ul>
+          <div class="card warning">
+            <div class="card-title">The trigger</div>
+            We are past the point where a single-framework design system is cheaper. With
+            <strong>two or more active consumer frameworks</strong>, industry practice is one
+            web-component core plus thin wrappers &mdash; not three parallel implementations.
+          </div>
+        </section>
+
+        <section id="sec-02" class="section">
+          <h2>Proposed Approach</h2>
+          <p class="section-subtitle">
+            Four layers, one repo. Technical detail lives in the
+            <a href="#architecture" onclick="showSection(event, 'architecture')"
+              >architecture briefing</a
+            >; here is the executive view.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Layer</th>
+                <th>What it is</th>
+                <th>Delivers</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. Design tokens</strong></td>
+                <td>JSON source of truth (colour, spacing, type)</td>
+                <td>CSS, SCSS, JS for every platform</td>
+              </tr>
+              <tr>
+                <td><strong>2. Web components</strong></td>
+                <td>One implementation per component (Lit or Stencil)</td>
+                <td>Same HTML tag in every framework</td>
+              </tr>
+              <tr>
+                <td><strong>3. Framework wrappers</strong></td>
+                <td>Thin React / Angular / Vue / Blazor adapters</td>
+                <td>Idiomatic APIs; no re-implementation</td>
+              </tr>
+              <tr>
+                <td><strong>4. Documentation</strong></td>
+                <td>One Storybook</td>
+                <td>Single place to learn and QA components</td>
+              </tr>
+            </tbody>
+          </table>
+          <p>
+            Example: <code>&lt;arcadis-button variant="outline"&gt;</code> is authored once. React,
+            Angular, Vue, jQuery, and Blazor apps all consume the same element &mdash; wrappers only
+            translate framework conventions.
+          </p>
+          <div class="card brand">
+            <div class="card-title">Proof it is mainstream</div>
+            Adobe Spectrum, IBM Carbon, Ionic, Shoelace, and Google Material Web all ship this way.
+            See the briefing for comparisons and code samples.
+          </div>
+        </section>
+
+        <section id="sec-03" class="section">
+          <h2>Alternatives Considered</h2>
+          <p class="section-subtitle">
+            Four other paths. We recommend the phased web-component approach.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Option</th>
+                <th>Summary</th>
+                <th>Why it falls short</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>A. Status quo</strong></td>
+                <td>Keep Kendo + per-framework Storybook paths as today.</td>
+                <td>
+                  Lowest short-term effort; drift and duplicate work grow with adoption. Each new
+                  framework multiplies maintenance.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>B. Separate design system per framework</strong></td>
+                <td>Dedicated React DS, Angular DS, Vue DS teams.</td>
+                <td>
+                  ~3&times; component work, ~3&times; accessibility audits. Hard to keep visual
+                  parity; expensive at scale.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>C. Buy a commercial design system</strong></td>
+                <td>License a vendor SaaS / component library.</td>
+                <td>
+                  Often <strong>$10K&ndash;$50K+ per year</strong>, generic styling, weak fit for
+                  Arcadis Design System-specific Kendo + Tabler patterns.
+                </td>
+              </tr>
+              <tr class="alt-recommended">
+                <td><strong>D. Tokens + web components (recommended)</strong></td>
+                <td>Phased migration; Kendo paths coexist during transition.</td>
+                <td>
+                  Up-front setup cost, but one fix ships everywhere. Matches how the design system
+                  is already consumed across stacks.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="sec-cost" class="section">
+          <h2>Cost &amp; Effort</h2>
+          <p class="section-subtitle">
+            Tentative estimates from the design system team. Phases 3&ndash;5 are approved only if
+            prior gates pass. Numbers below assume the existing team, not a new dedicated squad.
+          </p>
+
+          <h3>Per-component effort &mdash; the building block</h3>
+          <p>
+            A web component built properly (theming hooks, accessibility, tests, Storybook story,
+            framework wrappers smoke-tested in React + Angular) takes the following effort for a
+            team after the initial setup:
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Complexity</th>
+                <th>Examples</th>
+                <th class="num">Effort per component</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Simple</strong></td>
+                <td>Button, Badge, Icon, Spinner, Divider, Avatar, Tag</td>
+                <td class="num">~1 week</td>
+              </tr>
+              <tr>
+                <td><strong>Medium</strong></td>
+                <td>Input, Select, Checkbox, Radio, Card, Modal, Tabs, Toast, Accordion</td>
+                <td class="num">~2 weeks</td>
+              </tr>
+              <tr>
+                <td><strong>Complex</strong></td>
+                <td>Dropdown, DatePicker, Form, FileUpload, Stepper, simple Table</td>
+                <td class="num">~3&ndash;4 weeks</td>
+              </tr>
+              <tr>
+                <td><strong>Very complex</strong></td>
+                <td>Grid, Gantt, TreeView (see inventory &mdash; out of v1 scope)</td>
+                <td class="num">~6&ndash;8 weeks each if rebuilt later</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="footnote italic">
+            Estimates from public design-system retrospectives (Adobe Spectrum, IBM Carbon, Ionic).
+            Actual effort lands inside the ranges &plusmn; ~30%; the spike in Phase 2 will tighten
+            this for our specific component shapes.
+          </p>
+
+          <h3>Scenarios for the full migration</h3>
+          <p>
+            For the ~48 components + 5 page shells in the
+            <a href="#sec-inventory" onclick="showSection(event, 'sec-inventory')">catalogue</a>,
+            the realistic calendar depends on team size and whether we include the five heaviest
+            components in v1:
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Scenario</th>
+                <th>Team</th>
+                <th>Scope</th>
+                <th class="num">Calendar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="alt-recommended">
+                <td><strong>A. Practical</strong> <em>(recommended)</em></td>
+                <td>2 engineers</td>
+                <td>
+                  43 components as web components (simple + medium + most complex + shells); 5
+                  heaviest <strong>out of v1 scope</strong> (see inventory)
+                </td>
+                <td class="num">~6&ndash;9 months</td>
+              </tr>
+              <tr>
+                <td><strong>B. Comprehensive</strong></td>
+                <td>2 engineers</td>
+                <td>All ~48 components + 5 shells, including Grid and Gantt rebuilt</td>
+                <td class="num">~12&ndash;18 months</td>
+              </tr>
+              <tr>
+                <td><strong>C. Part-time</strong></td>
+                <td>1 engineer part-time</td>
+                <td>~30 simple + medium components only</td>
+                <td class="num">~12&ndash;24 months</td>
+              </tr>
+              <tr>
+                <td><strong>D. Accelerated</strong></td>
+                <td>3 engineers + 1 designer support</td>
+                <td>Same scope as Scenario A (~43 components)</td>
+                <td class="num">~4&ndash;6 months</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="card">
+            <div class="card-title">Recommended baseline: Scenario A</div>
+            Ship <strong>43 of 48</strong> catalogue components as framework-agnostic web components
+            (see
+            <a href="#sec-inventory" onclick="showSection(event, 'sec-inventory')">inventory</a>).
+            <strong>Grid, Gantt, and the Tree family (5 components)</strong> are explicitly
+            <strong>out of v1 scope</strong> &mdash; not part of the cross-framework package. Vue,
+            Blazor, and jQuery teams use their own grid/tree solutions or wait for a future phase.
+            This delivers <strong>~90% of day-to-day UI</strong> at a realistic calendar.
+          </div>
+
+          <h3>Phased plan &mdash; effort per phase</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Phase</th>
+                <th>Deliverable</th>
+                <th class="num">Calendar</th>
+                <th class="num">Effort</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="alt-recommended">
+                <td><strong>1. Tokens</strong> <em>(this ask)</em></td>
+                <td><code>@arcadis/tokens</code> published; apps can adopt CSS variables</td>
+                <td class="num">~4 weeks</td>
+                <td class="num">~1 sprint</td>
+              </tr>
+              <tr class="alt-recommended">
+                <td><strong>2. Tool spike</strong> <em>(this ask)</em></td>
+                <td>Button in Stencil + Lit; written tool decision</td>
+                <td class="num">~3 days</td>
+                <td class="num">~0.5 sprint</td>
+              </tr>
+              <tr>
+                <td><strong>3. First 3 components</strong></td>
+                <td>Button, Input, Card + React &amp; Angular wrappers + sample apps</td>
+                <td class="num">~6&ndash;8 weeks</td>
+                <td class="num">~1.5&ndash;2 months</td>
+              </tr>
+              <tr>
+                <td><strong>4. More frameworks</strong></td>
+                <td>Vue, Blazor, jQuery CDN bundle for the first 3 components</td>
+                <td class="num">~2&ndash;3 weeks</td>
+                <td class="num">~0.5 sprint</td>
+              </tr>
+              <tr>
+                <td><strong>5. Migrate remainder</strong></td>
+                <td>
+                  Remaining ~40 web components (after Phase 3 pilot); 5 heaviest out of v1 scope
+                </td>
+                <td class="num">~5&ndash;7 months</td>
+                <td class="num">Per Scenario A above</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="stats">
+            <div class="stat accent">
+              <div class="label">First production component</div>
+              <div class="value">~3 months</div>
+            </div>
+            <div class="stat accent">
+              <div class="label">Recommended full rollout</div>
+              <div class="value">~6&ndash;9 months</div>
+            </div>
+            <div class="stat">
+              <div class="label">Cash cost Phase 1&ndash;2</div>
+              <div class="value">Team time only</div>
+            </div>
+            <div class="stat">
+              <div class="label">If we stop after Phase 1</div>
+              <div class="value">Tokens remain</div>
+            </div>
+          </div>
+
+          <div class="card warning">
+            <div class="card-title">What &ldquo;done&rdquo; means at each stage</div>
+            <ul style="margin-top: 0.4rem">
+              <li>
+                <strong>End of Phase 2 (~5 weeks in):</strong> tokens shipped, tool chosen. No
+                components migrated yet.
+              </li>
+              <li>
+                <strong>End of Phase 3 (~3 months in):</strong> 3 components production-ready in
+                React + Angular. Consuming apps can pilot.
+              </li>
+              <li>
+                <strong>End of Phase 4 (~3.5 months in):</strong> same 3 components available in
+                Vue, Blazor, and via CDN for jQuery.
+              </li>
+              <li>
+                <strong>End of Phase 5 (~9&ndash;12 months in):</strong> 43 catalogue components
+                available cross-framework; Grid, Gantt, and Tree family still out of v1 scope unless
+                a later phase is approved.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section id="sec-inventory" class="section">
+          <h2>Component Inventory</h2>
+          <p class="section-subtitle">
+            The current Arcadis Design System Storybook has
+            <strong>~48 components + 5 page shells</strong>. Below is the full list, grouped by
+            complexity, with an explicit recommendation for each group:
+            <strong>rebuild as a web component</strong> in v1, or
+            <strong>out of v1 framework-agnostic scope</strong> (not shipped cross-framework in the
+            first release).
+          </p>
+
+          <p class="footnote italic">
+            Source: <code>src/stories/</code> in the current repository. Components are grouped by
+            implementation complexity, not user-facing category. Effort ranges from
+            <a href="#sec-cost" onclick="showSection(event, 'sec-cost')">Cost &amp; Effort</a>.
+          </p>
+
+          <h3>Simple &mdash; rebuild as web components</h3>
+          <p>Static or near-static display elements; minimal state.</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Notes</th>
+                <th class="num">Effort</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Avatar</td>
+                <td>Initials, image, sizes, status dot</td>
+                <td class="num">~1 wk</td>
+              </tr>
+              <tr>
+                <td>Badge</td>
+                <td>Counts, status indicators</td>
+                <td class="num">~1 wk</td>
+              </tr>
+              <tr>
+                <td>Chips</td>
+                <td>Single chip; selectable / dismissable</td>
+                <td class="num">~1 wk</td>
+              </tr>
+              <tr>
+                <td>ChipList</td>
+                <td>Composition of Chip; tag input variant</td>
+                <td class="num">~1 wk</td>
+              </tr>
+              <tr>
+                <td>Label</td>
+                <td>Form label primitive</td>
+                <td class="num">~0.5 wk</td>
+              </tr>
+              <tr>
+                <td>Loader</td>
+                <td>Spinner; size + colour variants</td>
+                <td class="num">~1 wk</td>
+              </tr>
+              <tr>
+                <td>ProgressBar</td>
+                <td>Determinate + indeterminate</td>
+                <td class="num">~1 wk</td>
+              </tr>
+              <tr>
+                <td>Tooltip</td>
+                <td>Positioning via Floating UI</td>
+                <td class="num">~1 wk</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="footnote">
+            <strong>Subtotal: 8 components &middot; ~7.5 weeks</strong> of engineer time.
+          </p>
+
+          <h3>Medium &mdash; rebuild as web components</h3>
+          <p>Components with internal state, multiple variants, and form integration.</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Notes</th>
+                <th class="num">Effort</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Button</td>
+                <td>Solid, outline, link, sizes, icon slots</td>
+                <td class="num">~2 wk</td>
+              </tr>
+              <tr>
+                <td>ButtonGroup</td>
+                <td>Composition; toggle group behaviour</td>
+                <td class="num">~1.5 wk</td>
+              </tr>
+              <tr>
+                <td>SplitButton</td>
+                <td>Primary action + dropdown</td>
+                <td class="num">~2 wk</td>
+              </tr>
+              <tr>
+                <td>DropdownButton</td>
+                <td>Button + menu</td>
+                <td class="num">~2 wk</td>
+              </tr>
+              <tr>
+                <td>Card</td>
+                <td>Header, body, footer slots</td>
+                <td class="num">~1.5 wk</td>
+              </tr>
+              <tr>
+                <td>Switch</td>
+                <td>Form-associated; on/off + sizes</td>
+                <td class="num">~1.5 wk</td>
+              </tr>
+              <tr>
+                <td>Checkbox</td>
+                <td>Form-associated; indeterminate state</td>
+                <td class="num">~2 wk</td>
+              </tr>
+              <tr>
+                <td>RadioButton</td>
+                <td>Form-associated; group coordination</td>
+                <td class="num">~2 wk</td>
+              </tr>
+              <tr>
+                <td>TextBox</td>
+                <td>Form-associated; validation API</td>
+                <td class="num">~2 wk</td>
+              </tr>
+              <tr>
+                <td>TextArea</td>
+                <td>Resize + autosize</td>
+                <td class="num">~1.5 wk</td>
+              </tr>
+              <tr>
+                <td>NumericTextBox</td>
+                <td>Min/max, step, locale formatting</td>
+                <td class="num">~2 wk</td>
+              </tr>
+              <tr>
+                <td>MaskedTextBox</td>
+                <td>Mask parser; cursor handling</td>
+                <td class="num">~2 wk</td>
+              </tr>
+              <tr>
+                <td>Breadcrumb</td>
+                <td>Truncation, separators</td>
+                <td class="num">~1 wk</td>
+              </tr>
+              <tr>
+                <td>Tabs</td>
+                <td>Lazy panels, keyboard nav</td>
+                <td class="num">~2 wk</td>
+              </tr>
+              <tr>
+                <td>PanelBar</td>
+                <td>Accordion; expand/collapse</td>
+                <td class="num">~2 wk</td>
+              </tr>
+              <tr>
+                <td>Stepper</td>
+                <td>Horizontal/vertical; linear/non-linear</td>
+                <td class="num">~2 wk</td>
+              </tr>
+              <tr>
+                <td>Notification</td>
+                <td>Toast container + queue</td>
+                <td class="num">~2 wk</td>
+              </tr>
+              <tr>
+                <td>Popover</td>
+                <td>Floating UI; multiple anchors</td>
+                <td class="num">~2 wk</td>
+              </tr>
+              <tr>
+                <td>Drawer</td>
+                <td>Side panel; focus trap</td>
+                <td class="num">~2 wk</td>
+              </tr>
+              <tr>
+                <td>Dialog</td>
+                <td>Modal; focus trap; a11y</td>
+                <td class="num">~2 wk</td>
+              </tr>
+              <tr>
+                <td>Window</td>
+                <td>Resizable / draggable dialog</td>
+                <td class="num">~2.5 wk</td>
+              </tr>
+              <tr>
+                <td>Menu</td>
+                <td>Multi-level nav; keyboard</td>
+                <td class="num">~2.5 wk</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="footnote">
+            <strong>Subtotal: 22 components &middot; ~43 weeks</strong> of engineer time.
+          </p>
+
+          <h3>Complex &mdash; rebuild selectively</h3>
+          <p>
+            Selection, date/time, and asynchronous work. Tree variants and data grids are called out
+            separately as <strong>out of v1 scope</strong>.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Notes</th>
+                <th class="num">Effort</th>
+                <th>Recommendation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>AutoComplete</td>
+                <td>Async suggestions, debouncing</td>
+                <td class="num">~3 wk</td>
+                <td>Rebuild</td>
+              </tr>
+              <tr>
+                <td>ComboBox</td>
+                <td>Free-text + suggestions</td>
+                <td class="num">~3 wk</td>
+                <td>Rebuild</td>
+              </tr>
+              <tr>
+                <td>DropDownList</td>
+                <td>Search, virtualisation</td>
+                <td class="num">~3 wk</td>
+                <td>Rebuild</td>
+              </tr>
+              <tr>
+                <td>MultiSelect</td>
+                <td>Chips + dropdown + search</td>
+                <td class="num">~3.5 wk</td>
+                <td>Rebuild</td>
+              </tr>
+              <tr>
+                <td>Calendar</td>
+                <td>Date math, locale, range mode</td>
+                <td class="num">~3 wk</td>
+                <td>Rebuild</td>
+              </tr>
+              <tr>
+                <td>DatePicker</td>
+                <td>Calendar + input; locale</td>
+                <td class="num">~3 wk</td>
+                <td>Rebuild</td>
+              </tr>
+              <tr>
+                <td>TimePicker</td>
+                <td>Hour/min/sec; AM-PM</td>
+                <td class="num">~2.5 wk</td>
+                <td>Rebuild</td>
+              </tr>
+              <tr>
+                <td>DateTimePicker</td>
+                <td>Compose Date + Time</td>
+                <td class="num">~2 wk</td>
+                <td>Rebuild</td>
+              </tr>
+              <tr>
+                <td>DateRangePicker</td>
+                <td>Two calendars; constraints</td>
+                <td class="num">~3 wk</td>
+                <td>Rebuild</td>
+              </tr>
+              <tr>
+                <td>Pager</td>
+                <td>Standalone pagination; Grid pairing</td>
+                <td class="num">~2 wk</td>
+                <td>Rebuild</td>
+              </tr>
+              <tr>
+                <td>Slider</td>
+                <td>Single + range; ARIA</td>
+                <td class="num">~2.5 wk</td>
+                <td>Rebuild</td>
+              </tr>
+              <tr>
+                <td>Upload</td>
+                <td>Multi-file, progress, validation</td>
+                <td class="num">~3 wk</td>
+                <td>Rebuild</td>
+              </tr>
+              <tr>
+                <td>ExternalDropZone</td>
+                <td>Pair with Upload</td>
+                <td class="num">~1.5 wk</td>
+                <td>Rebuild</td>
+              </tr>
+              <tr>
+                <td>TreeView</td>
+                <td>Lazy load, virtualisation</td>
+                <td class="num">~4 wk</td>
+                <td>Out of v1 scope</td>
+              </tr>
+              <tr>
+                <td>DropdownTree</td>
+                <td>TreeView + dropdown</td>
+                <td class="num">~3 wk</td>
+                <td>Out of v1 scope</td>
+              </tr>
+              <tr>
+                <td>MultiSelectTree</td>
+                <td>TreeView + multi-select</td>
+                <td class="num">~3 wk</td>
+                <td>Out of v1 scope</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="footnote">
+            <strong>Subtotal (rebuild): 10 components &middot; ~26 weeks</strong>. Tree-family (3
+            components) are <strong>out of v1 scope</strong> &mdash; see below.
+          </p>
+
+          <h3>Out of v1 scope &mdash; not in the cross-framework catalogue</h3>
+          <p>
+            These five components exist in Storybook today (often React/Kendo-backed). They are
+            <strong>not</strong> part of the first framework-agnostic release. React-only or
+            Angular-only usage does <strong>not</strong> satisfy Vue, Blazor, or jQuery teams.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Why out of v1</th>
+                <th class="num">Rebuild cost (if revisited)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Grid (DataGrid)</strong></td>
+                <td>
+                  Virtualisation, editing, grouping, export, sticky columns &mdash; sub-product
+                  scale
+                </td>
+                <td class="num">~6&ndash;8 wk minimum</td>
+              </tr>
+              <tr>
+                <td><strong>Gantt</strong></td>
+                <td>Timeline rendering, dependencies, drag interactions</td>
+                <td class="num">~6&ndash;8 wk minimum</td>
+              </tr>
+              <tr>
+                <td><strong>TreeView</strong></td>
+                <td>Lazy load, virtualisation, keyboard tree semantics</td>
+                <td class="num">~4 wk minimum</td>
+              </tr>
+              <tr>
+                <td><strong>DropdownTree</strong></td>
+                <td>Combines tree + dropdown behaviour</td>
+                <td class="num">~3 wk minimum</td>
+              </tr>
+              <tr>
+                <td><strong>MultiSelectTree</strong></td>
+                <td>Tree + multi-select + async data</td>
+                <td class="num">~3 wk minimum</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="card brand">
+            <div class="card-title">What about Grid, Gantt, and Tree?</div>
+            <p style="margin-top: 0.4rem">
+              We acknowledge a <strong>real gap</strong> for data-heavy apps. v1 does not pretend
+              existing React wrappers solve cross-framework needs. Product teams on Vue, Blazor, or
+              jQuery should plan separate grid/tree choices until we fund a follow-on.
+            </p>
+            <p style="margin-top: 0.6rem"><strong>Future paths (not in this approval):</strong></p>
+            <ul style="margin-top: 0.35rem">
+              <li>
+                <strong>Commercial cross-framework library</strong> (e.g. AG Grid, Syncfusion) with
+                Arcadis tokens and a thin design-system wrapper.
+              </li>
+              <li>
+                <strong>Phase 5+ rebuild</strong> as web components if ROI and capacity justify
+                multi-month effort per component.
+              </li>
+              <li>
+                <strong>Framework-native grids</strong> in each stack, aligned to tokens only.
+              </li>
+            </ul>
+          </div>
+
+          <h3>Page shells &mdash; composition layouts</h3>
+          <p>
+            These are not new primitives; they are <strong>opinionated arrangements</strong> of
+            other components (sidebars, headers, page content slots, wizards). Most of their value
+            is layout and tokens, not behaviour.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Shell</th>
+                <th>Recommendation</th>
+                <th class="num">Effort</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>TopBarShell</td>
+                <td>Rebuild as composition of WCs</td>
+                <td class="num">~1 wk</td>
+              </tr>
+              <tr>
+                <td>CollapseSidebarLayout</td>
+                <td>Rebuild as composition of WCs</td>
+                <td class="num">~1.5 wk</td>
+              </tr>
+              <tr>
+                <td>PageHeader</td>
+                <td>Rebuild as composition</td>
+                <td class="num">~1 wk</td>
+              </tr>
+              <tr>
+                <td>PageTemplate</td>
+                <td>Rebuild as composition</td>
+                <td class="num">~1 wk</td>
+              </tr>
+              <tr>
+                <td>Wizard</td>
+                <td>Rebuild on top of Stepper</td>
+                <td class="num">~1.5 wk</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="footnote"><strong>Subtotal: 5 shells &middot; ~6 weeks</strong>.</p>
+
+          <h3>Already a web component</h3>
+          <p>
+            <strong>Checklist</strong> (under <code>src/stories/web-component-stories/</code>) is
+            already implemented as a custom element. It is the natural
+            <strong>proof-of-concept</strong> for Phase 2 &mdash; the spike can validate the tooling
+            against an existing WC rather than starting from zero.
+          </p>
+
+          <h3>Rolled-up totals</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Group</th>
+                <th class="num">Components</th>
+                <th class="num">Engineer weeks</th>
+                <th>Recommendation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="alt-recommended">
+                <td>Simple</td>
+                <td class="num">8</td>
+                <td class="num">~7.5</td>
+                <td>Rebuild as WC</td>
+              </tr>
+              <tr class="alt-recommended">
+                <td>Medium</td>
+                <td class="num">22</td>
+                <td class="num">~43</td>
+                <td>Rebuild as WC</td>
+              </tr>
+              <tr class="alt-recommended">
+                <td>Complex (rebuild in v1)</td>
+                <td class="num">10</td>
+                <td class="num">~26</td>
+                <td>Rebuild as WC</td>
+              </tr>
+              <tr>
+                <td>Complex Tree family</td>
+                <td class="num">3</td>
+                <td class="num">~10</td>
+                <td>Out of v1 scope</td>
+              </tr>
+              <tr>
+                <td>Very complex (Grid, Gantt)</td>
+                <td class="num">2</td>
+                <td class="num">&mdash;</td>
+                <td>Out of v1 scope</td>
+              </tr>
+              <tr class="alt-recommended">
+                <td>Page shells</td>
+                <td class="num">5</td>
+                <td class="num">~6</td>
+                <td>Rebuild as composition</td>
+              </tr>
+              <tr>
+                <td><strong>Total (recommended rebuild scope)</strong></td>
+                <td class="num"><strong>48</strong></td>
+                <td class="num"><strong>~82.5 weeks</strong></td>
+                <td>43 of 48 rebuilt</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="stats">
+            <div class="stat accent">
+              <div class="label">Rebuild as WC</div>
+              <div class="value">43 components</div>
+            </div>
+            <div class="stat">
+              <div class="label">Out of v1 scope</div>
+              <div class="value">5 components</div>
+            </div>
+            <div class="stat accent">
+              <div class="label">Engineer-weeks (rebuild)</div>
+              <div class="value">~82.5</div>
+            </div>
+            <div class="stat accent">
+              <div class="label">Calendar &middot; 2 engineers</div>
+              <div class="value">~12 months</div>
+            </div>
+          </div>
+
+          <div class="card warning">
+            <div class="card-title">Why the rolled-up calendar &gt; the Scenario A range</div>
+            The headline <strong>6&ndash;9 months</strong> (Scenario A) assumes parallelism,
+            learning curve compression after the first few components, and some pairs/triplets being
+            built in shared sprints (e.g. Date + Calendar + Range together). The
+            <strong>~82.5 engineer-week</strong> figure here is the
+            <em>sum of independent estimates</em> and is a defensible upper bound for a leadership
+            sanity check.
+          </div>
+        </section>
+
+        <section id="sec-inaction" class="section">
+          <h2>Cost of Inaction</h2>
+          <p class="section-subtitle">
+            What we pay if we keep the current multi-path model for another year.
+          </p>
+          <ul>
+            <li>
+              <strong>Duplicate engineering:</strong> Every component change (variant, a11y fix,
+              token rename) is repeated across framework surfaces &mdash; roughly proportional to
+              the number of active stacks.
+            </li>
+            <li>
+              <strong>Inconsistent UX:</strong> Teams and auditors notice when Angular and React
+              apps don&rsquo;t match; rework lands on the design system team anyway.
+            </li>
+            <li>
+              <strong>Slower adoption:</strong> New product lines on Vue or .NET wait for
+              &ldquo;their&rdquo; Arcadis Design System path instead of installing a published
+              package.
+            </li>
+            <li>
+              <strong>Documentation debt:</strong> Storybook and Slack support scale with questions
+              &times; frameworks, not with a single source of truth.
+            </li>
+          </ul>
+          <div class="card">
+            <div class="card-title">Directional, not precise</div>
+            We are not claiming a single dollar ROI figure without baseline data. Phase 1 gives
+            measurable token adoption; Phase 3 gives before/after maintenance time on three pilot
+            components.
+          </div>
+        </section>
+
+        <section id="sec-measure" class="section">
+          <h2>How We&rsquo;ll Measure Success</h2>
+          <p class="section-subtitle">
+            Explicit gates. We continue only when criteria are met &mdash; otherwise we stop with
+            limited sunk cost.
+          </p>
+          <h3>Phase 1 gate (end of ~week 4)</h3>
+          <div class="stats">
+            <div class="stat accent">
+              <div class="label">Token package</div>
+              <div class="value">Published</div>
+            </div>
+            <div class="stat accent">
+              <div class="label">Pilot apps</div>
+              <div class="value">&ge; 2 adopt</div>
+            </div>
+            <div class="stat accent">
+              <div class="label">Regressions</div>
+              <div class="value">0 critical</div>
+            </div>
+          </div>
+          <p class="footnote">
+            &ldquo;Adopt&rdquo; = at least two consuming apps import
+            <code>@arcadis/tokens</code> in a non-production or production branch without visual
+            regression.
+          </p>
+          <h3>Phase 2 gate (end of spike)</h3>
+          <ul>
+            <li>Written decision: Stencil or Lit, with team sign-off.</li>
+            <li>Button prototype runs in Storybook and in one React + one Angular sample app.</li>
+          </ul>
+          <h3>Phase 3 gate (before wider migration)</h3>
+          <ul>
+            <li>
+              Consuming-team feedback positive on wrapper APIs (short survey + 2 interviewees per
+              stack).
+            </li>
+            <li>
+              Cross-framework smoke tests pass for Button, Input, Card (automated where possible).
+            </li>
+            <li>No increase in design-system support hours vs baseline.</li>
+          </ul>
+          <div class="card brand">
+            <div class="card-title">If a gate fails</div>
+            We do not proceed to the next phase. Phase 1 deliverables (tokens) still have standalone
+            value. Sunk cost after Phase 1&ndash;2 is bounded to roughly
+            <strong>1.5 sprints</strong> of existing team time.
+          </div>
+          <h3>Reporting</h3>
+          <ul>
+            <li><strong>End of Phase 1:</strong> one-page memo with gate results.</li>
+            <li><strong>End of Phase 2:</strong> tool decision + demo recording.</li>
+            <li>
+              <strong>End of Phase 3:</strong> go / no-go on Phase 4&ndash;5 with measured data.
+            </li>
+          </ul>
+        </section>
+
+        <section id="sec-risks" class="section">
+          <h2>Risks &amp; Mitigations</h2>
+          <p class="section-subtitle">
+            Named risks for management review &mdash; not an exhaustive project plan.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Risk</th>
+                <th>Likelihood</th>
+                <th>Mitigation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Consuming apps break during migration</td>
+                <td>Medium</td>
+                <td>
+                  Phased rollout; semver on packages; legacy React paths coexist until each web
+                  component reaches parity.
+                </td>
+              </tr>
+              <tr>
+                <td>SSR apps (Next.js, etc.) incompatible</td>
+                <td>Medium</td>
+                <td>
+                  Spike in Phase 2 if SSR consumers exist; Declarative Shadow DOM where needed.
+                </td>
+              </tr>
+              <tr>
+                <td>Team lacks web-component skills</td>
+                <td>Low&ndash;Medium</td>
+                <td>Training week; Stencil/Lit both well documented; start with 3 components.</td>
+              </tr>
+              <tr>
+                <td>Older browsers / locked-down desktops</td>
+                <td>Low</td>
+                <td>
+                  Confirm enterprise browser matrix in Phase 1; WC support matches Chromium
+                  evergreen.
+                </td>
+              </tr>
+              <tr>
+                <td>Scope creep (&ldquo;migrate everything now&rdquo;)</td>
+                <td>High</td>
+                <td>
+                  This proposal approves Phase 1&ndash;2 only; later phases need new sign-off.
+                </td>
+              </tr>
+              <tr>
+                <td>Ongoing cross-framework QA cost</td>
+                <td>Medium</td>
+                <td>Budget smoke tests per wrapper; automate in CI where possible.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="sec-08" class="section">
+          <h2>Rollout Plan</h2>
+          <p class="section-subtitle">
+            Five phases. Only the first two are in scope for this approval.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Phase</th>
+                <th>When (indicative)</th>
+                <th>Outcome</th>
+                <th>Approval</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="alt-recommended">
+                <td><strong>1. Tokens</strong></td>
+                <td>Month 1</td>
+                <td><code>@arcadis/tokens</code> live; pilot adoption</td>
+                <td><strong>This proposal</strong></td>
+              </tr>
+              <tr class="alt-recommended">
+                <td><strong>2. Stencil vs Lit spike</strong></td>
+                <td>Month 1 (parallel tail)</td>
+                <td>Tool choice documented</td>
+                <td><strong>This proposal</strong></td>
+              </tr>
+              <tr>
+                <td><strong>3. First 3 components</strong></td>
+                <td>Month 2&ndash;3</td>
+                <td>Button, Input, Card production-ready in React + Angular; pilot teams</td>
+                <td>After Phase 2 gate</td>
+              </tr>
+              <tr>
+                <td><strong>4. Vue / Blazor / jQuery</strong></td>
+                <td>Month 3&ndash;4</td>
+                <td>Same 3 components shipped to Vue, Blazor (NuGet), and jQuery (CDN)</td>
+                <td>After Phase 3 gate</td>
+              </tr>
+              <tr>
+                <td><strong>5. Migrate remainder</strong></td>
+                <td>Month 4&ndash;12 (~5&ndash;7 months under Scenario A)</td>
+                <td>
+                  Remaining ~40 web components migrated (after the Phase 3 pilot); Grid, Gantt, and
+                  Tree family remain <strong>out of v1 scope</strong> unless a follow-on is approved
+                </td>
+                <td>After Phase 3 gate</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="card">
+            <div class="card-title">In one line</div>
+            Month 1: tokens + tool decision. Month 2&ndash;3: prove 3 components. Month 4&ndash;12:
+            migrate the rest under Scenario A only if Phase 3 results justify the spend.
+          </div>
+        </section>
+
+        <section id="sec-09" class="section">
+          <h2>The Ask</h2>
+          <p class="section-subtitle">Three decisions for this review cycle.</p>
+          <ol>
+            <li>
+              Approve <strong>Phase 1</strong>: ~1 sprint for the design system team to publish
+              <code>@arcadis/tokens</code> (Style Dictionary) with CSS, SCSS, and JS outputs.
+            </li>
+            <li>
+              Approve <strong>Phase 2</strong>: ~3-day Stencil vs Lit spike on Button, with a
+              written tool decision before any wider build.
+            </li>
+            <li>
+              Acknowledge that <strong>Phases 3&ndash;5</strong> require separate approval after
+              measured gate results &mdash; no open-ended migration mandate today.
+            </li>
+          </ol>
+          <div class="card brand">
+            <div class="card-title">Bottom line</div>
+            For roughly <strong>1.5 sprints</strong> of existing team time, we de-risk the
+            architecture, ship reusable tokens immediately, and earn the data to decide whether full
+            multi-framework unification is worth continuing.
+          </div>
+          <p style="margin-top: 1rem">
+            Architecture deep-dive continues below &mdash;
+            <a href="#overview" onclick="showSection(event, 'overview')">jump to At a glance</a>.
+          </p>
+        </section>
+
+        <!-- ═════════════════════════════════════════════════════════════════
+             ARCHITECTURE SECTIONS (technical briefing) — follow next
+             ═════════════════════════════════════════════════════════════════ -->
+
+        <!-- ─── At a glance ─── -->
+        <section id="overview" class="section">
+          <h2>At a glance</h2>
+          <p class="section-subtitle">
+            A pragmatic blueprint for a design system that is written
+            <strong>once</strong> and used natively from React, Angular, Vue, jQuery, .NET (Blazor),
+            and plain HTML &mdash; without forking the component code per framework.
+          </p>
+
+          <div class="chips">
+            <span class="chip brand">React</span>
+            <span class="chip brand">Angular</span>
+            <span class="chip brand">Vue</span>
+            <span class="chip brand">jQuery</span>
+            <span class="chip brand">.NET / Blazor</span>
+            <span class="chip brand">Plain HTML</span>
+          </div>
+
+          <div class="stats">
+            <div class="stat accent">
+              <div class="label">Source of truth</div>
+              <div class="value">One repo</div>
+            </div>
+            <div class="stat">
+              <div class="label">Component runtime</div>
+              <div class="value">Web Components</div>
+            </div>
+            <div class="stat">
+              <div class="label">Framework support</div>
+              <div class="value">All major</div>
+            </div>
+            <div class="stat">
+              <div class="label">Browser support</div>
+              <div class="value">Native since 2018</div>
+            </div>
+          </div>
+
+          <h3>The idea in one paragraph</h3>
+          <p>
+            Treat the design system as <strong>four layered packages</strong>: design tokens (JSON)
+            &rarr; web components (the actual UI) &rarr; thin framework wrappers (React / Angular /
+            Vue) &rarr; one Storybook documenting all of them. Web Components are a
+            <strong>native browser standard</strong>, so the same
+            <code>&lt;arcadis-button&gt;</code> tag works identically in every framework. Wrappers
+            exist purely to give each framework an <em>idiomatic</em> API (typed props in React,
+            <code>[(ngModel)]</code> in Angular, etc.) &mdash; not to re-implement the component.
+          </p>
+
+          <h3>Who already does this (proof it works)</h3>
+          <ul>
+            <li><strong>Adobe Spectrum Web Components</strong> &mdash; Lit-based, React + plain</li>
+            <li>
+              <strong>Fluent UI Web Components</strong> (Microsoft, FAST) &mdash; cross-framework;
+              note Fluent UI v9 itself is React-first
+            </li>
+            <li><strong>IBM Carbon</strong> &mdash; React, Angular, Vue, Web Components</li>
+            <li><strong>Salesforce Lightning Web Components</strong> &mdash; vanilla + LWC</li>
+            <li><strong>Shoelace / Web Awesome</strong> &mdash; Lit, every framework</li>
+            <li><strong>Ionic Framework</strong> &mdash; Stencil; React, Angular, Vue, vanilla</li>
+            <li><strong>Material Web (Google)</strong> &mdash; Lit, every framework</li>
+          </ul>
+
+          <div class="card brand">
+            <div class="card-title">Bottom line</div>
+            This isn&rsquo;t experimental. It&rsquo;s the architecture every major cross-framework
+            design system has converged on over the last 5 years. The question is
+            <em>which tools</em>, not <em>if it can work</em>.
+          </div>
+
+          <p>
+            For management review &mdash; scope, cost, timeline, and decision gates &mdash; see the
+            <a href="#tldr" onclick="showSection(event, 'tldr')"
+              >Proposal section at the top of this document</a
+            >.
+          </p>
+        </section>
+
+        <!-- ─── Why ─── -->
+        <section id="why" class="section">
+          <h2>Why one codebase?</h2>
+          <p class="section-subtitle">
+            The cost of maintaining a design system grows linearly with the number of
+            framework-specific forks. One codebase keeps the cost flat.
+          </p>
+
+          <h3>The pain of framework-locked design systems</h3>
+          <p>
+            A typical &ldquo;React design system&rdquo; that also wants to support Angular and Vue
+            ends up with three parallel implementations of every component. That means:
+          </p>
+
+          <ul>
+            <li>
+              <strong>3&times; the maintenance.</strong> Every bug fix, every accessibility
+              improvement, every new variant has to be applied to React, Angular, and Vue versions.
+            </li>
+            <li>
+              <strong>Visual drift.</strong> Components look slightly different over time as changes
+              land in one version but not another.
+            </li>
+            <li>
+              <strong>Inconsistent behaviour.</strong> Focus management, keyboard shortcuts, and
+              animations diverge between framework implementations.
+            </li>
+            <li>
+              <strong>Hiring tax.</strong> The design system team needs deep expertise in every
+              framework it supports.
+            </li>
+            <li>
+              <strong>Slow rollouts.</strong> A new Tabler icon set takes one PR per framework
+              instead of one PR period.
+            </li>
+          </ul>
+
+          <h3>What changes with web components</h3>
+
+          <div class="compare">
+            <div class="col today">
+              <h4>Framework-locked (one per stack)</h4>
+              <ul>
+                <li>3+ component implementations to maintain</li>
+                <li>Bug fixes applied 3+ times</li>
+                <li>Accessibility audited 3+ times</li>
+                <li>Visual drift between framework versions</li>
+                <li>Tied to each framework&rsquo;s major-version upgrades</li>
+              </ul>
+            </div>
+            <div class="col future">
+              <h4>Single web-component codebase</h4>
+              <ul>
+                <li>One component, every framework</li>
+                <li>Bug fixed once, picked up everywhere</li>
+                <li>Accessibility audited once</li>
+                <li>Visual parity by construction</li>
+                <li>Survives framework version churn</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">The pragmatic exception</div>
+            Framework wrappers are still maintained &mdash; but they are <strong>thin</strong>
+            (typically 20&ndash;50 lines of code) and largely auto-generated. They wrap the
+            component, they don&rsquo;t re-implement it.
+          </div>
+        </section>
+
+        <!-- ─── Architecture ─── -->
+        <section id="architecture" class="section">
+          <h2>The 4-layer architecture</h2>
+          <p class="section-subtitle">
+            Every cross-framework design system, in any company, looks like these four layers. The
+            libraries change &mdash; the layers don&rsquo;t.
+          </p>
+
+          <div class="layer-stack">
+            <div class="layer">
+              <div class="num">4</div>
+              <div class="name">
+                Documentation
+                <small>The face of the design system &mdash; one Storybook, every framework.</small>
+              </div>
+              <div class="tech">Storybook</div>
+            </div>
+            <div class="layer">
+              <div class="num">3</div>
+              <div class="name">
+                Framework Wrappers
+                <small>Thin, idiomatic APIs for each framework consuming the components.</small>
+              </div>
+              <div class="tech">React / Angular / Vue / Blazor</div>
+            </div>
+            <div class="layer">
+              <div class="num">2</div>
+              <div class="name">
+                Web Components
+                <small>The actual UI. Written once, runs natively in every framework.</small>
+              </div>
+              <div class="tech">Lit or Stencil</div>
+            </div>
+            <div class="layer">
+              <div class="num">1</div>
+              <div class="name">
+                Design Tokens
+                <small
+                  >The foundation &mdash; colours, spacing, type, radius. JSON in, anything
+                  out.</small
+                >
+              </div>
+              <div class="tech">Style Dictionary</div>
+            </div>
+          </div>
+
+          <h3>How a change flows up the stack</h3>
+          <p>Imagine the brand colour changes from <code>#d85614</code> to <code>#e85a16</code>:</p>
+          <ol>
+            <li>
+              <strong>Layer 1</strong>: update <code>brand.primary</code> in
+              <code>tokens.json</code>.
+            </li>
+            <li>
+              <strong>Layer 1</strong>: Style Dictionary rebuilds &mdash; outputs new CSS variables,
+              SCSS, JS, iOS, Android in one command.
+            </li>
+            <li>
+              <strong>Layer 2</strong>: Every web component reads
+              <code>var(--color-brand-primary)</code>; no component change needed.
+            </li>
+            <li>
+              <strong>Layer 3</strong>: Wrappers don&rsquo;t care; they just forward to the
+              components.
+            </li>
+            <li><strong>Layer 4</strong>: Storybook reflects the change automatically.</li>
+          </ol>
+
+          <p>One commit, every consuming app updated on next dependency bump.</p>
+        </section>
+
+        <!-- ─── Layer 1: Design Tokens ─── -->
+        <section id="layer-1" class="section">
+          <span class="pill"><span class="num">1</span> Foundation</span>
+          <h2>Layer 1 &mdash; Design Tokens</h2>
+          <p class="section-subtitle">
+            Tokens are the design decisions (colour, spacing, type, radius, motion) expressed as
+            <strong>data</strong>, not code. One JSON source &rarr; many platform outputs.
+          </p>
+
+          <h3>The source: one JSON file (or a few)</h3>
+          <div class="code-card">
+            <div class="code-card-header">
+              <span>tokens/color.json</span>
+              <span class="badge">Source of truth</span>
+            </div>
+            <pre><code>{
+  <span class="c-attr">"color"</span>: {
+    <span class="c-attr">"brand"</span>: {
+      <span class="c-attr">"primary"</span>:   { <span class="c-attr">"value"</span>: <span class="c-str">"#d85614"</span> },
+      <span class="c-attr">"primary-soft"</span>: { <span class="c-attr">"value"</span>: <span class="c-str">"rgba(216, 86, 20, 0.06)"</span> }
+    },
+    <span class="c-attr">"text"</span>: {
+      <span class="c-attr">"primary"</span>:   { <span class="c-attr">"value"</span>: <span class="c-str">"#111827"</span> },
+      <span class="c-attr">"muted"</span>:     { <span class="c-attr">"value"</span>: <span class="c-str">"#6b7280"</span> }
+    }
+  }
+}</code></pre>
+          </div>
+
+          <p>
+            This format is the <strong>W3C Design Tokens Community Group standard</strong> &mdash;
+            tooling-neutral and now adopted by Figma, Style Dictionary, and major design tools.
+          </p>
+
+          <h3>The tool: Style Dictionary</h3>
+          <p>
+            <a href="https://styledictionary.com" target="_blank" rel="noopener"
+              >Style Dictionary</a
+            >
+            (open source, Amazon) reads the JSON and emits exactly the formats each platform needs:
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Output</th>
+                <th>Consumer</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>CSS variables</strong></td>
+                <td>Web components, plain HTML, Tailwind v4</td>
+                <td><code>--color-brand-primary: #d85614;</code></td>
+              </tr>
+              <tr>
+                <td><strong>SCSS variables</strong></td>
+                <td>Legacy stylesheets, Kendo themes</td>
+                <td><code>$color-brand-primary: #d85614;</code></td>
+              </tr>
+              <tr>
+                <td><strong>JS / TS</strong></td>
+                <td>React Native, JS-in-CSS, design libraries</td>
+                <td><code>export const colorBrandPrimary = "#d85614";</code></td>
+              </tr>
+              <tr>
+                <td><strong>iOS (Swift)</strong></td>
+                <td>Native iOS apps</td>
+                <td><code>UIColor.brandPrimary</code></td>
+              </tr>
+              <tr>
+                <td><strong>Android (XML)</strong></td>
+                <td>Native Android apps</td>
+                <td><code>&lt;color name="brand_primary"&gt;#d85614&lt;/color&gt;</code></td>
+              </tr>
+              <tr>
+                <td><strong>JSON</strong></td>
+                <td>Figma Tokens plugin, design tooling</td>
+                <td><code>{ "color": { "brand": { ... } } }</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="card brand">
+            <div class="card-title">Why this matters first</div>
+            Tokens are the cheapest layer to migrate to first, and they pay back immediately &mdash;
+            every app that consumes Arcadis Design System can start using
+            <code>--color-brand-primary</code> today, even before any component is rewritten as a
+            web component.
+          </div>
+        </section>
+
+        <!-- ─── Layer 2: Web Components ─── -->
+        <section id="layer-2" class="section">
+          <span class="pill"><span class="num">2</span> Components</span>
+          <h2>Layer 2 &mdash; Web Components</h2>
+          <p class="section-subtitle">
+            The single component implementation that every framework consumes. Native to the
+            browser; no virtual DOM, no framework lock-in.
+          </p>
+
+          <h3>What is a Web Component?</h3>
+          <p>
+            <strong>Web Components</strong> is a set of browser standards (<code
+              >Custom Elements</code
+            >, <code>Shadow DOM</code>, <code>HTML Templates</code>) that lets you define new HTML
+            tags with encapsulated styles and behaviour. Once registered, the browser treats them as
+            first-class HTML.
+          </p>
+          <p>
+            Supported natively in <strong>every major browser since 2018</strong> &mdash; no
+            polyfill needed for any browser an enterprise actively targets.
+          </p>
+
+          <h3>A minimal Arcadis Button as a Lit component</h3>
+          <div class="code-card">
+            <div class="code-card-header">
+              <span>packages/components/src/button/arcadis-button.ts</span>
+              <span class="badge">Lit</span>
+            </div>
+            <pre><code><span class="c-kw">import</span> { LitElement, html, css } <span class="c-kw">from</span> <span class="c-str">"lit"</span>;
+<span class="c-kw">import</span> { customElement, property } <span class="c-kw">from</span> <span class="c-str">"lit/decorators.js"</span>;
+
+@customElement(<span class="c-str">"arcadis-button"</span>)
+<span class="c-kw">export class</span> ArcadisButton <span class="c-kw">extends</span> LitElement {
+  <span class="c-kw">static</span> styles = css<span class="c-str">`
+    :host { display: inline-block; }
+    button {
+      background: var(--color-brand-primary);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.55rem 1.1rem;
+      font: inherit;
+      cursor: pointer;
+    }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+  `</span>;
+
+  @property({ type: String }) variant: <span class="c-str">"solid"</span> | <span class="c-str">"outline"</span> = <span class="c-str">"solid"</span>;
+  @property({ type: Boolean }) disabled = <span class="c-kw">false</span>;
+
+  render() {
+    <span class="c-kw">return</span> html<span class="c-str">`&lt;button ?disabled=${this.disabled}&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/button&gt;`</span>;
+  }
+}</code></pre>
+          </div>
+
+          <h3>Using it &mdash; identical in every framework</h3>
+          <p>
+            Once <code>arcadis-button</code> is registered, this is valid HTML <em>everywhere</em>:
+          </p>
+
+          <div class="code-card">
+            <div class="code-card-header">
+              <span>HTML &mdash; works in any context</span>
+              <span class="badge">Native</span>
+            </div>
+            <pre><code><span class="c-tag">&lt;arcadis-button</span> <span class="c-attr">variant</span>=<span class="c-str">"outline"</span><span class="c-tag">&gt;</span>Save<span class="c-tag">&lt;/arcadis-button&gt;</span></code></pre>
+          </div>
+
+          <h3>Why Shadow DOM matters</h3>
+          <p>
+            Each web component lives in its own <strong>Shadow DOM</strong> &mdash; an encapsulated
+            subtree the host page&rsquo;s CSS can&rsquo;t leak into. This is what makes the
+            component look the same whether it&rsquo;s embedded in a Tailwind app, a Bootstrap app,
+            or a legacy jQuery + custom CSS app. The host can only style what you explicitly expose
+            (via CSS custom properties or <code>::part()</code>).
+          </p>
+
+          <div class="card">
+            <div class="card-title">Design tokens + Shadow DOM = consistent look</div>
+            Inside the shadow DOM, CSS variables defined on the document (<code>:root</code>)
+            <em>are</em> inherited &mdash; so the design tokens from Layer 1 reach every component
+            automatically. Encapsulation without isolation.
+          </div>
+        </section>
+
+        <!-- ─── Layer 3: Framework Wrappers ─── -->
+        <section id="layer-3" class="section">
+          <span class="pill"><span class="num">3</span> Wrappers</span>
+          <h2>Layer 3 &mdash; Framework Wrappers</h2>
+          <p class="section-subtitle">
+            Same component, idiomatic API per framework. Most wrappers are 20&ndash;50 lines and
+            largely auto-generated.
+          </p>
+
+          <h3>Why wrappers exist at all</h3>
+          <p>
+            React, Angular, and Vue can each <em>technically</em> use a web component directly
+            (<code>&lt;arcadis-button&gt;</code> just works as HTML). But each framework has quirks
+            that make the bare API awkward:
+          </p>
+          <ul>
+            <li>
+              <strong>React</strong> (before v19) couldn&rsquo;t pass complex props or listen to
+              custom events idiomatically.
+            </li>
+            <li>
+              <strong>Angular</strong> needs <code>CUSTOM_ELEMENTS_SCHEMA</code> and benefits from
+              typed inputs / outputs.
+            </li>
+            <li><strong>Vue</strong> works out of the box but a typed wrapper gives better DX.</li>
+            <li><strong>Blazor (.NET)</strong> needs a small JS interop shim.</li>
+          </ul>
+
+          <h3>The framework matrix</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Framework</th>
+                <th>How it consumes</th>
+                <th>Wrapper effort</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>React 19+</strong></td>
+                <td>
+                  Native: <code>&lt;arcadis-button variant="outline" /&gt;</code> works with refs,
+                  props, events
+                </td>
+                <td>Optional thin wrapper for type safety</td>
+              </tr>
+              <tr>
+                <td><strong>React 18 and below</strong></td>
+                <td><code>@lit/react</code> or Stencil-generated wrapper</td>
+                <td>Auto-generated</td>
+              </tr>
+              <tr>
+                <td><strong>Angular</strong></td>
+                <td><code>CUSTOM_ELEMENTS_SCHEMA</code> + thin directive for typed I/O</td>
+                <td>~20 lines / component, auto-generatable</td>
+              </tr>
+              <tr>
+                <td><strong>Vue 3</strong></td>
+                <td>Native &mdash; web components are first-class in Vue 3</td>
+                <td>Optional typed wrapper</td>
+              </tr>
+              <tr>
+                <td><strong>jQuery / plain JS</strong></td>
+                <td>
+                  Just use the HTML tag; <code>$("arcadis-button").attr("variant", "outline")</code>
+                </td>
+                <td>None</td>
+              </tr>
+              <tr>
+                <td><strong>Blazor (.NET)</strong></td>
+                <td>Tag in .razor markup; JS interop for events</td>
+                <td>~30 lines C# wrapper / component</td>
+              </tr>
+              <tr>
+                <td><strong>Plain HTML</strong></td>
+                <td>Just the tag. One <code>&lt;script&gt;</code> to register elements</td>
+                <td>None</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>What a React 19 consumer sees</h3>
+          <div class="code-card">
+            <div class="code-card-header">
+              <span>app/components/SaveButton.tsx</span>
+              <span class="badge">React 19</span>
+            </div>
+            <pre><code><span class="c-kw">import</span> <span class="c-str">"@arcadis/components/button"</span>; <span class="c-cmt">// registers &lt;arcadis-button&gt;</span>
+
+<span class="c-kw">export function</span> SaveButton() {
+  <span class="c-kw">return</span> (
+    <span class="c-tag">&lt;arcadis-button</span>
+      <span class="c-attr">variant</span>=<span class="c-str">"outline"</span>
+      <span class="c-attr">onClick</span>={() =&gt; save()}<span class="c-tag">&gt;</span>
+      Save changes
+    <span class="c-tag">&lt;/arcadis-button&gt;</span>
+  );
+}</code></pre>
+          </div>
+
+          <h3>What an Angular consumer sees</h3>
+          <div class="code-card">
+            <div class="code-card-header">
+              <span>app/components/save-button.component.ts</span>
+              <span class="badge">Angular</span>
+            </div>
+            <pre><code><span class="c-kw">import</span> <span class="c-str">"@arcadis/components/button"</span>;
+
+@Component({
+  selector: <span class="c-str">"app-save"</span>,
+  template: <span class="c-str">`&lt;arcadis-button variant="outline" (click)="save()"&gt;Save&lt;/arcadis-button&gt;`</span>,
+  <span class="c-cmt">// Module declares CUSTOM_ELEMENTS_SCHEMA</span>
+})
+<span class="c-kw">export class</span> SaveComponent {}</code></pre>
+          </div>
+
+          <h3>What a Vue consumer sees</h3>
+          <div class="code-card">
+            <div class="code-card-header">
+              <span>SaveButton.vue</span>
+              <span class="badge">Vue 3</span>
+            </div>
+            <pre><code><span class="c-tag">&lt;template&gt;</span>
+  <span class="c-tag">&lt;arcadis-button</span> <span class="c-attr">variant</span>=<span class="c-str">"outline"</span> @<span class="c-attr">click</span>=<span class="c-str">"save"</span><span class="c-tag">&gt;</span>Save<span class="c-tag">&lt;/arcadis-button&gt;</span>
+<span class="c-tag">&lt;/template&gt;</span></code></pre>
+          </div>
+
+          <h3>What a jQuery consumer sees</h3>
+          <div class="code-card">
+            <div class="code-card-header">
+              <span>legacy.js</span>
+              <span class="badge">jQuery</span>
+            </div>
+            <pre><code><span class="c-cmt">// In the page once:</span>
+<span class="c-tag">&lt;script src=<span class="c-str">"https://cdn.../arcadis/components.js"</span>&gt;&lt;/script&gt;</span>
+
+<span class="c-cmt">// Then anywhere:</span>
+$(<span class="c-str">"arcadis-button"</span>).on(<span class="c-str">"click"</span>, save);
+$(<span class="c-str">"&lt;arcadis-button variant='outline'&gt;Save&lt;/arcadis-button&gt;"</span>).appendTo(<span class="c-str">"#toolbar"</span>);</code></pre>
+          </div>
+
+          <h3>What a Blazor consumer sees</h3>
+          <div class="code-card">
+            <div class="code-card-header">
+              <span>Pages/Save.razor</span>
+              <span class="badge">.NET / Blazor</span>
+            </div>
+            <pre><code>&lt;arcadis-button variant=<span class="c-str">"outline"</span> @onclick=<span class="c-str">"Save"</span>&gt;Save&lt;/arcadis-button&gt;
+
+@code {
+    <span class="c-kw">private void</span> Save() { <span class="c-cmt">/* ... */</span> }
+}</code></pre>
+          </div>
+
+          <div class="card brand">
+            <div class="card-title">The key insight</div>
+            Every framework reaches the <em>same</em> <code>&lt;arcadis-button&gt;</code> element.
+            The wrapper layer only translates between framework idioms and the underlying standard
+            &mdash; the component itself doesn&rsquo;t change.
+          </div>
+        </section>
+
+        <!-- ─── Layer 4: Documentation ─── -->
+        <section id="layer-4" class="section">
+          <span class="pill"><span class="num">4</span> Docs</span>
+          <h2>Layer 4 &mdash; Documentation</h2>
+          <p class="section-subtitle">
+            One Storybook documents the components for every framework. No need to maintain a
+            separate React-Storybook, Angular-Storybook, and Vue-Storybook.
+          </p>
+
+          <h3>One Storybook, every framework</h3>
+          <p>
+            Storybook supports a <code>@storybook/web-components</code> renderer that documents web
+            components directly &mdash; properties, slots, events, accessibility, theming. Because
+            the same web component runs in React/Angular/Vue, the documentation is
+            framework-agnostic by construction.
+          </p>
+
+          <div class="code-card">
+            <div class="code-card-header">
+              <span>packages/components/src/button/arcadis-button.stories.ts</span>
+              <span class="badge">Storybook</span>
+            </div>
+            <pre><code><span class="c-kw">import</span> { html } <span class="c-kw">from</span> <span class="c-str">"lit"</span>;
+<span class="c-kw">import</span> <span class="c-str">"./arcadis-button"</span>;
+
+<span class="c-kw">export default</span> {
+  title: <span class="c-str">"Components/Button"</span>,
+  component: <span class="c-str">"arcadis-button"</span>,
+  argTypes: {
+    variant: { control: <span class="c-str">"select"</span>, options: [<span class="c-str">"solid"</span>, <span class="c-str">"outline"</span>] },
+    disabled: { control: <span class="c-str">"boolean"</span> },
+  },
+};
+
+<span class="c-kw">export const</span> Outline = {
+  args: { variant: <span class="c-str">"outline"</span> },
+  render: (args) =&gt; html<span class="c-str">`&lt;arcadis-button variant=${args.variant}&gt;Save&lt;/arcadis-button&gt;`</span>,
+};</code></pre>
+          </div>
+
+          <h3>What developers see</h3>
+          <ul>
+            <li>
+              <strong>Live preview</strong> &mdash; the actual web component rendered, not a mock.
+            </li>
+            <li>
+              <strong>API table</strong> &mdash; properties, slots, events; auto-generated from the
+              component&rsquo;s <code>argTypes</code>.
+            </li>
+            <li>
+              <strong>Framework snippets</strong> &mdash; show usage in React, Angular, Vue, jQuery,
+              plain HTML for the <em>same</em> live example.
+            </li>
+            <li><strong>Accessibility report</strong> &mdash; one audit covers every framework.</li>
+          </ul>
+
+          <div class="card brand">
+            <div class="card-title">Why this is a big deal</div>
+            One docs site is the difference between Arcadis Design System being a &ldquo;React
+            design system with Angular notes&rdquo; and a real cross-framework design system. The
+            current Arcadis Design System Storybook already does the heavy lifting &mdash; the
+            upgrade is to switch the renderer to <code>@storybook/web-components</code> and add
+            multi-framework code snippets per story.
+          </div>
+        </section>
+
+        <!-- ─── Tooling: Stencil vs Lit ─── -->
+        <section id="tooling" class="section">
+          <h2>Stencil vs Lit</h2>
+          <p class="section-subtitle">
+            Two well-supported choices for authoring web components in 2026. They lead to slightly
+            different team workflows; both are production-grade.
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>&nbsp;</th>
+                <th>Lit</th>
+                <th>Stencil</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Type</strong></td>
+                <td>Runtime library (~5 KB)</td>
+                <td>Compiler that emits standard web components</td>
+              </tr>
+              <tr>
+                <td><strong>Maintainer</strong></td>
+                <td>Google (Polymer team)</td>
+                <td>Ionic</td>
+              </tr>
+              <tr>
+                <td><strong>Authoring style</strong></td>
+                <td>TypeScript classes + tagged-template literals</td>
+                <td>TypeScript classes + JSX</td>
+              </tr>
+              <tr>
+                <td><strong>Build step</strong></td>
+                <td>Optional (TS or plain JS)</td>
+                <td>Required (Stencil compiler)</td>
+              </tr>
+              <tr>
+                <td><strong>Framework wrappers</strong></td>
+                <td>Manual or <code>@lit/react</code></td>
+                <td>Auto-generated React / Angular / Vue wrappers</td>
+              </tr>
+              <tr>
+                <td><strong>SSR / hydration</strong></td>
+                <td>Lit SSR (Declarative Shadow DOM)</td>
+                <td>Built-in (prerendering / hydration)</td>
+              </tr>
+              <tr>
+                <td><strong>Bundle output</strong></td>
+                <td>Per-component ESM</td>
+                <td>Tree-shakable bundle per framework target</td>
+              </tr>
+              <tr>
+                <td><strong>Best for</strong></td>
+                <td>Small footprint, full control, modern apps</td>
+                <td>Big component library shipping to multiple framework consumers</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Recommendation for a Arcadis-scale system</h3>
+          <div class="card brand">
+            <div class="card-title">
+              Stencil &mdash; if you need React/Angular/Vue wrappers without writing them
+            </div>
+            For a design system that explicitly wants to ship typed React, Angular, and Vue packages
+            with minimum maintenance overhead, <strong>Stencil</strong> wins because it
+            auto-generates those wrappers from the same component source. Ionic Framework&rsquo;s
+            entire UI is built this way &mdash; 100+ components shipping to every framework from one
+            codebase. Note: Stencil&rsquo;s Vue output has historically been less mature than its
+            React and Angular targets &mdash; validate in a spike.
+          </div>
+
+          <div class="card">
+            <div class="card-title">
+              Lit &mdash; if you want the smallest, most standards-pure stack
+            </div>
+            <strong>Lit</strong> is the right call when most of your consumers are modern React
+            (19+), Vue, or plain HTML, and you want minimal tooling. Adobe Spectrum, Shoelace, and
+            Material Web are all Lit-based. Wrappers can be auto-generated via
+            <code>@custom-elements-manifest/analyzer</code> + community tools when you need them.
+          </div>
+
+          <h3>Honourable mentions</h3>
+          <ul>
+            <li>
+              <strong>FAST</strong> (Microsoft) &mdash; powers Fluent UI Web Components (distinct
+              from Fluent UI v9, which is React-first). Powerful, slightly heavier.
+            </li>
+            <li>
+              <strong>Vanilla Custom Elements</strong> &mdash; absolutely valid for a small library,
+              but you&rsquo;ll re-invent reactivity and DX. Not recommended for 50+ components.
+            </li>
+          </ul>
+        </section>
+
+        <!-- ─── Repo structure ─── -->
+        <section id="repo" class="section">
+          <h2>Recommended repo structure</h2>
+          <p class="section-subtitle">
+            One monorepo, three to five published packages. Tooling-agnostic &mdash; works with npm
+            workspaces, pnpm, Nx, Turborepo, or Yarn.
+          </p>
+
+          <div class="code-card">
+            <div class="code-card-header">
+              <span>arcadis/</span>
+              <span class="badge">Monorepo</span>
+            </div>
+            <pre><code>arcadis/
+├── packages/
+│   ├── tokens/                <span class="c-cmt"># Layer 1: Style Dictionary source + outputs</span>
+│   │   ├── src/               <span class="c-cmt">#   tokens.json (W3C DTCG)</span>
+│   │   └── dist/              <span class="c-cmt">#   css / scss / js / ios / android</span>
+│   │
+│   ├── components/            <span class="c-cmt"># Layer 2: Web components (Stencil or Lit)</span>
+│   │   ├── src/arcadis-button/
+│   │   ├── src/arcadis-input/
+│   │   └── src/arcadis-card/
+│   │
+│   ├── react/                 <span class="c-cmt"># Layer 3a: React wrappers</span>
+│   ├── angular/               <span class="c-cmt"># Layer 3b: Angular wrappers</span>
+│   ├── vue/                   <span class="c-cmt"># Layer 3c: Vue wrappers</span>
+│   └── blazor/                <span class="c-cmt"># Layer 3d: .NET / Blazor wrappers (NuGet)</span>
+│
+├── apps/
+│   └── storybook/             <span class="c-cmt"># Layer 4: docs site (one for all)</span>
+│
+├── examples/                  <span class="c-cmt"># Reference apps per framework</span>
+│   ├── react-vite/
+│   ├── angular/
+│   ├── vue/
+│   ├── jquery-legacy/
+│   └── plain-html/
+│
+└── package.json               <span class="c-cmt"># workspaces config</span></code></pre>
+          </div>
+
+          <h3>What gets published where</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Package</th>
+                <th>Registry</th>
+                <th>Install</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>@arcadis/tokens</code></td>
+                <td>npm (and consume via SCSS / CSS too)</td>
+                <td><code>npm i @arcadis/tokens</code></td>
+              </tr>
+              <tr>
+                <td><code>@arcadis/components</code></td>
+                <td>npm</td>
+                <td><code>npm i @arcadis/components</code></td>
+              </tr>
+              <tr>
+                <td><code>@arcadis/react</code></td>
+                <td>npm</td>
+                <td><code>npm i @arcadis/react</code></td>
+              </tr>
+              <tr>
+                <td><code>@arcadis/angular</code></td>
+                <td>npm</td>
+                <td><code>npm i @arcadis/angular</code></td>
+              </tr>
+              <tr>
+                <td><code>@arcadis/vue</code></td>
+                <td>npm</td>
+                <td><code>npm i @arcadis/vue</code></td>
+              </tr>
+              <tr>
+                <td><code>Arcadis.Blazor</code></td>
+                <td>NuGet</td>
+                <td><code>dotnet add package Arcadis.Blazor</code></td>
+              </tr>
+              <tr>
+                <td>CDN bundle</td>
+                <td>Static host (e.g. unpkg, internal CDN)</td>
+                <td><code>&lt;script src="https://cdn/arcadis.min.js"&gt;</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="card">
+            <div class="card-title">Versioning</div>
+            Use <strong>Changesets</strong> for coordinated semver across packages. The token
+            package, component package, and framework wrappers move together &mdash; a bug fix in
+            <code>arcadis-button</code> ships a patched component + republished wrappers in one
+            release.
+          </div>
+        </section>
+
+        <!-- ─── Real-world examples ─── -->
+        <section id="real-world" class="section">
+          <h2>Real-world examples</h2>
+          <p class="section-subtitle">
+            This isn&rsquo;t a theoretical pattern. Every name in the table below ships
+            production-grade UI to multiple frameworks from one codebase.
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Design system</th>
+                <th>Owner</th>
+                <th>Tech</th>
+                <th>Frameworks supported</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Spectrum Web Components</strong></td>
+                <td>Adobe</td>
+                <td>Lit</td>
+                <td>React, plain HTML, framework-agnostic</td>
+              </tr>
+              <tr>
+                <td><strong>Fluent UI Web Components</strong></td>
+                <td>Microsoft</td>
+                <td>FAST</td>
+                <td>
+                  React, Angular, Vue, Blazor, plain. Fluent UI <strong>v9</strong> (main product)
+                  is React-only; FAST-based WCs are a separate track.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Carbon Design System</strong></td>
+                <td>IBM</td>
+                <td>Multiple (Lit + bespoke)</td>
+                <td>React, Angular, Vue, Web Components</td>
+              </tr>
+              <tr>
+                <td><strong>Shoelace / Web Awesome</strong></td>
+                <td>Independent</td>
+                <td>Lit</td>
+                <td>Every framework</td>
+              </tr>
+              <tr>
+                <td><strong>Ionic Framework</strong></td>
+                <td>Ionic</td>
+                <td>Stencil</td>
+                <td>React, Angular, Vue, vanilla</td>
+              </tr>
+              <tr>
+                <td><strong>Material Web</strong></td>
+                <td>Google</td>
+                <td>Lit</td>
+                <td>Every framework</td>
+              </tr>
+              <tr>
+                <td><strong>Lightning Web Components</strong></td>
+                <td>Salesforce</td>
+                <td>Bespoke compiler</td>
+                <td>Salesforce platform + LWC OSS</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>
+            The common thread: <strong>none</strong> of them maintain parallel React, Angular, and
+            Vue implementations of the same component. They all use web components as the single
+            source of UI and ship framework-specific wrappers built from the same source.
+          </p>
+        </section>
+
+        <!-- ─── Trade-offs ─── -->
+        <section id="tradeoffs" class="section">
+          <h2>Trade-offs &amp; gotchas</h2>
+          <p class="section-subtitle">
+            Going framework-agnostic is the right architecture, but it has real costs. Knowing them
+            up front prevents surprises.
+          </p>
+
+          <h3>Where web components are weaker</h3>
+          <ul>
+            <li>
+              <strong>SSR is harder.</strong> Declarative Shadow DOM (the modern fix) works in
+              modern browsers but tooling is still catching up. If your apps are heavily SSR
+              (Next.js, SvelteKit), do a small spike before committing.
+            </li>
+            <li>
+              <strong>Form-associated custom elements.</strong> Native form integration
+              (<code>value</code>, <code>required</code>, validation) works via the
+              <code>ElementInternals</code> API &mdash; supported in current Chrome, Firefox, and
+              Safari 16.4+; plan extra QA if you must support older iOS / embedded browsers.
+            </li>
+            <li>
+              <strong>Theming via Shadow DOM.</strong> Host pages can&rsquo;t reach inside the
+              shadow DOM with arbitrary CSS. You must explicitly expose theming hooks (CSS custom
+              properties, <code>::part()</code>). This is actually a feature &mdash; but it&rsquo;s
+              a discipline.
+            </li>
+            <li>
+              <strong>Bundle cost.</strong> Lit adds ~5 KB; Stencil&rsquo;s runtime is ~3 KB
+              tree-shaken. Negligible for any real app, but not zero.
+            </li>
+          </ul>
+
+          <h3>Where it costs more than a single-framework system</h3>
+          <ul>
+            <li>
+              <strong>Initial setup.</strong> Setting up tokens + Stencil/Lit + wrappers takes a few
+              weeks of effort that a pure React design system doesn&rsquo;t pay.
+            </li>
+            <li>
+              <strong>Two skill sets.</strong> The team needs comfort with both framework-native
+              authoring and the web-component layer.
+            </li>
+            <li>
+              <strong>Build complexity.</strong> A monorepo + multi-target build pipeline is more
+              moving parts than a single React library.
+            </li>
+            <li>
+              <strong>Cross-framework integration testing.</strong> The component is written once,
+              but each wrapper (React, Angular, Vue, Blazor) still needs smoke tests in real apps.
+              Budget ongoing QA effort &mdash; not a one-time migration cost.
+            </li>
+          </ul>
+
+          <h3>Framework-specific notes</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Framework</th>
+                <th>Honest assessment</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>React 19+</strong></td>
+                <td>
+                  First-class support. Pre-19 needs <code>@lit/react</code> or generated wrapper.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Angular</strong></td>
+                <td>
+                  Excellent &mdash; web components are a stated supported integration point. Needs
+                  <code>CUSTOM_ELEMENTS_SCHEMA</code> in modules.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Vue 3</strong></td>
+                <td>Easiest of all &mdash; native, just works.</td>
+              </tr>
+              <tr>
+                <td><strong>jQuery</strong></td>
+                <td>
+                  Works fine for reading / writing attributes and listening to events. No two-way
+                  binding (jQuery doesn&rsquo;t have it natively), but selectors and events behave
+                  normally.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Blazor (.NET)</strong></td>
+                <td>
+                  Works via standard HTML interop. Two-way binding to component properties needs a
+                  small JS interop layer.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Server-side WebForms / older .NET</strong></td>
+                <td>
+                  Web components render as plain HTML &mdash; serve them like any other tag.
+                  Interaction is JS-only.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="card warning">
+            <div class="card-title">Honest rule of thumb</div>
+            If <strong>more than 80%</strong> of your consumers are one framework forever,
+            multi-framework architecture is over-investment. If you have
+            <strong>two or more framework consumers today</strong> (we already do &mdash; React,
+            Angular, Web Components), the maths flips and a unified design system pays back inside a
+            year.
+          </div>
+        </section>
+
+        <!-- ─── Arcadis Design System rollout ─── -->
+        <section id="for-arcadis" class="section">
+          <h2>Phased rollout for the design system</h2>
+          <p class="section-subtitle">
+            The Arcadis Design System already supports React, Angular, and Web Components on top of
+            Kendo UI. The quickest path to a true framework-agnostic system is incremental &mdash;
+            never a big-bang rewrite.
+          </p>
+
+          <h3>The five phases</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Phase</th>
+                <th>What ships</th>
+                <th>Effort</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. Tokens first</strong></td>
+                <td>
+                  Extract Arcadis Design System SCSS variables to Style Dictionary; publish
+                  <code>@arcadis/tokens</code> with CSS, SCSS, and JS outputs. Existing apps adopt
+                  with no other changes.
+                </td>
+                <td>~1 sprint</td>
+              </tr>
+              <tr>
+                <td><strong>2. Pick the tool</strong></td>
+                <td>
+                  Build one component (e.g. Button) twice &mdash; once with Stencil, once with Lit
+                  &mdash; on a feature branch. Pick the winner based on team feedback.
+                </td>
+                <td>~3 days</td>
+              </tr>
+              <tr>
+                <td><strong>3. First 3 components</strong></td>
+                <td>
+                  Build Button, Input, and Card as web components. Ship
+                  <code>@arcadis/components</code> + <code>@arcadis/react</code> +
+                  <code>@arcadis/angular</code>. New consuming apps start using them; existing apps
+                  unaffected.
+                </td>
+                <td>~1 month</td>
+              </tr>
+              <tr>
+                <td><strong>4. Vue + Blazor + jQuery</strong></td>
+                <td>
+                  Add Vue wrapper (small), Blazor wrapper (NuGet), and a CDN bundle for jQuery /
+                  plain HTML consumers. Now the system is genuinely cross-framework.
+                </td>
+                <td>~2 weeks</td>
+              </tr>
+              <tr class="recommended">
+                <td><strong>5. Migrate the rest</strong></td>
+                <td>
+                  Migrate remaining catalogue components (Scenario A: ~43 as web components). Grid,
+                  Gantt, and the Tree family are <strong>out of v1 scope</strong> &mdash; not part
+                  of the cross-framework package until a later phase or commercial alternative.
+                </td>
+                <td>1&ndash;2 quarters</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>What you keep along the way</h3>
+          <ul>
+            <li>
+              <strong>The Storybook.</strong> Switch the renderer to web-components; all existing
+              docs, theming, and the AI Assistant continue to work.
+            </li>
+            <li>
+              <strong>The brand and visual language.</strong> Tokens are the foundation &mdash; not
+              the components &mdash; so Arcadis Design System looks identical from day one.
+            </li>
+            <li>
+              <strong>Honest scope on heavy UI.</strong> Grid, Gantt, and Tree are not in v1. React-
+              only wrappers do not satisfy Vue, Blazor, or jQuery; follow-on work or third-party
+              grids are a separate decision.
+            </li>
+          </ul>
+
+          <h3>Decision points</h3>
+          <ul>
+            <li>
+              <strong>End of Phase 1:</strong> have we extracted tokens cleanly, and do consuming
+              apps see no regressions when they upgrade?
+            </li>
+            <li>
+              <strong>End of Phase 2:</strong> Stencil or Lit &mdash; one decision, written down.
+            </li>
+            <li>
+              <strong>End of Phase 3:</strong> are the React and Angular wrappers idiomatic enough
+              that consuming-team feedback is positive?
+            </li>
+            <li>
+              <strong>End of Phase 5:</strong> are 43 catalogue components available
+              cross-framework? What is the plan for Grid, Gantt, and Tree (rebuild, commercial lib,
+              or per-stack)?
+            </li>
+          </ul>
+
+          <div class="card brand">
+            <div class="card-title">The pragmatic point</div>
+            You don&rsquo;t need to commit to all five phases upfront. Phase 1 (tokens) alone is
+            worth doing regardless &mdash; it&rsquo;s the cheapest win in a design system. Each
+            subsequent phase reads the data from the previous one and decides whether to continue.
+          </div>
+        </section>
+
+        <footer class="doc-footer">
+          Arcadis Design System &middot; Arcadis Digital Intelligence &middot; Architecture Guide
+        </footer>
+      </main>
+    </div>
+
+    <script>
+      function showSection(ev, sectionId) {
+        if (ev && ev.preventDefault) ev.preventDefault();
+
+        document.querySelectorAll(".section").forEach(function (section) {
+          section.classList.remove("active");
+        });
+        var target = document.getElementById(sectionId);
+        if (target) target.classList.add("active");
+
+        document.querySelectorAll(".nav-link").forEach(function (link) {
+          link.classList.remove("active");
+        });
+        var activeLink = document.querySelector('.nav-link[href="#' + sectionId + '"]');
+        if (activeLink) activeLink.classList.add("active");
+
+        if (history.replaceState) {
+          history.replaceState(null, "", "#" + sectionId);
+        } else {
+          window.location.hash = sectionId;
+        }
+
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }
+
+      window.addEventListener("DOMContentLoaded", function () {
+        var hash = (window.location.hash || "").slice(1);
+        if (hash && document.getElementById(hash)) {
+          showSection(null, hash);
+        }
+      });
+    </script>
+  </body>
+</html>
