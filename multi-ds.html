@@ -913,6 +913,268 @@
         padding: 0.2rem 0.5rem;
         border-radius: 999px;
       }
+      /* Owned vs vendor layers (current-architecture diagram) */
+      .stack-layer.owned {
+        border-left-color: var(--color-brand);
+        background: var(--color-brand-soft);
+      }
+      .stack-layer.vendor {
+        border-left: 4px dashed #b91c1c;
+        background: #fff;
+      }
+      .stack-layer.vendor .num {
+        background: #b91c1c;
+      }
+      .stack-layer.neutral {
+        border-left-color: var(--text-muted);
+      }
+      .stack-layer.neutral .num {
+        background: var(--text-muted);
+      }
+      .stack-layer .tag-own,
+      .stack-layer .tag-vendor {
+        font-size: 0.64rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 0.18rem 0.5rem;
+        border-radius: 999px;
+        white-space: nowrap;
+      }
+      .stack-layer .tag-own {
+        background: var(--color-brand);
+        color: #fff;
+      }
+      .stack-layer .tag-vendor {
+        background: rgba(185, 28, 28, 0.1);
+        color: #b91c1c;
+        border: 1px solid rgba(185, 28, 28, 0.25);
+      }
+      .stack-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 1rem;
+        font-size: 0.78rem;
+        color: var(--text-tertiary);
+      }
+      .stack-legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .stack-legend .swatch {
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+        display: inline-block;
+      }
+      .stack-legend .swatch.own {
+        background: var(--color-brand);
+      }
+      .stack-legend .swatch.vendor {
+        background: #fff;
+        border: 1px dashed #b91c1c;
+      }
+
+      /* ─────────────────────── Design-system approaches page ─────────────────────── */
+      .approach {
+        background: #fff;
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+        margin-bottom: 1.1rem;
+        overflow: hidden;
+      }
+      .approach.is-recommended {
+        border-color: var(--color-brand);
+        box-shadow: 0 0 0 1px var(--color-brand-line);
+      }
+      .abadge.tag-novus {
+        background: var(--text-muted);
+        color: #fff;
+      }
+      .approach-head {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        padding: 0.8rem 1.1rem;
+        background: var(--bg-surface);
+        border-bottom: 1px solid var(--border-default);
+      }
+      .approach.is-recommended .approach-head {
+        background: rgba(216, 86, 20, 0.08);
+      }
+      .approach-head .anum {
+        width: 30px;
+        height: 30px;
+        flex: 0 0 30px;
+        border-radius: 50%;
+        background: var(--text-muted);
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .approach.is-recommended .approach-head .anum {
+        background: var(--color-brand);
+      }
+      .approach-head .aname {
+        font-weight: 800;
+        color: var(--text-primary);
+        font-size: 0.98rem;
+        line-height: 1.25;
+      }
+      .approach-badges {
+        margin-left: auto;
+        display: flex;
+        gap: 0.35rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+      .abadge {
+        font-size: 0.64rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        padding: 0.2rem 0.5rem;
+        border-radius: 999px;
+        white-space: nowrap;
+        border: 1px solid transparent;
+      }
+      .abadge.tag-status {
+        background: var(--text-muted);
+        color: #fff;
+      }
+      .abadge.tag-rec {
+        background: var(--color-brand);
+        color: #fff;
+      }
+      .abadge.lvl-low {
+        background: rgba(185, 28, 28, 0.1);
+        color: #b91c1c;
+        border-color: rgba(185, 28, 28, 0.25);
+      }
+      .abadge.lvl-mid {
+        background: #fff7ed;
+        color: #c2410c;
+        border-color: #fed7aa;
+      }
+      .abadge.lvl-high {
+        background: var(--color-brand-soft);
+        color: var(--color-brand);
+        border-color: var(--color-brand-line);
+      }
+      .approach-body {
+        padding: 1rem 1.1rem 1.1rem;
+      }
+      .approach-body > p {
+        margin-bottom: 0.85rem;
+      }
+      .arch-chain {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.75rem;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-default);
+        border-radius: 8px;
+        margin-bottom: 0.95rem;
+      }
+      .arch-box {
+        background: #fff;
+        border: 1px solid var(--border-default);
+        border-radius: 6px;
+        padding: 0.35rem 0.6rem;
+        font-size: 0.76rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+      }
+      .arch-box.own {
+        border-left: 3px solid var(--color-brand);
+        background: var(--color-brand-soft);
+        color: var(--color-brand);
+      }
+      .arch-box.vendor {
+        border-left: 3px dashed #b91c1c;
+        color: #b91c1c;
+      }
+      .arch-sep {
+        color: var(--text-muted);
+        font-weight: 700;
+      }
+      .approach-pc {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 0.9rem;
+      }
+      .approach-pc h5 {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        margin-bottom: 0.35rem;
+      }
+      .approach-pc .pros h5 {
+        color: var(--color-brand);
+      }
+      .approach-pc .cons h5 {
+        color: #b91c1c;
+      }
+      .approach-pc ul {
+        margin: 0 0 0 1rem;
+        font-size: 0.85rem;
+      }
+      .approach-pc ul li {
+        margin-bottom: 0.25rem;
+      }
+      .approach-best {
+        font-size: 0.85rem;
+        background: var(--color-brand-soft);
+        border-left: 3px solid var(--color-brand);
+        border-radius: 0 6px 6px 0;
+        padding: 0.55rem 0.75rem;
+        color: var(--text-tertiary);
+      }
+      .approach-best strong {
+        color: var(--text-primary);
+      }
+      .spectrum {
+        display: flex;
+        align-items: stretch;
+        gap: 0;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid var(--border-default);
+        margin: 0.5rem 0 0.4rem;
+      }
+      .spectrum-end {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.78rem;
+        font-weight: 700;
+        flex: 0 0 auto;
+      }
+      .spectrum-end.fast {
+        background: rgba(185, 28, 28, 0.08);
+        color: #b91c1c;
+      }
+      .spectrum-end.control {
+        background: var(--color-brand-soft);
+        color: var(--color-brand);
+        margin-left: auto;
+      }
+      .spectrum-track {
+        flex: 1;
+        background: linear-gradient(90deg, rgba(185, 28, 28, 0.18), var(--color-brand-tint));
+      }
+      @media (max-width: 720px) {
+        .approach-pc {
+          grid-template-columns: 1fr;
+        }
+      }
 
       /* Phase timeline */
       .phase-track {
@@ -1432,11 +1694,11 @@
         <div class="nav-section">
           <div class="nav-section-title">Proposal</div>
           <a href="#tldr" class="nav-link active" onclick="showSection(event, 'tldr')">Summary</a>
-          <a href="#sec-ask-scope" class="nav-link" onclick="showSection(event, 'sec-ask-scope')"
-            >Scope of this Ask</a
-          >
           <a href="#sec-01" class="nav-link" onclick="showSection(event, 'sec-01')"
             >Why We Need This</a
+          >
+          <a href="#current-arch" class="nav-link" onclick="showSection(event, 'current-arch')"
+            >Today&rsquo;s Architecture</a
           >
           <a href="#sec-02" class="nav-link" onclick="showSection(event, 'sec-02')"
             >Proposed Approach</a
@@ -1444,23 +1706,33 @@
           <a href="#sec-03" class="nav-link" onclick="showSection(event, 'sec-03')"
             >Alternatives Considered</a
           >
+          <a href="#sec-inaction" class="nav-link" onclick="showSection(event, 'sec-inaction')"
+            >Cost of Inaction</a
+          >
           <a href="#sec-cost" class="nav-link" onclick="showSection(event, 'sec-cost')"
             >Cost &amp; Effort</a
           >
           <a href="#sec-inventory" class="nav-link" onclick="showSection(event, 'sec-inventory')"
             >Component Inventory</a
           >
-          <a href="#sec-inaction" class="nav-link" onclick="showSection(event, 'sec-inaction')"
-            >Cost of Inaction</a
-          >
+          <a href="#sec-08" class="nav-link" onclick="showSection(event, 'sec-08')">Rollout Plan</a>
           <a href="#sec-measure" class="nav-link" onclick="showSection(event, 'sec-measure')"
             >How We&rsquo;ll Measure Success</a
           >
           <a href="#sec-risks" class="nav-link" onclick="showSection(event, 'sec-risks')"
             >Risks &amp; Mitigations</a
           >
-          <a href="#sec-08" class="nav-link" onclick="showSection(event, 'sec-08')">Rollout Plan</a>
+          <a href="#sec-ask-scope" class="nav-link" onclick="showSection(event, 'sec-ask-scope')"
+            >Scope of this Ask</a
+          >
           <a href="#sec-09" class="nav-link" onclick="showSection(event, 'sec-09')">The Ask</a>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Design System Options</div>
+          <a href="#ds-approaches" class="nav-link" onclick="showSection(event, 'ds-approaches')"
+            >Ways to build a design system</a
+          >
         </div>
 
         <div class="nav-section">
@@ -1499,11 +1771,11 @@
           <a href="#real-world" class="nav-link" onclick="showSection(event, 'real-world')"
             >Real-world examples</a
           >
+          <a href="#for-luma" class="nav-link" onclick="showSection(event, 'for-luma')"
+            >Phased rollout for Luma</a
+          >
           <a href="#tradeoffs" class="nav-link" onclick="showSection(event, 'tradeoffs')"
             >Trade-offs &amp; gotchas</a
-          >
-          <a href="#for-arcadis" class="nav-link" onclick="showSection(event, 'for-arcadis')"
-            >Phased rollout for the design system</a
           >
         </div>
       </nav>
@@ -1511,61 +1783,59 @@
       <!-- ─────────────────────── Main ─────────────────────── -->
       <main class="main">
         <!-- ═════════════════════════════════════════════════════════════════
-             PROPOSAL SECTIONS (management view) — kept at top per request
+             PROPOSAL SECTIONS (management view)
              ═════════════════════════════════════════════════════════════════ -->
 
         <section id="tldr" class="section active">
           <h2>Summary</h2>
           <p class="section-subtitle">
-            The Arcadis Design System is Arcadis Digital Intelligence&rsquo;s shared component
-            library (Kendo UI, React, Angular, Web Components). Product teams also use Vue, jQuery,
-            and .NET. This proposal asks for a <strong>measured, phased path</strong> to one
-            framework-agnostic codebase &mdash; not a big-bang rewrite.
+            One design system, built once, used natively by every framework &mdash; approached as a
+            measured, phased path, not a big-bang rewrite.
           </p>
-          <div class="card warning">
-            <div class="card-title">A note on timing in this document</div>
-            Phrases like &ldquo;short / mid-term / longer-term&rdquo; are
-            <strong>directional</strong> &mdash; for scope and trade-off conversations, not
-            committed dates. Concrete schedules are agreed only after each phase gate, once team
-            size, parallelism, and dependencies are confirmed.
-          </div>
+
+          <h3>In one minute</h3>
           <ul>
             <li>
-              <strong>Problem:</strong> Today&rsquo;s model risks visual and behavioural drift as
-              each stack evolves separately; every change is paid for more than once.
+              <strong>What we have today:</strong> a shared Luma
+              <strong>theme on top of Kendo UI</strong> &mdash;
+              <strong>one CSS build, one npm package</strong>, used by React, Angular, Web
+              Components, jQuery, Vue, and .NET. That aligns branding across stacks, but components
+              are still Kendo&rsquo;s &mdash; we
+              <strong>cannot change their DOM structure or redesign them</strong> beyond what
+              theming and vendor APIs allow.
             </li>
             <li>
-              <strong>Approach:</strong> Design tokens first, then web components (Lit or Stencil),
-              then thin framework wrappers &mdash; one Storybook.
+              <strong>The problem:</strong> each framework still depends on its own Kendo (or
+              related vendor) build and documentation path, so stacks drift and work is repeated.
+              Deeper UX, accessibility, or behaviour changes often hit those vendor limits instead
+              of shipping once from our own components.
             </li>
             <li>
-              <strong>What this approval funds:</strong>
-              <strong>Phase 1 (tokens)</strong> and a <strong>short Stencil-vs-Lit spike</strong>.
-              This is <em>not</em>
-              the full design system &mdash; it is the foundation and a tool decision.
+              <strong>The fix:</strong> one shared core &mdash; design tokens, then web components,
+              then thin framework wrappers &mdash; documented in a single Storybook.
             </li>
             <li>
-              <strong>v1 cross-framework scope:</strong> <strong>43 of 48</strong> catalogue
-              components as web components; <strong>5 data-heavy</strong> (Grid, Gantt, Tree family)
-              explicitly out of v1 &mdash; see
-              <a href="#sec-inventory" onclick="showSection(event, 'sec-inventory')"
-                >Component Inventory</a
-              >.
-            </li>
-            <li>
-              <strong>Full multi-framework rollout</strong> for the v1 scope is a
-              <strong>longer-term</strong>, scaled by team size and parallelism &mdash; see
-              <a href="#sec-cost" onclick="showSection(event, 'sec-cost')">Cost &amp; Effort</a>
-              and
-              <a href="#sec-inventory" onclick="showSection(event, 'sec-inventory')"
-                >Component Inventory</a
-              >. Phases 3&ndash;5 require separate approval after gate data.
-            </li>
-            <li>
-              <strong>Ask today:</strong> Approve Phase 1 + Phase 2 only.
-              <strong>Small slice of existing team time</strong>; no new headcount; no licences.
+              <strong>The payoff:</strong> a fix is made once and ships to every framework, instead
+              of being repeated three times.
             </li>
           </ul>
+
+          <h3>What we are asking for today</h3>
+          <ul>
+            <li>
+              <strong>Approve Phase 1 + Phase 2 only:</strong> publish design tokens, then run a
+              short Stencil-vs-Lit spike on one component (Button) and write down the tool decision.
+            </li>
+            <li>
+              <strong>Cost:</strong> a small slice of existing team time &mdash; no new headcount,
+              no licences.
+            </li>
+            <li>
+              <strong>Not in this ask:</strong> the full build. Phases 3&ndash;5 need separate
+              approval once each gate shows results.
+            </li>
+          </ul>
+
           <div class="stats">
             <div class="stat accent">
               <div class="label">This approval</div>
@@ -1573,130 +1843,71 @@
             </div>
             <div class="stat">
               <div class="label">Components in catalogue</div>
-              <div class="value">~48 components</div>
+              <div class="value">~48 total</div>
             </div>
             <div class="stat">
-              <div class="label">First production-ready set</div>
-              <div class="value">Short / mid-term</div>
+              <div class="label">In v1 scope</div>
+              <div class="value">43 of 48</div>
             </div>
             <div class="stat">
-              <div class="label">Full migration</div>
-              <div class="value">Longer-term</div>
+              <div class="label">Out of v1 (data-heavy)</div>
+              <div class="value">5</div>
             </div>
           </div>
-          <div class="card warning">
-            <div class="card-title">A note on investment</div>
-            Web components are not magic &mdash; building ~48 production-grade components
-            <strong>from scratch</strong> (our own API and implementation &mdash; not exact copies
-            of Kendo or any vendor) with theming, accessibility, tests, and framework wrappers is a
-            <strong>real engineering investment</strong>. The benefit is not speed-of-build; it is
-            <strong>one fix shipping everywhere afterwards</strong> instead of three.
-          </div>
-        </section>
-
-        <section id="sec-ask-scope" class="section">
-          <h2>Scope of this Ask</h2>
-          <p class="section-subtitle">
-            What this proposal requests now &mdash; and what it deliberately does
-            <em>not</em> commit to.
+          <p class="footnote">
+            The 5 data-heavy components (Grid, Gantt, Tree family) are deliberately out of v1
+            &mdash; see
+            <a href="#sec-inventory" onclick="showSection(event, 'sec-inventory')"
+              >Component Inventory</a
+            >. Full rollout of the v1 scope is longer-term and scales with team size &mdash; see
+            <a href="#sec-cost" onclick="showSection(event, 'sec-cost')">Cost &amp; Effort</a>.
           </p>
 
-          <div class="diagram">
-            <div class="diagram-head">
-              <span class="tag">This ask</span>
-              <span class="label">Phase 1 + 2 now &mdash; Phases 3&ndash;5 only after gates</span>
-            </div>
-            <div class="phase-track">
-              <div class="phase-step now">
-                <span class="phase-num">Phase 1</span>
-                <span class="phase-name">Tokens</span>
-                <span class="phase-out"><code>@arcadis/tokens</code></span>
-                <span class="phase-badge">Approve now</span>
-              </div>
-              <div class="phase-step now">
-                <span class="phase-num">Phase 2</span>
-                <span class="phase-name">Stencil vs Lit</span>
-                <span class="phase-out">Button spike + decision</span>
-                <span class="phase-badge">Approve now</span>
-              </div>
-              <div class="phase-step later gate">
-                <span class="phase-num">Phase 3</span>
-                <span class="phase-name">First components</span>
-                <span class="phase-out">Button, Input, Card</span>
-                <span class="phase-badge">Later</span>
-              </div>
-              <div class="phase-step later gate">
-                <span class="phase-num">Phase 4&ndash;5</span>
-                <span class="phase-name">Full rollout</span>
-                <span class="phase-out">~43 components + more frameworks</span>
-                <span class="phase-badge">Later</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="compare">
-            <div class="col future">
-              <h4>Approving now</h4>
-              <ul>
-                <li>
-                  <strong>Phase 1:</strong> Extract Arcadis Design System tokens to Style
-                  Dictionary; publish <code>@arcadis/tokens</code> (CSS, SCSS, JS).
-                </li>
-                <li>
-                  <strong>Phase 2:</strong> Short spike &mdash; one component (Button) in Stencil
-                  and Lit; pick a tool.
-                </li>
-                <li>
-                  Existing design system team capacity (~1&ndash;2 engineers part-time on this
-                  track).
-                </li>
-              </ul>
-            </div>
-            <div class="col today">
-              <h4>Not approving now</h4>
-              <ul>
-                <li>
-                  Full migration of all 48 catalogue components (including Grid, Gantt, Tree).
-                </li>
-                <li>Treating React-only Grid/Tree implementations as cross-framework delivery.</li>
-                <li>Deprecating Kendo-based React paths overnight.</li>
-                <li>New headcount or a separate &ldquo;platform&rdquo; team.</li>
-                <li>Vue / Blazor / jQuery wrappers (Phase 4, if earlier phases succeed).</li>
-              </ul>
-            </div>
-          </div>
-          <div class="card brand">
-            <div class="card-title">Consuming apps stay safe</div>
-            Phase 1 is additive. Existing React and Angular integrations keep working. Teams adopt
-            tokens when ready; nothing breaks on day one.
+          <div class="card warning">
+            <div class="card-title">Two things to keep in mind</div>
+            <strong>This is real engineering, not a shortcut.</strong> Building ~48 production-grade
+            components from scratch &mdash; our own API and implementation, not copies of Kendo or
+            any vendor &mdash; with theming, accessibility, tests, and wrappers is a genuine
+            investment; the benefit is one fix shipping everywhere afterwards.<br /><br />
+            <strong>Timing words are directional.</strong> &ldquo;Short / mid / longer-term&rdquo;
+            are for scope conversations, not committed dates. Concrete schedules are set at each
+            phase gate.
           </div>
         </section>
 
         <section id="sec-01" class="section">
           <h2>Why We Need This</h2>
           <p class="section-subtitle">
-            The design system already serves multiple frameworks. Without a single component source,
-            cost and inconsistency grow with every new adopting team.
+            We already reach multiple frameworks through a Kendo-based theme &mdash; but that is not
+            the same as owning the components. Without a single component source we cannot freely
+            change structure or design, and cost grows with every stack.
           </p>
           <p>
-            Arcadis product teams consume Arcadis Design System from <strong>React</strong>,
-            <strong>Angular</strong>, and <strong>Web Components</strong> today. Additional stacks
-            (Vue, jQuery, .NET / Blazor) appear in roadmaps. Each stack currently depends on
-            Kendo-themed paths and documentation that must stay aligned by hand.
+            Today the Luma design system is primarily a <strong>theme layer on Kendo UI</strong>,
+            used from <strong>React</strong>, <strong>Angular</strong>,
+            <strong>Web Components</strong>, <strong>jQuery</strong>, <strong>Vue</strong>, and
+            <strong>.NET / Blazor</strong>. That spreads Luma branding, but Kendo still owns each
+            component&rsquo;s markup, behaviour, and API. We can skin and configure &mdash; we
+            <strong>cannot redesign DOM structure or ship custom component implementations</strong>
+            the way a true multi-framework design system can.
           </p>
           <ul>
             <li>
-              A bug fix or accessibility improvement in one surface may need repeating across
-              framework-specific examples and wrappers.
-            </li>
-            <li>Brand updates (colour, spacing, type) touch SCSS and docs in multiple places.</li>
-            <li>
-              Consuming teams see small visual differences between stacks &mdash; undermining
-              &ldquo;one Arcadis experience.&rdquo;
+              Structural or interaction changes (layout, accessibility fixes, new variants) are
+              limited by what Kendo exposes &mdash; not by what product or design need.
             </li>
             <li>
-              Onboarding a new framework (e.g. Vue) means re-proving patterns instead of reusing a
-              published package.
+              <strong>Kendo is per framework</strong> (React, Angular, jQuery, etc.) &mdash;
+              different vendor packages and docs paths, even though the Luma theme CSS is the same
+              everywhere.
+            </li>
+            <li>
+              Consuming teams still see drift between stacks &mdash; Kendo markup and behaviour
+              differ by framework, undermining a truly identical experience.
+            </li>
+            <li>
+              Onboarding a new framework means wiring another Kendo (or vendor) stack, not
+              installing one shared component package.
             </li>
           </ul>
 
@@ -1711,7 +1922,7 @@
             <div class="diagram problem">
               <div class="diagram-head">
                 <span class="tag">Today</span>
-                <span class="label">Design system on a different base library per framework</span>
+                <span class="label">One Luma theme (npm) styling Kendo per framework</span>
               </div>
               <div class="flow">
                 <div class="flow-source">
@@ -1720,54 +1931,51 @@
                 </div>
                 <div class="flow-arrow"></div>
                 <div class="flow-note">
-                  each framework wraps a <em>different</em> base library &mdash; all maintained
-                  separately &darr;
+                  one Luma CSS package &mdash; each stack still uses its own Kendo build &darr;
                 </div>
                 <div class="lanes">
                   <div class="lane">
                     <div class="lane-head">React</div>
-                    <div class="lane-ds">Design system &mdash; React build</div>
-                    <div class="lane-on">built on</div>
-                    <div class="lane-step base">Kendo UI for React / MUI</div>
-                    <div class="lane-step">Own SCSS theme</div>
-                    <div class="lane-step">Own Storybook docs</div>
-                    <div class="lane-foot">Maintained separately</div>
+                    <div class="lane-ds">Same Luma theme (npm)</div>
+                    <div class="lane-on">styles</div>
+                    <div class="lane-step base">Kendo UI for React</div>
+                    <div class="lane-step">Vendor owns markup &amp; behaviour</div>
+                    <div class="lane-step">Own docs / snippets</div>
+                    <div class="lane-foot">Can skin, can&rsquo;t redesign</div>
                   </div>
                   <div class="lane">
                     <div class="lane-head">Angular</div>
-                    <div class="lane-ds">Design system &mdash; Angular build</div>
-                    <div class="lane-on">built on</div>
-                    <div class="lane-step base">Kendo UI for Angular / Material</div>
-                    <div class="lane-step">Own SCSS theme</div>
-                    <div class="lane-step">Own Storybook docs</div>
-                    <div class="lane-foot">Maintained separately</div>
+                    <div class="lane-ds">Same Luma theme (npm)</div>
+                    <div class="lane-on">styles</div>
+                    <div class="lane-step base">Kendo UI for Angular</div>
+                    <div class="lane-step">Vendor owns markup &amp; behaviour</div>
+                    <div class="lane-step">Own docs / snippets</div>
+                    <div class="lane-foot">Can skin, can&rsquo;t redesign</div>
                   </div>
                   <div class="lane">
                     <div class="lane-head">jQuery</div>
-                    <div class="lane-ds">Design system &mdash; jQuery build</div>
-                    <div class="lane-on">built on</div>
-                    <div class="lane-step base">Kendo jQuery / Bootstrap</div>
-                    <div class="lane-step">Own SCSS theme</div>
+                    <div class="lane-ds">Same Luma theme (npm)</div>
+                    <div class="lane-on">styles</div>
+                    <div class="lane-step base">Kendo jQuery</div>
+                    <div class="lane-step">Vendor owns markup &amp; behaviour</div>
                     <div class="lane-step">Own docs / snippets</div>
-                    <div class="lane-foot">Maintained separately</div>
+                    <div class="lane-foot">Can skin, can&rsquo;t redesign</div>
                   </div>
                   <div class="lane">
                     <div class="lane-head">Vue / .NET</div>
-                    <div class="lane-ds">Design system &mdash; Vue / .NET build</div>
-                    <div class="lane-on">built on</div>
+                    <div class="lane-ds">Same Luma theme (npm)</div>
+                    <div class="lane-on">styles</div>
                     <div class="lane-step base">Vuetify / Telerik</div>
-                    <div class="lane-step">Own SCSS theme</div>
+                    <div class="lane-step">Vendor owns markup &amp; behaviour</div>
                     <div class="lane-step">Own docs</div>
-                    <div class="lane-foot">Roadmap &mdash; re-prove again</div>
+                    <div class="lane-foot">Another vendor stack</div>
                   </div>
                 </div>
                 <div class="flow-caption">
-                  One design system, but
-                  <span class="cost"
-                    >a separate build on a different base library per framework</span
-                  >
-                  &mdash; multiple vendor libraries to license, theme, patch, and keep in sync, and
-                  the versions slowly drift apart.
+                  One theme CSS, but
+                  <span class="cost">Kendo (or other vendor) components differ per framework</span>
+                  &mdash; we cannot change DOM structure or redesign behaviour, and stacks still
+                  drift on vendor markup and APIs.
                 </div>
               </div>
             </div>
@@ -1775,18 +1983,17 @@
             <div class="diagram solution">
               <div class="diagram-head">
                 <span class="tag">With one codebase</span>
-                <span class="label">One change ships everywhere</span>
+                <span class="label">Our own components &mdash; one change ships everywhere</span>
               </div>
               <div class="flow">
                 <div class="flow-source">
                   One change
                   <small
-                    >bug fix &middot; accessibility &middot; token rename &middot; new
-                    variant</small
+                    >redesign &middot; bug fix &middot; accessibility &middot; new variant</small
                   >
                 </div>
                 <div class="flow-arrow"></div>
-                <div class="flow-note">made once in the shared core &darr;</div>
+                <div class="flow-note">made once in components we own &darr;</div>
                 <div class="flow-core">
                   Design tokens + web components &mdash; single source of truth
                 </div>
@@ -1801,8 +2008,9 @@
                   <div class="flow-node">Plain HTML</div>
                 </div>
                 <div class="flow-caption">
-                  Effort <span class="cost">&asymp; change &times; 1</span> &mdash; it stays flat no
-                  matter how many teams adopt it, and every stack stays visually identical.
+                  Effort <span class="cost">&asymp; change &times; 1</span> &mdash; full control of
+                  markup and design, flat cost no matter how many teams adopt it, every stack
+                  identical.
                 </div>
               </div>
             </div>
@@ -1810,9 +2018,123 @@
 
           <div class="card warning">
             <div class="card-title">The trigger</div>
-            We are past the point where a single-framework design system is cheaper. With
-            <strong>two or more active consumer frameworks</strong>, industry practice is one
-            web-component core plus thin wrappers &mdash; not three parallel implementations.
+            Theming a vendor library got us a shared look, but it caps how far we can take our own
+            design. With <strong>two or more active consumer frameworks</strong> and a real need to
+            change structure and behaviour, industry practice is one web-component core we own plus
+            thin wrappers &mdash; not a theme re-applied on someone else&rsquo;s components per
+            stack.
+          </div>
+        </section>
+
+        <section id="current-arch" class="section">
+          <h2>Today&rsquo;s Architecture &mdash; Theme on Kendo</h2>
+          <p class="section-subtitle">
+            How the Luma design system is built right now: a theme layer we own, sitting on top of
+            Kendo&rsquo;s components. This is what gives us reach across frameworks &mdash; and also
+            what limits how much we can change.
+          </p>
+
+          <div class="diagram">
+            <div class="diagram-head">
+              <span class="tag">Today</span>
+              <span class="label">Luma theme layered on Kendo components</span>
+            </div>
+            <div class="stack-layers">
+              <div class="stack-layer neutral">
+                <div class="num">5</div>
+                <div class="title">
+                  Product apps
+                  <small>React, Angular, jQuery, Vue, .NET / Blazor</small>
+                </div>
+                <span class="tag-own">Ours</span>
+              </div>
+              <div class="stack-layer owned">
+                <div class="num">4</div>
+                <div class="title">
+                  Luma theme &mdash; one CSS bundle (npm)
+                  <small>Single build; same package imported in every framework</small>
+                </div>
+                <span class="tag-own">Ours</span>
+              </div>
+              <div class="stack-layer vendor">
+                <div class="num">3</div>
+                <div class="title">
+                  Kendo components (per framework)
+                  <small>Kendo for React / Angular / jQuery, plus Vuetify / Telerik</small>
+                </div>
+                <span class="tag-vendor">Vendor</span>
+              </div>
+              <div class="stack-layer vendor">
+                <div class="num">2</div>
+                <div class="title">
+                  Kendo markup, behaviour &amp; APIs
+                  <small>DOM structure and interaction owned by the vendor</small>
+                </div>
+                <span class="tag-vendor">Vendor</span>
+              </div>
+              <div class="stack-layer neutral">
+                <div class="num">1</div>
+                <div class="title">
+                  Browser
+                  <small>HTML, CSS, JavaScript</small>
+                </div>
+              </div>
+            </div>
+            <div class="stack-legend">
+              <span><span class="swatch own"></span> We own &mdash; can change freely</span>
+              <span><span class="swatch vendor"></span> Vendor owns &mdash; theming only</span>
+            </div>
+          </div>
+
+          <h3>What this gets us &mdash; and where it stops</h3>
+          <div class="compare">
+            <div class="col future">
+              <h4>What the theme layer gives us</h4>
+              <ul>
+                <li>
+                  <strong>One theme, one npm package</strong> &mdash; a single CSS file serves
+                  React, Angular, jQuery, Vue, and .NET.
+                </li>
+                <li>Fast reach &mdash; Kendo already ships components for each stack.</li>
+                <li>Mature, supported widgets (grids, pickers) without building them.</li>
+                <li>Familiar APIs for teams already using Kendo.</li>
+              </ul>
+            </div>
+            <div class="col today">
+              <h4>Where it stops</h4>
+              <ul>
+                <li>
+                  <strong>No control of DOM structure</strong> &mdash; markup is Kendo&rsquo;s; we
+                  can&rsquo;t restructure components.
+                </li>
+                <li>
+                  <strong>Limited redesign</strong> &mdash; we style within what Kendo&rsquo;s CSS
+                  hooks allow, not a blank canvas.
+                </li>
+                <li>
+                  <strong>Behaviour is fixed</strong> &mdash; interaction and accessibility depend
+                  on the vendor&rsquo;s implementation.
+                </li>
+                <li>
+                  <strong>Kendo is still per framework</strong> &mdash; different vendor packages
+                  per stack; only the theme CSS is unified.
+                </li>
+                <li>
+                  <strong>Vendor lock-in &amp; licensing</strong> &mdash; tied to Kendo versions,
+                  upgrades, and licence terms.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card brand">
+            <div class="card-title">Why this matters for the proposal</div>
+            The theme-on-Kendo model is a sensible starting point, not a dead end. The proposed
+            approach keeps the layer we already own (tokens) and gradually replaces the
+            <strong>vendor-owned</strong> layers with
+            <strong>our own web components</strong> &mdash; so we gain control of structure and
+            design without losing cross-framework reach. See
+            <a href="#sec-02" onclick="showSection(event, 'sec-02')">Proposed Approach</a>.
           </div>
         </section>
 
@@ -1851,7 +2173,7 @@
                 <div class="num">2</div>
                 <div class="title">
                   Web components
-                  <small>One <code>&lt;arcadis-button&gt;</code> tag everywhere</small>
+                  <small>One <code>&lt;luma-button&gt;</code> tag everywhere</small>
                 </div>
                 <div class="tech">Lit or Stencil</div>
               </div>
@@ -1898,7 +2220,7 @@
             </tbody>
           </table>
           <p>
-            Example: <code>&lt;arcadis-button variant="outline"&gt;</code> is authored once. React,
+            Example: <code>&lt;luma-button variant="outline"&gt;</code> is authored once. React,
             Angular, Vue, jQuery, and Blazor apps all consume the same element &mdash; wrappers only
             translate framework conventions.
           </p>
@@ -1938,7 +2260,7 @@
               <div class="alt-card">
                 <span class="alt-letter">C</span>
                 <span class="alt-title">Buy commercial DS</span>
-                <span class="alt-verdict">Licence cost; weak fit for Arcadis patterns</span>
+                <span class="alt-verdict">Licence cost; weak fit for Luma patterns</span>
               </div>
               <div class="alt-card recommended">
                 <span class="alt-letter">D</span>
@@ -1978,7 +2300,7 @@
                 <td>License a vendor SaaS / component library.</td>
                 <td>
                   Often <strong>$10K&ndash;$50K+ per year</strong>, generic styling, weak fit for
-                  Arcadis Design System-specific Kendo + Tabler patterns.
+                  Luma-specific Kendo + Tabler patterns.
                 </td>
               </tr>
               <tr class="alt-recommended">
@@ -1991,6 +2313,36 @@
               </tr>
             </tbody>
           </table>
+        </section>
+
+        <section id="sec-inaction" class="section">
+          <h2>Cost of Inaction</h2>
+          <p class="section-subtitle">What we pay if we keep the current multi-path model.</p>
+          <ul>
+            <li>
+              <strong>Duplicate engineering:</strong> Every component change (variant, a11y fix,
+              token rename) is repeated across framework surfaces &mdash; roughly proportional to
+              the number of active stacks.
+            </li>
+            <li>
+              <strong>Inconsistent UX:</strong> Teams and auditors notice when Angular and React
+              apps don&rsquo;t match; rework lands on the design system team anyway.
+            </li>
+            <li>
+              <strong>Slower adoption:</strong> New product lines on Vue or .NET wait for
+              &ldquo;their&rdquo; Luma design system path instead of installing a published package.
+            </li>
+            <li>
+              <strong>Documentation debt:</strong> Storybook and Slack support scale with questions
+              &times; frameworks, not with a single source of truth.
+            </li>
+          </ul>
+          <div class="card">
+            <div class="card-title">Directional, not precise</div>
+            We are not claiming a single dollar ROI figure without baseline data. Phase 1 gives
+            measurable token adoption; Phase 3 gives before/after maintenance time on three pilot
+            components.
+          </div>
         </section>
 
         <section id="sec-cost" class="section">
@@ -2100,7 +2452,7 @@
             <tbody>
               <tr class="alt-recommended">
                 <td><strong>1. Tokens</strong> <em>(this ask)</em></td>
-                <td><code>@arcadis/tokens</code> published; apps can adopt CSS variables</td>
+                <td><code>@luma/tokens</code> published; apps can adopt CSS variables</td>
               </tr>
               <tr class="alt-recommended">
                 <td><strong>2. Tool spike</strong> <em>(this ask)</em></td>
@@ -2168,7 +2520,7 @@
         <section id="sec-inventory" class="section">
           <h2>Component Inventory</h2>
           <p class="section-subtitle">
-            The current Arcadis Design System Storybook covers
+            The current Luma design system Storybook covers
             <strong>~48 components</strong>. Below is the full list, grouped by complexity, with an
             explicit recommendation for each group: <strong>build as a web component</strong> in v1,
             or <strong>out of v1 framework-agnostic scope</strong> (not shipped cross-framework in
@@ -2512,7 +2864,7 @@
             <ul style="margin-top: 0.35rem">
               <li>
                 <strong>Commercial cross-framework library</strong> (e.g. AG Grid, Syncfusion) with
-                Arcadis tokens and a thin design-system wrapper.
+                Luma tokens and a thin design-system wrapper.
               </li>
               <li>
                 <strong>Phase 5+ rebuild</strong> as web components if ROI and capacity justify the
@@ -2599,34 +2951,62 @@
           </div>
         </section>
 
-        <section id="sec-inaction" class="section">
-          <h2>Cost of Inaction</h2>
-          <p class="section-subtitle">What we pay if we keep the current multi-path model.</p>
-          <ul>
-            <li>
-              <strong>Duplicate engineering:</strong> Every component change (variant, a11y fix,
-              token rename) is repeated across framework surfaces &mdash; roughly proportional to
-              the number of active stacks.
-            </li>
-            <li>
-              <strong>Inconsistent UX:</strong> Teams and auditors notice when Angular and React
-              apps don&rsquo;t match; rework lands on the design system team anyway.
-            </li>
-            <li>
-              <strong>Slower adoption:</strong> New product lines on Vue or .NET wait for
-              &ldquo;their&rdquo; Arcadis Design System path instead of installing a published
-              package.
-            </li>
-            <li>
-              <strong>Documentation debt:</strong> Storybook and Slack support scale with questions
-              &times; frameworks, not with a single source of truth.
-            </li>
-          </ul>
+        <section id="sec-08" class="section">
+          <h2>Rollout Plan</h2>
+          <p class="section-subtitle">
+            Five phases. Only the first two are in scope for this approval.
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Phase</th>
+                <th>Sequence</th>
+                <th>Outcome</th>
+                <th>Approval</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="alt-recommended">
+                <td><strong>1. Tokens</strong></td>
+                <td>Phase 1 (first)</td>
+                <td><code>@luma/tokens</code> live; pilot adoption</td>
+                <td><strong>This proposal</strong></td>
+              </tr>
+              <tr class="alt-recommended">
+                <td><strong>2. Stencil vs Lit spike</strong></td>
+                <td>Phase 1 (parallel tail)</td>
+                <td>Tool choice documented</td>
+                <td><strong>This proposal</strong></td>
+              </tr>
+              <tr>
+                <td><strong>3. First 3 components</strong></td>
+                <td>Phase 2 window</td>
+                <td>Button, Input, Card production-ready in React + Angular; pilot teams</td>
+                <td>After Phase 2 gate</td>
+              </tr>
+              <tr>
+                <td><strong>4. Vue / Blazor / jQuery</strong></td>
+                <td>Phase 3 window</td>
+                <td>Same 3 components shipped to Vue, Blazor (NuGet), and jQuery (CDN)</td>
+                <td>After Phase 3 gate</td>
+              </tr>
+              <tr>
+                <td><strong>5. Migrate remainder</strong></td>
+                <td>Later phases (per Scenario A)</td>
+                <td>
+                  Remaining ~40 web components migrated (after the Phase 3 pilot); Grid, Gantt, and
+                  Tree family remain <strong>out of v1 scope</strong> unless a follow-on is approved
+                </td>
+                <td>After Phase 3 gate</td>
+              </tr>
+            </tbody>
+          </table>
           <div class="card">
-            <div class="card-title">Directional, not precise</div>
-            We are not claiming a single dollar ROI figure without baseline data. Phase 1 gives
-            measurable token adoption; Phase 3 gives before/after maintenance time on three pilot
-            components.
+            <div class="card-title">In one line</div>
+            First: tokens + tool decision. Next: prove 3 components. Later: migrate the rest under
+            Scenario A only if Phase 3 results justify the spend. Sequencing is intentional &mdash;
+            calendar dates are agreed at each gate.
           </div>
         </section>
 
@@ -2673,7 +3053,7 @@
           </div>
           <p class="footnote">
             &ldquo;Adopt&rdquo; = at least two consuming apps import
-            <code>@arcadis/tokens</code> in a non-production or production branch without visual
+            <code>@luma/tokens</code> in a non-production or production branch without visual
             regression.
           </p>
           <h3>Phase 2 gate (end of spike)</h3>
@@ -2768,101 +3148,81 @@
           </table>
         </section>
 
-        <section id="sec-08" class="section">
-          <h2>Rollout Plan</h2>
+        <section id="sec-ask-scope" class="section">
+          <h2>Scope of this Ask</h2>
           <p class="section-subtitle">
-            Five phases. Only the first two are in scope for this approval.
+            What this proposal requests now &mdash; and what it deliberately does
+            <em>not</em> commit to.
           </p>
 
           <div class="diagram">
             <div class="diagram-head">
-              <span class="tag">Rollout</span>
-              <span class="label">Five phases with decision gates</span>
+              <span class="tag">This ask</span>
+              <span class="label">Phase 1 + 2 now &mdash; Phases 3&ndash;5 only after gates</span>
             </div>
             <div class="phase-track">
               <div class="phase-step now">
                 <span class="phase-num">Phase 1</span>
                 <span class="phase-name">Tokens</span>
-                <span class="phase-out"><code>@arcadis/tokens</code> published</span>
-                <span class="phase-badge">This proposal</span>
+                <span class="phase-out"><code>@luma/tokens</code></span>
+                <span class="phase-badge">Approve now</span>
               </div>
               <div class="phase-step now">
                 <span class="phase-num">Phase 2</span>
                 <span class="phase-name">Stencil vs Lit</span>
-                <span class="phase-out">Tool decision on Button</span>
-                <span class="phase-badge">This proposal</span>
+                <span class="phase-out">Button spike + decision</span>
+                <span class="phase-badge">Approve now</span>
               </div>
               <div class="phase-step later gate">
                 <span class="phase-num">Phase 3</span>
-                <span class="phase-name">First 3 components</span>
-                <span class="phase-out">Button, Input, Card in React + Angular</span>
-                <span class="phase-badge">After gate</span>
+                <span class="phase-name">First components</span>
+                <span class="phase-out">Button, Input, Card</span>
+                <span class="phase-badge">Later</span>
               </div>
               <div class="phase-step later gate">
-                <span class="phase-num">Phase 4</span>
-                <span class="phase-name">More frameworks</span>
-                <span class="phase-out">Vue, Blazor, jQuery CDN</span>
-                <span class="phase-badge">After gate</span>
-              </div>
-              <div class="phase-step later gate">
-                <span class="phase-num">Phase 5</span>
-                <span class="phase-name">Migrate rest</span>
-                <span class="phase-out">~43 components; Grid/Gantt/Tree later</span>
-                <span class="phase-badge">After gate</span>
+                <span class="phase-num">Phase 4&ndash;5</span>
+                <span class="phase-name">Full rollout</span>
+                <span class="phase-out">~43 components + more frameworks</span>
+                <span class="phase-badge">Later</span>
               </div>
             </div>
           </div>
 
-          <table>
-            <thead>
-              <tr>
-                <th>Phase</th>
-                <th>Sequence</th>
-                <th>Outcome</th>
-                <th>Approval</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="alt-recommended">
-                <td><strong>1. Tokens</strong></td>
-                <td>Phase 1 (first)</td>
-                <td><code>@arcadis/tokens</code> live; pilot adoption</td>
-                <td><strong>This proposal</strong></td>
-              </tr>
-              <tr class="alt-recommended">
-                <td><strong>2. Stencil vs Lit spike</strong></td>
-                <td>Phase 1 (parallel tail)</td>
-                <td>Tool choice documented</td>
-                <td><strong>This proposal</strong></td>
-              </tr>
-              <tr>
-                <td><strong>3. First 3 components</strong></td>
-                <td>Phase 2 window</td>
-                <td>Button, Input, Card production-ready in React + Angular; pilot teams</td>
-                <td>After Phase 2 gate</td>
-              </tr>
-              <tr>
-                <td><strong>4. Vue / Blazor / jQuery</strong></td>
-                <td>Phase 3 window</td>
-                <td>Same 3 components shipped to Vue, Blazor (NuGet), and jQuery (CDN)</td>
-                <td>After Phase 3 gate</td>
-              </tr>
-              <tr>
-                <td><strong>5. Migrate remainder</strong></td>
-                <td>Later phases (per Scenario A)</td>
-                <td>
-                  Remaining ~40 web components migrated (after the Phase 3 pilot); Grid, Gantt, and
-                  Tree family remain <strong>out of v1 scope</strong> unless a follow-on is approved
-                </td>
-                <td>After Phase 3 gate</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="card">
-            <div class="card-title">In one line</div>
-            First: tokens + tool decision. Next: prove 3 components. Later: migrate the rest under
-            Scenario A only if Phase 3 results justify the spend. Sequencing is intentional &mdash;
-            calendar dates are agreed at each gate.
+          <div class="compare">
+            <div class="col future">
+              <h4>Approving now</h4>
+              <ul>
+                <li>
+                  <strong>Phase 1:</strong> Extract Luma design system tokens to Style Dictionary;
+                  publish <code>@luma/tokens</code> (CSS, SCSS, JS).
+                </li>
+                <li>
+                  <strong>Phase 2:</strong> Short spike &mdash; one component (Button) in Stencil
+                  and Lit; pick a tool.
+                </li>
+                <li>
+                  Existing design system team capacity (~1&ndash;2 engineers part-time on this
+                  track).
+                </li>
+              </ul>
+            </div>
+            <div class="col today">
+              <h4>Not approving now</h4>
+              <ul>
+                <li>
+                  Full migration of all 48 catalogue components (including Grid, Gantt, Tree).
+                </li>
+                <li>Treating React-only Grid/Tree implementations as cross-framework delivery.</li>
+                <li>Deprecating Kendo-based React paths overnight.</li>
+                <li>New headcount or a separate &ldquo;platform&rdquo; team.</li>
+                <li>Vue / Blazor / jQuery wrappers (Phase 4, if earlier phases succeed).</li>
+              </ul>
+            </div>
+          </div>
+          <div class="card brand">
+            <div class="card-title">Consuming apps stay safe</div>
+            Phase 1 is additive. Existing React and Angular integrations keep working. Teams adopt
+            tokens when ready; nothing breaks on day one.
           </div>
         </section>
 
@@ -2872,7 +3232,7 @@
           <ol>
             <li>
               Approve <strong>Phase 1</strong>: small slice of existing team time for the design
-              system team to publish <code>@arcadis/tokens</code> (Style Dictionary) with CSS, SCSS,
+              system team to publish <code>@luma/tokens</code> (Style Dictionary) with CSS, SCSS,
               and JS outputs.
             </li>
             <li>
@@ -2897,10 +3257,566 @@
         </section>
 
         <!-- ═════════════════════════════════════════════════════════════════
-             ARCHITECTURE SECTIONS (technical briefing) — follow next
+             DESIGN SYSTEM OPTIONS (dedicated page)
              ═════════════════════════════════════════════════════════════════ -->
 
-        <!-- ─── Overview ─── -->
+        <section id="ds-approaches" class="section">
+          <h2>Ways to Build a Design System</h2>
+          <p class="section-subtitle">
+            Every design system enforces the same brand and design guidelines &mdash; the difference
+            is the <strong>architecture</strong> underneath. Each option trades
+            <strong>speed and effort</strong> against
+            <strong>how much of the markup, behaviour, and design you actually control</strong>.
+            Here are the seven realistic ways, what each gives you, and where it stops.
+          </p>
+
+          <div class="spectrum">
+            <span class="spectrum-end fast">Faster / less control</span>
+            <span class="spectrum-track"></span>
+            <span class="spectrum-end control">More control / more effort</span>
+          </div>
+          <p class="footnote">
+            Roughly, the options below run from least control (theme a vendor library) to most
+            control (own components for every framework). Colour key in each diagram:
+            <span style="color: var(--color-brand); font-weight: 700">orange = we own</span>,
+            <span style="color: #b91c1c; font-weight: 700">red dashed = vendor owns</span>.
+          </p>
+
+          <!-- 1. Theme on a vendor library (current) -->
+          <div class="approach is-current">
+            <div class="approach-head">
+              <span class="anum">1</span>
+              <span class="aname">Theme on a vendor component library</span>
+              <span class="approach-badges">
+                <span class="abadge tag-status">Luma Design System (Theme)</span>
+                <span class="abadge lvl-low">Control: Low&ndash;Med</span>
+                <span class="abadge lvl-high">Speed: Fast</span>
+              </span>
+            </div>
+            <div class="approach-body">
+              <p>
+                Apply brand tokens and build <strong>one Luma theme</strong> (a single CSS bundle)
+                on top of Kendo&rsquo;s component classes, published as an
+                <strong>npm package</strong> and imported by apps in any framework. Kendo still
+                ships a <em>different component package per stack</em> (React, Angular, jQuery,
+                etc.) &mdash; but the theme itself is built once and served everywhere. This is how
+                Luma works today.
+              </p>
+              <div class="arch-chain">
+                <span class="arch-box own">Design tokens</span>
+                <span class="arch-sep">&rarr;</span>
+                <span class="arch-box own">One Luma theme (single CSS &middot; npm)</span>
+                <span class="arch-sep">&rarr;</span>
+                <span class="arch-box">Any framework app</span>
+              </div>
+              <p class="footnote" style="margin-top: -0.5rem; margin-bottom: 0.85rem">
+                Underneath: <span style="color: #b91c1c; font-weight: 600">Kendo components</span>
+                (vendor-owned, different package per framework) provide the markup and behaviour the
+                theme styles.
+              </p>
+              <div class="approach-pc">
+                <div class="pros">
+                  <h5>Strengths</h5>
+                  <ul>
+                    <li>
+                      <strong>One theme build, one npm package</strong> &mdash; same CSS in React,
+                      Angular, jQuery, Vue, and .NET apps.
+                    </li>
+                    <li>Fast reach &mdash; Kendo already ships widgets per framework.</li>
+                    <li>Mature grids, pickers, etc. without building them.</li>
+                    <li>Low cost to maintain the theme layer.</li>
+                  </ul>
+                </div>
+                <div class="cons">
+                  <h5>Limits</h5>
+                  <ul>
+                    <li>No control of DOM structure or behaviour (Kendo owns that).</li>
+                    <li>Redesign capped by what Kendo&rsquo;s CSS hooks allow.</li>
+                    <li>Still tied to Kendo per framework for components; vendor lock-in.</li>
+                  </ul>
+                </div>
+              </div>
+              <p class="approach-best">
+                <strong>Best when:</strong> speed matters more than bespoke design, the team is
+                small, or only one or two frameworks are in play.
+              </p>
+            </div>
+          </div>
+
+          <!-- 2. Single-framework component library -->
+          <div class="approach is-novus">
+            <div class="approach-head">
+              <span class="anum">2</span>
+              <span class="aname">Single-framework component library</span>
+              <span class="approach-badges">
+                <span class="abadge tag-novus">NOVUS Design System</span>
+                <span class="abadge lvl-high">Control: High</span>
+                <span class="abadge lvl-mid">Speed: Medium</span>
+              </span>
+            </div>
+            <div class="approach-body">
+              <p>
+                Build your own components in <strong>one framework</strong> (e.g. a React-only
+                library) on top of shared design tokens. You own markup, behaviour, and API &mdash;
+                but only for that stack.
+              </p>
+              <p>
+                <strong>We have already done this:</strong> the
+                <strong>NOVUS Design System</strong> was built this way &mdash; our own components
+                in a single framework, full control of design and implementation, published as a
+                package for product teams on that stack. It proves the model works when one
+                framework is enough; Luma&rsquo;s challenge is reaching <em>all</em> frameworks
+                without repeating that build three times.
+              </p>
+              <div class="arch-chain">
+                <span class="arch-box own">Design tokens</span>
+                <span class="arch-sep">&rarr;</span>
+                <span class="arch-box own">Own components (one framework)</span>
+                <span class="arch-sep">&rarr;</span>
+                <span class="arch-box">Apps on that stack</span>
+              </div>
+              <p class="footnote" style="margin-top: -0.5rem; margin-bottom: 0.85rem">
+                <strong>NOVUS Design System</strong> follows this pattern in production today.
+              </p>
+              <div class="approach-pc">
+                <div class="pros">
+                  <h5>Strengths</h5>
+                  <ul>
+                    <li>Full design and behaviour control in that framework.</li>
+                    <li>Idiomatic, best-in-class developer experience.</li>
+                    <li>Simplest build when there is only one framework.</li>
+                    <li>Proven internally via NOVUS Design System.</li>
+                  </ul>
+                </div>
+                <div class="cons">
+                  <h5>Limits</h5>
+                  <ul>
+                    <li>
+                      Only serves one framework (NOVUS does not cover Angular, jQuery, .NET, etc.).
+                    </li>
+                    <li>Other stacks get nothing or must re-implement from scratch.</li>
+                    <li>
+                      Painful the day a second framework appears &mdash; why Luma looks beyond this.
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <p class="approach-best">
+                <strong>Best when:</strong> essentially all consumers are one framework for the
+                foreseeable future &mdash; as with NOVUS. Not enough when Luma must serve many
+                stacks.
+              </p>
+            </div>
+          </div>
+
+          <!-- 3. Parallel native libraries per framework -->
+          <div class="approach">
+            <div class="approach-head">
+              <span class="anum">3</span>
+              <span class="aname">Separate native library per framework</span>
+              <span class="approach-badges">
+                <span class="abadge lvl-high">Control: High</span>
+                <span class="abadge lvl-low">Speed: Slow / costly</span>
+              </span>
+            </div>
+            <div class="approach-body">
+              <p>
+                Build and maintain parallel React, Angular, and Vue component libraries that share
+                only the tokens. Full control everywhere &mdash; at multiplied cost.
+              </p>
+              <div class="arch-chain">
+                <span class="arch-box own">Design tokens</span>
+                <span class="arch-sep">&rarr;</span>
+                <span class="arch-box own">React lib</span>
+                <span class="arch-box own">Angular lib</span>
+                <span class="arch-box own">Vue lib</span>
+                <span class="arch-sep">&rarr;</span>
+                <span class="arch-box">All apps</span>
+              </div>
+              <div class="approach-pc">
+                <div class="pros">
+                  <h5>Strengths</h5>
+                  <ul>
+                    <li>Idiomatic and fully controlled in every framework.</li>
+                    <li>No shared-runtime constraints.</li>
+                  </ul>
+                </div>
+                <div class="cons">
+                  <h5>Limits</h5>
+                  <ul>
+                    <li>N&times; the build and maintenance.</li>
+                    <li>Every fix repeated; stacks drift apart.</li>
+                    <li>Needs dedicated teams and budget.</li>
+                  </ul>
+                </div>
+              </div>
+              <p class="approach-best">
+                <strong>Best when:</strong> a large org with funded, dedicated teams per framework
+                and a tolerance for duplicate work.
+              </p>
+            </div>
+          </div>
+
+          <!-- 4. Web components + wrappers (recommended) -->
+          <div class="approach is-recommended">
+            <div class="approach-head">
+              <span class="anum">4</span>
+              <span class="aname">Web-component core + thin framework wrappers</span>
+              <span class="approach-badges">
+                <span class="abadge tag-rec">Recommended</span>
+                <span class="abadge lvl-high">Control: High</span>
+                <span class="abadge lvl-mid">Speed: Medium</span>
+              </span>
+            </div>
+            <div class="approach-body">
+              <p>
+                Build each component once as a standards-based web component on top of tokens, then
+                ship thin per-framework wrappers and one Storybook. One codebase, full control,
+                native in every framework.
+              </p>
+              <div class="arch-chain">
+                <span class="arch-box own">Design tokens</span>
+                <span class="arch-sep">&rarr;</span>
+                <span class="arch-box own">Web components</span>
+                <span class="arch-sep">&rarr;</span>
+                <span class="arch-box own">Thin wrappers</span>
+                <span class="arch-sep">&rarr;</span>
+                <span class="arch-box">React / Angular / Vue / jQuery / .NET / HTML</span>
+              </div>
+              <div class="approach-pc">
+                <div class="pros">
+                  <h5>Strengths</h5>
+                  <ul>
+                    <li>One implementation &mdash; one fix ships everywhere.</li>
+                    <li>Full control of markup, design, and behaviour.</li>
+                    <li>Framework-agnostic and future-proof.</li>
+                  </ul>
+                </div>
+                <div class="cons">
+                  <h5>Limits</h5>
+                  <ul>
+                    <li>Up-front setup (tooling + wrappers).</li>
+                    <li>Team needs web-component skills.</li>
+                    <li>SSR and a few edge cases need care.</li>
+                  </ul>
+                </div>
+              </div>
+              <p class="approach-best">
+                <strong>Best when:</strong> two or more frameworks are in play and you want to own
+                the design &mdash; exactly Luma&rsquo;s situation. See
+                <a href="#sec-02" onclick="showSection(event, 'sec-02')">Proposed Approach</a>.
+              </p>
+            </div>
+          </div>
+
+          <!-- 5. CSS / tokens only -->
+          <div class="approach">
+            <div class="approach-head">
+              <span class="anum">5</span>
+              <span class="aname">Tokens + CSS / utility framework (style-only)</span>
+              <span class="approach-badges">
+                <span class="abadge lvl-mid">Control: Visual only</span>
+                <span class="abadge lvl-high">Speed: Fast</span>
+              </span>
+            </div>
+            <div class="approach-body">
+              <p>
+                Ship design tokens plus a CSS layer (utility classes or SCSS, e.g. Tailwind) and no
+                JavaScript components. Teams write their own markup using your classes.
+              </p>
+              <div class="arch-chain">
+                <span class="arch-box own">Design tokens</span>
+                <span class="arch-sep">&rarr;</span>
+                <span class="arch-box own">CSS utilities / classes</span>
+                <span class="arch-sep">&rarr;</span>
+                <span class="arch-box">Apps build their own markup</span>
+              </div>
+              <div class="approach-pc">
+                <div class="pros">
+                  <h5>Strengths</h5>
+                  <ul>
+                    <li>Framework-agnostic and tiny; no JS lock-in.</li>
+                    <li>Strong, cheap visual consistency.</li>
+                  </ul>
+                </div>
+                <div class="cons">
+                  <h5>Limits</h5>
+                  <ul>
+                    <li>No shared behaviour or accessibility.</li>
+                    <li>Each team rebuilds interactive components.</li>
+                  </ul>
+                </div>
+              </div>
+              <p class="approach-best">
+                <strong>Best when:</strong> mostly static or content UI, or you only need visual
+                consistency &mdash; often paired with another option.
+              </p>
+            </div>
+          </div>
+
+          <!-- 6. Headless + your styling -->
+          <div class="approach">
+            <div class="approach-head">
+              <span class="anum">6</span>
+              <span class="aname">Headless components + your own styling</span>
+              <span class="approach-badges">
+                <span class="abadge lvl-high">Control: High</span>
+                <span class="abadge lvl-mid">Speed: Medium</span>
+              </span>
+            </div>
+            <div class="approach-body">
+              <p>
+                A <strong>&ldquo;headless&rdquo; component</strong> is one that ships
+                <strong>behaviour but no looks</strong> &mdash; it handles the hard logic
+                (open/close, keyboard navigation, focus trapping, accessibility) but renders
+                <strong>plain, unstyled HTML</strong>. You bring 100% of the visual design yourself.
+              </p>
+              <p>
+                Think of a dropdown: the headless library makes it open on click, move selection
+                with arrow keys, and announce to screen readers correctly &mdash; but it looks like
+                raw HTML until you style it. Popular ones: <strong>Radix UI</strong>,
+                <strong>Headless UI</strong>, <strong>Ark UI</strong>. You combine that behaviour
+                with your tokens and your own CSS.
+              </p>
+              <div class="arch-chain">
+                <span class="arch-box own">Design tokens</span>
+                <span class="arch-sep">+</span>
+                <span class="arch-box vendor">Headless library (behaviour only, no styles)</span>
+                <span class="arch-sep">+</span>
+                <span class="arch-box own">Your CSS / design</span>
+                <span class="arch-sep">&rarr;</span>
+                <span class="arch-box">Apps</span>
+              </div>
+              <div class="approach-pc">
+                <div class="pros">
+                  <h5>Strengths</h5>
+                  <ul>
+                    <li>
+                      The hard part &mdash; accessibility &amp; interaction &mdash; is done for you.
+                    </li>
+                    <li>Total visual freedom; the look is entirely yours.</li>
+                    <li>Lighter than a full component library.</li>
+                  </ul>
+                </div>
+                <div class="cons">
+                  <h5>Limits</h5>
+                  <ul>
+                    <li>
+                      Most headless libraries are <strong>React-only</strong> (some support a few
+                      others).
+                    </li>
+                    <li>You still write and maintain all the styling yourself.</li>
+                    <li>Doesn&rsquo;t solve cross-framework on its own.</li>
+                  </ul>
+                </div>
+              </div>
+              <p class="approach-best">
+                <strong>Best when:</strong> a mostly-React org that wants accessibility/behaviour
+                handled but insists on its own unique look. Not a fit for Luma&rsquo;s many
+                non-React stacks.
+              </p>
+            </div>
+          </div>
+
+          <!-- 7. Commercial cross-framework suite -->
+          <div class="approach">
+            <div class="approach-head">
+              <span class="anum">7</span>
+              <span class="aname">Buy a commercial component suite</span>
+              <span class="approach-badges">
+                <span class="abadge lvl-low">Control: Low&ndash;Med</span>
+                <span class="abadge lvl-high">Speed: Fast</span>
+              </span>
+            </div>
+            <div class="approach-body">
+              <p>
+                Pay for a <strong>ready-made, paid component library</strong> from a vendor that
+                already supports many frameworks, and apply your brand theme on top. Instead of
+                building components, you <strong>buy a licence</strong> and use theirs.
+              </p>
+              <p>
+                Examples: <strong>Syncfusion</strong>, <strong>AG Grid</strong>, or a fuller
+                <strong>Telerik / Kendo</strong> licence. They ship polished, heavy widgets &mdash;
+                data grids, schedulers, charts &mdash; for React, Angular, Vue, etc. on day one.
+              </p>
+              <p>
+                <strong>Not a different architecture from Option 1.</strong> Luma already follows
+                this pattern with Kendo. Option 7 means
+                <strong>buying or switching to another vendor</strong> (or adding one just for Grid
+                / Gantt) &mdash; still theme-on-vendor, still the same limits on redesigning
+                components.
+              </p>
+              <div class="arch-chain">
+                <span class="arch-box own">Design tokens</span>
+                <span class="arch-sep">+</span>
+                <span class="arch-box vendor"
+                  >Paid vendor components (Syncfusion, AG Grid&hellip;)</span
+                >
+                <span class="arch-sep">+</span>
+                <span class="arch-box own">Your theme</span>
+                <span class="arch-sep">&rarr;</span>
+                <span class="arch-box">All apps</span>
+              </div>
+              <div class="approach-pc">
+                <div class="pros">
+                  <h5>Strengths</h5>
+                  <ul>
+                    <li>Heavy data widgets across many frameworks immediately.</li>
+                    <li>Vendor handles support, bug fixes, and updates.</li>
+                    <li>No component build effort from us.</li>
+                  </ul>
+                </div>
+                <div class="cons">
+                  <h5>Limits</h5>
+                  <ul>
+                    <li>Ongoing licence cost (often per developer / per year).</li>
+                    <li>
+                      Same ceiling as Option 1 &mdash; we can&rsquo;t change their markup or
+                      behaviour.
+                    </li>
+                    <li>Locked into the vendor&rsquo;s roadmap and pricing.</li>
+                  </ul>
+                </div>
+              </div>
+              <p class="approach-best">
+                <strong>Best when:</strong> you urgently need complex widgets (grids, schedulers)
+                across frameworks and are happy to live within a vendor&rsquo;s design. Good as a
+                <em>complement</em> for heavy components, not as the whole design system.
+              </p>
+            </div>
+          </div>
+
+          <div class="card" style="margin: 0 0 1.25rem">
+            <div class="card-title">
+              Option 1 vs Option 7 &mdash; same pattern, different choice
+            </div>
+            <p style="margin-bottom: 0.5rem">
+              <strong>Same architecture:</strong> your brand (tokens + theme) on top of
+              <strong>someone else&rsquo;s components</strong>. You skin them; the vendor owns
+              markup and behaviour. That pattern is listed twice because the
+              <em>business decision</em> is different:
+            </p>
+            <table>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Option 1 (Luma today)</th>
+                  <th>Option 7 (buy commercial suite)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>What it is</strong></td>
+                  <td>Already using <strong>Kendo</strong> + one Luma theme npm package</td>
+                  <td>
+                    <strong>Choosing or adding</strong> another paid library (Syncfusion, AG Grid,
+                    etc.) &mdash; same &ldquo;theme on vendor&rdquo; idea
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>When you&rsquo;d pick it</strong></td>
+                  <td>Status quo &mdash; no vendor change</td>
+                  <td>
+                    New licence for heavy widgets, or replace/swap vendor; still not owning
+                    components
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Control ceiling</strong></td>
+                  <td colspan="2">Identical &mdash; cannot redesign DOM; theme only</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="footnote" style="margin: 0.5rem 0 0">
+              Kendo <em>is</em> a commercial suite (Telerik). Option 7 is not a different technical
+              path &mdash; it is &ldquo;stay on this path but with another vendor or an extra
+              licence for grids/schedulers.&rdquo; Option 4 is the path that actually changes the
+              architecture.
+            </p>
+          </div>
+
+          <h3>Side-by-side comparison</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Approach</th>
+                <th>Design control</th>
+                <th>Frameworks</th>
+                <th>Build cost</th>
+                <th>Best for</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. Theme on vendor</strong> <em>(today)</em></td>
+                <td>Low&ndash;Med</td>
+                <td>All (one theme npm; Kendo per stack)</td>
+                <td>Low</td>
+                <td>Speed over bespoke design</td>
+              </tr>
+              <tr>
+                <td><strong>2. Single-framework lib</strong> <em>(NOVUS DS)</em></td>
+                <td>High</td>
+                <td>One</td>
+                <td>Medium</td>
+                <td>One framework forever; proven by NOVUS</td>
+              </tr>
+              <tr>
+                <td><strong>3. Library per framework</strong></td>
+                <td>High</td>
+                <td>Each, separately</td>
+                <td>Very high</td>
+                <td>Large funded teams</td>
+              </tr>
+              <tr class="alt-recommended">
+                <td><strong>4. Web components + wrappers</strong></td>
+                <td>High</td>
+                <td>All, one codebase</td>
+                <td>Medium</td>
+                <td>Multi-framework + own design</td>
+              </tr>
+              <tr>
+                <td><strong>5. Tokens + CSS only</strong></td>
+                <td>Visual only</td>
+                <td>All</td>
+                <td>Low</td>
+                <td>Visual consistency only</td>
+              </tr>
+              <tr>
+                <td><strong>6. Headless + styling</strong></td>
+                <td>High (look only)</td>
+                <td>Mostly React</td>
+                <td>Medium</td>
+                <td>React-only; vendor does behaviour, you do CSS</td>
+              </tr>
+              <tr>
+                <td><strong>7. Buy commercial suite</strong></td>
+                <td>Low&ndash;Med</td>
+                <td>All (via vendor)</td>
+                <td>Low + licence fee</td>
+                <td>Grids/schedulers fast; same limits as Option 1</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="card brand">
+            <div class="card-title">Where Luma is going</div>
+            We are on <strong>Option 1</strong> today (theme on Kendo). We already proved
+            <strong>Option 2</strong> with the <strong>NOVUS Design System</strong> (own components,
+            one framework). Luma proposes <strong>Option 4</strong> (web components we own) &mdash;
+            the control of NOVUS, but once, for every framework &mdash; keeping tokens, replacing
+            vendor-owned layers gradually, and keeping cross-framework reach. See
+            <a href="#current-arch" onclick="showSection(event, 'current-arch')"
+              >Today&rsquo;s Architecture</a
+            >
+            and <a href="#sec-02" onclick="showSection(event, 'sec-02')">Proposed Approach</a>.
+          </div>
+        </section>
+
+        <!-- ═════════════════════════════════════════════════════════════════
+             ARCHITECTURE SECTIONS (technical briefing)
+             ═════════════════════════════════════════════════════════════════ -->
+
         <section id="overview" class="section">
           <h2>Overview</h2>
           <p class="section-subtitle">
@@ -2943,7 +3859,7 @@
             &rarr; web components (the actual UI) &rarr; thin framework wrappers (React / Angular /
             Vue) &rarr; one Storybook documenting all of them. Web Components are a
             <strong>native browser standard</strong>, so the same
-            <code>&lt;arcadis-button&gt;</code> tag works identically in every framework. Wrappers
+            <code>&lt;luma-button&gt;</code> tag works identically in every framework. Wrappers
             exist purely to give each framework an <em>idiomatic</em> API (typed props in React,
             <code>[(ngModel)]</code> in Angular, etc.) &mdash; not to re-implement the component.
           </p>
@@ -3077,7 +3993,6 @@
           </p>
         </section>
 
-        <!-- ─── Why ─── -->
         <section id="why" class="section">
           <h2>Why one codebase?</h2>
           <p class="section-subtitle">
@@ -3147,7 +4062,6 @@
           </div>
         </section>
 
-        <!-- ─── Architecture ─── -->
         <section id="architecture" class="section">
           <h2>The 4-layer architecture</h2>
           <p class="section-subtitle">
@@ -3250,7 +4164,6 @@
           <p>One commit, every consuming app updated on next dependency bump.</p>
         </section>
 
-        <!-- ─── Layer 1: Design Tokens ─── -->
         <section id="layer-1" class="section">
           <span class="pill"><span class="num">1</span> Foundation</span>
           <h2>Layer 1 &mdash; Design Tokens</h2>
@@ -3359,13 +4272,12 @@
           <div class="card brand">
             <div class="card-title">Why this matters first</div>
             Tokens are the cheapest layer to migrate to first, and they pay back immediately &mdash;
-            every app that consumes Arcadis Design System can start using
+            every app that consumes Luma design system can start using
             <code>--color-brand-primary</code> today, even before any component is rewritten as a
             web component.
           </div>
         </section>
 
-        <!-- ─── Layer 2: Web Components ─── -->
         <section id="layer-2" class="section">
           <span class="pill"><span class="num">2</span> Components</span>
           <h2>Layer 2 &mdash; Web Components</h2>
@@ -3381,7 +4293,7 @@
             </div>
             <div class="hub-diagram">
               <div class="hub-core">
-                <code>&lt;arcadis-button&gt;</code>
+                <code>&lt;luma-button&gt;</code>
                 <small>Written once in Lit or Stencil</small>
               </div>
               <div class="hub-spokes">
@@ -3407,17 +4319,17 @@
             polyfill needed for any browser an enterprise actively targets.
           </p>
 
-          <h3>A minimal Arcadis Button as a Lit component</h3>
+          <h3>A minimal Luma Button as a Lit component</h3>
           <div class="code-card">
             <div class="code-card-header">
-              <span>packages/components/src/button/arcadis-button.ts</span>
+              <span>packages/components/src/button/luma-button.ts</span>
               <span class="badge">Lit</span>
             </div>
             <pre><code><span class="c-kw">import</span> { LitElement, html, css } <span class="c-kw">from</span> <span class="c-str">"lit"</span>;
 <span class="c-kw">import</span> { customElement, property } <span class="c-kw">from</span> <span class="c-str">"lit/decorators.js"</span>;
 
-@customElement(<span class="c-str">"arcadis-button"</span>)
-<span class="c-kw">export class</span> ArcadisButton <span class="c-kw">extends</span> LitElement {
+@customElement(<span class="c-str">"luma-button"</span>)
+<span class="c-kw">export class</span> LumaButton <span class="c-kw">extends</span> LitElement {
   <span class="c-kw">static</span> styles = css<span class="c-str">`
     :host { display: inline-block; }
     button {
@@ -3443,7 +4355,7 @@
 
           <h3>Using it &mdash; identical in every framework</h3>
           <p>
-            Once <code>arcadis-button</code> is registered, this is valid HTML <em>everywhere</em>:
+            Once <code>luma-button</code> is registered, this is valid HTML <em>everywhere</em>:
           </p>
 
           <div class="code-card">
@@ -3451,7 +4363,7 @@
               <span>HTML &mdash; works in any context</span>
               <span class="badge">Native</span>
             </div>
-            <pre><code><span class="c-tag">&lt;arcadis-button</span> <span class="c-attr">variant</span>=<span class="c-str">"outline"</span><span class="c-tag">&gt;</span>Save<span class="c-tag">&lt;/arcadis-button&gt;</span></code></pre>
+            <pre><code><span class="c-tag">&lt;luma-button</span> <span class="c-attr">variant</span>=<span class="c-str">"outline"</span><span class="c-tag">&gt;</span>Save<span class="c-tag">&lt;/luma-button&gt;</span></code></pre>
           </div>
 
           <h3>Why Shadow DOM matters</h3>
@@ -3471,7 +4383,6 @@
           </div>
         </section>
 
-        <!-- ─── Layer 3: Framework Wrappers ─── -->
         <section id="layer-3" class="section">
           <span class="pill"><span class="num">3</span> Wrappers</span>
           <h2>Layer 3 &mdash; Framework Wrappers</h2>
@@ -3483,7 +4394,7 @@
           <h3>Why wrappers exist at all</h3>
           <p>
             React, Angular, and Vue can each <em>technically</em> use a web component directly
-            (<code>&lt;arcadis-button&gt;</code> just works as HTML). But each framework has quirks
+            (<code>&lt;luma-button&gt;</code> just works as HTML). But each framework has quirks
             that make the bare API awkward:
           </p>
           <ul>
@@ -3511,7 +4422,7 @@
               <tr>
                 <td><strong>React 19+</strong></td>
                 <td>
-                  Native: <code>&lt;arcadis-button variant="outline" /&gt;</code> works with refs,
+                  Native: <code>&lt;luma-button variant="outline" /&gt;</code> works with refs,
                   props, events. Optional thin wrapper for type safety.
                 </td>
               </tr>
@@ -3535,7 +4446,7 @@
               <tr>
                 <td><strong>jQuery / plain JS</strong></td>
                 <td>
-                  Just use the HTML tag; <code>$("arcadis-button").attr("variant", "outline")</code>
+                  Just use the HTML tag; <code>$("luma-button").attr("variant", "outline")</code>
                   &mdash; no wrapper needed.
                 </td>
               </tr>
@@ -3558,15 +4469,15 @@
               <span>app/components/SaveButton.tsx</span>
               <span class="badge">React 19</span>
             </div>
-            <pre><code><span class="c-kw">import</span> <span class="c-str">"@arcadis/components/button"</span>; <span class="c-cmt">// registers &lt;arcadis-button&gt;</span>
+            <pre><code><span class="c-kw">import</span> <span class="c-str">"@luma/components/button"</span>; <span class="c-cmt">// registers &lt;luma-button&gt;</span>
 
 <span class="c-kw">export function</span> SaveButton() {
   <span class="c-kw">return</span> (
-    <span class="c-tag">&lt;arcadis-button</span>
+    <span class="c-tag">&lt;luma-button</span>
       <span class="c-attr">variant</span>=<span class="c-str">"outline"</span>
       <span class="c-attr">onClick</span>={() =&gt; save()}<span class="c-tag">&gt;</span>
       Save changes
-    <span class="c-tag">&lt;/arcadis-button&gt;</span>
+    <span class="c-tag">&lt;/luma-button&gt;</span>
   );
 }</code></pre>
           </div>
@@ -3577,11 +4488,11 @@
               <span>app/components/save-button.component.ts</span>
               <span class="badge">Angular</span>
             </div>
-            <pre><code><span class="c-kw">import</span> <span class="c-str">"@arcadis/components/button"</span>;
+            <pre><code><span class="c-kw">import</span> <span class="c-str">"@luma/components/button"</span>;
 
 @Component({
   selector: <span class="c-str">"app-save"</span>,
-  template: <span class="c-str">`&lt;arcadis-button variant="outline" (click)="save()"&gt;Save&lt;/arcadis-button&gt;`</span>,
+  template: <span class="c-str">`&lt;luma-button variant="outline" (click)="save()"&gt;Save&lt;/luma-button&gt;`</span>,
   <span class="c-cmt">// Module declares CUSTOM_ELEMENTS_SCHEMA</span>
 })
 <span class="c-kw">export class</span> SaveComponent {}</code></pre>
@@ -3594,7 +4505,7 @@
               <span class="badge">Vue 3</span>
             </div>
             <pre><code><span class="c-tag">&lt;template&gt;</span>
-  <span class="c-tag">&lt;arcadis-button</span> <span class="c-attr">variant</span>=<span class="c-str">"outline"</span> @<span class="c-attr">click</span>=<span class="c-str">"save"</span><span class="c-tag">&gt;</span>Save<span class="c-tag">&lt;/arcadis-button&gt;</span>
+  <span class="c-tag">&lt;luma-button</span> <span class="c-attr">variant</span>=<span class="c-str">"outline"</span> @<span class="c-attr">click</span>=<span class="c-str">"save"</span><span class="c-tag">&gt;</span>Save<span class="c-tag">&lt;/luma-button&gt;</span>
 <span class="c-tag">&lt;/template&gt;</span></code></pre>
           </div>
 
@@ -3605,11 +4516,11 @@
               <span class="badge">jQuery</span>
             </div>
             <pre><code><span class="c-cmt">// In the page once:</span>
-<span class="c-tag">&lt;script src=<span class="c-str">"https://cdn.../arcadis/components.js"</span>&gt;&lt;/script&gt;</span>
+<span class="c-tag">&lt;script src=<span class="c-str">"https://cdn.../luma/components.js"</span>&gt;&lt;/script&gt;</span>
 
 <span class="c-cmt">// Then anywhere:</span>
-$(<span class="c-str">"arcadis-button"</span>).on(<span class="c-str">"click"</span>, save);
-$(<span class="c-str">"&lt;arcadis-button variant='outline'&gt;Save&lt;/arcadis-button&gt;"</span>).appendTo(<span class="c-str">"#toolbar"</span>);</code></pre>
+$(<span class="c-str">"luma-button"</span>).on(<span class="c-str">"click"</span>, save);
+$(<span class="c-str">"&lt;luma-button variant='outline'&gt;Save&lt;/luma-button&gt;"</span>).appendTo(<span class="c-str">"#toolbar"</span>);</code></pre>
           </div>
 
           <h3>What a Blazor consumer sees</h3>
@@ -3618,7 +4529,7 @@ $(<span class="c-str">"&lt;arcadis-button variant='outline'&gt;Save&lt;/arcadis-
               <span>Pages/Save.razor</span>
               <span class="badge">.NET / Blazor</span>
             </div>
-            <pre><code>&lt;arcadis-button variant=<span class="c-str">"outline"</span> @onclick=<span class="c-str">"Save"</span>&gt;Save&lt;/arcadis-button&gt;
+            <pre><code>&lt;luma-button variant=<span class="c-str">"outline"</span> @onclick=<span class="c-str">"Save"</span>&gt;Save&lt;/luma-button&gt;
 
 @code {
     <span class="c-kw">private void</span> Save() { <span class="c-cmt">/* ... */</span> }
@@ -3627,13 +4538,12 @@ $(<span class="c-str">"&lt;arcadis-button variant='outline'&gt;Save&lt;/arcadis-
 
           <div class="card brand">
             <div class="card-title">The key insight</div>
-            Every framework reaches the <em>same</em> <code>&lt;arcadis-button&gt;</code> element.
-            The wrapper layer only translates between framework idioms and the underlying standard
+            Every framework reaches the <em>same</em> <code>&lt;luma-button&gt;</code> element. The
+            wrapper layer only translates between framework idioms and the underlying standard
             &mdash; the component itself doesn&rsquo;t change.
           </div>
         </section>
 
-        <!-- ─── Layer 4: Documentation ─── -->
         <section id="layer-4" class="section">
           <span class="pill"><span class="num">4</span> Docs</span>
           <h2>Layer 4 &mdash; Documentation</h2>
@@ -3652,15 +4562,15 @@ $(<span class="c-str">"&lt;arcadis-button variant='outline'&gt;Save&lt;/arcadis-
 
           <div class="code-card">
             <div class="code-card-header">
-              <span>packages/components/src/button/arcadis-button.stories.ts</span>
+              <span>packages/components/src/button/luma-button.stories.ts</span>
               <span class="badge">Storybook</span>
             </div>
             <pre><code><span class="c-kw">import</span> { html } <span class="c-kw">from</span> <span class="c-str">"lit"</span>;
-<span class="c-kw">import</span> <span class="c-str">"./arcadis-button"</span>;
+<span class="c-kw">import</span> <span class="c-str">"./luma-button"</span>;
 
 <span class="c-kw">export default</span> {
   title: <span class="c-str">"Components/Button"</span>,
-  component: <span class="c-str">"arcadis-button"</span>,
+  component: <span class="c-str">"luma-button"</span>,
   argTypes: {
     variant: { control: <span class="c-str">"select"</span>, options: [<span class="c-str">"solid"</span>, <span class="c-str">"outline"</span>] },
     disabled: { control: <span class="c-str">"boolean"</span> },
@@ -3669,7 +4579,7 @@ $(<span class="c-str">"&lt;arcadis-button variant='outline'&gt;Save&lt;/arcadis-
 
 <span class="c-kw">export const</span> Outline = {
   args: { variant: <span class="c-str">"outline"</span> },
-  render: (args) =&gt; html<span class="c-str">`&lt;arcadis-button variant=${args.variant}&gt;Save&lt;/arcadis-button&gt;`</span>,
+  render: (args) =&gt; html<span class="c-str">`&lt;luma-button variant=${args.variant}&gt;Save&lt;/luma-button&gt;`</span>,
 };</code></pre>
           </div>
 
@@ -3691,15 +4601,14 @@ $(<span class="c-str">"&lt;arcadis-button variant='outline'&gt;Save&lt;/arcadis-
 
           <div class="card brand">
             <div class="card-title">Why this is a big deal</div>
-            One docs site is the difference between Arcadis Design System being a &ldquo;React
-            design system with Angular notes&rdquo; and a real cross-framework design system. The
-            current Arcadis Design System Storybook already does the heavy lifting &mdash; the
-            upgrade is to switch the renderer to <code>@storybook/web-components</code> and add
-            multi-framework code snippets per story.
+            One docs site is the difference between Luma design system being a &ldquo;React design
+            system with Angular notes&rdquo; and a real cross-framework design system. The current
+            Luma design system Storybook already does the heavy lifting &mdash; the upgrade is to
+            switch the renderer to <code>@storybook/web-components</code> and add multi-framework
+            code snippets per story.
           </div>
         </section>
 
-        <!-- ─── Tooling: Stencil vs Lit ─── -->
         <section id="tooling" class="section">
           <h2>Stencil vs Lit</h2>
           <p class="section-subtitle">
@@ -3759,7 +4668,7 @@ $(<span class="c-str">"&lt;arcadis-button variant='outline'&gt;Save&lt;/arcadis-
             </tbody>
           </table>
 
-          <h3>Recommendation for a Arcadis-scale system</h3>
+          <h3>Recommendation for a Luma-scale design system</h3>
           <div class="card brand">
             <div class="card-title">
               Stencil &mdash; if you need React/Angular/Vue wrappers without writing them
@@ -3795,7 +4704,6 @@ $(<span class="c-str">"&lt;arcadis-button variant='outline'&gt;Save&lt;/arcadis-
           </ul>
         </section>
 
-        <!-- ─── Repo structure ─── -->
         <section id="repo" class="section">
           <h2>Recommended repo structure</h2>
           <p class="section-subtitle">
@@ -3805,19 +4713,19 @@ $(<span class="c-str">"&lt;arcadis-button variant='outline'&gt;Save&lt;/arcadis-
 
           <div class="code-card">
             <div class="code-card-header">
-              <span>arcadis/</span>
+              <span>luma/</span>
               <span class="badge">Monorepo</span>
             </div>
-            <pre><code>arcadis/
+            <pre><code>luma/
 ├── packages/
 │   ├── tokens/                <span class="c-cmt"># Layer 1: Style Dictionary source + outputs</span>
 │   │   ├── src/               <span class="c-cmt">#   tokens.json (W3C DTCG)</span>
 │   │   └── dist/              <span class="c-cmt">#   css / scss / js / ios / android</span>
 │   │
 │   ├── components/            <span class="c-cmt"># Layer 2: Web components (Stencil or Lit)</span>
-│   │   ├── src/arcadis-button/
-│   │   ├── src/arcadis-input/
-│   │   └── src/arcadis-card/
+│   │   ├── src/luma-button/
+│   │   ├── src/luma-input/
+│   │   └── src/luma-card/
 │   │
 │   ├── react/                 <span class="c-cmt"># Layer 3a: React wrappers</span>
 │   ├── angular/               <span class="c-cmt"># Layer 3b: Angular wrappers</span>
@@ -3855,10 +4763,10 @@ $(<span class="c-str">"&lt;arcadis-button variant='outline'&gt;Save&lt;/arcadis-
               </div>
               <div class="repo-col">
                 <h4>Published</h4>
-                <div class="repo-item"><strong>@arcadis/tokens</strong> &mdash; npm</div>
-                <div class="repo-item"><strong>@arcadis/components</strong> &mdash; npm / CDN</div>
-                <div class="repo-item"><strong>@arcadis/react</strong> &mdash; npm</div>
-                <div class="repo-item"><strong>@arcadis/angular</strong> &mdash; npm</div>
+                <div class="repo-item"><strong>@luma/tokens</strong> &mdash; npm</div>
+                <div class="repo-item"><strong>@luma/components</strong> &mdash; npm / CDN</div>
+                <div class="repo-item"><strong>@luma/react</strong> &mdash; npm</div>
+                <div class="repo-item"><strong>@luma/angular</strong> &mdash; npm</div>
                 <div class="repo-item"><strong>Blazor NuGet</strong> &mdash; Phase 4</div>
               </div>
             </div>
@@ -3875,39 +4783,39 @@ $(<span class="c-str">"&lt;arcadis-button variant='outline'&gt;Save&lt;/arcadis-
             </thead>
             <tbody>
               <tr>
-                <td><code>@arcadis/tokens</code></td>
+                <td><code>@luma/tokens</code></td>
                 <td>npm (and consume via SCSS / CSS too)</td>
-                <td><code>npm i @arcadis/tokens</code></td>
+                <td><code>npm i @luma/tokens</code></td>
               </tr>
               <tr>
-                <td><code>@arcadis/components</code></td>
+                <td><code>@luma/components</code></td>
                 <td>npm</td>
-                <td><code>npm i @arcadis/components</code></td>
+                <td><code>npm i @luma/components</code></td>
               </tr>
               <tr>
-                <td><code>@arcadis/react</code></td>
+                <td><code>@luma/react</code></td>
                 <td>npm</td>
-                <td><code>npm i @arcadis/react</code></td>
+                <td><code>npm i @luma/react</code></td>
               </tr>
               <tr>
-                <td><code>@arcadis/angular</code></td>
+                <td><code>@luma/angular</code></td>
                 <td>npm</td>
-                <td><code>npm i @arcadis/angular</code></td>
+                <td><code>npm i @luma/angular</code></td>
               </tr>
               <tr>
-                <td><code>@arcadis/vue</code></td>
+                <td><code>@luma/vue</code></td>
                 <td>npm</td>
-                <td><code>npm i @arcadis/vue</code></td>
+                <td><code>npm i @luma/vue</code></td>
               </tr>
               <tr>
-                <td><code>Arcadis.Blazor</code></td>
+                <td><code>Luma.Blazor</code></td>
                 <td>NuGet</td>
-                <td><code>dotnet add package Arcadis.Blazor</code></td>
+                <td><code>dotnet add package Luma.Blazor</code></td>
               </tr>
               <tr>
                 <td>CDN bundle</td>
                 <td>Static host (e.g. unpkg, internal CDN)</td>
-                <td><code>&lt;script src="https://cdn/arcadis.min.js"&gt;</code></td>
+                <td><code>&lt;script src="https://cdn/luma.min.js"&gt;</code></td>
               </tr>
             </tbody>
           </table>
@@ -3916,12 +4824,11 @@ $(<span class="c-str">"&lt;arcadis-button variant='outline'&gt;Save&lt;/arcadis-
             <div class="card-title">Versioning</div>
             Use <strong>Changesets</strong> for coordinated semver across packages. The token
             package, component package, and framework wrappers move together &mdash; a bug fix in
-            <code>arcadis-button</code> ships a patched component + republished wrappers in one
+            <code>luma-button</code> ships a patched component + republished wrappers in one
             release.
           </div>
         </section>
 
-        <!-- ─── Real-world examples ─── -->
         <section id="real-world" class="section">
           <h2>Real-world examples</h2>
           <p class="section-subtitle">
@@ -4044,7 +4951,110 @@ $(<span class="c-str">"&lt;arcadis-button variant='outline'&gt;Save&lt;/arcadis-
           </p>
         </section>
 
-        <!-- ─── Trade-offs ─── -->
+        <section id="for-luma" class="section">
+          <h2>Phased rollout for Luma</h2>
+          <p class="section-subtitle">
+            Today the Luma design system is a shared theme on Kendo UI across React, Angular, Web
+            Components, jQuery, Vue, and .NET &mdash; not yet our own component implementations. The
+            quickest path to true framework-agnostic components is incremental &mdash; never a
+            big-bang rewrite.
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Phase</th>
+                <th>What ships</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. Tokens first</strong></td>
+                <td>
+                  Extract Luma design system SCSS variables to Style Dictionary; publish
+                  <code>@luma/tokens</code> with CSS, SCSS, and JS outputs. Existing apps adopt with
+                  no other changes.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>2. Pick the tool</strong></td>
+                <td>
+                  Build one component (e.g. Button) twice &mdash; once with Stencil, once with Lit
+                  &mdash; on a feature branch. Pick the winner based on team feedback.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>3. First 3 components</strong></td>
+                <td>
+                  Build Button, Input, and Card as web components. Ship
+                  <code>@luma/components</code> + <code>@luma/react</code> +
+                  <code>@luma/angular</code>. New consuming apps start using them; existing apps
+                  unaffected.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>4. Vue + Blazor + jQuery</strong></td>
+                <td>
+                  Add Vue wrapper (small), Blazor wrapper (NuGet), and a CDN bundle for jQuery /
+                  plain HTML consumers. Now the system is genuinely cross-framework.
+                </td>
+              </tr>
+              <tr class="recommended">
+                <td><strong>5. Migrate the rest</strong></td>
+                <td>
+                  Migrate remaining catalogue components (Scenario A: ~43 as web components). Grid,
+                  Gantt, and the Tree family are <strong>out of v1 scope</strong> &mdash; not part
+                  of the cross-framework package until a later phase or commercial alternative.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>What you keep along the way</h3>
+          <ul>
+            <li>
+              <strong>The Storybook.</strong> Switch the renderer to web-components; all existing
+              docs, theming, and the AI Assistant continue to work.
+            </li>
+            <li>
+              <strong>The brand and visual language.</strong> Tokens are the foundation &mdash; not
+              the components &mdash; so Luma design system looks identical from day one.
+            </li>
+            <li>
+              <strong>Honest scope on heavy UI.</strong> Grid, Gantt, and Tree are not in v1. React-
+              only wrappers do not satisfy Vue, Blazor, or jQuery; follow-on work or third-party
+              grids are a separate decision.
+            </li>
+          </ul>
+
+          <h3>Decision points</h3>
+          <ul>
+            <li>
+              <strong>End of Phase 1:</strong> have we extracted tokens cleanly, and do consuming
+              apps see no regressions when they upgrade?
+            </li>
+            <li>
+              <strong>End of Phase 2:</strong> Stencil or Lit &mdash; one decision, written down.
+            </li>
+            <li>
+              <strong>End of Phase 3:</strong> are the React and Angular wrappers idiomatic enough
+              that consuming-team feedback is positive?
+            </li>
+            <li>
+              <strong>End of Phase 5:</strong> are 43 catalogue components available
+              cross-framework? What is the plan for Grid, Gantt, and Tree (rebuild, commercial lib,
+              or per-stack)?
+            </li>
+          </ul>
+
+          <div class="card brand">
+            <div class="card-title">The pragmatic point</div>
+            You don&rsquo;t need to commit to all five phases upfront. Phase 1 (tokens) alone is
+            worth doing regardless &mdash; it&rsquo;s the cheapest win in a design system. Each
+            subsequent phase reads the data from the previous one and decides whether to continue.
+          </div>
+        </section>
+
         <section id="tradeoffs" class="section">
           <h2>Trade-offs &amp; gotchas</h2>
           <p class="section-subtitle">
@@ -4159,148 +5169,8 @@ $(<span class="c-str">"&lt;arcadis-button variant='outline'&gt;Save&lt;/arcadis-
           </div>
         </section>
 
-        <!-- ─── Arcadis Design System rollout ─── -->
-        <section id="for-arcadis" class="section">
-          <h2>Phased rollout for the design system</h2>
-          <p class="section-subtitle">
-            The Arcadis Design System already supports React, Angular, and Web Components on top of
-            Kendo UI. The quickest path to a true framework-agnostic system is incremental &mdash;
-            never a big-bang rewrite.
-          </p>
-
-          <h3>The five phases</h3>
-
-          <div class="diagram">
-            <div class="diagram-head">
-              <span class="tag">Rollout</span>
-              <span class="label">Incremental path &mdash; each phase earns the next</span>
-            </div>
-            <div class="phase-track">
-              <div class="phase-step now">
-                <span class="phase-num">1</span>
-                <span class="phase-name">Tokens</span>
-                <span class="phase-out"><code>@arcadis/tokens</code></span>
-              </div>
-              <div class="phase-step now">
-                <span class="phase-num">2</span>
-                <span class="phase-name">Pick tool</span>
-                <span class="phase-out">Stencil vs Lit on Button</span>
-              </div>
-              <div class="phase-step later">
-                <span class="phase-num">3</span>
-                <span class="phase-name">First 3</span>
-                <span class="phase-out">Button, Input, Card</span>
-              </div>
-              <div class="phase-step later">
-                <span class="phase-num">4</span>
-                <span class="phase-name">More stacks</span>
-                <span class="phase-out">Vue, Blazor, jQuery CDN</span>
-              </div>
-              <div class="phase-step later">
-                <span class="phase-num">5</span>
-                <span class="phase-name">Migrate rest</span>
-                <span class="phase-out">~43 components; Grid/Gantt/Tree later</span>
-              </div>
-            </div>
-          </div>
-
-          <table>
-            <thead>
-              <tr>
-                <th>Phase</th>
-                <th>What ships</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>1. Tokens first</strong></td>
-                <td>
-                  Extract Arcadis Design System SCSS variables to Style Dictionary; publish
-                  <code>@arcadis/tokens</code> with CSS, SCSS, and JS outputs. Existing apps adopt
-                  with no other changes.
-                </td>
-              </tr>
-              <tr>
-                <td><strong>2. Pick the tool</strong></td>
-                <td>
-                  Build one component (e.g. Button) twice &mdash; once with Stencil, once with Lit
-                  &mdash; on a feature branch. Pick the winner based on team feedback.
-                </td>
-              </tr>
-              <tr>
-                <td><strong>3. First 3 components</strong></td>
-                <td>
-                  Build Button, Input, and Card as web components. Ship
-                  <code>@arcadis/components</code> + <code>@arcadis/react</code> +
-                  <code>@arcadis/angular</code>. New consuming apps start using them; existing apps
-                  unaffected.
-                </td>
-              </tr>
-              <tr>
-                <td><strong>4. Vue + Blazor + jQuery</strong></td>
-                <td>
-                  Add Vue wrapper (small), Blazor wrapper (NuGet), and a CDN bundle for jQuery /
-                  plain HTML consumers. Now the system is genuinely cross-framework.
-                </td>
-              </tr>
-              <tr class="recommended">
-                <td><strong>5. Migrate the rest</strong></td>
-                <td>
-                  Migrate remaining catalogue components (Scenario A: ~43 as web components). Grid,
-                  Gantt, and the Tree family are <strong>out of v1 scope</strong> &mdash; not part
-                  of the cross-framework package until a later phase or commercial alternative.
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h3>What you keep along the way</h3>
-          <ul>
-            <li>
-              <strong>The Storybook.</strong> Switch the renderer to web-components; all existing
-              docs, theming, and the AI Assistant continue to work.
-            </li>
-            <li>
-              <strong>The brand and visual language.</strong> Tokens are the foundation &mdash; not
-              the components &mdash; so Arcadis Design System looks identical from day one.
-            </li>
-            <li>
-              <strong>Honest scope on heavy UI.</strong> Grid, Gantt, and Tree are not in v1. React-
-              only wrappers do not satisfy Vue, Blazor, or jQuery; follow-on work or third-party
-              grids are a separate decision.
-            </li>
-          </ul>
-
-          <h3>Decision points</h3>
-          <ul>
-            <li>
-              <strong>End of Phase 1:</strong> have we extracted tokens cleanly, and do consuming
-              apps see no regressions when they upgrade?
-            </li>
-            <li>
-              <strong>End of Phase 2:</strong> Stencil or Lit &mdash; one decision, written down.
-            </li>
-            <li>
-              <strong>End of Phase 3:</strong> are the React and Angular wrappers idiomatic enough
-              that consuming-team feedback is positive?
-            </li>
-            <li>
-              <strong>End of Phase 5:</strong> are 43 catalogue components available
-              cross-framework? What is the plan for Grid, Gantt, and Tree (rebuild, commercial lib,
-              or per-stack)?
-            </li>
-          </ul>
-
-          <div class="card brand">
-            <div class="card-title">The pragmatic point</div>
-            You don&rsquo;t need to commit to all five phases upfront. Phase 1 (tokens) alone is
-            worth doing regardless &mdash; it&rsquo;s the cheapest win in a design system. Each
-            subsequent phase reads the data from the previous one and decides whether to continue.
-          </div>
-        </section>
-
         <footer class="doc-footer">
-          Arcadis Design System &middot; Arcadis Digital Intelligence &middot; Architecture Guide
+          Luma design system &middot; Arcadis Digital Intelligence &middot; Architecture Guide
         </footer>
       </main>
     </div>
