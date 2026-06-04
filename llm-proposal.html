@@ -1,1 +1,1546 @@
 
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proposal &mdash; Controlled AI / LLM Enablement for Exploration</title>
+    <meta
+      name="description"
+      content="Proposal for management review: controlled, low-cost access to one approved Large Language Model API so teams can explore AI integrations, learn hands-on, and make informed adoption decisions under strict cost and security guardrails."
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Controlled AI / LLM Enablement for Exploration" />
+    <meta
+      property="og:description"
+      content="Controlled, low-cost LLM API access for exploration and experimentation in existing applications. Minimal monitored usage, no company data shared, full policy compliance."
+    />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Controlled AI / LLM Enablement for Exploration" />
+    <meta
+      name="twitter:description"
+      content="Controlled, low-cost LLM API access for hands-on learning and practical AI experimentation, with cost and security guardrails."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --color-brand: #d85614;
+        --color-brand-soft: rgba(216, 86, 20, 0.06);
+        --color-brand-line: rgba(216, 86, 20, 0.12);
+        --color-brand-tint: rgba(216, 86, 20, 0.15);
+        --bg-canvas: #ffffff;
+        --bg-surface: #f9fafb;
+        --bg-elevated: #f3f4f6;
+        --border-default: #e5e7eb;
+        --text-primary: #111827;
+        --text-secondary: #1f2937;
+        --text-tertiary: #374151;
+        --text-muted: #6b7280;
+        --sidebar-width: 300px;
+        --spacing-6: 24px;
+        --spacing-3: 12px;
+      }
+
+      body {
+        font-family:
+          "Noto Sans",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        background-color: var(--bg-canvas);
+        color: var(--text-primary);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .layout {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* ─────────────────────── Sidebar ─────────────────────── */
+      .sidebar {
+        width: var(--sidebar-width);
+        background-color: var(--bg-surface);
+        border-right: 1px solid var(--border-default);
+        position: fixed;
+        height: 100vh;
+        overflow-y: auto;
+        padding: var(--spacing-6) var(--spacing-3);
+      }
+
+      .sidebar-header {
+        padding: 0 1rem 0.85rem;
+        border-bottom: 1px solid var(--border-default);
+        margin-bottom: 0.5rem;
+      }
+
+      .sidebar-header h1 {
+        font-size: 1rem;
+        font-weight: 800;
+        color: var(--color-brand);
+        margin-bottom: 0.15rem;
+        line-height: 1.3;
+      }
+
+      .sidebar-header p {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+      }
+
+      .nav-section {
+        padding: 0.25rem 0.75rem;
+      }
+
+      .nav-section-title {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--color-brand);
+        text-transform: uppercase;
+        padding: 0.85rem 0.5rem 0.35rem;
+        margin-bottom: 0.15rem;
+        border-top: 1px solid var(--border-default);
+        margin-top: 0.25rem;
+      }
+
+      .nav-section:first-of-type .nav-section-title {
+        border-top: none;
+        margin-top: 0;
+        padding-top: 0.25rem;
+      }
+
+      .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        position: relative;
+        padding: 0.6rem 0.75rem;
+        color: var(--text-tertiary);
+        text-decoration: none;
+        font-size: 0.95rem;
+        border-radius: 8px;
+        transition: all 0.15s ease;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      .nav-link:hover {
+        background-color: var(--bg-elevated);
+        color: var(--color-brand);
+      }
+
+      .nav-link.active {
+        background-color: var(--color-brand-soft);
+        color: var(--color-brand);
+        font-weight: 600;
+        border: 1px solid var(--color-brand-line);
+        border-radius: 12px;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02) inset;
+        padding-left: calc(0.6rem + 10px);
+      }
+
+      .nav-link.active::before {
+        content: "";
+        position: absolute;
+        left: -1px;
+        top: 8px;
+        bottom: 8px;
+        width: 3px;
+        background: var(--color-brand);
+        border-radius: 6px;
+      }
+
+      /* ─────────────────────── Main content ─────────────────────── */
+      .main {
+        flex: 1;
+        margin-left: var(--sidebar-width);
+        padding: 2rem 3rem;
+        max-width: 100%;
+      }
+
+      .section {
+        display: none;
+        animation: fadeIn 0.3s ease;
+      }
+
+      .section.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      h2 {
+        font-size: 1.75rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        color: var(--color-brand);
+        line-height: 1.25;
+      }
+
+      h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin: 2rem 0 0.85rem;
+        color: var(--color-brand);
+      }
+
+      h4 {
+        font-size: 1rem;
+        font-weight: 700;
+        margin: 1.4rem 0 0.6rem;
+        color: var(--text-primary);
+      }
+
+      .section-subtitle {
+        color: var(--text-muted);
+        font-size: 1rem;
+        margin-bottom: 1.75rem;
+        max-width: 70ch;
+      }
+
+      p {
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+        font-weight: 400;
+      }
+
+      ul,
+      ol {
+        color: var(--text-secondary);
+        padding-left: 1.4rem;
+        margin-bottom: 1rem;
+      }
+
+      li {
+        margin-bottom: 0.45rem;
+      }
+
+      strong {
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+
+      em {
+        color: var(--text-tertiary);
+        font-style: italic;
+      }
+
+      code {
+        background-color: var(--bg-elevated);
+        padding: 0.18rem 0.4rem;
+        border-radius: 4px;
+        font-family: "JetBrains Mono", "Fira Code", monospace;
+        font-size: 0.85em;
+        color: var(--color-brand);
+      }
+
+      .footnote {
+        color: var(--text-muted);
+        font-size: 0.82rem;
+        margin: 0.5rem 0 1rem;
+      }
+
+      .footnote.italic {
+        font-style: italic;
+      }
+
+      /* ─────────────────────── Cards ─────────────────────── */
+      .card {
+        background-color: var(--bg-elevated);
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+        padding: 1.1rem 1.25rem;
+        margin: 1rem 0;
+      }
+
+      .card-title {
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.45rem;
+        font-size: 0.95rem;
+      }
+
+      .card.brand {
+        background: var(--color-brand-soft);
+        border-color: var(--color-brand-line);
+      }
+
+      .card.brand .card-title {
+        color: var(--color-brand);
+      }
+
+      .card.success {
+        background: #ecfdf5;
+        border-color: #a7f3d0;
+      }
+
+      .card.success .card-title {
+        color: #047857;
+      }
+
+      .card.warning {
+        background: #fffbeb;
+        border-color: #fde68a;
+      }
+
+      .card.warning .card-title {
+        color: #92400e;
+      }
+
+      .card.warning .card-label {
+        display: block;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #92400e;
+        margin-bottom: 0.3rem;
+      }
+
+      .card ul {
+        margin: 0.4rem 0 0;
+        padding-left: 1.2rem;
+      }
+
+      .card ul li {
+        margin-bottom: 0.3rem;
+      }
+
+      /* ─────────────────────── Stat grid ─────────────────────── */
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 0.85rem;
+        margin: 1rem 0 0.5rem;
+      }
+
+      .stat {
+        background-color: var(--bg-elevated);
+        border: 1px solid var(--border-default);
+        border-radius: 8px;
+        padding: 0.95rem 1rem;
+      }
+
+      .stat .label {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+      }
+
+      .stat .value {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+
+      .stat.accent {
+        background: var(--color-brand-soft);
+        border-color: var(--color-brand-line);
+      }
+
+      .stat.accent .label {
+        color: var(--color-brand);
+      }
+
+      .stat.accent .value {
+        color: var(--color-brand);
+      }
+
+      /* ─────────────────────── Compare grid ─────────────────────── */
+      .compare {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+
+      .compare .col {
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+        padding: 1rem 1.15rem;
+        background: var(--bg-elevated);
+      }
+
+      .compare .col.today {
+        background: #fef2f2;
+        border-color: #fecaca;
+      }
+
+      .compare .col.future {
+        background: #ecfdf5;
+        border-color: #a7f3d0;
+      }
+
+      .compare h4 {
+        margin: 0 0 0.5rem;
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--text-tertiary);
+      }
+
+      .compare .col.today h4 {
+        color: #991b1b;
+      }
+
+      .compare .col.future h4 {
+        color: #065f46;
+      }
+
+      .compare ul {
+        margin: 0;
+        padding-left: 1.1rem;
+        font-size: 0.9rem;
+      }
+
+      .compare ul li {
+        margin-bottom: 0.3rem;
+      }
+
+      /* ─────────────────────── Tables ─────────────────────── */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+        font-size: 0.9rem;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid var(--border-default);
+        vertical-align: top;
+      }
+
+      th {
+        background-color: var(--bg-elevated);
+        color: var(--text-muted);
+        font-weight: 700;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+      }
+
+      td {
+        color: var(--text-secondary);
+        font-weight: 400;
+      }
+
+      td.num,
+      th.num {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+
+      tr.alt-recommended td {
+        background: #ecfdf5;
+      }
+
+      tr.alt-recommended td:first-child {
+        color: #065f46;
+        font-weight: 700;
+      }
+
+      /* ─────────────────────── Chart card ─────────────────────── */
+      .chart-card {
+        background-color: var(--bg-elevated);
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+        padding: 1.25rem 1.25rem 1rem;
+        margin: 1.25rem 0 1rem;
+      }
+
+      .chart-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .chart-sub {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        margin-bottom: 0.85rem;
+      }
+
+      .chart-svg {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .tag-tentative {
+        display: inline-block;
+        padding: 0.15rem 0.55rem;
+        background: #fef3c7;
+        color: #92400e;
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        border-radius: 999px;
+        vertical-align: middle;
+      }
+
+      .chart-callout {
+        margin-top: 0.85rem;
+        padding: 0.7rem 1rem;
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
+        border-radius: 8px;
+        font-size: 0.88rem;
+        color: #064e3b;
+        text-align: center;
+      }
+
+      .chart-disclaimer {
+        margin: 0.7rem 0 0;
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        text-align: center;
+        font-style: italic;
+      }
+
+      /* ─────────────────────── Footer ─────────────────────── */
+      footer.doc-footer {
+        margin-top: 3rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border-default);
+        text-align: center;
+        font-size: 0.82rem;
+        color: var(--text-muted);
+      }
+
+      /* ─────────────────────── Responsive ─────────────────────── */
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+          border-right: none;
+          border-bottom: 1px solid var(--border-default);
+        }
+        .main {
+          margin-left: 0;
+          padding: 1.5rem;
+        }
+        .layout {
+          flex-direction: column;
+        }
+        .compare {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ─────────────────────── Print ─────────────────────── */
+      @media print {
+        .sidebar {
+          display: none;
+        }
+        .main {
+          margin-left: 0;
+          padding: 0;
+        }
+        body {
+          background: #fff;
+        }
+        .section {
+          display: block !important;
+          page-break-before: always;
+        }
+        .section:first-of-type {
+          page-break-before: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <!-- ─────────────────────── Sidebar ─────────────────────── -->
+      <nav class="sidebar" aria-label="Proposal navigation">
+        <div class="sidebar-header">
+          <h1>AI / LLM Enablement</h1>
+          <p>Exploration &amp; experimentation &middot; Proposal</p>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Overview</div>
+          <a href="#sec-a3" class="nav-link active" onclick="showSection(event, 'sec-a3')"
+            >Why It Matters</a
+          >
+          <a href="#sec-a1" class="nav-link" onclick="showSection(event, 'sec-a1')"
+            >The Ask &amp; Cost</a
+          >
+          <a href="#sec-a-scope" class="nav-link" onclick="showSection(event, 'sec-a-scope')"
+            >Scope of this Ask</a
+          >
+          <a href="#sec-a2" class="nav-link" onclick="showSection(event, 'sec-a2')"
+            >How It Stays Safe</a
+          >
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Value &amp; rollout</div>
+          <a href="#sec-04" class="nav-link" onclick="showSection(event, 'sec-04')">How It Helps</a>
+          <a href="#sec-usecases" class="nav-link" onclick="showSection(event, 'sec-usecases')"
+            >Real-Time Use Cases</a
+          >
+          <a href="#sec-rt" class="nav-link" onclick="showSection(event, 'sec-rt')"
+            >How AI Works in Real Time</a
+          >
+          <a href="#sec-08" class="nav-link" onclick="showSection(event, 'sec-08')">Rollout Plan</a>
+          <a href="#sec-measure" class="nav-link" onclick="showSection(event, 'sec-measure')"
+            >How We&rsquo;ll Measure Value</a
+          >
+          <a href="#sec-07" class="nav-link" onclick="showSection(event, 'sec-07')"
+            >Security &amp; Cost Controls</a
+          >
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Reference</div>
+          <a href="#sec-a-pricing" class="nav-link" onclick="showSection(event, 'sec-a-pricing')"
+            >OpenAI Model Pricing</a
+          >
+          <a href="#sec-a-ollama" class="nav-link" onclick="showSection(event, 'sec-a-ollama')"
+            >Ollama &mdash; Free Local Alternative</a
+          >
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Decision</div>
+          <a href="#sec-09" class="nav-link" onclick="showSection(event, 'sec-09')">The Ask</a>
+        </div>
+      </nav>
+
+      <!-- ─────────────────────── Main ─────────────────────── -->
+      <main class="main">
+        <!-- ─── Broader LLM Access ─── -->
+        <section id="sec-a1" class="section">
+          <h2>The Ask &amp; Cost</h2>
+          <p class="section-subtitle">
+            Enable controlled access to one low-cost Large Language Model API (recommended: GPT-4o
+            Mini or an approved alternative) so the team can <strong>explore and experiment</strong>
+            with practical AI use cases. Today&rsquo;s network restrictions (e.g. Zscaler / company
+            policy blocking external API access) make even a small, safe experiment hard &mdash;
+            this is a request to unblock thoughtful, hands-on learning.
+          </p>
+
+          <p>
+            Typical spend is <strong>~$1&ndash;$30 per month</strong> under an
+            <strong>agreed monthly budget cap</strong> (set at approval; indicative range
+            <strong>$25&ndash;$50</strong>). The cap is a safety ceiling above expected usage, not a
+            flat bill &mdash; see
+            <a href="#sec-a-pricing" onclick="showSection(event, 'sec-a-pricing')"
+              >OpenAI Model Pricing</a
+            >
+            for the per-token math. Leadership picks the final number.
+          </p>
+
+          <h3>What this unlocks</h3>
+          <p>
+            A small, controlled enablement helps both the organisation and individual growth by
+            letting us:
+          </p>
+          <ul>
+            <li>
+              Identify use cases for <strong>automation and productivity</strong> improvements
+            </li>
+            <li>
+              Explore how LLMs can be <strong>integrated into our existing applications</strong>
+            </li>
+            <li>Support <strong>informed, cost-effective decisions</strong> on AI adoption</li>
+            <li>Encourage <strong>hands-on learning and innovation</strong> within the team</li>
+          </ul>
+
+          <h3>Done in a controlled manner</h3>
+          <ul>
+            <li>
+              <strong>Minimal and monitored usage</strong> &mdash; capped spend with an audit trail
+            </li>
+            <li><strong>No sensitive or company data</strong> is shared with the model</li>
+            <li><strong>Full compliance</strong> with company security policies</li>
+          </ul>
+
+          <p>
+            The same controlled key can later support more than one experiment &mdash; each vetted
+            use case rides the <strong>same key</strong>, the <strong>same cap</strong>, and the
+            <strong>same guardrails</strong>, so the marginal cost of the next one is near zero.
+            Whether any of them pay off is measured per use case (see
+            <a href="#sec-measure" onclick="showSection(event, 'sec-measure')"
+              >How We&rsquo;ll Measure Value</a
+            >); candidate use cases in our existing products are in
+            <a href="#sec-usecases" onclick="showSection(event, 'sec-usecases')"
+              >Real-Time Use Cases</a
+            >.
+          </p>
+        </section>
+
+        <section id="sec-a-scope" class="section">
+          <h2>Scope of this Ask</h2>
+          <p class="section-subtitle">
+            What we&rsquo;re asking management to approve &mdash; and what we are explicitly
+            <em>not</em> asking for. Network policy (Zscaler) and existing security controls still
+            apply.
+          </p>
+
+          <p>
+            To avoid any scope confusion: this is a tightly bounded enablement &mdash;
+            <strong>one approved outbound API endpoint, used server-side</strong> for controlled
+            exploration and experimentation. It is not a request to lift network policy, and it is
+            separate from any conversation about personal AI tooling (Copilot, Claude, ChatGPT).
+          </p>
+
+          <div class="compare">
+            <div class="col future">
+              <h4>What this proposal asks for</h4>
+              <ul>
+                <li>
+                  Outbound access to <strong>one approved API endpoint</strong> &mdash; server-side;
+                  minimal, monitored usage for team learning and use-case discovery.
+                </li>
+                <li>
+                  A Zscaler exception via the
+                  <strong>standard Security exception process</strong> for that one URL.
+                </li>
+                <li>
+                  A <strong>reusable pattern</strong> so future vetted use cases can share the same
+                  enablement (operational guardrails in
+                  <a href="#sec-a2" onclick="showSection(event, 'sec-a2')">How It Stays Safe</a>).
+                </li>
+              </ul>
+            </div>
+            <div class="col today">
+              <h4>What this proposal does <em>not</em> ask for</h4>
+              <ul>
+                <li>Per-engineer or per-laptop API keys.</li>
+                <li>
+                  GitHub Copilot, Claude desktop, or ChatGPT in the browser &mdash;
+                  <strong>separate decisions</strong> with different trade-offs.
+                </li>
+                <li>A blanket lift of Zscaler or any company-wide network policy.</li>
+                <li>Access to multiple vendors at once &mdash; one vendor, one URL, reviewed.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card brand">
+            <div class="card-title">On Zscaler / network policy</div>
+            We are <strong>not</strong> bypassing Zscaler. We use the
+            <strong>same exception process</strong> as other approved SaaS APIs to allow
+            <strong>one</strong> outbound URL for <strong>one</strong> reviewed use case. Network
+            policy continues to apply everywhere else. Personal AI tooling remains a separate
+            conversation &mdash; this proposal does not pre-decide it.
+          </div>
+        </section>
+
+        <section id="sec-a-pricing" class="section">
+          <h2>OpenAI Model Pricing</h2>
+          <p class="section-subtitle">
+            The current OpenAI catalogue at a glance, with token pricing and what each model is best
+            suited for &mdash; the broader context for why we recommend GPT-4o Mini for exploration
+            and low-cost experimentation.
+          </p>
+
+          <h3>How OpenAI bills you</h3>
+          <p>
+            OpenAI APIs charge per <strong>token</strong> &mdash; roughly
+            <strong>&frac34; of a word</strong>. Every request is billed as
+            <em>input tokens</em> (the system prompt + grounding docs + the user question) plus
+            <em>output tokens</em> (the answer the model produces). All prices below are per
+            <strong>1 million tokens</strong>.
+          </p>
+
+          <h3>Model catalogue &amp; per-token pricing</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Best for</th>
+                <th class="num">Input&nbsp;/ 1M</th>
+                <th class="num">Output&nbsp;/ 1M</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="alt-recommended">
+                <td><strong>GPT-4o mini</strong><br /><em>(recommended)</em></td>
+                <td>Cheap, fast Q&amp;A grounded on documentation / data</td>
+                <td class="num">$0.15</td>
+                <td class="num">$0.60</td>
+              </tr>
+              <tr>
+                <td><strong>GPT-4.1 nano</strong></td>
+                <td>Ultra-low cost; simple completions, short replies</td>
+                <td class="num">$0.10</td>
+                <td class="num">$0.40</td>
+              </tr>
+              <tr>
+                <td><strong>GPT-4.1 mini</strong></td>
+                <td>Balanced quality step-up from 4o mini</td>
+                <td class="num">$0.40</td>
+                <td class="num">$1.60</td>
+              </tr>
+              <tr>
+                <td><strong>GPT-4.1</strong></td>
+                <td>Flagship general-purpose model</td>
+                <td class="num">$2.00</td>
+                <td class="num">$8.00</td>
+              </tr>
+              <tr>
+                <td><strong>GPT-4o</strong></td>
+                <td>Production-grade multimodal (text + image + audio)</td>
+                <td class="num">$2.50</td>
+                <td class="num">$10.00</td>
+              </tr>
+              <tr>
+                <td><strong>GPT-3.5 Turbo</strong> <em>(legacy)</em></td>
+                <td>Older fallback; superseded by 4o mini for chat</td>
+                <td class="num">$0.50</td>
+                <td class="num">$1.50</td>
+              </tr>
+              <tr>
+                <td><strong>o3-mini</strong></td>
+                <td>Reasoning model &mdash; planning, math, code</td>
+                <td class="num">$1.10</td>
+                <td class="num">$4.40</td>
+              </tr>
+              <tr>
+                <td><strong>o1 / o3</strong> <em>(reasoning)</em></td>
+                <td>Hard reasoning tasks &mdash; overkill for grounded doc Q&amp;A</td>
+                <td class="num">$15.00</td>
+                <td class="num">$60.00</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="footnote">
+            Indicative public pricing. Verify current rates at
+            <code>openai.com/api/pricing</code> before purchase &mdash; OpenAI revises pricing
+            periodically and prices vary by region / volume tier.
+          </p>
+
+          <h3>What this means for a real-time feature</h3>
+          <p>
+            A typical real-time request (e.g. a grounded Q&amp;A or summarization call) costs about
+            <strong>2,000 input tokens</strong> (system prompt + retrieved context + the user input)
+            and <strong>600 output tokens</strong> (the response). Applying the catalogue above to a
+            moderate-usage scenario of <strong>10,000 requests per month</strong>:
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th class="num">Cost / request</th>
+                <th class="num">10,000 requests / month</th>
+                <th class="num">vs GPT-4o mini</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="alt-recommended">
+                <td><strong>GPT-4o mini</strong> <em>(recommended)</em></td>
+                <td class="num">~$0.0007</td>
+                <td class="num">~$7</td>
+                <td class="num">1&times;</td>
+              </tr>
+              <tr>
+                <td>GPT-4.1 nano</td>
+                <td class="num">~$0.0004</td>
+                <td class="num">~$4</td>
+                <td class="num">0.6&times;</td>
+              </tr>
+              <tr>
+                <td>GPT-4.1 mini</td>
+                <td class="num">~$0.0018</td>
+                <td class="num">~$18</td>
+                <td class="num">2.7&times;</td>
+              </tr>
+              <tr>
+                <td>GPT-4.1</td>
+                <td class="num">~$0.0088</td>
+                <td class="num">~$88</td>
+                <td class="num">13&times;</td>
+              </tr>
+              <tr>
+                <td>GPT-4o</td>
+                <td class="num">~$0.011</td>
+                <td class="num">~$110</td>
+                <td class="num">17&times;</td>
+              </tr>
+              <tr>
+                <td>o1 / o3 (reasoning)</td>
+                <td class="num">~$0.066</td>
+                <td class="num">~$660</td>
+                <td class="num">100&times;</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="footnote italic">
+            Cost = (2,000 input tokens &times; input&nbsp;rate + 600 output tokens &times;
+            output&nbsp;rate) &div; 1,000,000. Rounded to two significant figures.
+          </p>
+
+          <div class="card brand">
+            <div class="card-title">Why GPT-4o mini</div>
+            For grounded Q&amp;A, summarization, and extraction, GPT-4o mini delivers
+            <strong>flagship-class answer quality at ~17&times; lower cost</strong> than GPT-4o and
+            ~100&times; lower than the reasoning models. Even cheaper nano-class models exist, but
+            answer quality drops on multi-clause requests that combine several constraints. GPT-4o
+            mini hits the sweet spot &mdash; strong answers, predictable spend, comfortably inside a
+            small agreed monthly cap.
+          </div>
+        </section>
+
+        <section id="sec-a-ollama" class="section">
+          <h2>Ollama &mdash; Free Local Alternative</h2>
+          <p class="section-subtitle">
+            Ollama is a free, open-source way to run Large Language Models on your own machine. It
+            is excellent for development &mdash; this section explains why it can&rsquo;t be the
+            production answer for a real-time product feature, and how the two fit together.
+          </p>
+
+          <p>
+            <a href="https://ollama.com" target="_blank" rel="noopener"><code>ollama.com</code></a>
+            runs open models (Llama 3, Mistral, Phi, etc.) on a developer&rsquo;s machine &mdash; no
+            API key, no per-request cost, data never leaves the laptop. It supports
+            OpenAI-compatible APIs, so the same application code can target Ollama locally and a
+            hosted API in production.
+          </p>
+
+          <h3>Why Ollama can&rsquo;t be the production deployment</h3>
+          <div class="compare">
+            <div class="col future">
+              <h4>What Ollama is great for</h4>
+              <ul>
+                <li>Prompt iteration and offline exploration on your own hardware</li>
+                <li>
+                  Useful when outbound API access is blocked &mdash; entirely local, no Zscaler
+                  exception needed
+                </li>
+              </ul>
+            </div>
+            <div class="col today">
+              <h4>Why it falls short for production</h4>
+              <ul>
+                <li>
+                  A product feature can&rsquo;t depend on each end-user installing Ollama and
+                  downloading a ~2&ndash;8 GB model &mdash; impractical
+                </li>
+                <li>
+                  Performance depends on each machine (CPU/GPU/RAM); responses can take 10&ndash;30
+                  seconds on a typical laptop &mdash; too slow for real-time UX
+                </li>
+                <li>
+                  Smaller open models give noticeably lower answer quality than GPT-4o Mini for the
+                  same prompt
+                </li>
+                <li>
+                  Hosting Ollama centrally on a shared server brings back ops + GPU costs that far
+                  exceed a small hosted API budget
+                </li>
+                <li>No vendor SLA, no audit tooling, no managed updates</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card brand">
+            <div class="card-title">How both fit together</div>
+            Use <strong>Ollama free for local development</strong> and prompt iteration. Use the
+            low-cost <strong>GPT-4o Mini API for the production feature</strong>. Because both speak
+            the OpenAI-compatible API, switching providers is essentially a one-line URL change, so
+            we keep the freedom to revisit later as open models improve.
+          </div>
+        </section>
+
+        <section id="sec-a2" class="section">
+          <h2>How It Stays Safe</h2>
+          <p class="section-subtitle">
+            Guardrails baked into every use case: one approved model, capped spend, no sensitive
+            data, sign-off per use case.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Guardrail</th>
+                <th>How it works</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>One approved model</strong></td>
+                <td>Start with GPT-4o Mini only. New providers go through Security review.</td>
+              </tr>
+              <tr>
+                <td><strong>Hard budget cap</strong></td>
+                <td>
+                  Pay-as-you-go with a monthly ceiling per experiment (agreed at approval; typical
+                  range $25&ndash;$50). Automatic shut-off if exceeded.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>No sensitive data</strong></td>
+                <td>
+                  Public documentation and synthetic data only &mdash; no personal data (names,
+                  emails, employee IDs), no proprietary code, no credentials.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Sign-off per use case</strong></td>
+                <td>
+                  One-page intent doc (owner, data classification, spend cap, success metric) signed
+                  off by Security, Platform, and the product owner before going live.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="sec-a3" class="section active">
+          <h2>Why It Matters</h2>
+          <p class="section-subtitle">
+            What changes for the organisation and the team when controlled LLM access is enabled
+            compared with today.
+          </p>
+          <div class="compare">
+            <div class="col today">
+              <h4>Without LLM access</h4>
+              <ul>
+                <li>
+                  Hard to explore practical AI integrations under current network restrictions.
+                </li>
+                <li>We can&rsquo;t measure cost or quality of AI before committing to a build.</li>
+                <li>Teams fall behind on practical AI skills and informed adoption decisions.</li>
+              </ul>
+            </div>
+            <div class="col future">
+              <h4>With controlled LLM access</h4>
+              <ul>
+                <li>
+                  Teams can <strong>experiment hands-on</strong> with real integrations in our apps.
+                </li>
+                <li>
+                  We get <strong>real usage data</strong> to guide cost-effective AI decisions.
+                </li>
+                <li>
+                  We identify automation and productivity opportunities before large investments.
+                </li>
+                <li>Continuous learning and innovation are supported in a compliant way.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card brand">
+            <div class="card-title">Bottom line</div>
+            A small, controlled enablement lets us adopt AI thoughtfully &mdash; learn first,
+            measure what works, then scale &mdash; instead of guessing from theory or vendor demos
+            alone.
+          </div>
+        </section>
+
+        <!-- ─── AI in Our Products ─── -->
+        <section id="sec-rt" class="section">
+          <h2>How AI Works in Real Time</h2>
+          <p class="section-subtitle">
+            &ldquo;Real-time&rdquo; AI means a user does something in the product and gets a useful,
+            generated response within a second or two &mdash; an answer, a summary, a draft,
+            extracted fields. Under the hood it is a short, predictable request loop to one Large
+            Language Model API.
+          </p>
+
+          <h3>The request loop</h3>
+          <p>
+            Every real-time AI feature, regardless of product, follows the same five steps on the
+            server side:
+          </p>
+          <ol>
+            <li>
+              <strong>Capture input</strong> &mdash; the user types a question, opens a long
+              document, pastes text, or triggers an action.
+            </li>
+            <li>
+              <strong>Retrieve context (grounding)</strong> &mdash; the app fetches the few most
+              relevant pieces of <em>our own</em> data/docs for that input (Retrieval-Augmented
+              Generation). This is what keeps answers accurate and on-topic.
+            </li>
+            <li>
+              <strong>Build the prompt</strong> &mdash; a fixed system instruction + the retrieved
+              context + the user input are combined into one request.
+            </li>
+            <li>
+              <strong>Call the model</strong> &mdash; the request goes to the approved API
+              (server-side, with the shared key and budget cap).
+            </li>
+            <li>
+              <strong>Stream the response</strong> &mdash; tokens come back and render as they
+              arrive, so the user sees the answer forming immediately rather than waiting for the
+              whole thing.
+            </li>
+          </ol>
+
+          <div class="card brand">
+            <div class="card-title">Why it feels instant</div>
+            Two things create the &ldquo;real-time&rdquo; feel: <strong>streaming</strong> (text
+            appears word-by-word in &lt;1s) and <strong>grounding</strong> (only a small, relevant
+            slice of data is sent, so the model responds fast and stays accurate). A typical call is
+            ~2,000 input + ~600 output tokens &mdash; a fraction of a cent on GPT-4o Mini.
+          </div>
+
+          <h3>What stays server-side</h3>
+          <p>
+            The API key, the prompt assembly, the retrieval, and the budget cap all live on the
+            server &mdash; never in the browser or on a user&rsquo;s machine. The product UI only
+            sends the user input and renders the streamed answer. This is what makes a single
+            approved endpoint safe to share across multiple product features.
+          </p>
+        </section>
+
+        <section id="sec-usecases" class="section">
+          <h2>Real-Time Use Cases</h2>
+          <p class="section-subtitle">
+            The same request loop and the same approved key support a range of real-time AI features
+            across our existing products. These are the proven patterns; the specific product and
+            data for each one is vetted through the per-use-case sign-off.
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Pattern</th>
+                <th>What the user does in real time</th>
+                <th>Grounded on</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Grounded Q&amp;A assistant</strong></td>
+                <td>
+                  Asks a question in natural language and gets an answer with sources, in seconds.
+                </td>
+                <td>Product help/docs, knowledge base</td>
+              </tr>
+              <tr>
+                <td><strong>Summarization</strong></td>
+                <td>
+                  Opens a long report, thread, or document and gets a short summary on demand.
+                </td>
+                <td>The document the user is viewing</td>
+              </tr>
+              <tr>
+                <td><strong>Semantic search</strong></td>
+                <td>
+                  Searches in plain language and gets relevant results ranked by meaning, not
+                  keywords.
+                </td>
+                <td>Indexed product content</td>
+              </tr>
+              <tr>
+                <td><strong>Data extraction</strong></td>
+                <td>
+                  Uploads or pastes unstructured text (PDF, form, email) and gets structured fields
+                  back.
+                </td>
+                <td>The uploaded document + a target schema</td>
+              </tr>
+              <tr>
+                <td><strong>Classification &amp; routing</strong></td>
+                <td>
+                  Submits an item (ticket, message, record) and it is auto-categorized / triaged
+                  instantly.
+                </td>
+                <td>Category definitions + examples</td>
+              </tr>
+              <tr>
+                <td><strong>Draft generation</strong></td>
+                <td>
+                  Clicks &ldquo;draft&rdquo; and gets a first-pass reply, description, or note to
+                  edit.
+                </td>
+                <td>Context fields + a tone/template</td>
+              </tr>
+              <tr>
+                <td><strong>Insight explanation</strong></td>
+                <td>
+                  Views a chart/metric and gets a plain-language explanation of what changed and
+                  why.
+                </td>
+                <td>The underlying data points</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="card warning">
+            <span class="card-label">Important — data classification</span>
+            Every use case must declare what data it sends to the model. The pilot starts with
+            <strong>public or low-sensitivity data only</strong>. Anything involving customer or
+            personal data goes through Security review and the personal-data filter before it can go
+            live (see
+            <a href="#sec-07" onclick="showSection(event, 'sec-07')">Security &amp; Cost Controls</a
+            >).
+          </div>
+
+          <p>
+            All of these share <strong>one key, one cap, one set of guardrails</strong>. The first
+            approved experiment proves the pattern; each subsequent one is incrementally cheaper to
+            add because the enablement already exists.
+          </p>
+        </section>
+
+        <section id="sec-04" class="section">
+          <h2>How It Helps</h2>
+          <p class="section-subtitle">
+            Direct gains for the team and the organisation once controlled LLM access is available.
+          </p>
+          <ul>
+            <li>
+              <strong>Practical learning.</strong> Engineers experiment with real integrations
+              instead of theory-only or blocked API calls.
+            </li>
+            <li>
+              <strong>Informed decisions.</strong> Cost, quality, and security trade-offs are
+              measured from real usage before larger commitments.
+            </li>
+            <li>
+              <strong>Faster path to value.</strong> One enablement (key, cap, guardrails) is reused
+              instead of each team negotiating access from scratch.
+            </li>
+            <li>
+              <strong>Use-case discovery.</strong> Automation and productivity opportunities surface
+              through hands-on work in our existing applications.
+            </li>
+            <li>
+              <strong>Measured, reversible.</strong> Every experiment has a cap and success metric;
+              we keep what works and switch off what doesn&rsquo;t.
+            </li>
+            <li>
+              <strong>A path to product AI.</strong> Once the pattern is proven on a low-risk
+              experiment (e.g. read-only assistant), the same approach extends to higher-value
+              capabilities.
+            </li>
+          </ul>
+        </section>
+
+        <section id="sec-measure" class="section">
+          <h2>How We&rsquo;ll Measure Value</h2>
+          <p class="section-subtitle">
+            Every experiment is measured the same way: a baseline first, weekly tracking during the
+            pilot, then an explicit go / no-go at week 4 &mdash; so learning is documented and we
+            only scale what proves useful.
+          </p>
+
+          <h3>The four phases</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Phase</th>
+                <th>When</th>
+                <th>What we measure</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. Baseline</strong></td>
+                <td>Week 0 &mdash; before pilot starts</td>
+                <td>
+                  The current state for the chosen use case (e.g. time/clicks to complete the task,
+                  manual effort, volume) so there is a number to compare against.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>2. Pilot tracking</strong></td>
+                <td>Weeks 1 &ndash; 4</td>
+                <td>
+                  Feature usage; weekly <strong>accuracy spot-check</strong> on a sample of 20
+                  responses; API spend; the use case&rsquo;s primary value metric.
+                </td>
+              </tr>
+              <tr class="alt-recommended">
+                <td><strong>3. Decision gate</strong></td>
+                <td>End of week 4</td>
+                <td>
+                  Explicit <strong>go / no-go</strong> against the thresholds below. If thresholds
+                  aren&rsquo;t met, the feature is turned off and the API key is revoked.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>4. Scale tracking</strong></td>
+                <td>Weeks 5 &ndash; 8</td>
+                <td>
+                  Same metrics across the full user group; confirm the pattern scales; final value
+                  and cost reported to management at week 8.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Decision gate &mdash; end of week 4</h3>
+          <p>
+            Concrete, written-down thresholds. We continue
+            <strong>only if all three</strong> are met:
+          </p>
+          <div class="stats">
+            <div class="stat accent">
+              <div class="label">Value metric</div>
+              <div class="value">Beats baseline</div>
+            </div>
+            <div class="stat accent">
+              <div class="label">Answer accuracy</div>
+              <div class="value">&ge; 70%</div>
+            </div>
+            <div class="stat accent">
+              <div class="label">API spend</div>
+              <div class="value">&le; agreed cap</div>
+            </div>
+          </div>
+          <p class="footnote">
+            &ldquo;Value metric&rdquo; = the use case&rsquo;s primary measure (time saved, faster
+            completion, deflected manual work) vs the week-0 baseline. &ldquo;Accuracy&rdquo; = % of
+            sampled responses the owning team rates as <em>correct and grounded in our data</em>
+            (random 20-response sample, weekly).
+          </p>
+
+          <div class="card brand">
+            <div class="card-title">If the numbers don&rsquo;t hold up</div>
+            The feature is switched off at the end of week 4, the API key is revoked, and the use
+            case is closed. Sunk cost is capped at the <strong>agreed monthly ceiling</strong> over
+            the pilot &mdash; no infrastructure, no licensing, no headcount commitments. This
+            decision gate is in writing so it&rsquo;s real, not aspirational.
+          </div>
+
+          <h3>What gets reported to management</h3>
+          <ul>
+            <li>
+              <strong>Weekly during pilot</strong>: one-line status &mdash; usage, accuracy sample,
+              value metric, spend-to-date.
+            </li>
+            <li>
+              <strong>End of week 4</strong>: written go / no-go memo against the three thresholds
+              above.
+            </li>
+            <li>
+              <strong>End of week 8</strong>: final report &mdash; baseline vs measured value,
+              actual API spend, and recommendation on next use cases.
+            </li>
+          </ul>
+        </section>
+
+        <section id="sec-07" class="section">
+          <h2>Security &amp; Cost Controls</h2>
+          <p class="section-subtitle">
+            Eight controls that bound the spend, the data, and the answer quality.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Control</th>
+                <th>How it works</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Hard monthly budget cap</td>
+                <td>$50 ceiling on the API key; automatic shut-off when reached.</td>
+              </tr>
+              <tr>
+                <td>Data sent to the model</td>
+                <td>
+                  Only the approved data for that use case and the user&rsquo;s input. No customer
+                  data or product source unless explicitly classified and approved.
+                </td>
+              </tr>
+              <tr>
+                <td>No training on our prompts</td>
+                <td>Vendor&rsquo;s &ldquo;zero data retention&rdquo; / no-training tier.</td>
+              </tr>
+              <tr>
+                <td>Approved vendor only</td>
+                <td>Single vendor, terms reviewed by Security &amp; Legal.</td>
+              </tr>
+              <tr>
+                <td>Audit trail</td>
+                <td>All prompts and responses logged 30 days for security review.</td>
+              </tr>
+              <tr>
+                <td>Personal data filter (names, emails, employee IDs, etc.)</td>
+                <td>Prompts scanned and blocked when they match known sensitive patterns.</td>
+              </tr>
+              <tr>
+                <td>Answers grounded in approved data only</td>
+                <td>
+                  Retrieval-Augmented Generation &mdash; the model is fed relevant snippets from the
+                  approved source before each answer, so it can&rsquo;t invent facts.
+                </td>
+              </tr>
+              <tr>
+                <td>Unknown questions &amp; quality review</td>
+                <td>
+                  Clear &ldquo;I don&rsquo;t know&rdquo; fallback when no source matches; weekly
+                  response sampling by the owning team; user-reportable answers.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="sec-08" class="section">
+          <h2>Rollout Plan &mdash; 2 Months</h2>
+          <p class="section-subtitle">
+            A learning-first rollout in two steps over eight weeks. Each step depends on the
+            previous one &mdash; we can stop at any point if results don&rsquo;t justify continuing.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>When</th>
+                <th>What happens</th>
+                <th>How we judge success</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. Explore &amp; pilot</strong><br /><em>(controlled)</em></td>
+                <td>Weeks 1&ndash;4</td>
+                <td>
+                  Enable the approved API for <strong>one vetted experiment</strong> (e.g. a
+                  read-only assistant in an existing app). A small group uses it on real tasks under
+                  the cap and guardrails; the team documents what works and what doesn&rsquo;t.
+                </td>
+                <td>
+                  &bull; Are people learning and using it?<br />
+                  &bull; Does quality meet the accuracy bar?<br />
+                  &bull; Spend stays within the agreed cap?
+                </td>
+              </tr>
+              <tr>
+                <td><strong>2. Learn &amp; expand</strong><br /><em>(if pilot succeeds)</em></td>
+                <td>Weeks 5&ndash;8</td>
+                <td>
+                  Share findings with leadership; widen the pilot and/or start the next vetted
+                  experiment on the <strong>same key and cap</strong> &mdash; no new infrastructure.
+                </td>
+                <td>
+                  &bull; Clear recommendation on next use cases<br />
+                  &bull; Measured value vs baseline<br />
+                  &bull; Cost still within the agreed cap
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="card brand">
+            <div class="card-title">Success targets (by end of month 1)</div>
+            <ul>
+              <li>At least <strong>one documented use case</strong> with measured results</li>
+              <li>Team can explain cost, quality, and security trade-offs from real usage</li>
+              <li>
+                Monthly API spend stays under the <strong>agreed cap</strong> (set at approval)
+              </li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-title">In one line</div>
+            Month 1: learn safely on one experiment. Month 2: share what we learned and decide what
+            to scale next.
+          </div>
+        </section>
+
+        <section id="sec-09" class="section">
+          <h2>The Ask</h2>
+          <p class="section-subtitle">Three decisions we&rsquo;re asking management to approve.</p>
+          <ol>
+            <li>
+              Approve <strong>controlled outbound access</strong> to one low-cost Large Language
+              Model API (recommended: GPT-4o Mini, or approved equivalent) for exploration and
+              experimentation.
+            </li>
+            <li>
+              Approve an <strong>ongoing monthly budget cap</strong> on the API key (amount set at
+              approval; indicative range <strong>$25&ndash;$50</strong>).
+              <br />
+              <span class="footnote" style="margin: 0.3rem 0 0; display: block">
+                Expected actual spend: <strong>~$1&ndash;$30 per month</strong>. The cap is a safety
+                ceiling, not a flat bill &mdash; pay-as-you-go, with automatic shut-off if reached.
+              </span>
+            </li>
+            <li>
+              Assign a small reviewer group (one each from Security, Platform, and the owning team)
+              to sign off on guardrails and oversee usage.
+            </li>
+          </ol>
+
+          <div class="card brand">
+            <div class="card-title">Bottom line</div>
+            For a small, agreed monthly cap &mdash; with minimal, monitored usage, no company data
+            shared, and full policy compliance &mdash; we unblock hands-on AI learning and establish
+            a safe, measured, reusable pattern for thoughtful AI adoption.
+          </div>
+        </section>
+
+        <footer class="doc-footer">
+          Prepared for management review &middot; AI / LLM Enablement &middot; Arcadis Digital
+          Intelligence
+        </footer>
+      </main>
+    </div>
+
+    <script>
+      function showSection(ev, sectionId) {
+        if (ev && ev.preventDefault) ev.preventDefault();
+
+        document.querySelectorAll(".section").forEach(function (section) {
+          section.classList.remove("active");
+        });
+        var target = document.getElementById(sectionId);
+        if (target) target.classList.add("active");
+
+        document.querySelectorAll(".nav-link").forEach(function (link) {
+          link.classList.remove("active");
+        });
+        var activeLink = document.querySelector('.nav-link[href="#' + sectionId + '"]');
+        if (activeLink) activeLink.classList.add("active");
+
+        if (history.replaceState) {
+          history.replaceState(null, "", "#" + sectionId);
+        } else {
+          window.location.hash = sectionId;
+        }
+
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }
+
+      window.addEventListener("DOMContentLoaded", function () {
+        var hash = (window.location.hash || "").slice(1);
+        if (hash && document.getElementById(hash)) {
+          showSection(null, hash);
+        }
+      });
+    </script>
+  </body>
+</html>
