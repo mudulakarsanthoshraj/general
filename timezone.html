@@ -1,1 +1,182 @@
 
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Time</title>
+    <style>
+      :root {
+        --bg-1: #0f0c29;
+        --bg-2: #302b63;
+        --bg-3: #24243e;
+        --chile: #ff8a5c;
+        --india: #7ee8fa;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          Roboto,
+          sans-serif;
+        color: #fff;
+        text-align: center;
+        padding: 2rem 1rem;
+        background: linear-gradient(
+          -45deg,
+          var(--bg-1),
+          var(--bg-2),
+          var(--bg-3),
+          #0f2027
+        );
+        background-size: 400% 400%;
+        animation: gradientShift 18s ease infinite;
+      }
+
+      @keyframes gradientShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .clock {
+        flex: 1 1 340px;
+        max-width: 460px;
+        padding: 2.5rem;
+        border-radius: 28px;
+        background: rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+      }
+      .clock--chile {
+        border-top: 4px solid var(--chile);
+      }
+      .clock--india {
+        border-top: 4px solid var(--india);
+      }
+
+      .flag {
+        font-size: 2.4rem;
+      }
+
+      .name {
+        margin-top: 0.4rem;
+        font-size: 1.3rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+      .clock--chile .name {
+        color: var(--chile);
+      }
+      .clock--india .name {
+        color: var(--india);
+      }
+
+      .time {
+        margin-top: 1.2rem;
+        font-size: clamp(2.8rem, 9vw, 5rem);
+        font-weight: 800;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .ampm {
+        font-size: 0.32em;
+        font-weight: 600;
+        margin-left: 0.4rem;
+      }
+      .clock--chile .ampm {
+        color: var(--chile);
+      }
+      .clock--india .ampm {
+        color: var(--india);
+      }
+
+      .date {
+        margin-top: 1rem;
+        font-size: 1rem;
+        letter-spacing: 1px;
+        color: rgba(255, 255, 255, 0.75);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="clock clock--chile">
+      <div class="flag">🇨🇱</div>
+      <div class="name">Chile</div>
+      <div class="time" id="time-chile">--:--</div>
+      <div class="date" id="date-chile"></div>
+    </div>
+
+    <div class="clock clock--india">
+      <div class="flag">🇮🇳</div>
+      <div class="name">India</div>
+      <div class="time" id="time-india">--:--</div>
+      <div class="date" id="date-india"></div>
+    </div>
+
+    <script>
+      const zones = [
+        { tz: "America/Santiago", time: "time-chile", date: "date-chile" },
+        { tz: "Asia/Kolkata", time: "time-india", date: "date-india" },
+      ];
+
+      function updateClocks() {
+        const now = new Date();
+
+        for (const z of zones) {
+          const parts = new Intl.DateTimeFormat("en-US", {
+            timeZone: z.tz,
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true,
+          }).formatToParts(now);
+
+          const get = (t) =>
+            (parts.find((x) => x.type === t) || {}).value || "";
+
+          document.getElementById(z.time).innerHTML =
+            `${get("hour")}:${get("minute")}:${get("second")}` +
+            `<span class="ampm">${get("dayPeriod")}</span>`;
+
+          document.getElementById(z.date).textContent = new Intl.DateTimeFormat(
+            undefined,
+            { timeZone: z.tz, weekday: "long", month: "long", day: "numeric" },
+          ).format(now);
+        }
+      }
+
+      updateClocks();
+      setInterval(updateClocks, 1000);
+    </script>
+  </body>
+</html>
