@@ -790,8 +790,11 @@
               bill.
             </li>
             <li>
-              <strong>A Zscaler exception</strong> for that one web address, through the normal
-              Security approval steps.
+              <strong>Network access to one address</strong> &mdash; allow outbound calls to
+              <code>api.openai.com</code> through the normal Security approval steps (a Zscaler
+              exception for developer machines, or an egress/firewall rule for the server). Copilot
+              being allowed doesn&rsquo;t cover this &mdash; it uses different GitHub/Microsoft
+              addresses; the OpenAI API is a separate one that&rsquo;s still blocked.
             </li>
           </ol>
 
