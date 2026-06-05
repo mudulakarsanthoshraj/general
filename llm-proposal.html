@@ -735,49 +735,24 @@
       <nav class="sidebar" aria-label="Proposal navigation">
         <div class="sidebar-header">
           <h1>AI / LLM Enablement</h1>
-          <p>Exploration &amp; experimentation &middot; Proposal</p>
+          <p>API access for our team &middot; Proposal</p>
         </div>
 
         <div class="nav-section">
-          <div class="nav-section-title">Overview</div>
-          <a href="#sec-a3" class="nav-link active" onclick="showSection(event, 'sec-a3')"
-            >Why It Matters</a
+          <a href="#sec-ask" class="nav-link active" onclick="showSection(event, 'sec-ask')"
+            >The Ask</a
           >
-          <a href="#sec-a1" class="nav-link" onclick="showSection(event, 'sec-a1')"
-            >The Ask &amp; Cost</a
+          <a href="#sec-why" class="nav-link" onclick="showSection(event, 'sec-why')"
+            >Why It Helps</a
           >
-          <a href="#sec-a-scope" class="nav-link" onclick="showSection(event, 'sec-a-scope')"
-            >Scope of this Ask</a
+          <a href="#sec-try" class="nav-link" onclick="showSection(event, 'sec-try')"
+            >What We&rsquo;d Try First</a
           >
-          <a href="#sec-a2" class="nav-link" onclick="showSection(event, 'sec-a2')"
+          <a href="#sec-cost" class="nav-link" onclick="showSection(event, 'sec-cost')"
+            >What It Costs</a
+          >
+          <a href="#sec-safe" class="nav-link" onclick="showSection(event, 'sec-safe')"
             >How It Stays Safe</a
-          >
-        </div>
-
-        <div class="nav-section">
-          <div class="nav-section-title">Value &amp; safeguards</div>
-          <a href="#sec-04" class="nav-link" onclick="showSection(event, 'sec-04')">How It Helps</a>
-          <a href="#sec-usecases" class="nav-link" onclick="showSection(event, 'sec-usecases')"
-            >Real-Time Use Cases</a
-          >
-          <a href="#sec-rt" class="nav-link" onclick="showSection(event, 'sec-rt')"
-            >How AI Works in Real Time</a
-          >
-          <a href="#sec-measure" class="nav-link" onclick="showSection(event, 'sec-measure')"
-            >How We&rsquo;ll Measure Value</a
-          >
-          <a href="#sec-07" class="nav-link" onclick="showSection(event, 'sec-07')"
-            >Security &amp; Cost Controls</a
-          >
-        </div>
-
-        <div class="nav-section">
-          <div class="nav-section-title">Reference</div>
-          <a href="#sec-a-pricing" class="nav-link" onclick="showSection(event, 'sec-a-pricing')"
-            >OpenAI Model Pricing</a
-          >
-          <a href="#sec-a-ollama" class="nav-link" onclick="showSection(event, 'sec-a-ollama')"
-            >Ollama &mdash; Free Local Alternative</a
           >
         </div>
       </nav>
@@ -785,406 +760,80 @@
       <!-- ─────────────────────── Main ─────────────────────── -->
       <main class="main">
         <!-- ─── Broader LLM Access ─── -->
-        <section id="sec-a1" class="section">
-          <h2>The Ask &amp; Cost</h2>
+        <section id="sec-ask" class="section active">
+          <h2>The Ask</h2>
           <p class="section-subtitle">
-            We want to turn on safe access to one low-cost AI model (we suggest GPT-4o Mini, or a
-            similar approved one) so the team can <strong>try out</strong> real AI ideas. Right now
-            our network rules (like Zscaler blocking outside connections) make even a small, safe
-            test hard. This is a request to open the door for careful, hands-on learning.
+            We&rsquo;d like approval for a single, low-cost API key so our team can use an approved
+            AI model (we suggest GPT-4o Mini) inside our own apps, on our own server. Today our
+            network rules block this, so even a small, safe test isn&rsquo;t possible.
           </p>
 
-          <p>
-            We expect to spend about <strong>$1&ndash;$30 a month</strong>, with an
-            <strong>agreed monthly limit</strong> set when this is approved (somewhere around
-            <strong>$25&ndash;$50</strong>). The limit is a safety ceiling, not a fixed bill &mdash;
-            see
-            <a href="#sec-a-pricing" onclick="showSection(event, 'sec-a-pricing')"
-              >OpenAI Model Pricing</a
-            >
-            for the numbers. Leadership decides the final figure.
-          </p>
-
-          <h3>What this lets us do</h3>
-          <p>This small, controlled access helps both the company and the team by letting us:</p>
-          <ul>
-            <li>Find tasks we can <strong>automate or speed up</strong></li>
-            <li>See how AI can <strong>fit into the apps we already have</strong></li>
-            <li>Make <strong>smart, low-cost choices</strong> about using AI</li>
-            <li>Give the team a chance to <strong>learn by doing</strong></li>
-          </ul>
-
-          <h3>Kept under control</h3>
-          <ul>
-            <li><strong>Small, watched usage</strong> &mdash; capped spend with a full record</li>
-            <li><strong>No private or company data</strong> is sent to the model</li>
-            <li><strong>Follows all</strong> company security rules</li>
-          </ul>
-
-          <p>
-            The same access key can later cover more than one test. Each approved idea uses the
-            <strong>same key</strong>, the <strong>same limit</strong>, and the
-            <strong>same safety rules</strong>, so adding the next one costs almost nothing. We
-            check whether each one is worth it (see
-            <a href="#sec-measure" onclick="showSection(event, 'sec-measure')"
-              >How We&rsquo;ll Measure Value</a
-            >); ideas for our existing products are in
-            <a href="#sec-usecases" onclick="showSection(event, 'sec-usecases')"
-              >Real-Time Use Cases</a
-            >.
-          </p>
-        </section>
-
-        <section id="sec-a-scope" class="section">
-          <h2>Scope of this Ask</h2>
-          <p class="section-subtitle">
-            What we are asking management to approve &mdash; and what we are <em>not</em> asking
-            for. Our network rules (Zscaler) and security controls still apply.
-          </p>
-
-          <p>
-            To keep this clear: we are asking for one small, well-defined thing &mdash;
-            <strong>access to one approved AI service, used only on our server</strong>, for careful
-            testing and learning. We are not asking to change network rules, and this is separate
-            from any talk about personal AI tools (Copilot, Claude, ChatGPT).
-          </p>
+          <h3>What we&rsquo;re asking management to approve</h3>
+          <ol>
+            <li>
+              <strong>One approved API key</strong> to one low-cost AI model (GPT-4o Mini, or a
+              similar approved model), used only on our server.
+            </li>
+            <li>
+              <strong>A small monthly spending limit</strong> on that key &mdash; around
+              <strong>$25&ndash;$50</strong>, set by leadership. Expected real spend is about
+              <strong>$1&ndash;$30 a month</strong>; the limit is a safety ceiling, not a fixed
+              bill.
+            </li>
+            <li>
+              <strong>A Zscaler exception</strong> for that one web address, through the normal
+              Security approval steps.
+            </li>
+          </ol>
 
           <div class="compare">
             <div class="col future">
-              <h4>What we are asking for</h4>
+              <h4>What this is</h4>
               <ul>
-                <li>
-                  Access to <strong>one approved AI service</strong> &mdash; used on our server;
-                  small, watched usage for team learning and finding good ideas.
-                </li>
-                <li>
-                  A Zscaler exception for that one web address, using the
-                  <strong>normal Security approval steps</strong>.
-                </li>
-                <li>
-                  A <strong>reusable setup</strong> so future approved ideas can share the same
-                  access (safety rules in
-                  <a href="#sec-a2" onclick="showSection(event, 'sec-a2')">How It Stays Safe</a>).
-                </li>
+                <li>One approved model, one key, used on our server.</li>
+                <li>Small, watched usage for learning and trying ideas.</li>
+                <li>A reusable setup that future approved ideas can share.</li>
               </ul>
             </div>
             <div class="col today">
-              <h4>What we are <em>not</em> asking for</h4>
+              <h4>What this is <em>not</em></h4>
               <ul>
-                <li>A separate key for every engineer or laptop.</li>
-                <li>
-                  GitHub Copilot, Claude desktop, or ChatGPT in the browser &mdash; those are
-                  <strong>separate decisions</strong>.
-                </li>
-                <li>Removing Zscaler or any company-wide network rule.</li>
-                <li>
-                  Access to many vendors at once &mdash; just one vendor, one address, reviewed.
-                </li>
+                <li>Not a key for every engineer or laptop.</li>
+                <li>Not Copilot, ChatGPT, or Claude &mdash; those are separate decisions.</li>
+                <li>Not a change to Zscaler or any company-wide network rule.</li>
               </ul>
             </div>
           </div>
 
           <div class="card brand">
-            <div class="card-title">About Zscaler / network rules</div>
-            We are <strong>not</strong> getting around Zscaler. We use the
-            <strong>same approval steps</strong> as other approved cloud services to allow
-            <strong>one</strong> web address for <strong>one</strong> reviewed use case. All other
-            network rules stay in place. Personal AI tools are a separate topic &mdash; this request
-            does not decide them.
+            <div class="card-title">In one line</div>
+            For a small, capped monthly cost &mdash; with no private data shared and all security
+            rules followed &mdash; we get hands-on access to use AI safely inside our own apps.
           </div>
         </section>
 
-        <section id="sec-a-pricing" class="section">
-          <h2>OpenAI Model Pricing</h2>
+        <section id="sec-why" class="section">
+          <h2>Why It Helps</h2>
           <p class="section-subtitle">
-            A quick look at OpenAI&rsquo;s models, their prices, and what each one is best for
-            &mdash; and why we suggest GPT-4o Mini for low-cost testing.
+            What changes for the company and the team once we can use AI safely in our own apps.
           </p>
 
-          <h3>How OpenAI charges</h3>
-          <p>
-            OpenAI charges by the <strong>token</strong> &mdash; about
-            <strong>&frac34; of a word</strong>. Each request is charged for the <em>input</em> (the
-            instructions + supporting info + the user&rsquo;s question) and the <em>output</em> (the
-            model&rsquo;s answer). All prices below are per <strong>1 million tokens</strong>.
-          </p>
-
-          <h3>Model catalogue &amp; per-token pricing</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Model</th>
-                <th>Best for</th>
-                <th class="num">Input&nbsp;/ 1M</th>
-                <th class="num">Output&nbsp;/ 1M</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="alt-recommended">
-                <td><strong>GPT-4o mini</strong><br /><em>(recommended)</em></td>
-                <td>Cheap, fast answers based on our docs and data</td>
-                <td class="num">$0.15</td>
-                <td class="num">$0.60</td>
-              </tr>
-              <tr>
-                <td><strong>GPT-4.1 nano</strong></td>
-                <td>Lowest cost; simple, short replies</td>
-                <td class="num">$0.10</td>
-                <td class="num">$0.40</td>
-              </tr>
-              <tr>
-                <td><strong>GPT-4.1 mini</strong></td>
-                <td>A small quality step up from 4o mini</td>
-                <td class="num">$0.40</td>
-                <td class="num">$1.60</td>
-              </tr>
-              <tr>
-                <td><strong>GPT-4.1</strong></td>
-                <td>Strong all-round model</td>
-                <td class="num">$2.00</td>
-                <td class="num">$8.00</td>
-              </tr>
-              <tr>
-                <td><strong>GPT-4o</strong></td>
-                <td>Handles text, images, and audio</td>
-                <td class="num">$2.50</td>
-                <td class="num">$10.00</td>
-              </tr>
-              <tr>
-                <td><strong>GPT-3.5 Turbo</strong> <em>(older)</em></td>
-                <td>Older model; 4o mini is better for chat now</td>
-                <td class="num">$0.50</td>
-                <td class="num">$1.50</td>
-              </tr>
-              <tr>
-                <td><strong>o3-mini</strong></td>
-                <td>For harder thinking &mdash; planning, math, code</td>
-                <td class="num">$1.10</td>
-                <td class="num">$4.40</td>
-              </tr>
-              <tr>
-                <td><strong>o1</strong> <em>(reasoning)</em></td>
-                <td>For very hard problems &mdash; too much for simple Q&amp;A</td>
-                <td class="num">$15.00</td>
-                <td class="num">$60.00</td>
-              </tr>
-            </tbody>
-          </table>
-          <p class="footnote">
-            Indicative public pricing. Verify current rates at
-            <code>openai.com/api/pricing</code> before purchase &mdash; OpenAI revises pricing
-            periodically and prices vary by region / volume tier.
-          </p>
-
-          <h3>What this means in practice</h3>
-          <p>
-            A typical request (say a grounded question or a summary) uses about
-            <strong>2,000 input tokens</strong> (instructions + supporting info + the user&rsquo;s
-            input) and <strong>600 output tokens</strong> (the answer). Here is what that looks like
-            at <strong>10,000 requests a month</strong>:
-          </p>
-
-          <table>
-            <thead>
-              <tr>
-                <th>Model</th>
-                <th class="num">Cost / request</th>
-                <th class="num">10,000 requests / month</th>
-                <th class="num">vs GPT-4o mini</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="alt-recommended">
-                <td><strong>GPT-4o mini</strong> <em>(recommended)</em></td>
-                <td class="num">~$0.0007</td>
-                <td class="num">~$7</td>
-                <td class="num">1&times;</td>
-              </tr>
-              <tr>
-                <td>GPT-4.1 nano</td>
-                <td class="num">~$0.0004</td>
-                <td class="num">~$4</td>
-                <td class="num">0.6&times;</td>
-              </tr>
-              <tr>
-                <td>GPT-4.1 mini</td>
-                <td class="num">~$0.0018</td>
-                <td class="num">~$18</td>
-                <td class="num">2.7&times;</td>
-              </tr>
-              <tr>
-                <td>GPT-4.1</td>
-                <td class="num">~$0.0088</td>
-                <td class="num">~$88</td>
-                <td class="num">13&times;</td>
-              </tr>
-              <tr>
-                <td>GPT-4o</td>
-                <td class="num">~$0.011</td>
-                <td class="num">~$110</td>
-                <td class="num">17&times;</td>
-              </tr>
-              <tr>
-                <td>o1 (reasoning)</td>
-                <td class="num">~$0.066</td>
-                <td class="num">~$660</td>
-                <td class="num">100&times;</td>
-              </tr>
-            </tbody>
-          </table>
-          <p class="footnote italic">
-            Cost = (2,000 input tokens &times; input&nbsp;rate + 600 output tokens &times;
-            output&nbsp;rate) &div; 1,000,000. Rounded to two significant figures.
-          </p>
-
-          <div class="card brand">
-            <div class="card-title">Why GPT-4o mini</div>
-            For answering questions, summarizing, and pulling out data, GPT-4o mini gives
-            <strong>top-quality answers at about 17&times; lower cost</strong> than GPT-4o and
-            around 100&times; lower than the reasoning models. There are even cheaper models, but
-            their answers slip when a request has several parts. GPT-4o mini is the sweet spot
-            &mdash; strong answers, steady cost, and easily within a small monthly limit.
-          </div>
-
-          <div class="card">
-            <div class="card-title">What a low-cost model like GPT-4o mini is good for</div>
-            Low-cost models are great for things like <strong>AI agents and chatbots</strong>,
-            <strong>finding and filtering data</strong>, summarizing, and pulling out details
-            &mdash; but they are <strong>not built to write complex code</strong>. For heavy coding
-            or hard problem-solving, a bigger model (GPT-4.1 or a reasoning model) is the better
-            choice. Match the model to the job: use GPT-4o mini for everyday assistant and data
-            tasks, and save the pricier models for the few cases that really need them.
-          </div>
-        </section>
-
-        <section id="sec-a-ollama" class="section">
-          <h2>Ollama &mdash; Free Local Alternative</h2>
-          <p class="section-subtitle">
-            Ollama is a free, open-source tool for running AI models on your own computer. It is
-            great for building and testing &mdash; this section explains why it can&rsquo;t run the
-            live product feature, and how the two work together.
-          </p>
-
-          <p>
-            <a href="https://ollama.com" target="_blank" rel="noopener"><code>ollama.com</code></a>
-            runs open models (Llama 3, Mistral, Phi, and others) right on a developer&rsquo;s
-            computer &mdash; no key, no per-use cost, and the data never leaves the laptop. It works
-            the same way as the OpenAI API, so the same code can use Ollama while building and a
-            hosted model when live.
-          </p>
-
-          <h3>Why Ollama can&rsquo;t run the live feature</h3>
-          <div class="compare">
-            <div class="col future">
-              <h4>What Ollama is great for</h4>
-              <ul>
-                <li>Trying out prompts and ideas offline on your own computer</li>
-                <li>
-                  Handy when outside access is blocked &mdash; it&rsquo;s all local, so no Zscaler
-                  exception is needed
-                </li>
-              </ul>
-            </div>
-            <div class="col today">
-              <h4>Why it falls short for the live product</h4>
-              <ul>
-                <li>
-                  We can&rsquo;t expect every user to install Ollama and download a 2&ndash;8 GB
-                  model &mdash; that&rsquo;s not practical
-                </li>
-                <li>
-                  Speed depends on each person&rsquo;s computer; answers can take 10&ndash;30
-                  seconds on a normal laptop &mdash; too slow
-                </li>
-                <li>
-                  Smaller open models give clearly weaker answers than GPT-4o Mini for the same
-                  question
-                </li>
-                <li>
-                  Running Ollama on a shared server brings back server and GPU costs that are far
-                  higher than a small hosted-model budget
-                </li>
-                <li>No vendor support, no audit tools, no managed updates</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="card brand">
-            <div class="card-title">How both work together</div>
-            Use <strong>Ollama (free) while building and testing</strong>, and the low-cost
-            <strong>GPT-4o Mini for the live feature</strong>. Since both work the same way,
-            switching between them is basically a one-line change &mdash; so we can revisit this
-            later as open models get better.
-          </div>
-        </section>
-
-        <section id="sec-a2" class="section">
-          <h2>How It Stays Safe</h2>
-          <p class="section-subtitle">
-            Safety rules built into every use case: one approved model, a spending limit, no private
-            data, and a sign-off before anything goes live.
-          </p>
-          <table>
-            <thead>
-              <tr>
-                <th>Safety rule</th>
-                <th>How it works</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>One approved model</strong></td>
-                <td>We start with GPT-4o Mini only. Any new model goes through Security review.</td>
-              </tr>
-              <tr>
-                <td><strong>Spending limit</strong></td>
-                <td>
-                  Pay only for what we use, with a monthly limit per test (agreed at approval,
-                  usually $25&ndash;$50). It shuts off on its own if the limit is reached.
-                </td>
-              </tr>
-              <tr>
-                <td><strong>No private data</strong></td>
-                <td>
-                  Only public docs and made-up sample data &mdash; no personal details (names,
-                  emails, employee IDs), no private code, no passwords.
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Sign-off for each use case</strong></td>
-                <td>
-                  A short one-page plan (owner, what data is used, spending limit, success measure)
-                  is approved by Security, Platform, and the product owner before going live.
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <section id="sec-a3" class="section active">
-          <h2>Why It Matters</h2>
-          <p class="section-subtitle">
-            What changes for the company and the team when we turn on safe AI access, compared with
-            today.
-          </p>
           <div class="compare">
             <div class="col today">
-              <h4>Without AI access</h4>
+              <h4>Today, without access</h4>
               <ul>
-                <li>It&rsquo;s hard to try real AI ideas while the network blocks access.</li>
-                <li>
-                  We can&rsquo;t check the cost or quality of AI before we commit to building.
-                </li>
+                <li>We can&rsquo;t try real AI ideas while the network blocks access.</li>
+                <li>We can&rsquo;t check the cost or quality of AI before committing to build.</li>
                 <li>The team falls behind on real AI skills and good adoption choices.</li>
               </ul>
             </div>
             <div class="col future">
-              <h4>With safe AI access</h4>
+              <h4>With safe access</h4>
               <ul>
-                <li>The team can <strong>try real AI ideas</strong> directly in our apps.</li>
-                <li>We get <strong>real usage data</strong> to make smart, low-cost AI choices.</li>
+                <li>The team can try real AI ideas directly in our apps.</li>
+                <li>We get real usage data to make smart, low-cost AI choices.</li>
                 <li>We spot ways to automate and save time before spending big.</li>
-                <li>The team keeps learning and improving, in a safe and approved way.</li>
+                <li>The team keeps learning, in a safe and approved way.</li>
               </ul>
             </div>
           </div>
@@ -1196,562 +845,159 @@
           </div>
         </section>
 
-        <!-- ─── AI in Our Products ─── -->
-        <section id="sec-rt" class="section">
-          <h2>How AI Works in Real Time</h2>
+        <section id="sec-try" class="section">
+          <h2>What We&rsquo;d Try First</h2>
           <p class="section-subtitle">
-            &ldquo;Real-time&rdquo; AI means the user does something in the app and gets a useful
-            reply in a second or two &mdash; an answer, a summary, a draft, or some extracted
-            details. Behind the scenes it&rsquo;s a short, repeatable set of steps that calls one AI
-            model.
+            One small, low-risk example so it&rsquo;s clear what the key is actually for.
           </p>
 
-          <h3>The steps</h3>
-          <p>Every real-time AI feature, in any app, follows the same five steps on our server:</p>
-          <ol>
-            <li>
-              <strong>Take the input</strong> &mdash; the user types a question, opens a long
-              document, pastes text, or clicks a button.
-            </li>
-            <li>
-              <strong>Pull in the right context</strong> &mdash; the app grabs the few most relevant
-              pieces of <em>our own</em> data or docs for that input. This is what keeps answers
-              accurate and on-topic.
-            </li>
-            <li>
-              <strong>Put the request together</strong> &mdash; a fixed instruction + that context +
-              the user&rsquo;s input are combined into one request.
-            </li>
-            <li>
-              <strong>Send it to the model</strong> &mdash; the request goes to the approved model
-              (on our server, using the shared key and spending limit).
-            </li>
-            <li>
-              <strong>Show the answer as it comes</strong> &mdash; the reply appears word by word,
-              so the user sees it forming right away instead of waiting for the whole thing.
-            </li>
-          </ol>
+          <p>
+            A good first test is a <strong>plain-language helper</strong> inside an app we already
+            have. Instead of filling a long form, the user types what they want in everyday words
+            &mdash; for example, &ldquo;Book the cheapest flight to Canada on 15 June, meals
+            included, any time is fine.&rdquo; The AI reads that sentence and turns it into the
+            neat, structured fields our app already understands.
+          </p>
+
+          <p>
+            The user sees those details, checks them, and clicks <strong>Confirm</strong> &mdash;
+            and only then is anything saved. The AI just reads and organizes the text; the person
+            always makes the final decision, and nothing is stored without confirmation.
+          </p>
 
           <div class="card brand">
-            <div class="card-title">Why it feels instant</div>
-            Two things make it feel instant: the answer <strong>appears word by word</strong> (in
-            under a second) and we only send a <strong>small, relevant slice of data</strong>, so
-            the model replies fast and stays accurate. A typical call is about 2,000 input + 600
-            output tokens &mdash; a fraction of a cent on GPT-4o Mini.
-          </div>
-
-          <h3>What stays on our server</h3>
-          <p>
-            The key, the request building, the data lookup, and the spending limit all stay on our
-            server &mdash; never in the browser or on a user&rsquo;s computer. The app only sends
-            the user&rsquo;s input and shows the answer. That&rsquo;s what makes one approved
-            connection safe to share across several features.
-          </p>
-        </section>
-
-        <section id="sec-usecases" class="section">
-          <h2>Real-Time Use Cases</h2>
-          <p class="section-subtitle">
-            The same five steps and the same approved key can power many real-time AI features
-            across the apps we already have. These are common, proven patterns; the exact app and
-            data for each one is checked through the per-use-case sign-off.
-          </p>
-
-          <table class="usecase-table">
-            <colgroup>
-              <col style="width: 16%" />
-              <col style="width: 27%" />
-              <col style="width: 19%" />
-              <col style="width: 38%" />
-            </colgroup>
-            <thead>
-              <tr>
-                <th>Pattern</th>
-                <th>What the user does in real time</th>
-                <th>Grounded on</th>
-                <th>Architecture &mdash; real-time data flow</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Question &amp; answer helper</strong></td>
-                <td>Asks a question in plain words and gets an answer with sources, in seconds.</td>
-                <td>Product help/docs, knowledge base</td>
-                <td>
-                  <div class="arch-flow">
-                    <span class="node">Question</span>
-                    <span class="arrow">&rarr;</span>
-                    <span class="node">Retrieve docs (KB)</span>
-                    <span class="arrow">&rarr;</span>
-                    <span class="node llm">LLM</span>
-                    <span class="arrow">&rarr;</span>
-                    <span class="node out">Answer + sources</span>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Summarization</strong></td>
-                <td>
-                  Opens a long report, thread, or document and gets a short summary on demand.
-                </td>
-                <td>The document the user is viewing</td>
-                <td>
-                  <div class="arch-flow">
-                    <span class="node">Document</span>
-                    <span class="arrow">&rarr;</span>
-                    <span class="node llm">LLM</span>
-                    <span class="arrow">&rarr;</span>
-                    <span class="node out">Short summary</span>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Search by meaning</strong></td>
-                <td>
-                  Searches in plain words and gets results ranked by meaning, not just exact
-                  keywords.
-                </td>
-                <td>Indexed product content</td>
-                <td>
-                  <div class="arch-flow">
-                    <span class="node">Query</span>
-                    <span class="arrow">&rarr;</span>
-                    <span class="node llm">Embed</span>
-                    <span class="arrow">&rarr;</span>
-                    <span class="node">Vector search</span>
-                    <span class="arrow">&rarr;</span>
-                    <span class="node out">Ranked results</span>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Pull out details</strong></td>
-                <td>
-                  Uploads or pastes free text (PDF, form, email) and gets neat, organized fields
-                  back.
-                </td>
-                <td>The uploaded document + the fields we want</td>
-                <td>
-                  <div class="arch-flow">
-                    <span class="node">Raw text</span>
-                    <span class="arrow">&rarr;</span>
-                    <span class="node llm">LLM (JSON mode)</span>
-                    <span class="arrow">&rarr;</span>
-                    <span class="node out">Structured fields</span>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Sort &amp; route</strong></td>
-                <td>
-                  Submits an item (ticket, message, record) and it is sorted and sent to the right
-                  place right away.
-                </td>
-                <td>Category definitions + examples</td>
-                <td>
-                  <div class="arch-flow">
-                    <span class="node">Item</span>
-                    <span class="arrow">&rarr;</span>
-                    <span class="node llm">LLM</span>
-                    <span class="arrow">&rarr;</span>
-                    <span class="node">Category</span>
-                    <span class="arrow">&rarr;</span>
-                    <span class="node out">Routed</span>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Write a first draft</strong></td>
-                <td>
-                  Clicks &ldquo;draft&rdquo; and gets a first version of a reply, description, or
-                  note to edit.
-                </td>
-                <td>Context fields + a tone/template</td>
-                <td>
-                  <div class="arch-flow">
-                    <span class="node">Context + template</span>
-                    <span class="arrow">&rarr;</span>
-                    <span class="node llm">LLM</span>
-                    <span class="arrow">&rarr;</span>
-                    <span class="node out">Editable draft</span>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Explain the numbers</strong></td>
-                <td>
-                  Views a chart or metric and gets a plain-words explanation of what changed and
-                  why.
-                </td>
-                <td>The underlying data points</td>
-                <td>
-                  <div class="arch-flow">
-                    <span class="node">Data points</span>
-                    <span class="arrow">&rarr;</span>
-                    <span class="node llm">LLM</span>
-                    <span class="arrow">&rarr;</span>
-                    <span class="node out">Plain-language explanation</span>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div class="arch-legend">
-            <span><span class="swatch"></span> App / data step (on our server)</span>
-            <span><span class="swatch llm"></span> AI model call (approved)</span>
-            <span><span class="swatch out"></span> What the user sees</span>
-          </div>
-          <p class="footnote">
-            Every flow uses the same five steps &mdash; take the input, pull in our own context,
-            send it to the approved model on our server, and return the result. Only the lookup and
-            output steps change for each pattern; the key, limit, and safety rules stay the same.
-          </p>
-
-          <div class="card warning">
-            <span class="card-label">Important — what data is used</span>
-            Every use case must say what data it sends to the model. We start with
-            <strong>public or low-risk data only</strong>. Anything with customer or personal data
-            goes through Security review and the personal-data filter before it can go live (see
-            <a href="#sec-07" onclick="showSection(event, 'sec-07')">Security &amp; Cost Controls</a
-            >).
-          </div>
-
-          <p>
-            All of these share <strong>one key, one limit, one set of safety rules</strong>. The
-            first approved test proves the idea; each one after that is cheaper to add because the
-            setup is already there.
-          </p>
-
-          <h3>Example &mdash; using GPT-4o mini in a product</h3>
-          <p>
-            A clear, useful example is a <strong>plain-language booking flow</strong>: the user
-            describes what they want in everyday words, GPT-4o mini turns it into neat, organized
-            data, the user confirms, and only then is it saved. No forms to fill &mdash; the user
-            just types a sentence.
-          </p>
-
-          <div class="example-grid">
-            <div class="example-step">
-              <span class="num">1</span>
-              <div>
-                <strong>User describes the trip</strong> in everyday words &mdash; the app sends the
-                sentence to our server.
-              </div>
-            </div>
-            <div class="example-step">
-              <span class="num">2</span>
-              <div>
-                <strong>GPT-4o mini turns it into data</strong> &mdash; one call on our server
-                returns the trip as neat, organized fields.
-              </div>
-            </div>
-            <div class="example-step">
-              <span class="num">3</span>
-              <div>
-                <strong>User confirms</strong> &mdash; the details are shown back; the user checks
-                them and clicks <em>Confirm</em>.
-              </div>
-            </div>
-            <div class="example-step">
-              <span class="num">4</span>
-              <div>
-                <strong>Saved</strong> &mdash; only after the user confirms is the booking request
-                stored.
-              </div>
-            </div>
-          </div>
-
-          <h4>Steps 1&ndash;2: turn the user's words into data (JSON)</h4>
-          <p class="footnote" style="margin-bottom: 0.4rem">
-            <code>response_format: json_object</code> makes the model return clean, organized data.
-            The key stays on our server, never in the browser.
-          </p>
-          <pre><code><span class="c-com">// userText = "I'd like to fly to Canada on 15 June. Please find the</span>
-<span class="c-com">//            cheapest flight, include meals, and any departure time works for me."</span>
-<span class="c-key">const</span> res = <span class="c-key">await</span> fetch(<span class="c-str">"https://api.openai.com/v1/chat/completions"</span>, {
-  method: <span class="c-str">"POST"</span>,
-  headers: {
-    <span class="c-str">"Authorization"</span>: <span class="c-str">`Bearer ${process.env.OPENAI_API_KEY}`</span>,
-    <span class="c-str">"Content-Type"</span>: <span class="c-str">"application/json"</span>
-  },
-  body: <span class="c-key">JSON</span>.stringify({
-    model: <span class="c-str">"gpt-4o-mini"</span>,
-    temperature: <span class="c-str">0</span>,
-    response_format: { type: <span class="c-str">"json_object"</span> },
-    messages: [
-      { role: <span class="c-str">"system"</span>,
-        content: <span class="c-str">"Convert the travel request to JSON with keys: destination, travel_date (YYYY-MM-DD), transport_mode, budget_preference, include_meals (boolean), time_preference. Use null if not stated."</span> },
-      { role: <span class="c-str">"user"</span>, content: userText }
-    ]
-  })
-});
-<span class="c-key">const</span> booking = <span class="c-key">JSON</span>.parse((<span class="c-key">await</span> res.json()).choices[<span class="c-str">0</span>].message.content);</code></pre>
-
-          <h4>What the user typed &rarr; what GPT-4o mini returns</h4>
-          <div class="compare">
-            <div class="col today">
-              <h4>User types</h4>
-              <p style="margin: 0; font-size: 0.88rem">
-                &ldquo;I&rsquo;d like to fly to Canada on 15 June. Please find the cheapest flight,
-                include meals, and any departure time works for me.&rdquo;
-              </p>
-            </div>
-            <div class="col future">
-              <h4>GPT-4o mini returns (JSON)</h4>
-              <pre style="margin: 0"><code>{
-  <span class="c-key">"destination"</span>: <span class="c-str">"Canada"</span>,
-  <span class="c-key">"travel_date"</span>: <span class="c-str">"2026-06-15"</span>,
-  <span class="c-key">"transport_mode"</span>: <span class="c-str">"flight"</span>,
-  <span class="c-key">"budget_preference"</span>: <span class="c-str">"lowest cost"</span>,
-  <span class="c-key">"include_meals"</span>: <span class="c-key">true</span>,
-  <span class="c-key">"time_preference"</span>: <span class="c-str">"any"</span>
-}</code></pre>
-            </div>
-          </div>
-
-          <h4>Steps 3&ndash;4: confirm, then save</h4>
-          <p class="footnote" style="margin-bottom: 0.4rem">
-            The details are shown back to the user. Nothing is saved until they confirm &mdash; the
-            AI drafts, the person decides.
-          </p>
-          <pre><code><span class="c-com">// Only runs after the user reviews and clicks "Confirm"</span>
-<span class="c-key">if</span> (userConfirmed) {
-  <span class="c-key">await</span> db.bookings.insert({
-    destination:       booking.destination,
-    travelDate:        booking.travel_date,
-    transportMode:     booking.transport_mode,
-    budgetPreference:  booking.budget_preference,
-    includeMeals:      booking.include_meals,
-    timePreference:    booking.time_preference,
-    createdBy:         currentUser.id,
-    status:            <span class="c-str">"pending"</span>
-  });
-}</code></pre>
-
-          <div class="card brand">
-            <div class="card-title">Why this works well &mdash; and stays safe</div>
+            <div class="card-title">Why this is a good first test</div>
             <ul>
               <li>
-                <strong>Easy for users:</strong> they type one sentence instead of filling a long
-                form &mdash; faster, with fewer people giving up.
+                <strong>Useful:</strong> faster for users, with fewer forms and fewer drop-offs.
               </li>
               <li>
-                <strong>Cheap:</strong> a request like this is about 300 input + 80 output tokens,
-                <strong>well under a tenth of a cent</strong> on GPT-4o mini (see
-                <a href="#sec-a-pricing" onclick="showSection(event, 'sec-a-pricing')"
-                  >OpenAI Model Pricing</a
-                >).
+                <strong>Cheap:</strong> a request like this costs well under a tenth of a cent.
               </li>
               <li>
-                <strong>Under control:</strong> the model only <em>reads and organizes</em> the text
-                &mdash; it never saves anything. Data is saved only after the user confirms, on our
-                server, under one limited key.
+                <strong>Safe:</strong> public data only, runs on our server, and the user confirms
+                before anything is saved.
               </li>
             </ul>
           </div>
         </section>
 
-        <section id="sec-04" class="section">
-          <h2>How It Helps</h2>
+        <section id="sec-cost" class="section">
+          <h2>What It Costs</h2>
           <p class="section-subtitle">
-            Clear wins for the team and the company once safe AI access is available.
-          </p>
-          <ul>
-            <li>
-              <strong>Real learning.</strong> Engineers try real AI ideas instead of just reading
-              about them or hitting a blocked connection.
-            </li>
-            <li>
-              <strong>Better decisions.</strong> We measure cost, quality, and safety from real use
-              before making bigger commitments.
-            </li>
-            <li>
-              <strong>Faster results.</strong> One setup (key, limit, safety rules) is reused
-              instead of each team sorting out access on its own.
-            </li>
-            <li>
-              <strong>Finding good ideas.</strong> We spot ways to automate and save time by working
-              hands-on in the apps we already have.
-            </li>
-            <li>
-              <strong>Measured and reversible.</strong> Every test has a limit and a success
-              measure; we keep what works and switch off what doesn&rsquo;t.
-            </li>
-            <li>
-              <strong>A path to AI in our products.</strong> Once the idea works on a low-risk test
-              (like a read-only helper), the same approach can grow to bigger uses.
-            </li>
-          </ul>
-        </section>
-
-        <section id="sec-measure" class="section">
-          <h2>How We&rsquo;ll Measure Value</h2>
-          <p class="section-subtitle">
-            We measure every test the same way: take a starting number first, track it weekly during
-            the test, then make a clear keep-or-stop call at week 4 &mdash; so we write down what we
-            learn and only grow what actually helps.
+            AI models charge per &ldquo;token&rdquo; (about &frac34; of a word) for the text sent in
+            and the answer sent back. GPT-4o Mini is one of the cheapest good models.
           </p>
 
-          <h3>The four steps</h3>
           <table>
             <thead>
               <tr>
-                <th>Step</th>
-                <th>When</th>
-                <th>What we measure</th>
+                <th>Model</th>
+                <th>Best for</th>
+                <th class="num">Input&nbsp;/ 1M</th>
+                <th class="num">Output&nbsp;/ 1M</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td><strong>1. Starting point</strong></td>
-                <td>Week 0 &mdash; before the test starts</td>
-                <td>
-                  How things work today for the chosen task (like time or clicks to finish it,
-                  manual effort, how often it happens) so we have a number to compare against.
-                </td>
-              </tr>
-              <tr>
-                <td><strong>2. Track the test</strong></td>
-                <td>Weeks 1 &ndash; 4</td>
-                <td>
-                  How much it&rsquo;s used; a weekly <strong>quality check</strong> on a sample of
-                  20 answers; the spend; and the main measure of value for the task.
-                </td>
-              </tr>
               <tr class="alt-recommended">
-                <td><strong>3. Keep-or-stop call</strong></td>
-                <td>End of week 4</td>
-                <td>
-                  A clear <strong>keep or stop</strong> decision against the targets below. If the
-                  targets aren&rsquo;t met, we turn the feature off and cancel the key.
-                </td>
+                <td><strong>GPT-4o mini</strong> <em>(recommended)</em></td>
+                <td>Cheap, fast answers, chatbots, organizing data</td>
+                <td class="num">$0.15</td>
+                <td class="num">$0.60</td>
               </tr>
               <tr>
-                <td><strong>4. Track at scale</strong></td>
-                <td>Weeks 5 &ndash; 8</td>
-                <td>
-                  Same measures across all users; check it still works at scale; final value and
-                  cost reported to management at week 8.
-                </td>
+                <td><strong>GPT-4.1 mini</strong></td>
+                <td>A small quality step up, if needed</td>
+                <td class="num">$0.40</td>
+                <td class="num">$1.60</td>
+              </tr>
+              <tr>
+                <td><strong>GPT-4o</strong></td>
+                <td>Higher quality; handles text, images, audio</td>
+                <td class="num">$2.50</td>
+                <td class="num">$10.00</td>
               </tr>
             </tbody>
           </table>
-
-          <h3>Keep-or-stop call &mdash; end of week 4</h3>
-          <p>
-            Clear targets, written down ahead of time. We continue
-            <strong>only if all three</strong> are met:
-          </p>
-          <div class="stats">
-            <div class="stat accent">
-              <div class="label">Value</div>
-              <div class="value">Beats the start</div>
-            </div>
-            <div class="stat accent">
-              <div class="label">Answer quality</div>
-              <div class="value">&ge; 70%</div>
-            </div>
-            <div class="stat accent">
-              <div class="label">Spend</div>
-              <div class="value">&le; agreed limit</div>
-            </div>
-          </div>
           <p class="footnote">
-            &ldquo;Value&rdquo; = the main measure for the task (time saved, faster completion, less
-            manual work) compared with the week-0 starting number. &ldquo;Quality&rdquo; = the share
-            of sampled answers the team rates as <em>correct and based on our data</em> (a random
-            sample of 20 answers, checked weekly).
+            Prices are per 1 million tokens, shown for context. Check current rates at
+            <code>openai.com/api/pricing</code> before purchase.
           </p>
 
           <div class="card brand">
-            <div class="card-title">If the numbers don&rsquo;t hold up</div>
-            We turn the feature off at the end of week 4, cancel the key, and close the use case.
-            The most we can lose is the <strong>agreed monthly limit</strong> over the test &mdash;
-            no servers, no licenses, no new hires. This keep-or-stop call is written down, so
-            it&rsquo;s real and not just a hope.
+            <div class="card-title">What this means in real money</div>
+            A typical request on GPT-4o Mini costs well under a cent. Even at
+            <strong>10,000 requests a month</strong> that&rsquo;s about <strong>$7</strong> &mdash;
+            far below the proposed limit. That&rsquo;s why we expect real spend of just
+            <strong>$1&ndash;$30 a month</strong>, with the cap as a safety ceiling.
           </div>
 
-          <h3>What we report to management</h3>
-          <ul>
-            <li>
-              <strong>Weekly during the test</strong>: a one-line update &mdash; usage, quality
-              sample, value, and spend so far.
-            </li>
-            <li>
-              <strong>End of week 4</strong>: a short written keep-or-stop note against the three
-              targets above.
-            </li>
-            <li>
-              <strong>End of week 8</strong>: a final report &mdash; starting point vs measured
-              value, actual spend, and a suggestion on what to do next.
-            </li>
-          </ul>
+          <div class="card">
+            <div class="card-title">Right tool for the job</div>
+            Low-cost models like GPT-4o Mini are great for chatbots, finding and organizing data,
+            and summarizing &mdash; but not for writing complex code or hard problem-solving. We use
+            the cheap model for everyday tasks, and only consider a pricier model if a specific need
+            comes up.
+          </div>
         </section>
 
-        <section id="sec-07" class="section">
-          <h2>Security &amp; Cost Controls</h2>
+        <section id="sec-safe" class="section">
+          <h2>How It Stays Safe</h2>
           <p class="section-subtitle">
-            Eight simple rules that keep the spend, the data, and the answer quality under control.
+            Simple rules that keep the spend, the data, and the answers under control.
           </p>
           <table>
             <thead>
               <tr>
-                <th>Control</th>
+                <th>Rule</th>
                 <th>How it works</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Monthly spending limit</td>
+                <td><strong>One approved model</strong></td>
+                <td>We start with GPT-4o Mini only. Any new model goes through Security review.</td>
+              </tr>
+              <tr>
+                <td><strong>Monthly spending limit</strong></td>
                 <td>
-                  The API key has a fixed monthly cap. When it&rsquo;s reached, it stops on its own.
+                  The key has a fixed monthly cap and stops on its own when it&rsquo;s reached.
                 </td>
               </tr>
               <tr>
-                <td>What we send to the model</td>
+                <td><strong>No private data</strong></td>
                 <td>
-                  Only the approved data for that task and what the user types. No customer data or
-                  product code unless it has been checked and approved first.
+                  Public docs and sample data only &mdash; no personal details (names, emails,
+                  employee IDs), no private code, no passwords.
                 </td>
               </tr>
               <tr>
-                <td>Our data is not used for training</td>
+                <td><strong>Runs only on our server</strong></td>
+                <td>The key and logic stay on our server, never in the browser or on a laptop.</td>
+              </tr>
+              <tr>
+                <td><strong>Not used for training</strong></td>
                 <td>
-                  We use the vendor&rsquo;s &ldquo;no-training&rdquo; tier, so our prompts are not
-                  kept or used to train their models.
+                  We use the vendor&rsquo;s &ldquo;no-training&rdquo; tier, so our prompts
+                  aren&rsquo;t kept.
                 </td>
               </tr>
               <tr>
-                <td>One approved vendor only</td>
-                <td>
-                  We use a single vendor whose terms have been reviewed by Security and Legal.
-                </td>
-              </tr>
-              <tr>
-                <td>Full record of activity</td>
+                <td><strong>Full record</strong></td>
                 <td>Every prompt and response is logged for 30 days so Security can review it.</td>
               </tr>
               <tr>
-                <td>Personal data is blocked</td>
+                <td><strong>Honest answers</strong></td>
                 <td>
-                  Prompts are scanned for personal details (names, emails, employee IDs, etc.) and
-                  blocked before they are sent.
+                  Answers come from approved data; the model says &ldquo;I don&rsquo;t know&rdquo;
+                  when unsure, and the team checks a sample regularly.
                 </td>
               </tr>
               <tr>
-                <td>Answers come only from approved data</td>
+                <td><strong>Sign-off per use case</strong></td>
                 <td>
-                  The model is given the relevant approved information before it answers, so it
-                  can&rsquo;t make facts up.
-                </td>
-              </tr>
-              <tr>
-                <td>Honest &ldquo;I don&rsquo;t know&rdquo; and regular checks</td>
-                <td>
-                  If there&rsquo;s no matching source, it says &ldquo;I don&rsquo;t know&rdquo;
-                  instead of guessing. The team reviews a sample of answers each week, and users can
-                  flag bad ones.
+                  A short one-page plan (owner, data used, spending limit, success measure) is
+                  approved by Security, Platform, and the product owner before going live.
                 </td>
               </tr>
             </tbody>
