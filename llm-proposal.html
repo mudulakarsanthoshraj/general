@@ -748,6 +748,9 @@
           <a href="#sec-dev" class="nav-link" onclick="showSection(event, 'sec-dev')"
             >For Developers</a
           >
+          <a href="#sec-realtime" class="nav-link" onclick="showSection(event, 'sec-realtime')"
+            >How It Works in Real Time</a
+          >
           <a href="#sec-try" class="nav-link" onclick="showSection(event, 'sec-try')"
             >What We&rsquo;d Try First</a
           >
@@ -890,6 +893,86 @@
               <li>A form that reads a pasted email and fills the fields automatically.</li>
               <li>Auto-tagging that sorts incoming tickets into the right queue.</li>
             </ul>
+          </div>
+        </section>
+
+        <section id="sec-realtime" class="section">
+          <h2>How It Works in Real Time</h2>
+          <p class="section-subtitle">
+            A &ldquo;real-time&rdquo; AI feature means the user does something in the product and
+            gets a useful answer in a second or two. Every one follows the same simple loop &mdash;
+            and it all runs on our server, using the approved key.
+          </p>
+
+          <div class="arch-flow" style="margin-bottom: 1.25rem">
+            <span class="node">User does something</span>
+            <span class="arrow">&rarr;</span>
+            <span class="node">Server adds our data + the key</span>
+            <span class="arrow">&rarr;</span>
+            <span class="node llm">AI model</span>
+            <span class="arrow">&rarr;</span>
+            <span class="node out">Answer shown in the app</span>
+          </div>
+
+          <h3>Real examples in our products</h3>
+
+          <div class="card">
+            <div class="card-title">1. In-app help chatbot</div>
+            The user asks a question in plain words; the app finds the matching help docs and the
+            model answers with a link to the source.
+            <div class="arch-flow" style="margin-top: 0.6rem">
+              <span class="node">&ldquo;How do I export a report?&rdquo;</span>
+              <span class="arrow">&rarr;</span>
+              <span class="node">Find matching docs</span>
+              <span class="arrow">&rarr;</span>
+              <span class="node llm">AI model</span>
+              <span class="arrow">&rarr;</span>
+              <span class="node out">Answer + link</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">2. Summarize a long report or thread</div>
+            The user clicks &ldquo;Summarize&rdquo; on a long document; the model returns a few
+            clear bullet points.
+            <div class="arch-flow" style="margin-top: 0.6rem">
+              <span class="node">Long report</span>
+              <span class="arrow">&rarr;</span>
+              <span class="node llm">AI model</span>
+              <span class="arrow">&rarr;</span>
+              <span class="node out">Short summary</span>
+            </div>
+          </div>
+
+          <h3>What the code looks like &mdash; the help chatbot</h3>
+          <p class="footnote" style="margin-bottom: 0.4rem">
+            This runs on our server when the user asks a question. It calls the internal gateway
+            (from
+            <a href="#sec-keys" onclick="showSection(event, 'sec-keys')">How We Provide Keys</a>),
+            so no real key is on the user&rsquo;s side.
+          </p>
+          <pre><code><span class="c-com">// Runs on our server when the user asks a question</span>
+<span class="c-key">const</span> docs = <span class="c-key">await</span> findRelevantDocs(userQuestion);   <span class="c-com">// search our own help docs</span>
+
+<span class="c-key">const</span> res = <span class="c-key">await</span> fetch(<span class="c-str">"https://ai-gateway.internal/v1/chat"</span>, {
+  method: <span class="c-str">"POST"</span>,
+  headers: { <span class="c-str">"Authorization"</span>: <span class="c-str">`Bearer ${process.env.TEAM_TOKEN}`</span> },
+  body: <span class="c-key">JSON</span>.stringify({
+    model: <span class="c-str">"gpt-4o-mini"</span>,
+    messages: [
+      { role: <span class="c-str">"system"</span>,
+        content: <span class="c-str">"Answer using only the provided help docs. If unsure, say you don't know."</span> },
+      { role: <span class="c-str">"user"</span>, content: <span class="c-str">`Docs:\n${docs}\n\nQuestion: ${userQuestion}`</span> }
+    ]
+  })
+});
+<span class="c-key">const</span> answer = (<span class="c-key">await</span> res.json()).choices[<span class="c-str">0</span>].message.content;  <span class="c-com">// shown in the app</span></code></pre>
+
+          <div class="card brand">
+            <div class="card-title">The pattern is always the same</div>
+            User input &rarr; our server adds the right data and the key &rarr; the model answers
+            &rarr; the app shows it. Same loop for chat, summaries, search, or reading a form
+            &mdash; only the data and the wording change.
           </div>
         </section>
 
