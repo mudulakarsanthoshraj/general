@@ -6,20 +6,20 @@
     <title>Proposal &mdash; AI / LLM API Key Access</title>
     <meta
       name="description"
-      content="Proposal for management review: approval for one controlled, low-cost AI / LLM API key so developers can build and test AI features inside our own apps, under strict cost and security guardrails."
+      content="Proposal: approval for one controlled, low-cost AI / LLM API key for our team to build and test AI features inside our own apps, server-side, under strict cost and security guardrails."
     />
     <meta name="theme-color" content="#ffffff" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="AI / LLM API Key Access" />
     <meta
       property="og:description"
-      content="Approval for one controlled, low-cost AI / LLM API key for developers, used server-side. Minimal monitored usage, no company data shared, full policy compliance."
+      content="Approval for one controlled, low-cost AI / LLM API key for our team, used server-side. Minimal monitored usage, no company data shared, full policy compliance."
     />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="AI / LLM API Key Access" />
     <meta
       name="twitter:description"
-      content="Approval for one controlled, low-cost AI / LLM API key for developers, with cost and security guardrails."
+      content="Approval for one controlled, low-cost AI / LLM API key for our team, with cost and security guardrails."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -735,7 +735,7 @@
       <nav class="sidebar" aria-label="Proposal navigation">
         <div class="sidebar-header">
           <h1>AI / LLM API Key Access</h1>
-          <p>Approved, low-cost API key &middot; Proposal</p>
+          <p>One capped key &middot; One team pilot &middot; Server-side only</p>
         </div>
 
         <div class="nav-section">
@@ -755,7 +755,7 @@
             >What We&rsquo;d Try First</a
           >
           <a href="#sec-keys" class="nav-link" onclick="showSection(event, 'sec-keys')"
-            >How We Provide Keys</a
+            >How We Keep the Key Safe</a
           >
           <a href="#sec-cost" class="nav-link" onclick="showSection(event, 'sec-cost')"
             >What It Costs</a
@@ -857,15 +857,15 @@
         <section id="sec-dev" class="section">
           <h2>For Developers</h2>
           <p class="section-subtitle">
-            What an approved API key unlocks for developers across the org &mdash; and why a shared,
-            controlled key is better than everyone finding their own way.
+            What the approved key lets our team do &mdash; one shared, controlled key on our server,
+            not a key per person or laptop.
           </p>
 
           <ul>
             <li>
               <strong>Build real features.</strong> Add AI to the apps we already have &mdash;
-              summaries, smart search, chatbots, pulling fields out of forms &mdash; without waiting
-              on procurement or fighting the network block.
+              summaries, smart search, chatbots &mdash; without waiting on procurement or fighting
+              the network block.
             </li>
             <li>
               <strong>Learn by doing.</strong> Get hands-on with prompts, structured (JSON) output,
@@ -876,12 +876,8 @@
               doesn&rsquo;t work for a few cents.
             </li>
             <li>
-              <strong>No secrets on laptops.</strong> Developers call one shared, server-side setup,
-              so nobody copies a raw key into code, chat, or a personal machine.
-            </li>
-            <li>
-              <strong>Reuse, don&rsquo;t reinvent.</strong> One internal helper means every team
-              uses the same safe, logged path instead of building their own.
+              <strong>No secrets on laptops.</strong> The key stays on our server, so nobody copies
+              a raw key into code, chat, or a personal machine.
             </li>
           </ul>
 
@@ -946,17 +942,21 @@
 
           <h3>What the code looks like &mdash; the help chatbot</h3>
           <p class="footnote" style="margin-bottom: 0.4rem">
-            This runs on our server when the user asks a question. It calls the internal gateway
-            (from
-            <a href="#sec-keys" onclick="showSection(event, 'sec-keys')">How We Provide Keys</a>),
-            so no real key is on the user&rsquo;s side.
+            This runs on our server when the user asks a question. The key is read from the server
+            environment (see
+            <a href="#sec-keys" onclick="showSection(event, 'sec-keys')">How We Keep the Key Safe</a
+            >), so it&rsquo;s never on the user&rsquo;s side.
           </p>
           <pre><code><span class="c-com">// Runs on our server when the user asks a question</span>
+<span class="c-key">const</span> key = process.env.OPENAI_API_KEY;             <span class="c-com">// read from the server env</span>
 <span class="c-key">const</span> docs = <span class="c-key">await</span> findRelevantDocs(userQuestion);   <span class="c-com">// search our own help docs</span>
 
-<span class="c-key">const</span> res = <span class="c-key">await</span> fetch(<span class="c-str">"https://ai-gateway.internal/v1/chat"</span>, {
+<span class="c-key">const</span> res = <span class="c-key">await</span> fetch(<span class="c-str">"https://api.openai.com/v1/chat/completions"</span>, {
   method: <span class="c-str">"POST"</span>,
-  headers: { <span class="c-str">"Authorization"</span>: <span class="c-str">`Bearer ${process.env.TEAM_TOKEN}`</span> },
+  headers: {
+    <span class="c-str">"Authorization"</span>: <span class="c-str">`Bearer ${key}`</span>,
+    <span class="c-str">"Content-Type"</span>: <span class="c-str">"application/json"</span>
+  },
   body: <span class="c-key">JSON</span>.stringify({
     model: <span class="c-str">"gpt-4o-mini"</span>,
     messages: [
@@ -971,8 +971,8 @@
           <div class="card brand">
             <div class="card-title">The pattern is always the same</div>
             User input &rarr; our server adds the right data and the key &rarr; the model answers
-            &rarr; the app shows it. Same loop for chat, summaries, search, or reading a form
-            &mdash; only the data and the wording change.
+            &rarr; the app shows it. Same loop for chat, summaries, or search &mdash; only the data
+            and the wording change.
           </div>
         </section>
 
@@ -1014,77 +1014,55 @@
         </section>
 
         <section id="sec-keys" class="section">
-          <h2>How We Provide Keys</h2>
+          <h2>How We Keep the Key Safe</h2>
           <p class="section-subtitle">
-            How the org hands out access safely. The real key stays controlled &mdash; developers
-            get an internal endpoint or a team token, not the raw key.
+            One key, stored on our server &mdash; never in the browser, in our code, or on a laptop.
+            Here&rsquo;s exactly how it&rsquo;s held and used.
           </p>
 
-          <table>
-            <thead>
-              <tr>
-                <th>Way to provide access</th>
-                <th>How it works</th>
-                <th>Best for</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="alt-recommended">
-                <td><strong>Internal AI gateway</strong> <em>(recommended)</em></td>
-                <td>
-                  Developers call one internal address (e.g.
-                  <code>https://ai-gateway.internal/&hellip;</code>). The real key lives only on the
-                  gateway, which adds the budget cap, logging, and data checks in one place.
-                </td>
-                <td>Most apps and teams</td>
-              </tr>
-              <tr>
-                <td><strong>Secret manager</strong></td>
-                <td>
-                  The key is stored in a vault (e.g. Azure Key Vault or HashiCorp Vault) and handed
-                  to a service at runtime &mdash; never written in code, chat, or email.
-                </td>
-                <td>A single trusted backend service</td>
-              </tr>
-              <tr>
-                <td><strong>Per-project key</strong></td>
-                <td>
-                  A separate key with its own monthly cap for each project, so spend is easy to
-                  track and the key can be switched off on its own.
-                </td>
-                <td>Keeping projects separate</td>
-              </tr>
-            </tbody>
-          </table>
+          <ul>
+            <li>
+              <strong>Stored as a server secret.</strong> The key lives in our server&rsquo;s
+              environment (or a secret store like Azure Key Vault), not in the source code.
+            </li>
+            <li>
+              <strong>Read at runtime.</strong> The server reads it from the environment when it
+              starts &mdash; it never gets committed to git, pasted in chat, or emailed.
+            </li>
+            <li>
+              <strong>Called server-side only.</strong> The browser never sees the key; it only
+              talks to our own server, which makes the AI call on its behalf.
+            </li>
+            <li>
+              <strong>Rotated and revocable.</strong> The key can be rotated regularly and switched
+              off instantly if anything looks wrong.
+            </li>
+          </ul>
 
-          <h3>Example 1 &mdash; key from a secret manager</h3>
+          <h3>What this looks like in code</h3>
           <p class="footnote" style="margin-bottom: 0.4rem">
-            The key is injected at runtime from the vault. It never appears in the code itself.
+            The key is injected from the server environment / secret store. It never appears in the
+            code itself, and the call happens on our server.
           </p>
-          <pre><code><span class="c-com"># Provided to the service at runtime by the vault &mdash; not stored in code</span>
-OPENAI_API_KEY=sk-************   <span class="c-com"># from Azure Key Vault / HashiCorp Vault</span>
+          <pre><code><span class="c-com"># Provided to the server at runtime &mdash; not stored in code</span>
+OPENAI_API_KEY=sk-************   <span class="c-com"># server env / Azure Key Vault</span>
 
-<span class="c-com">// In the server code, it&rsquo;s just read from the environment:</span>
-<span class="c-key">const</span> key = process.env.OPENAI_API_KEY;</code></pre>
+<span class="c-com">// Server code: read the key from the environment, then call the model</span>
+<span class="c-key">const</span> key = process.env.OPENAI_API_KEY;
 
-          <h3>Example 2 &mdash; internal gateway (no raw key for developers)</h3>
-          <p class="footnote" style="margin-bottom: 0.4rem">
-            The developer&rsquo;s app calls our gateway with a team token. The gateway adds the real
-            key, checks the budget, logs the call, and forwards it to OpenAI.
-          </p>
-          <pre><code><span class="c-com">// Developer's app &mdash; no real OpenAI key here, only a team token</span>
-<span class="c-key">const</span> res = <span class="c-key">await</span> fetch(<span class="c-str">"https://ai-gateway.internal/v1/chat"</span>, {
+<span class="c-key">const</span> res = <span class="c-key">await</span> fetch(<span class="c-str">"https://api.openai.com/v1/chat/completions"</span>, {
   method: <span class="c-str">"POST"</span>,
-  headers: { <span class="c-str">"Authorization"</span>: <span class="c-str">`Bearer ${process.env.TEAM_TOKEN}`</span> },
-  body: <span class="c-key">JSON</span>.stringify({ prompt: userText })
-});
-<span class="c-com">// The gateway holds the real key, applies the cap + logging, then calls OpenAI.</span></code></pre>
+  headers: {
+    <span class="c-str">"Authorization"</span>: <span class="c-str">`Bearer ${key}`</span>,
+    <span class="c-str">"Content-Type"</span>: <span class="c-str">"application/json"</span>
+  },
+  body: <span class="c-key">JSON</span>.stringify({ model: <span class="c-str">"gpt-4o-mini"</span>, messages })
+});</code></pre>
 
           <div class="card brand">
             <div class="card-title">Rule of thumb</div>
-            The real OpenAI key never leaves the server or the vault. Developers get a
-            <strong>team token</strong> or an <strong>internal endpoint</strong> &mdash; never the
-            raw key &mdash; and keys are rotated regularly and can be switched off at any time.
+            The key never leaves our server. It&rsquo;s read from the environment at runtime, used
+            only for server-side calls, rotated regularly, and can be switched off at any time.
           </div>
         </section>
 
