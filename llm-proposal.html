@@ -3,23 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Proposal &mdash; Controlled AI / LLM Enablement for Exploration</title>
+    <title>Proposal &mdash; AI / LLM API Key Access</title>
     <meta
       name="description"
-      content="Proposal for management review: controlled, low-cost access to one approved Large Language Model API so teams can explore AI integrations, learn hands-on, and make informed adoption decisions under strict cost and security guardrails."
+      content="Proposal for management review: approval for one controlled, low-cost AI / LLM API key so developers can build and test AI features inside our own apps, under strict cost and security guardrails."
     />
     <meta name="theme-color" content="#ffffff" />
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="Controlled AI / LLM Enablement for Exploration" />
+    <meta property="og:title" content="AI / LLM API Key Access" />
     <meta
       property="og:description"
-      content="Controlled, low-cost LLM API access for exploration and experimentation in existing applications. Minimal monitored usage, no company data shared, full policy compliance."
+      content="Approval for one controlled, low-cost AI / LLM API key for developers, used server-side. Minimal monitored usage, no company data shared, full policy compliance."
     />
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Controlled AI / LLM Enablement for Exploration" />
+    <meta name="twitter:title" content="AI / LLM API Key Access" />
     <meta
       name="twitter:description"
-      content="Controlled, low-cost LLM API access for hands-on learning and practical AI experimentation, with cost and security guardrails."
+      content="Approval for one controlled, low-cost AI / LLM API key for developers, with cost and security guardrails."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -734,8 +734,8 @@
       <!-- ─────────────────────── Sidebar ─────────────────────── -->
       <nav class="sidebar" aria-label="Proposal navigation">
         <div class="sidebar-header">
-          <h1>AI / LLM Enablement</h1>
-          <p>API access for our team &middot; Proposal</p>
+          <h1>AI / LLM API Key Access</h1>
+          <p>Approved, low-cost API key &middot; Proposal</p>
         </div>
 
         <div class="nav-section">
@@ -745,8 +745,14 @@
           <a href="#sec-why" class="nav-link" onclick="showSection(event, 'sec-why')"
             >Why It Helps</a
           >
+          <a href="#sec-dev" class="nav-link" onclick="showSection(event, 'sec-dev')"
+            >For Developers</a
+          >
           <a href="#sec-try" class="nav-link" onclick="showSection(event, 'sec-try')"
             >What We&rsquo;d Try First</a
+          >
+          <a href="#sec-keys" class="nav-link" onclick="showSection(event, 'sec-keys')"
+            >How We Provide Keys</a
           >
           <a href="#sec-cost" class="nav-link" onclick="showSection(event, 'sec-cost')"
             >What It Costs</a
@@ -845,6 +851,48 @@
           </div>
         </section>
 
+        <section id="sec-dev" class="section">
+          <h2>For Developers</h2>
+          <p class="section-subtitle">
+            What an approved API key unlocks for developers across the org &mdash; and why a shared,
+            controlled key is better than everyone finding their own way.
+          </p>
+
+          <ul>
+            <li>
+              <strong>Build real features.</strong> Add AI to the apps we already have &mdash;
+              summaries, smart search, chatbots, pulling fields out of forms &mdash; without waiting
+              on procurement or fighting the network block.
+            </li>
+            <li>
+              <strong>Learn by doing.</strong> Get hands-on with prompts, structured (JSON) output,
+              and grounding answers on our own data &mdash; real skills, not slides.
+            </li>
+            <li>
+              <strong>Prototype fast.</strong> Try an idea in hours, not weeks, and drop what
+              doesn&rsquo;t work for a few cents.
+            </li>
+            <li>
+              <strong>No secrets on laptops.</strong> Developers call one shared, server-side setup,
+              so nobody copies a raw key into code, chat, or a personal machine.
+            </li>
+            <li>
+              <strong>Reuse, don&rsquo;t reinvent.</strong> One internal helper means every team
+              uses the same safe, logged path instead of building their own.
+            </li>
+          </ul>
+
+          <div class="card brand">
+            <div class="card-title">Things a developer could build in a day</div>
+            <ul>
+              <li>A &ldquo;Summarize&rdquo; button on a long report or ticket thread.</li>
+              <li>A help chatbot that answers from our own docs.</li>
+              <li>A form that reads a pasted email and fills the fields automatically.</li>
+              <li>Auto-tagging that sorts incoming tickets into the right queue.</li>
+            </ul>
+          </div>
+        </section>
+
         <section id="sec-try" class="section">
           <h2>What We&rsquo;d Try First</h2>
           <p class="section-subtitle">
@@ -879,6 +927,81 @@
                 before anything is saved.
               </li>
             </ul>
+          </div>
+        </section>
+
+        <section id="sec-keys" class="section">
+          <h2>How We Provide Keys</h2>
+          <p class="section-subtitle">
+            How the org hands out access safely. The real key stays controlled &mdash; developers
+            get an internal endpoint or a team token, not the raw key.
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Way to provide access</th>
+                <th>How it works</th>
+                <th>Best for</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="alt-recommended">
+                <td><strong>Internal AI gateway</strong> <em>(recommended)</em></td>
+                <td>
+                  Developers call one internal address (e.g.
+                  <code>https://ai-gateway.internal/&hellip;</code>). The real key lives only on the
+                  gateway, which adds the budget cap, logging, and data checks in one place.
+                </td>
+                <td>Most apps and teams</td>
+              </tr>
+              <tr>
+                <td><strong>Secret manager</strong></td>
+                <td>
+                  The key is stored in a vault (e.g. Azure Key Vault or HashiCorp Vault) and handed
+                  to a service at runtime &mdash; never written in code, chat, or email.
+                </td>
+                <td>A single trusted backend service</td>
+              </tr>
+              <tr>
+                <td><strong>Per-project key</strong></td>
+                <td>
+                  A separate key with its own monthly cap for each project, so spend is easy to
+                  track and the key can be switched off on its own.
+                </td>
+                <td>Keeping projects separate</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Example 1 &mdash; key from a secret manager</h3>
+          <p class="footnote" style="margin-bottom: 0.4rem">
+            The key is injected at runtime from the vault. It never appears in the code itself.
+          </p>
+          <pre><code><span class="c-com"># Provided to the service at runtime by the vault &mdash; not stored in code</span>
+OPENAI_API_KEY=sk-************   <span class="c-com"># from Azure Key Vault / HashiCorp Vault</span>
+
+<span class="c-com">// In the server code, it&rsquo;s just read from the environment:</span>
+<span class="c-key">const</span> key = process.env.OPENAI_API_KEY;</code></pre>
+
+          <h3>Example 2 &mdash; internal gateway (no raw key for developers)</h3>
+          <p class="footnote" style="margin-bottom: 0.4rem">
+            The developer&rsquo;s app calls our gateway with a team token. The gateway adds the real
+            key, checks the budget, logs the call, and forwards it to OpenAI.
+          </p>
+          <pre><code><span class="c-com">// Developer's app &mdash; no real OpenAI key here, only a team token</span>
+<span class="c-key">const</span> res = <span class="c-key">await</span> fetch(<span class="c-str">"https://ai-gateway.internal/v1/chat"</span>, {
+  method: <span class="c-str">"POST"</span>,
+  headers: { <span class="c-str">"Authorization"</span>: <span class="c-str">`Bearer ${process.env.TEAM_TOKEN}`</span> },
+  body: <span class="c-key">JSON</span>.stringify({ prompt: userText })
+});
+<span class="c-com">// The gateway holds the real key, applies the cap + logging, then calls OpenAI.</span></code></pre>
+
+          <div class="card brand">
+            <div class="card-title">Rule of thumb</div>
+            The real OpenAI key never leaves the server or the vault. Developers get a
+            <strong>team token</strong> or an <strong>internal endpoint</strong> &mdash; never the
+            raw key &mdash; and keys are rotated regularly and can be switched off at any time.
           </div>
         </section>
 
@@ -1005,7 +1128,7 @@
         </section>
 
         <footer class="doc-footer">
-          Prepared for management review &middot; AI / LLM Enablement &middot; Arcadis Digital
+          Prepared for management review &middot; AI / LLM API Key Access &middot; Arcadis Digital
           Intelligence
         </footer>
       </main>
