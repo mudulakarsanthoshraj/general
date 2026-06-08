@@ -367,6 +367,27 @@
         font-weight: 700;
       }
 
+      .figure {
+        margin: 1rem 0 0;
+        max-width: 760px;
+      }
+
+      .figure img {
+        display: block;
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+        background: var(--bg-canvas);
+      }
+
+      .figure figcaption {
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+
       .arch-legend {
         display: flex;
         flex-wrap: wrap;
@@ -870,6 +891,10 @@
               <strong>Prototype fast.</strong> Try an idea in hours, not weeks, and drop what
               doesn&rsquo;t work for a few cents.
             </li>
+            <li>
+              <strong>No secrets on laptops.</strong> The key stays on our server, so nobody copies
+              a raw key into code, chat, or a personal machine.
+            </li>
           </ul>
 
           <div class="card brand">
@@ -903,10 +928,61 @@
 
           <h3>Real examples in our products</h3>
 
+          <div class="card success">
+            <div class="card-title">Already working &mdash; the Assistant chatbot</div>
+            We&rsquo;ve already built this. The <strong>AI Assistant</strong> sits inside our
+            design-system docs and answers real questions like &ldquo;How to write a Button
+            component in React?&rdquo; &mdash; with working code grounded on our own product docs,
+            not guesses.
+            <figure class="figure">
+              <img
+                src="images/assistant-chatbot.png"
+                alt="AI Assistant chatbot answering 'How to write Button component in React?' with grounded code, running on Ollama"
+                width="1113"
+                height="663"
+              />
+              <figcaption>
+                The AI Assistant answering a real question. Today it runs on a free local model
+                (Ollama &middot; <code>llama3.2</code>) at zero cost &mdash; an approved API key
+                lets the same code use a hosted model for faster, higher-quality answers we can ship
+                to users.
+              </figcaption>
+            </figure>
+            <div class="arch-flow" style="margin-top: 0.8rem">
+              <span class="node">&ldquo;How to write a Button in React?&rdquo;</span>
+              <span class="arrow">&rarr;</span>
+              <span class="node">Find matching product docs</span>
+              <span class="arrow">&rarr;</span>
+              <span class="node llm">AI model</span>
+              <span class="arrow">&rarr;</span>
+              <span class="node out">Answer + code</span>
+            </div>
+          </div>
+
           <div class="card">
-            <div class="card-title">1. In-app help chatbot</div>
-            The user asks a question in plain words; the app finds the matching help docs and the
-            model answers with a link to the source.
+            <div class="card-title">How the AI Assistant works, step by step</div>
+            <ol style="margin: 0.2rem 0 0; padding-left: 1.1rem">
+              <li>The user types a question in plain words.</li>
+              <li>
+                Our code finds the most relevant product doc snippets and adds them to the prompt
+                (so answers stay grounded in our real docs).
+              </li>
+              <li>
+                It sends the question + those snippets to the model using the standard chat API.
+              </li>
+              <li>The model replies, and the answer (with code) shows up in the chat window.</li>
+            </ol>
+            <p class="footnote" style="margin: 0.6rem 0 0">
+              Because it speaks the standard OpenAI chat API, the very same code runs on a free
+              local model now and on <code>gpt-4o-mini</code> later &mdash; we only change one
+              setting, no rewrite.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Another in-app help chatbot</div>
+            The same pattern works in any app: the user asks a question in plain words; the app
+            finds the matching help docs and the model answers with a link to the source.
             <div class="arch-flow" style="margin-top: 0.6rem">
               <span class="node">&ldquo;How do I export a report?&rdquo;</span>
               <span class="arrow">&rarr;</span>
