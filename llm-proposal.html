@@ -756,7 +756,7 @@
       <nav class="sidebar" aria-label="Proposal navigation">
         <div class="sidebar-header">
           <h1>AI / LLM API Key Access</h1>
-          <p>One capped key &middot; One team pilot &middot; Server-side only</p>
+          <p>One Approved API key &middot; One team pilot &middot; Server-side only</p>
         </div>
 
         <div class="nav-section">
@@ -794,14 +794,15 @@
           <h2>The Ask</h2>
           <p class="section-subtitle">
             We&rsquo;d like approval for a single, low-cost API key so our team can use an approved
-            AI model (we suggest GPT-4o Mini) inside our own apps, on our own server.
+            low-cost AI model inside our own apps, on our own server. We&rsquo;re not tied to one
+            vendor &mdash; any of today&rsquo;s cheap models works.
           </p>
 
           <h3>What we&rsquo;re asking management to approve</h3>
           <ol>
             <li>
-              <strong>One approved API key</strong> to one low-cost AI model (GPT-4o Mini, or a
-              similar approved model), used only on our server.
+              <strong>One approved API key</strong> to one low-cost AI model (whichever cheap,
+              approved model fits best), used only on our server.
             </li>
             <li>
               <strong>A small monthly spending limit</strong> on that key &mdash; around
@@ -824,8 +825,10 @@
               <h4>What this is <em>not</em></h4>
               <ul>
                 <li>Not a key for every engineer or laptop.</li>
-                <li>Not Copilot, ChatGPT, or Claude &mdash; those are separate decisions.</li>
-                <li>Not a change to Zscaler or any company-wide network rule.</li>
+                <li>
+                  Not a consumer AI subscription (chat assistants or coding copilots) &mdash; those
+                  are separate decisions.
+                </li>
               </ul>
             </div>
           </div>
@@ -890,10 +893,6 @@
             <li>
               <strong>Prototype fast.</strong> Try an idea in hours, not weeks, and drop what
               doesn&rsquo;t work for a few cents.
-            </li>
-            <li>
-              <strong>No secrets on laptops.</strong> The key stays on our server, so nobody copies
-              a raw key into code, chat, or a personal machine.
             </li>
           </ul>
 
@@ -973,9 +972,9 @@
               <li>The model replies, and the answer (with code) shows up in the chat window.</li>
             </ol>
             <p class="footnote" style="margin: 0.6rem 0 0">
-              Because it speaks the standard OpenAI chat API, the very same code runs on a free
-              local model now and on <code>gpt-4o-mini</code> later &mdash; we only change one
-              setting, no rewrite.
+              Because it speaks the standard chat API that most vendors share, the very same code
+              runs on a free local model now and on any approved low-cost model later &mdash; we
+              only change one setting, no rewrite or vendor lock-in.
             </p>
           </div>
 
@@ -1015,17 +1014,17 @@
             >), so it&rsquo;s never on the user&rsquo;s side.
           </p>
           <pre><code><span class="c-com">// Runs on our server when the user asks a question</span>
-<span class="c-key">const</span> key = process.env.OPENAI_API_KEY;             <span class="c-com">// read from the server env</span>
+<span class="c-key">const</span> key = process.env.LLM_API_KEY;                <span class="c-com">// read from the server env</span>
 <span class="c-key">const</span> docs = <span class="c-key">await</span> findRelevantDocs(userQuestion);   <span class="c-com">// search our own help docs</span>
 
-<span class="c-key">const</span> res = <span class="c-key">await</span> fetch(<span class="c-str">"https://api.openai.com/v1/chat/completions"</span>, {
+<span class="c-key">const</span> res = <span class="c-key">await</span> fetch(process.env.LLM_API_URL, {   <span class="c-com">// the approved provider's endpoint</span>
   method: <span class="c-str">"POST"</span>,
   headers: {
     <span class="c-str">"Authorization"</span>: <span class="c-str">`Bearer ${key}`</span>,
     <span class="c-str">"Content-Type"</span>: <span class="c-str">"application/json"</span>
   },
   body: <span class="c-key">JSON</span>.stringify({
-    model: <span class="c-str">"gpt-4o-mini"</span>,
+    model: process.env.LLM_MODEL,   <span class="c-com">// any approved low-cost model — no vendor lock-in</span>
     messages: [
       { role: <span class="c-str">"system"</span>,
         content: <span class="c-str">"Answer using only the provided help docs. If unsure, say you don't know."</span> },
@@ -1112,18 +1111,20 @@
             code itself, and the call happens on our server.
           </p>
           <pre><code><span class="c-com"># Provided to the server at runtime &mdash; not stored in code</span>
-OPENAI_API_KEY=sk-************   <span class="c-com"># server env / Azure Key Vault</span>
+LLM_API_KEY=************                              <span class="c-com"># server env / Azure Key Vault</span>
+LLM_API_URL=https://&lt;approved-provider&gt;/v1/chat/completions
+LLM_MODEL=&lt;approved-low-cost-model&gt;
 
-<span class="c-com">// Server code: read the key from the environment, then call the model</span>
-<span class="c-key">const</span> key = process.env.OPENAI_API_KEY;
+<span class="c-com">// Server code: read the key + endpoint from the environment, then call the model</span>
+<span class="c-key">const</span> key = process.env.LLM_API_KEY;
 
-<span class="c-key">const</span> res = <span class="c-key">await</span> fetch(<span class="c-str">"https://api.openai.com/v1/chat/completions"</span>, {
+<span class="c-key">const</span> res = <span class="c-key">await</span> fetch(process.env.LLM_API_URL, {
   method: <span class="c-str">"POST"</span>,
   headers: {
     <span class="c-str">"Authorization"</span>: <span class="c-str">`Bearer ${key}`</span>,
     <span class="c-str">"Content-Type"</span>: <span class="c-str">"application/json"</span>
   },
-  body: <span class="c-key">JSON</span>.stringify({ model: <span class="c-str">"gpt-4o-mini"</span>, messages })
+  body: <span class="c-key">JSON</span>.stringify({ model: process.env.LLM_MODEL, messages })
 });</code></pre>
 
           <div class="card brand">
@@ -1137,58 +1138,71 @@ OPENAI_API_KEY=sk-************   <span class="c-com"># server env / Azure Key Va
           <h2>What It Costs</h2>
           <p class="section-subtitle">
             AI models charge per &ldquo;token&rdquo; (about &frac34; of a word) for the text sent in
-            and the answer sent back. GPT-4o Mini is one of the cheapest good models.
+            and the answer sent back. Several vendors offer a cheap model in the same low price
+            range &mdash; any of them works for a pilot.
           </p>
 
           <table>
             <thead>
               <tr>
                 <th>Model</th>
-                <th>Best for</th>
+                <th>Provider</th>
                 <th class="num">Input&nbsp;/ 1M</th>
                 <th class="num">Output&nbsp;/ 1M</th>
               </tr>
             </thead>
             <tbody>
               <tr class="alt-recommended">
-                <td><strong>GPT-4o mini</strong> <em>(recommended)</em></td>
-                <td>Cheap, fast answers, chatbots, organizing data</td>
+                <td><strong>Local model</strong> (e.g. <code>llama3.2</code>) <em>(dev)</em></td>
+                <td>Self-hosted (Ollama)</td>
+                <td class="num">Free</td>
+                <td class="num">Free</td>
+              </tr>
+              <tr>
+                <td><strong>Mistral Small</strong></td>
+                <td>Mistral</td>
+                <td class="num">$0.10</td>
+                <td class="num">$0.30</td>
+              </tr>
+              <tr>
+                <td><strong>Gemini 2.5 Flash-Lite</strong></td>
+                <td>Google</td>
+                <td class="num">$0.10</td>
+                <td class="num">$0.40</td>
+              </tr>
+              <tr>
+                <td><strong>GPT-4.1 nano</strong></td>
+                <td>OpenAI</td>
+                <td class="num">$0.10</td>
+                <td class="num">$0.40</td>
+              </tr>
+              <tr>
+                <td><strong>GPT-4o mini</strong></td>
+                <td>OpenAI</td>
                 <td class="num">$0.15</td>
                 <td class="num">$0.60</td>
-              </tr>
-              <tr>
-                <td><strong>GPT-4.1 mini</strong></td>
-                <td>A small quality step up, if needed</td>
-                <td class="num">$0.40</td>
-                <td class="num">$1.60</td>
-              </tr>
-              <tr>
-                <td><strong>GPT-4o</strong></td>
-                <td>Higher quality; handles text, images, audio</td>
-                <td class="num">$2.50</td>
-                <td class="num">$10.00</td>
               </tr>
             </tbody>
           </table>
           <p class="footnote">
-            Prices are per 1 million tokens, shown for context. Check current rates at
-            <code>openai.com/api/pricing</code> before purchase.
+            Prices are per 1 million tokens (June 2026), shown for context. They sit so close
+            together that price isn&rsquo;t the deciding factor &mdash; quality, context size, and
+            fit are. Check the vendor&rsquo;s current pricing page before purchase.
           </p>
 
           <div class="card brand">
             <div class="card-title">What this means in real money</div>
-            A typical request on GPT-4o Mini costs well under a cent. Even at
-            <strong>10,000 requests a month</strong> that&rsquo;s about <strong>$7</strong> &mdash;
-            far below the proposed limit. That&rsquo;s why we expect real spend of just
+            A typical request on any of these low-cost models costs well under a cent. Even at
+            <strong>10,000 requests a month</strong> that&rsquo;s only a few dollars &mdash; far
+            below the proposed limit. That&rsquo;s why we expect real spend of just
             <strong>$1&ndash;$30 a month</strong>, with the cap as a safety ceiling.
           </div>
 
           <div class="card">
             <div class="card-title">Right tool for the job</div>
-            Low-cost models like GPT-4o Mini are great for chatbots, finding and organizing data,
-            and summarizing &mdash; but not for writing complex code or hard problem-solving. We use
-            the cheap model for everyday tasks, and only consider a pricier model if a specific need
-            comes up.
+            Low-cost models are great for chatbots, finding and organizing data, and summarizing
+            &mdash; but not for writing complex code or hard problem-solving. We use a cheap model
+            for everyday tasks, and only consider a pricier model if a specific need comes up.
           </div>
         </section>
 
@@ -1207,7 +1221,10 @@ OPENAI_API_KEY=sk-************   <span class="c-com"># server env / Azure Key Va
             <tbody>
               <tr>
                 <td><strong>One approved model</strong></td>
-                <td>We start with GPT-4o Mini only. Any new model goes through Security review.</td>
+                <td>
+                  We start with one approved low-cost model. Any change of model goes through
+                  Security review.
+                </td>
               </tr>
               <tr>
                 <td><strong>Monthly spending limit</strong></td>
