@@ -756,7 +756,7 @@
       <nav class="sidebar" aria-label="Proposal navigation">
         <div class="sidebar-header">
           <h1>AI / LLM API Key Access</h1>
-          <p>One Approved API key &middot; One team pilot &middot; Server-side only</p>
+          <p>One Approved API key &middot;</p>
         </div>
 
         <div class="nav-section">
@@ -791,15 +791,15 @@
           <h2>The Ask</h2>
           <p class="section-subtitle">
             We&rsquo;d like approval for a single, low-cost API key so our team can use an approved
-            low-cost AI model inside our own apps, on our own server. We&rsquo;re not tied to one
-            vendor &mdash; any of today&rsquo;s cheap models works.
+            low-cost AI model inside our own apps, internally. We&rsquo;re not tied to one vendor
+            &mdash; any of today&rsquo;s cheap models works.
           </p>
 
           <h3>What we&rsquo;re asking management to approve</h3>
           <ol>
             <li>
               <strong>One approved API key</strong> to one low-cost AI model (whichever cheap,
-              approved model fits best), used only on our server.
+              approved model fits best), used only internally.
             </li>
             <li>
               <strong>A small monthly spending limit</strong> on that key &mdash; around
@@ -813,7 +813,7 @@
             <div class="col future">
               <h4>What this is</h4>
               <ul>
-                <li>One approved model, one key, used on our server.</li>
+                <li>One approved model, one key, used internally.</li>
                 <li>Small, watched usage for learning and trying ideas.</li>
                 <li>A reusable setup that future approved ideas can share.</li>
               </ul>
@@ -873,7 +873,7 @@
         <section id="sec-dev" class="section">
           <h2>For Developers</h2>
           <p class="section-subtitle">
-            What the approved key lets our team do &mdash; one shared, controlled key on our server,
+            What the approved key lets our team do &mdash; one shared, controlled key kept internal,
             not a key per person or laptop.
           </p>
 
@@ -903,13 +903,13 @@
           <p class="section-subtitle">
             A &ldquo;real-time&rdquo; AI feature means the user does something in the product and
             gets a useful answer in a second or two. Every one follows the same simple loop &mdash;
-            and it all runs on our server, using the approved key.
+            and it all runs internally, using the approved key.
           </p>
 
           <div class="arch-flow" style="margin-bottom: 1.25rem">
             <span class="node">User does something</span>
             <span class="arrow">&rarr;</span>
-            <span class="node">Server adds our data + the key</span>
+            <span class="node">Internal app adds our data + the key</span>
             <span class="arrow">&rarr;</span>
             <span class="node llm">AI model</span>
             <span class="arrow">&rarr;</span>
@@ -986,13 +986,13 @@
 
           <h3>What the code looks like &mdash; the help chatbot</h3>
           <p class="footnote" style="margin-bottom: 0.4rem">
-            This runs on our server when the user asks a question. The key is read from the server
+            This runs internally when the user asks a question. The key is read from the internal
             environment (see
             <a href="#sec-keys" onclick="showSection(event, 'sec-keys')">How We Keep the Key Safe</a
             >), so it&rsquo;s never on the user&rsquo;s side.
           </p>
-          <pre><code><span class="c-com">// Runs on our server when the user asks a question</span>
-<span class="c-key">const</span> key = process.env.LLM_API_KEY;                <span class="c-com">// read from the server env</span>
+          <pre><code><span class="c-com">// Runs internally when the user asks a question</span>
+<span class="c-key">const</span> key = process.env.LLM_API_KEY;                <span class="c-com">// read from the internal env</span>
 <span class="c-key">const</span> docs = <span class="c-key">await</span> findRelevantDocs(userQuestion);   <span class="c-com">// search our own help docs</span>
 
 <span class="c-key">const</span> res = <span class="c-key">await</span> fetch(process.env.LLM_API_URL, {   <span class="c-com">// the approved provider's endpoint</span>
@@ -1014,31 +1014,31 @@
 
           <div class="card brand">
             <div class="card-title">The pattern is always the same</div>
-            User input &rarr; our server adds the right data and the key &rarr; the model answers
-            &rarr; the app shows it. Same loop for chat, summaries, or search &mdash; only the data
-            and the wording change.
+            User input &rarr; our internal app adds the right data and the key &rarr; the model
+            answers &rarr; the app shows it. Same loop for chat, summaries, or search &mdash; only
+            the data and the wording change.
           </div>
         </section>
 
         <section id="sec-keys" class="section">
           <h2>How We Keep the Key Safe</h2>
           <p class="section-subtitle">
-            One key, stored on our server &mdash; never in the browser, in our code, or on a laptop.
+            One key, stored internally &mdash; never in the browser, in our code, or on a laptop.
             Here&rsquo;s exactly how it&rsquo;s held and used.
           </p>
 
           <ul>
             <li>
-              <strong>Stored as a server secret.</strong> The key lives in our server&rsquo;s
+              <strong>Stored as an internal secret.</strong> The key lives in our internal
               environment (or a secret store like Azure Key Vault), not in the source code.
             </li>
             <li>
-              <strong>Read at runtime.</strong> The server reads it from the environment when it
-              starts &mdash; it never gets committed to git, pasted in chat, or emailed.
+              <strong>Read at runtime.</strong> The internal app reads it from the environment when
+              it starts &mdash; it never gets committed to git, pasted in chat, or emailed.
             </li>
             <li>
-              <strong>Called server-side only.</strong> The browser never sees the key; it only
-              talks to our own server, which makes the AI call on its behalf.
+              <strong>Called internally only.</strong> The browser never sees the key; it only talks
+              to our own internal app, which makes the AI call on its behalf.
             </li>
             <li>
               <strong>Rotated and revocable.</strong> The key can be rotated regularly and switched
@@ -1048,15 +1048,15 @@
 
           <h3>What this looks like in code</h3>
           <p class="footnote" style="margin-bottom: 0.4rem">
-            The key is injected from the server environment / secret store. It never appears in the
-            code itself, and the call happens on our server.
+            The key is injected from the internal environment / secret store. It never appears in
+            the code itself, and the call happens internally.
           </p>
-          <pre><code><span class="c-com"># Provided to the server at runtime &mdash; not stored in code</span>
-LLM_API_KEY=************                              <span class="c-com"># server env / Azure Key Vault</span>
+          <pre><code><span class="c-com"># Provided to the internal app at runtime &mdash; not stored in code</span>
+LLM_API_KEY=************                              <span class="c-com"># internal env / Azure Key Vault</span>
 LLM_API_URL=https://&lt;approved-provider&gt;/v1/chat/completions
 LLM_MODEL=&lt;approved-low-cost-model&gt;
 
-<span class="c-com">// Server code: read the key + endpoint from the environment, then call the model</span>
+<span class="c-com">// Internal code: read the key + endpoint from the environment, then call the model</span>
 <span class="c-key">const</span> key = process.env.LLM_API_KEY;
 
 <span class="c-key">const</span> res = <span class="c-key">await</span> fetch(process.env.LLM_API_URL, {
@@ -1070,8 +1070,9 @@ LLM_MODEL=&lt;approved-low-cost-model&gt;
 
           <div class="card brand">
             <div class="card-title">Rule of thumb</div>
-            The key never leaves our server. It&rsquo;s read from the environment at runtime, used
-            only for server-side calls, rotated regularly, and can be switched off at any time.
+            The key never leaves our internal environment. It&rsquo;s read from the environment at
+            runtime, used only for internal calls, rotated regularly, and can be switched off at any
+            time.
           </div>
         </section>
 
@@ -1184,8 +1185,8 @@ LLM_MODEL=&lt;approved-low-cost-model&gt;
                 </td>
               </tr>
               <tr>
-                <td><strong>Runs only on our server</strong></td>
-                <td>The key and logic stay on our server, never in the browser or on a laptop.</td>
+                <td><strong>Runs only internally</strong></td>
+                <td>The key and logic stay internal, never in the browser or on a laptop.</td>
               </tr>
 
               <tr>
