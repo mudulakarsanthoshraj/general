@@ -772,9 +772,6 @@
           <a href="#sec-realtime" class="nav-link" onclick="showSection(event, 'sec-realtime')"
             >How It Works in Real Time</a
           >
-          <a href="#sec-keys" class="nav-link" onclick="showSection(event, 'sec-keys')"
-            >How We Keep the Key Safe</a
-          >
           <a href="#sec-cost" class="nav-link" onclick="showSection(event, 'sec-cost')"
             >What It Costs</a
           >
@@ -982,97 +979,6 @@
               <span class="arrow">&rarr;</span>
               <span class="node out">Answer + link</span>
             </div>
-          </div>
-
-          <h3>What the code looks like &mdash; the help chatbot</h3>
-          <p class="footnote" style="margin-bottom: 0.4rem">
-            This runs internally when the user asks a question. The key is read from the internal
-            environment (see
-            <a href="#sec-keys" onclick="showSection(event, 'sec-keys')">How We Keep the Key Safe</a
-            >), so it&rsquo;s never on the user&rsquo;s side.
-          </p>
-          <pre><code><span class="c-com">// Runs internally when the user asks a question</span>
-<span class="c-key">const</span> key = process.env.LLM_API_KEY;                <span class="c-com">// read from the internal env</span>
-<span class="c-key">const</span> docs = <span class="c-key">await</span> findRelevantDocs(userQuestion);   <span class="c-com">// search our own help docs</span>
-
-<span class="c-key">const</span> res = <span class="c-key">await</span> fetch(process.env.LLM_API_URL, {   <span class="c-com">// the approved provider's endpoint</span>
-  method: <span class="c-str">"POST"</span>,
-  headers: {
-    <span class="c-str">"Authorization"</span>: <span class="c-str">`Bearer ${key}`</span>,
-    <span class="c-str">"Content-Type"</span>: <span class="c-str">"application/json"</span>
-  },
-  body: <span class="c-key">JSON</span>.stringify({
-    model: process.env.LLM_MODEL,   <span class="c-com">// any approved low-cost model — no vendor lock-in</span>
-    messages: [
-      { role: <span class="c-str">"system"</span>,
-        content: <span class="c-str">"Answer using only the provided help docs. If unsure, say you don't know."</span> },
-      { role: <span class="c-str">"user"</span>, content: <span class="c-str">`Docs:\n${docs}\n\nQuestion: ${userQuestion}`</span> }
-    ]
-  })
-});
-<span class="c-key">const</span> answer = (<span class="c-key">await</span> res.json()).choices[<span class="c-str">0</span>].message.content;  <span class="c-com">// shown in the app</span></code></pre>
-
-          <div class="card brand">
-            <div class="card-title">The pattern is always the same</div>
-            User input &rarr; our internal app adds the right data and the key &rarr; the model
-            answers &rarr; the app shows it. Same loop for chat, summaries, or search &mdash; only
-            the data and the wording change.
-          </div>
-        </section>
-
-        <section id="sec-keys" class="section">
-          <h2>How We Keep the Key Safe</h2>
-          <p class="section-subtitle">
-            One key, stored internally &mdash; never in the browser, in our code, or on a laptop.
-            Here&rsquo;s exactly how it&rsquo;s held and used.
-          </p>
-
-          <ul>
-            <li>
-              <strong>Stored as an internal secret.</strong> The key lives in our internal
-              environment (or a secret store like Azure Key Vault), not in the source code.
-            </li>
-            <li>
-              <strong>Read at runtime.</strong> The internal app reads it from the environment when
-              it starts &mdash; it never gets committed to git, pasted in chat, or emailed.
-            </li>
-            <li>
-              <strong>Called internally only.</strong> The browser never sees the key; it only talks
-              to our own internal app, which makes the AI call on its behalf.
-            </li>
-            <li>
-              <strong>Rotated and revocable.</strong> The key can be rotated regularly and switched
-              off instantly if anything looks wrong.
-            </li>
-          </ul>
-
-          <h3>What this looks like in code</h3>
-          <p class="footnote" style="margin-bottom: 0.4rem">
-            The key is injected from the internal environment / secret store. It never appears in
-            the code itself, and the call happens internally.
-          </p>
-          <pre><code><span class="c-com"># Provided to the internal app at runtime &mdash; not stored in code</span>
-LLM_API_KEY=************                              <span class="c-com"># internal env / Azure Key Vault</span>
-LLM_API_URL=https://&lt;approved-provider&gt;/v1/chat/completions
-LLM_MODEL=&lt;approved-low-cost-model&gt;
-
-<span class="c-com">// Internal code: read the key + endpoint from the environment, then call the model</span>
-<span class="c-key">const</span> key = process.env.LLM_API_KEY;
-
-<span class="c-key">const</span> res = <span class="c-key">await</span> fetch(process.env.LLM_API_URL, {
-  method: <span class="c-str">"POST"</span>,
-  headers: {
-    <span class="c-str">"Authorization"</span>: <span class="c-str">`Bearer ${key}`</span>,
-    <span class="c-str">"Content-Type"</span>: <span class="c-str">"application/json"</span>
-  },
-  body: <span class="c-key">JSON</span>.stringify({ model: process.env.LLM_MODEL, messages })
-});</code></pre>
-
-          <div class="card brand">
-            <div class="card-title">Rule of thumb</div>
-            The key never leaves our internal environment. It&rsquo;s read from the environment at
-            runtime, used only for internal calls, rotated regularly, and can be switched off at any
-            time.
           </div>
         </section>
 
