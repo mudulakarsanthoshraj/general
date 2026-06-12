@@ -1,0 +1,1016 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luma Design System &mdash; Operating Model</title>
+    <meta
+      name="description"
+      content="Operating model for how Luma evolves to support AI-assisted design system adoption, implementation, and maintenance across multiple frontend stacks."
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --color-brand: #d85614;
+        --color-brand-soft: rgba(216, 86, 20, 0.06);
+        --color-brand-line: rgba(216, 86, 20, 0.12);
+        --bg-canvas: #ffffff;
+        --bg-surface: #f9fafb;
+        --bg-elevated: #f3f4f6;
+        --border-default: #e5e7eb;
+        --text-primary: #111827;
+        --text-secondary: #1f2937;
+        --text-tertiary: #374151;
+        --text-muted: #6b7280;
+        --sidebar-width: 300px;
+      }
+
+      html,
+      body {
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      body {
+        font-family:
+          "Noto Sans",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        background-color: var(--bg-canvas);
+        color: var(--text-primary);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .layout {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: var(--sidebar-width);
+        background-color: var(--bg-surface);
+        border-right: 1px solid var(--border-default);
+        position: fixed;
+        height: 100vh;
+        overflow-y: auto;
+        padding: 24px 12px;
+      }
+
+      .sidebar-header {
+        padding: 0 1rem 0.85rem;
+        border-bottom: 1px solid var(--border-default);
+        margin-bottom: 0.5rem;
+      }
+
+      .sidebar-header h1 {
+        font-size: 1rem;
+        font-weight: 800;
+        color: var(--color-brand);
+        margin-bottom: 0.15rem;
+        line-height: 1.3;
+      }
+
+      .sidebar-header p {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+      }
+
+      .nav-link {
+        display: block;
+        padding: 0.6rem 0.75rem;
+        color: var(--text-tertiary);
+        text-decoration: none;
+        font-size: 0.95rem;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+
+      .nav-link:hover {
+        background-color: var(--bg-elevated);
+        color: var(--color-brand);
+      }
+
+      .nav-link.active {
+        background-color: var(--color-brand-soft);
+        color: var(--color-brand);
+        font-weight: 600;
+      }
+
+      .main {
+        margin-left: var(--sidebar-width);
+        flex: 1;
+        padding: 2.5rem 3rem 4rem;
+        max-width: 900px;
+      }
+
+      .section {
+        display: none;
+      }
+
+      .section.active {
+        display: block;
+      }
+
+      h2 {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+        line-height: 1.25;
+      }
+
+      h3 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 1.75rem 0 0.6rem;
+      }
+
+      h4 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--text-secondary);
+        margin: 1rem 0 0.4rem;
+      }
+
+      .section-subtitle {
+        font-size: 1rem;
+        color: var(--text-muted);
+        margin-bottom: 1.25rem;
+        line-height: 1.55;
+      }
+
+      p {
+        margin-bottom: 0.85rem;
+        color: var(--text-secondary);
+      }
+
+      ul,
+      ol {
+        margin: 0.5rem 0 1rem 1.25rem;
+        color: var(--text-secondary);
+      }
+
+      ul li,
+      ol li {
+        margin-bottom: 0.35rem;
+      }
+
+      .disclaimer {
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        border-radius: 10px;
+        padding: 1rem 1.15rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.88rem;
+        color: #78350f;
+        line-height: 1.55;
+      }
+
+      .disclaimer strong {
+        color: #92400e;
+      }
+
+      .card {
+        background-color: var(--bg-elevated);
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+        padding: 1.1rem 1.25rem;
+        margin: 1rem 0;
+      }
+
+      .card.brand {
+        background: var(--color-brand-soft);
+        border-color: var(--color-brand-line);
+      }
+
+      .card-title {
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.45rem;
+        font-size: 0.95rem;
+      }
+
+      .card.brand .card-title {
+        color: var(--color-brand);
+      }
+
+      .card ul {
+        margin-bottom: 0;
+      }
+
+      .flow {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 1.25rem 0;
+        padding: 1rem 1.15rem;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+      }
+
+      .flow.vertical {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .flow.vertical .flow-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .flow-node {
+        display: inline-block;
+        padding: 0.45rem 0.85rem;
+        background: var(--bg-elevated);
+        border: 1px solid var(--border-default);
+        border-radius: 8px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        white-space: nowrap;
+      }
+
+      .flow-node.brand {
+        background: var(--color-brand-soft);
+        border-color: var(--color-brand-line);
+        color: var(--color-brand);
+      }
+
+      .flow-node.layer {
+        background: #ecfdf5;
+        border-color: #a7f3d0;
+        color: #065f46;
+      }
+
+      .flow-arrow {
+        color: var(--text-muted);
+        font-size: 1rem;
+        font-weight: 700;
+      }
+
+      .flow-arrow.down {
+        text-align: center;
+        display: block;
+        padding: 0.15rem 0;
+      }
+
+      .tree {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+        padding: 1rem 1.25rem;
+        margin: 1rem 0;
+        font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+        font-size: 0.82rem;
+        line-height: 1.7;
+        color: var(--text-secondary);
+        overflow-x: auto;
+      }
+
+      .artefact-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 0.85rem;
+        margin: 1rem 0;
+      }
+
+      .artefact {
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+        padding: 1rem;
+        background: var(--bg-surface);
+      }
+
+      .artefact code {
+        display: block;
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: var(--color-brand);
+        margin-bottom: 0.4rem;
+      }
+
+      .artefact p {
+        font-size: 0.85rem;
+        margin-bottom: 0;
+        color: var(--text-muted);
+      }
+
+      .stage {
+        border-left: 3px solid var(--color-brand);
+        padding: 0.5rem 0 0.5rem 1.15rem;
+        margin: 1.25rem 0;
+      }
+
+      .stage-label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--color-brand);
+        margin-bottom: 0.25rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+        font-size: 0.9rem;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid var(--border-default);
+        vertical-align: top;
+      }
+
+      th {
+        background-color: var(--bg-elevated);
+        color: var(--text-muted);
+        font-weight: 700;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+      }
+
+      td {
+        color: var(--text-secondary);
+      }
+
+      .tag {
+        display: inline-block;
+        padding: 0.15rem 0.55rem;
+        background: var(--color-brand-soft);
+        color: var(--color-brand);
+        font-size: 0.72rem;
+        font-weight: 700;
+        border-radius: 999px;
+        margin: 0.1rem 0.2rem 0.1rem 0;
+      }
+
+      .example-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+        margin: 0.5rem 0 0;
+        list-style: none;
+        padding: 0;
+      }
+
+      .example-list li {
+        margin: 0;
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+          border-right: none;
+          border-bottom: 1px solid var(--border-default);
+        }
+        .main {
+          margin-left: 0;
+          padding: 1.5rem;
+        }
+        .layout {
+          flex-direction: column;
+        }
+      }
+
+      @media print {
+        .sidebar {
+          display: none;
+        }
+        .main {
+          margin-left: 0;
+          padding: 0;
+        }
+        .section {
+          display: block !important;
+          page-break-before: always;
+        }
+        .section:first-of-type {
+          page-break-before: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <nav class="sidebar" aria-label="Operating model navigation">
+        <div class="sidebar-header">
+          <h1>Luma Operating Model</h1>
+          <p>AI-assisted adoption &middot; Multi-stack &middot; Directional guide</p>
+        </div>
+        <a href="#sec-overview" class="nav-link active" onclick="showSection(event, 'sec-overview')"
+          >Overview</a
+        >
+        <a
+          href="#sec-architecture"
+          class="nav-link"
+          onclick="showSection(event, 'sec-architecture')"
+          >System Architecture</a
+        >
+        <a href="#sec-hierarchy" class="nav-link" onclick="showSection(event, 'sec-hierarchy')"
+          >Design System Hierarchy</a
+        >
+        <a href="#sec-authoring" class="nav-link" onclick="showSection(event, 'sec-authoring')"
+          >Authoring Layer</a
+        >
+        <a
+          href="#sec-specification"
+          class="nav-link"
+          onclick="showSection(event, 'sec-specification')"
+          >Specification Layer</a
+        >
+        <a href="#sec-adaptation" class="nav-link" onclick="showSection(event, 'sec-adaptation')"
+          >Adaptation Layer</a
+        >
+        <a href="#sec-delivery" class="nav-link" onclick="showSection(event, 'sec-delivery')"
+          >Delivery Layer</a
+        >
+        <a href="#sec-ownership" class="nav-link" onclick="showSection(event, 'sec-ownership')"
+          >Ownership Model</a
+        >
+        <a href="#sec-howto" class="nav-link" onclick="showSection(event, 'sec-howto')"
+          >How to Apply This (Kendo)</a
+        >
+      </nav>
+
+      <main class="main">
+        <!-- ─── Overview ─── -->
+        <section id="sec-overview" class="section active">
+          <h2>Luma Design System Operating Model</h2>
+          <p class="section-subtitle">
+            How Luma can evolve to support AI-assisted design system adoption, implementation, and
+            maintenance across multiple frontend stacks.
+          </p>
+
+          <div class="disclaimer">
+            <strong>This document was written with the help of AI.</strong> The concepts,
+            architecture, and workflows described here should be viewed as a <em>working model</em>
+            rather than a fixed blueprint. Capabilities of AI tools, design tooling, and development
+            ecosystems are evolving rapidly &mdash; many approaches will need validation through
+            experimentation. Principles and objectives are expected to remain stable; implementation
+            details, tooling choices, workflows, and levels of automation may change over time.
+          </div>
+
+          <h3>Purpose</h3>
+          <p>
+            This document describes the architecture, operating model, and artefacts that make up
+            the Luma Design System ecosystem.
+          </p>
+          <p>It explains:</p>
+          <ul>
+            <li>How design intent is authored and maintained</li>
+            <li>How design information is structured</li>
+            <li>How design specifications are generated</li>
+            <li>How AI agents consume those specifications</li>
+            <li>How implementation is generated across different frontend stacks</li>
+            <li>How design system assets are governed and maintained</li>
+          </ul>
+
+          <div class="card brand">
+            <div class="card-title">Scope of this document</div>
+            This document focuses on the overall system architecture and flow of information.
+            Detailed authoring instructions for designers and implementation guidance for engineers
+            are covered in separate documents.
+          </div>
+        </section>
+
+        <!-- ─── System Architecture ─── -->
+        <section id="sec-architecture" class="section">
+          <h2>System Overview</h2>
+          <p class="section-subtitle">
+            Luma consists of four layers, each with a specific responsibility and ownership model.
+            The purpose is to separate design intent from implementation, allowing the same design
+            system to be applied consistently across multiple frontend frameworks.
+          </p>
+
+          <div class="flow vertical">
+            <div class="flow-row"><span class="flow-node layer">Authoring</span></div>
+            <span class="flow-arrow down">&darr;</span>
+            <div class="flow-row"><span class="flow-node layer">Specification</span></div>
+            <span class="flow-arrow down">&darr;</span>
+            <div class="flow-row"><span class="flow-node layer">Adaptation</span></div>
+            <span class="flow-arrow down">&darr;</span>
+            <div class="flow-row"><span class="flow-node layer">Delivery</span></div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Layer</th>
+                <th>Responsibility</th>
+                <th>Primary owners</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Authoring</strong></td>
+                <td>Design intent is created and maintained in Figma</td>
+                <td>Design System Team</td>
+              </tr>
+              <tr>
+                <td><strong>Specification</strong></td>
+                <td>Structured, framework-agnostic representation of design intent</td>
+                <td>Design System Team + AI agents</td>
+              </tr>
+              <tr>
+                <td><strong>Adaptation</strong></td>
+                <td>Specifications translated into framework-specific implementations</td>
+                <td>AI agents + engineers</td>
+              </tr>
+              <tr>
+                <td><strong>Delivery</strong></td>
+                <td>Packaging, publishing, and distributing Luma assets</td>
+                <td>Design System Team + product teams</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ─── Hierarchy ─── -->
+        <section id="sec-hierarchy" class="section">
+          <h2>Design System Hierarchy</h2>
+          <p class="section-subtitle">
+            Luma is organized using a consistent hierarchy across Figma, specifications,
+            documentation, and implementation.
+          </p>
+
+          <div class="flow vertical">
+            <div class="flow-row"><span class="flow-node brand">Foundations</span></div>
+            <span class="flow-arrow down">&darr;</span>
+            <div class="flow-row"><span class="flow-node brand">Components</span></div>
+            <span class="flow-arrow down">&darr;</span>
+            <div class="flow-row"><span class="flow-node brand">Patterns</span></div>
+            <span class="flow-arrow down">&darr;</span>
+            <div class="flow-row"><span class="flow-node brand">Templates</span></div>
+            <span class="flow-arrow down">&darr;</span>
+            <div class="flow-row"><span class="flow-node">Products</span></div>
+          </div>
+
+          <h3>Foundations</h3>
+          <p>
+            Visual and interaction rules that underpin the system, represented through design
+            tokens.
+          </p>
+          <ul class="example-list">
+            <li><span class="tag">Color</span></li>
+            <li><span class="tag">Typography</span></li>
+            <li><span class="tag">Iconography</span></li>
+            <li><span class="tag">Spacing</span></li>
+            <li><span class="tag">Elevation</span></li>
+            <li><span class="tag">Motion</span></li>
+            <li><span class="tag">Accessibility</span></li>
+            <li><span class="tag">Illustrations</span></li>
+          </ul>
+
+          <h3>Components</h3>
+          <p>
+            Reusable UI elements with a specific responsibility. Defined independently of any
+            frontend framework or component library &mdash; implementation details are introduced
+            later through framework-specific adaptation.
+          </p>
+          <ul class="example-list">
+            <li><span class="tag">Button</span></li>
+            <li><span class="tag">Input</span></li>
+            <li><span class="tag">Select</span></li>
+            <li><span class="tag">Checkbox</span></li>
+            <li><span class="tag">Card</span></li>
+            <li><span class="tag">Badge</span></li>
+            <li><span class="tag">Table</span></li>
+            <li><span class="tag">Gantt Chart</span></li>
+          </ul>
+
+          <h3>Patterns</h3>
+          <p>
+            Reusable solutions to recurring user problems, composed of multiple components. Patterns
+            provide the majority of consistency and efficiency benefits.
+          </p>
+          <ul class="example-list">
+            <li><span class="tag">Page Header</span></li>
+            <li><span class="tag">Side Navigation</span></li>
+            <li><span class="tag">Filter Panel</span></li>
+            <li><span class="tag">Form</span></li>
+            <li><span class="tag">Data Table</span></li>
+            <li><span class="tag">Empty State</span></li>
+            <li><span class="tag">Action Bar</span></li>
+          </ul>
+
+          <h3>Templates</h3>
+          <p>
+            Page-level compositions built from multiple patterns &mdash; proven starting points for
+            common product experiences.
+          </p>
+          <ul class="example-list">
+            <li><span class="tag">Dashboard</span></li>
+            <li><span class="tag">List View</span></li>
+            <li><span class="tag">Detail View</span></li>
+            <li><span class="tag">Create/Edit Flow</span></li>
+            <li><span class="tag">Wizard</span></li>
+            <li><span class="tag">Reporting View</span></li>
+          </ul>
+
+          <h3>Hierarchy at a glance</h3>
+          <pre class="tree">
+Foundations
+├─ Color, Typography, Spacing, Motion
+├─ Elevation, Accessibility, Icons, Illustrations
+│
+Components
+├─ Structure, Variants, States, Behaviors, Accessibility
+│
+Patterns
+├─ Structure, Composition, Interaction Rules, Workflows, Accessibility
+│
+Templates
+├─ Layout, Regions, Pattern Composition, Responsive Rules
+│
+Products</pre
+          >
+        </section>
+
+        <!-- ─── Authoring Layer ─── -->
+        <section id="sec-authoring" class="section">
+          <h2>Authoring Layer</h2>
+          <p class="section-subtitle">
+            Where design intent is created and maintained. Figma serves as the primary source of
+            truth for design intent.
+          </p>
+
+          <div class="card">
+            <div class="card-title">Primary tooling</div>
+            <ul>
+              <li><strong>Figma</strong> &mdash; design authoring environment</li>
+              <li>
+                <strong>Luma Design Library</strong> &mdash; shared component and pattern library
+              </li>
+            </ul>
+          </div>
+
+          <p>
+            Designers are responsible for defining not only how something looks, but also how it
+            behaves, how it should be used, and how it should be composed with other elements.
+            Design artefacts should be structured so they can be interpreted consistently by
+            designers, engineers, and AI agents.
+          </p>
+
+          <h3>Designing for Adaptation</h3>
+          <p>
+            Designers should define solutions based on user needs and Luma standards while remaining
+            aware of the capabilities and constraints of supported implementation frameworks.
+          </p>
+
+          <div class="card brand">
+            <div class="card-title">General principle</div>
+            <ul>
+              <li><strong>Reuse</strong> existing capabilities where they meet the user need.</li>
+              <li>
+                <strong>Extend</strong> existing capabilities only when necessary and reasonable.
+              </li>
+              <li>
+                <strong>Create new</strong> components or patterns only when existing solutions are
+                insufficient and the value outweighs the investment.
+              </li>
+            </ul>
+          </div>
+
+          <p>Design decisions should consider:</p>
+          <ul>
+            <li>User value</li>
+            <li>Accessibility</li>
+            <li>Consistency</li>
+            <li>Implementation complexity</li>
+            <li>Maintainability</li>
+            <li>Long-term ownership</li>
+          </ul>
+
+          <p>
+            Avoid introducing custom components, wrappers, or framework-specific extensions unless
+            they provide clear value that cannot be achieved through existing capabilities. Where
+            trade-offs exist, designers should collaborate with engineers before introducing new
+            patterns or component requirements.
+          </p>
+        </section>
+
+        <!-- ─── Specification Layer ─── -->
+        <section id="sec-specification" class="section">
+          <h2>Specification Layer</h2>
+          <p class="section-subtitle">
+            Structured, framework-agnostic representation of design intent &mdash; consumable by
+            both humans and AI agents. This structure is a directional guide, not a fixed blueprint.
+          </p>
+
+          <p>
+            Rather than generating implementation directly from Figma, design intent is documented
+            through structured artefacts that describe the foundations, components, patterns, and
+            templates that make up Luma.
+          </p>
+
+          <div class="artefact-grid">
+            <div class="artefact">
+              <code>tokens.json</code>
+              <p>
+                Visual foundations: colors, typography, spacing, motion, elevation, border radius.
+                Source of truth for all implementations.
+              </p>
+            </div>
+            <div class="artefact">
+              <code>design-system.md</code>
+              <p>
+                Global rules: design principles, naming conventions, accessibility, interaction
+                conventions, theming, framework strategy.
+              </p>
+            </div>
+            <div class="artefact">
+              <code>component.md</code>
+              <p>
+                Component contracts: purpose, anatomy, variants, states, behavior, accessibility,
+                token mappings, usage guidance.
+              </p>
+            </div>
+            <div class="artefact">
+              <code>pattern.md</code>
+              <p>
+                Interaction patterns: structure, hierarchy, composition rules, responsive behavior,
+                accessibility, usage guidance.
+              </p>
+            </div>
+            <div class="artefact">
+              <code>template.md</code>
+              <p>
+                Page-level templates: layout regions, pattern composition, responsive behavior,
+                page-level accessibility, usage guidance.
+              </p>
+            </div>
+          </div>
+
+          <h3>Specification Generation</h3>
+          <p>
+            Artefacts may be authored manually, generated through AI-assisted workflows, or
+            maintained through a combination of both. Designers remain responsible for defining
+            design intent; AI agents assist in creating, maintaining, enriching, and updating
+            specifications.
+          </p>
+
+          <ol>
+            <li>A designer creates or updates a component, pattern, or template in Figma.</li>
+            <li>An AI agent assists in generating or updating the corresponding specification.</li>
+            <li>The designer reviews, refines, and approves the generated output.</li>
+            <li>The approved specification becomes part of the Luma source of truth.</li>
+          </ol>
+
+          <div class="card brand">
+            <div class="card-title">Primary objective</div>
+            Not the generation process itself &mdash; but ensuring design intent is represented in a
+            structured, reusable, and machine-readable format that can be interpreted consistently
+            across teams, tools, AI agents, and frontend frameworks. The specification artefacts
+            remain the canonical representation of design intent as tooling evolves.
+          </div>
+        </section>
+
+        <!-- ─── Adaptation Layer ─── -->
+        <section id="sec-adaptation" class="section">
+          <h2>Adaptation Layer</h2>
+          <p class="section-subtitle">
+            Converts structured design specifications into framework-specific implementation
+            proposals. Framework mappings are an input into this layer, not a separate layer.
+          </p>
+
+          <p>
+            The same Luma Form pattern may result in an Angular + Kendo implementation, a React +
+            Material UI implementation, or a React + Shadcn implementation &mdash; depending on the
+            target product stack. The design intent remains constant; only the implementation
+            strategy changes.
+          </p>
+
+          <h3>AI agent responsibilities</h3>
+          <ul>
+            <li>Reading design specifications and understanding design intent</li>
+            <li>Reading framework mappings</li>
+            <li>Translating specifications into framework-specific implementations</li>
+            <li>Generating implementation proposals and pull requests</li>
+          </ul>
+
+          <h3>Examples</h3>
+          <ul>
+            <li>
+              Translating Luma design tokens into CSS variables, Sass themes, or framework theme
+              configs
+            </li>
+            <li>Translating a Luma Button spec into Kendo, Material UI, or Shadcn</li>
+            <li>Translating a Form pattern into a framework-specific composition</li>
+            <li>Translating a Dashboard template into a page aligned with Luma standards</li>
+            <li>Translating existing applications to align with updated Luma standards</li>
+          </ul>
+
+          <h3>Supported framework mappings</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Stack</th>
+                <th>Mapping defines</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Angular + Kendo</strong></td>
+                <td rowspan="4">
+                  Component equivalents, token application strategies, theming approaches, framework
+                  conventions, implementation patterns
+                </td>
+              </tr>
+              <tr>
+                <td><strong>React + Material UI</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Angular Material</strong></td>
+              </tr>
+              <tr>
+                <td><strong>React + Shadcn</strong> / <strong>Vue + Shadcn</strong></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="card brand">
+            <div class="card-title">Key principle</div>
+            Luma supports multiple frontend stacks without duplicating design system definitions.
+            One specification, many implementations.
+          </div>
+        </section>
+
+        <!-- ─── Delivery Layer ─── -->
+        <section id="sec-delivery" class="section">
+          <h2>Delivery Layer</h2>
+          <p class="section-subtitle">
+            Packaging, publishing, and distributing Luma assets for consumption by product teams.
+          </p>
+
+          <div class="stage">
+            <div class="stage-label">Stage 1 &mdash; Package-Based Adoption</div>
+            <h4>Objective</h4>
+            <p>
+              Provide product teams with production-ready Luma assets and implementation packages
+              consumable within their existing frontend stacks.
+            </p>
+            <p>
+              Luma publishes versioned packages through the Luma repository and package registries:
+            </p>
+            <ul class="example-list">
+              <li><span class="tag">@luma/tokens</span></li>
+              <li><span class="tag">@luma/icons</span></li>
+              <li><span class="tag">@luma/angular-kendo</span></li>
+              <li><span class="tag">@luma/react-material</span></li>
+              <li><span class="tag">@luma/react-shadcn</span></li>
+            </ul>
+            <p style="margin-top: 0.75rem">
+              Published assets may include design tokens, icon library, font packages, component
+              packages, pattern implementations, template implementations, and documentation.
+              Product teams consume and adopt these according to their technology stack and release
+              cadence.
+            </p>
+          </div>
+
+          <div class="stage">
+            <div class="stage-label">Stage 2 &mdash; AI-Assisted Adoption</div>
+            <h4>Objective</h4>
+            <p>
+              Reduce the effort required for teams to understand, adopt, and apply Luma standards.
+            </p>
+            <p>
+              AI is introduced as an <strong>engineering assistant</strong>, not an automation
+              engine. Engineers continue to own implementation decisions; AI helps identify
+              opportunities, answer questions, and accelerate adoption.
+            </p>
+            <p>AI agents may assist with:</p>
+            <ul>
+              <li>Analyzing existing codebases</li>
+              <li>Identifying opportunities to adopt Luma components, patterns, and tokens</li>
+              <li>Recommending replacements for custom implementations</li>
+              <li>Assisting with upgrades to newer Luma versions</li>
+              <li>Generating implementation proposals and pull requests</li>
+              <li>Helping migrate applications toward Luma standards incrementally</li>
+            </ul>
+            <div class="card" style="margin-top: 0.75rem">
+              <div class="card-title">Example</div>
+              An AI agent analyzes an existing application and identifies components that can be
+              replaced by Luma equivalents, suggests token migrations, or generates implementation
+              proposals that align existing screens with established Luma patterns and templates.
+              Engineers remain responsible for validation, testing, and approval.
+            </div>
+          </div>
+        </section>
+
+        <!-- ─── Ownership Model ─── -->
+        <section id="sec-ownership" class="section">
+          <h2>Ownership Model</h2>
+          <p class="section-subtitle">
+            Clear ownership across the design system team, product teams, and AI agents.
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Role</th>
+                <th>Responsible for</th>
+                <th>Does not own</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Design System Team</strong></td>
+                <td>
+                  Foundations, components, patterns, templates, design specifications, governance,
+                  design system evolution
+                </td>
+                <td>&mdash;</td>
+              </tr>
+              <tr>
+                <td><strong>Product Teams</strong></td>
+                <td>
+                  Product implementation, product-specific requirements, contributions back into
+                  Luma, adoption and rollout
+                </td>
+                <td>&mdash;</td>
+              </tr>
+              <tr>
+                <td><strong>AI Agents</strong></td>
+                <td>
+                  Translating specifications into framework-specific implementations, applying
+                  tokens and theming rules, mapping components to framework equivalents, generating
+                  implementation proposals and pull requests, assisting with upgrades and migrations
+                </td>
+                <td>
+                  Design decisions, product decisions, design system governance, quality approval
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="card brand">
+            <div class="card-title">Human judgment stays central</div>
+            AI agents accelerate work and reduce manual effort, but design decisions, product
+            decisions, governance, and quality approval always remain with people. Engineers
+            validate, test, and approve every AI-generated proposal before it ships.
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      function showSection(ev, sectionId) {
+        if (ev && ev.preventDefault) ev.preventDefault();
+
+        document.querySelectorAll(".section").forEach(function (section) {
+          section.classList.remove("active");
+        });
+        var target = document.getElementById(sectionId);
+        if (target) target.classList.add("active");
+
+        document.querySelectorAll(".nav-link").forEach(function (link) {
+          link.classList.remove("active");
+        });
+        var activeLink = document.querySelector('.nav-link[href="#' + sectionId + '"]');
+        if (activeLink) activeLink.classList.add("active");
+
+        if (history.replaceState) {
+          history.replaceState(null, "", "#" + sectionId);
+        } else {
+          window.location.hash = sectionId;
+        }
+
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }
+
+      window.addEventListener("DOMContentLoaded", function () {
+        var hash = (window.location.hash || "").slice(1);
+        if (hash && document.getElementById(hash)) {
+          showSection(null, hash);
+        }
+      });
+    </script>
+  </body>
+</html>
