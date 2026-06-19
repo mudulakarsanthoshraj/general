@@ -1,0 +1,1851 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luma Upgrade Proposal &mdash; Gap &amp; Non-Sync Analysis</title>
+    <meta
+      name="description"
+      content="Documentation of gaps and non-sync items between the proposed Luma Stage 1 (Package-Based Adoption) and Stage 2 (AI-Assisted Adoption) vision and the current luma-design-system repository."
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Luma Upgrade Proposal — Gap & Non-Sync Analysis" />
+    <meta
+      property="og:description"
+      content="Where the proposed multi-package, multi-framework Luma upgrade diverges from what exists today."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --color-brand: #d85614;
+        --color-brand-soft: rgba(216, 86, 20, 0.06);
+        --color-brand-line: rgba(216, 86, 20, 0.12);
+        --color-brand-tint: rgba(216, 86, 20, 0.15);
+        --bg-canvas: #ffffff;
+        --bg-surface: #f9fafb;
+        --bg-elevated: #f3f4f6;
+        --border-default: #e5e7eb;
+        --text-primary: #111827;
+        --text-secondary: #1f2937;
+        --text-tertiary: #374151;
+        --text-muted: #6b7280;
+        --sidebar-width: 300px;
+        --spacing-6: 24px;
+        --spacing-3: 12px;
+      }
+
+      html,
+      body {
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      body {
+        font-family:
+          "Noto Sans",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        background-color: var(--bg-canvas);
+        color: var(--text-primary);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .layout {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: var(--sidebar-width);
+        background-color: var(--bg-surface);
+        border-right: 1px solid var(--border-default);
+        position: fixed;
+        height: 100vh;
+        overflow-y: auto;
+        padding: var(--spacing-6) var(--spacing-3);
+      }
+
+      .sidebar-header {
+        padding: 0 1rem 0.85rem;
+        border-bottom: 1px solid var(--border-default);
+        margin-bottom: 0.5rem;
+      }
+
+      .sidebar-header h1 {
+        font-size: 1rem;
+        font-weight: 800;
+        color: var(--color-brand);
+        margin-bottom: 0.15rem;
+        line-height: 1.3;
+      }
+
+      .sidebar-header p {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+      }
+
+      .nav-section {
+        padding: 0.25rem 0.75rem;
+      }
+
+      .nav-section-title {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--color-brand);
+        text-transform: uppercase;
+        padding: 0.85rem 0.5rem 0.35rem;
+        margin-bottom: 0.15rem;
+        border-top: 1px solid var(--border-default);
+        margin-top: 0.25rem;
+      }
+
+      .nav-section:first-of-type .nav-section-title {
+        border-top: none;
+        margin-top: 0;
+        padding-top: 0.25rem;
+      }
+
+      .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        position: relative;
+        padding: 0.6rem 0.75rem;
+        color: var(--text-tertiary);
+        text-decoration: none;
+        font-size: 0.95rem;
+        border-radius: 8px;
+        transition: all 0.15s ease;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      .nav-link:hover {
+        background-color: var(--bg-elevated);
+        color: var(--color-brand);
+      }
+
+      .nav-link.active {
+        background-color: var(--color-brand-soft);
+        color: var(--color-brand);
+        font-weight: 600;
+        border: 1px solid var(--color-brand-line);
+        border-radius: 12px;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02) inset;
+        padding-left: calc(0.6rem + 10px);
+      }
+
+      .nav-link.active::before {
+        content: "";
+        position: absolute;
+        left: -1px;
+        top: 8px;
+        bottom: 8px;
+        width: 3px;
+        background: var(--color-brand);
+        border-radius: 6px;
+      }
+
+      .main {
+        flex: 1;
+        min-width: 0;
+        margin-left: var(--sidebar-width);
+        padding: 2rem 3rem;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      .section {
+        display: none;
+        animation: fadeIn 0.3s ease;
+      }
+
+      .section.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      h2 {
+        font-size: 1.75rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        color: var(--color-brand);
+        line-height: 1.25;
+      }
+
+      h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin: 2rem 0 0.85rem;
+        color: var(--color-brand);
+      }
+
+      h4 {
+        font-size: 1rem;
+        font-weight: 700;
+        margin: 1.4rem 0 0.6rem;
+        color: var(--text-primary);
+      }
+
+      .section-subtitle {
+        color: var(--text-muted);
+        font-size: 1rem;
+        margin-bottom: 1.75rem;
+        max-width: 75ch;
+      }
+
+      p {
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+        font-weight: 400;
+      }
+
+      ul,
+      ol {
+        color: var(--text-secondary);
+        padding-left: 1.4rem;
+        margin-bottom: 1rem;
+      }
+
+      li {
+        margin-bottom: 0.45rem;
+      }
+
+      strong {
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+
+      em {
+        color: var(--text-tertiary);
+        font-style: italic;
+      }
+
+      code {
+        background-color: var(--bg-elevated);
+        padding: 0.18rem 0.4rem;
+        border-radius: 4px;
+        font-family: "JetBrains Mono", "Fira Code", monospace;
+        font-size: 0.85em;
+        color: var(--color-brand);
+      }
+
+      pre {
+        background-color: #0f172a;
+        color: #e2e8f0;
+        border: 1px solid #1e293b;
+        border-radius: 10px;
+        padding: 1rem 1.1rem;
+        max-width: 100%;
+        overflow-x: auto;
+        margin: 0.6rem 0 1rem;
+        font-family: "JetBrains Mono", "Fira Code", monospace;
+        font-size: 0.82rem;
+        line-height: 1.6;
+        white-space: pre;
+      }
+
+      pre code {
+        background: none;
+        padding: 0;
+        border-radius: 0;
+        color: inherit;
+        font-size: inherit;
+      }
+
+      pre .c-key {
+        color: #7dd3fc;
+      }
+
+      pre .c-str {
+        color: #86efac;
+      }
+
+      pre .c-com {
+        color: #94a3b8;
+        font-style: italic;
+      }
+
+      .arch-flow {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px;
+        margin: 0.75rem 0 1rem;
+      }
+
+      .arch-flow .node {
+        display: inline-block;
+        background: var(--bg-canvas);
+        border: 1px solid var(--border-default);
+        border-radius: 6px;
+        padding: 2px 7px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--text-tertiary);
+        white-space: nowrap;
+      }
+
+      .arch-flow .node.llm {
+        background: var(--color-brand-soft);
+        border-color: var(--color-brand-line);
+        color: var(--color-brand);
+      }
+
+      .arch-flow .node.out {
+        background: #ecfdf5;
+        border-color: #a7f3d0;
+        color: #047857;
+      }
+
+      .arch-flow .node.warn {
+        background: #fef2f2;
+        border-color: #fecaca;
+        color: #991b1b;
+      }
+
+      .arch-flow .arrow {
+        color: var(--text-muted);
+        font-size: 0.72rem;
+        font-weight: 700;
+      }
+
+      .footnote {
+        color: var(--text-muted);
+        font-size: 0.82rem;
+        margin: 0.5rem 0 1rem;
+      }
+
+      .card {
+        background-color: var(--bg-elevated);
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+        padding: 1.1rem 1.25rem;
+        margin: 1rem 0;
+      }
+
+      .card-title {
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.45rem;
+        font-size: 0.95rem;
+      }
+
+      .card.brand {
+        background: var(--color-brand-soft);
+        border-color: var(--color-brand-line);
+      }
+
+      .card.brand .card-title {
+        color: var(--color-brand);
+      }
+
+      .card.success {
+        background: #ecfdf5;
+        border-color: #a7f3d0;
+      }
+
+      .card.success .card-title {
+        color: #047857;
+      }
+
+      .card.warning {
+        background: #fffbeb;
+        border-color: #fde68a;
+      }
+
+      .card.warning .card-title {
+        color: #92400e;
+      }
+
+      .card.danger {
+        background: #fef2f2;
+        border-color: #fecaca;
+      }
+
+      .card.danger .card-title {
+        color: #991b1b;
+      }
+
+      .card ul {
+        margin: 0.4rem 0 0;
+        padding-left: 1.2rem;
+      }
+
+      .card ul li {
+        margin-bottom: 0.3rem;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 0.85rem;
+        margin: 1rem 0 0.5rem;
+      }
+
+      .stat {
+        background-color: var(--bg-elevated);
+        border: 1px solid var(--border-default);
+        border-radius: 8px;
+        padding: 0.95rem 1rem;
+      }
+
+      .stat .label {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+      }
+
+      .stat .value {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+
+      .stat.accent {
+        background: var(--color-brand-soft);
+        border-color: var(--color-brand-line);
+      }
+
+      .stat.accent .label,
+      .stat.accent .value {
+        color: var(--color-brand);
+      }
+
+      .stat.danger {
+        background: #fef2f2;
+        border-color: #fecaca;
+      }
+
+      .stat.danger .label,
+      .stat.danger .value {
+        color: #991b1b;
+      }
+
+      .compare {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+
+      .compare .col {
+        min-width: 0;
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+        padding: 1rem 1.15rem;
+        background: var(--bg-elevated);
+      }
+
+      .compare .col.today {
+        background: #fef2f2;
+        border-color: #fecaca;
+      }
+
+      .compare .col.future {
+        background: #ecfdf5;
+        border-color: #a7f3d0;
+      }
+
+      .compare h4 {
+        margin: 0 0 0.5rem;
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--text-tertiary);
+      }
+
+      .compare .col.today h4 {
+        color: #991b1b;
+      }
+
+      .compare .col.future h4 {
+        color: #065f46;
+      }
+
+      .compare ul {
+        margin: 0;
+        padding-left: 1.1rem;
+        font-size: 0.9rem;
+      }
+
+      .compare ul li {
+        margin-bottom: 0.3rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+        font-size: 0.88rem;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 0.7rem 0.85rem;
+        border-bottom: 1px solid var(--border-default);
+        vertical-align: top;
+      }
+
+      th {
+        background-color: var(--bg-elevated);
+        color: var(--text-muted);
+        font-weight: 700;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+      }
+
+      td {
+        color: var(--text-secondary);
+        font-weight: 400;
+      }
+
+      td.num,
+      th.num {
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        width: 3rem;
+      }
+
+      tr.row-sync td {
+        background: #f9fafb;
+      }
+
+      tr.row-gap td:first-child {
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      tr.row-critical td {
+        background: #fef2f2;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 0.12rem 0.5rem;
+        border-radius: 999px;
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+      }
+
+      .badge.critical {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .badge.high {
+        background: #ffedd5;
+        color: #9a3412;
+      }
+
+      .badge.medium {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      .badge.low {
+        background: #ecfdf5;
+        color: #065f46;
+      }
+
+      .example-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 0.85rem;
+        margin: 1rem 0;
+      }
+
+      .example-step {
+        min-width: 0;
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+        padding: 0.9rem 1rem;
+        background: var(--bg-elevated);
+      }
+
+      .example-step .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--color-brand);
+        color: #fff;
+        font-size: 0.72rem;
+        font-weight: 700;
+        margin-bottom: 0.4rem;
+      }
+
+      footer.doc-footer {
+        margin-top: 3rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border-default);
+        text-align: center;
+        font-size: 0.82rem;
+        color: var(--text-muted);
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+          border-right: none;
+          border-bottom: 1px solid var(--border-default);
+        }
+        .main {
+          margin-left: 0;
+          padding: 1.5rem;
+        }
+        .layout {
+          flex-direction: column;
+        }
+        .compare {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media print {
+        .sidebar {
+          display: none;
+        }
+        .main {
+          margin-left: 0;
+          padding: 0;
+        }
+        body {
+          background: #fff;
+        }
+        .section {
+          display: block !important;
+          page-break-before: always;
+        }
+        .section:first-of-type {
+          page-break-before: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <nav class="sidebar" aria-label="Gap analysis navigation">
+        <div class="sidebar-header">
+          <h1>Luma Upgrade Non-Sync</h1>
+          <p>Proposal vs. repository &middot; Jun 2026</p>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Overview</div>
+          <a href="#sec-summary" class="nav-link active" onclick="showSection(event, 'sec-summary')"
+            >Executive Summary</a
+          >
+          <a href="#sec-vision" class="nav-link" onclick="showSection(event, 'sec-vision')"
+            >Vision vs. Reality</a
+          >
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Stage 1 Gaps</div>
+          <a href="#sec-packages" class="nav-link" onclick="showSection(event, 'sec-packages')"
+            >Package Model</a
+          >
+          <a href="#sec-stack" class="nav-link" onclick="showSection(event, 'sec-stack')"
+            >Technology Stack</a
+          >
+          <a href="#sec-adoption" class="nav-link" onclick="showSection(event, 'sec-adoption')"
+            >Adoption Model</a
+          >
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Stage 2 Gaps</div>
+          <a href="#sec-ai" class="nav-link" onclick="showSection(event, 'sec-ai')"
+            >AI-Assisted Adoption</a
+          >
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Reference</div>
+          <a href="#sec-registry" class="nav-link" onclick="showSection(event, 'sec-registry')"
+            >Full Non-Sync Registry</a
+          >
+          <a href="#sec-decisions" class="nav-link" onclick="showSection(event, 'sec-decisions')"
+            >Decision Checklist</a
+          >
+          <a href="#sec-next" class="nav-link" onclick="showSection(event, 'sec-next')"
+            >Recommended Next Steps</a
+          >
+        </div>
+      </nav>
+
+      <main class="main">
+        <!-- ─── Executive Summary ─── -->
+        <section id="sec-summary" class="section active">
+          <h2>Executive Summary</h2>
+          <p class="section-subtitle">
+            This document records every meaningful gap between the proposed
+            <strong>Stage 1 (Package-Based Adoption)</strong> and
+            <strong>Stage 2 (AI-Assisted Adoption)</strong> upgrade vision and what the
+            <code>luma-design-system</code> repository actually delivers today.
+          </p>
+
+          <div class="stats">
+            <div class="stat danger">
+              <div class="label">Non-sync items identified</div>
+              <div class="value">22+</div>
+            </div>
+            <div class="stat accent">
+              <div class="label">Published npm packages today</div>
+              <div class="value">1</div>
+            </div>
+            <div class="stat">
+              <div class="label">Proposed @luma/* packages</div>
+              <div class="value">5+</div>
+            </div>
+            <div class="stat">
+              <div class="label">UI stacks in codebase</div>
+              <div class="value">Kendo only</div>
+            </div>
+          </div>
+
+          <div class="card danger">
+            <div class="card-title">Bottom line</div>
+            The upgrade proposal describes a <strong>multi-package, multi-framework design system
+            platform</strong> with <strong>AI-driven codebase migration</strong>. The current repo is
+            a <strong>single private npm package</strong> that ships <strong>one compiled CSS
+            file</strong> for <strong>Kendo UI only</strong>, with Storybook as documentation and a
+            local keyword chatbot &mdash; not a repo-aware AI agent.
+          </div>
+
+          <div class="compare">
+            <div class="col today">
+              <h4>What exists today</h4>
+              <ul>
+                <li>
+                  <code>@arcadis-intelligence/luma-design-system</code> &rarr;
+                  <code>dist/luma-theme.css</code>
+                </li>
+                <li>Tokens, fonts, icons bundled inside compiled CSS</li>
+                <li>Kendo React/Angular usage documented in Storybook</li>
+                <li>Page Shell patterns as copy-paste templates only</li>
+                <li><code>LumaAssistant</code> &mdash; Storybook FAQ chatbot</li>
+              </ul>
+            </div>
+            <div class="col future">
+              <h4>What the proposal assumes</h4>
+              <ul>
+                <li>
+                  Granular packages: <code>@luma/tokens</code>, <code>@luma/icons</code>,
+                  <code>@luma/angular-kendo</code>, <code>@luma/react-material</code>,
+                  <code>@luma/react-shadcn</code>
+                </li>
+                <li>Versioned component &amp; pattern npm packages</li>
+                <li>Multi-framework adoption paths</li>
+                <li>AI agents that read product repos and generate PRs</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card brand">
+            <div class="card-title">In one line</div>
+            Stage 1 is not an incremental upgrade &mdash; it is a <strong>replatform</strong>. Stage
+            2 is not an extension of <code>LumaAssistant</code> &mdash; it is a
+            <strong>separate engineering platform</strong> that depends on Stage 1 having stable
+            package APIs and a component mapping catalog that does not exist yet.
+          </div>
+
+          <h3>Priority gaps to resolve first</h3>
+          <table>
+            <thead>
+              <tr>
+                <th class="num">#</th>
+                <th>Gap</th>
+                <th>Why it blocks progress</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="row-critical">
+                <td class="num">1</td>
+                <td><strong>Stack strategy</strong></td>
+                <td>Kendo-only codebase vs. Material/shadcn in proposal</td>
+              </tr>
+              <tr class="row-critical">
+                <td class="num">2</td>
+                <td><strong>Package model</strong></td>
+                <td>One CSS blob vs. many <code>@luma/*</code> packages</td>
+              </tr>
+              <tr class="row-critical">
+                <td class="num">3</td>
+                <td><strong>&ldquo;Component package&rdquo; definition</strong></td>
+                <td>Wrappers vs. theme-only vs. full libraries unclear</td>
+              </tr>
+              <tr class="row-gap">
+                <td class="num">4</td>
+                <td><strong>Naming</strong></td>
+                <td><code>@luma</code> vs. <code>@arcadis-intelligence</code></td>
+              </tr>
+              <tr class="row-gap">
+                <td class="num">5</td>
+                <td><strong>Stage 2 scope</strong></td>
+                <td>New platform vs. extending existing chatbot</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ─── Vision vs Reality ─── -->
+        <section id="sec-vision" class="section">
+          <h2>Vision vs. Reality</h2>
+          <p class="section-subtitle">
+            Side-by-side view of the architectural models. The proposal and the repository describe
+            fundamentally different products.
+          </p>
+
+          <h3>Proposed architecture (Stage 1 + 2)</h3>
+          <div class="arch-flow">
+            <span class="node">@luma/tokens</span>
+            <span class="arrow">+</span>
+            <span class="node">@luma/icons</span>
+            <span class="arrow">+</span>
+            <span class="node">@luma/fonts</span>
+            <span class="arrow">&rarr;</span>
+            <span class="node llm">@luma/angular-kendo</span>
+            <span class="node llm">@luma/react-material</span>
+            <span class="node llm">@luma/react-shadcn</span>
+            <span class="arrow">&rarr;</span>
+            <span class="node out">Product apps</span>
+          </div>
+          <div class="arch-flow">
+            <span class="node warn">AI agent</span>
+            <span class="arrow">&rarr;</span>
+            <span class="node">Reads product repo</span>
+            <span class="arrow">&rarr;</span>
+            <span class="node">Suggests migrations</span>
+            <span class="arrow">&rarr;</span>
+            <span class="node out">Generates PRs</span>
+          </div>
+
+          <h3>Current architecture</h3>
+          <div class="arch-flow">
+            <span class="node">src/styles/luma-tokens/</span>
+            <span class="arrow">+</span>
+            <span class="node">src/styles/_override.scss</span>
+            <span class="arrow">+</span>
+            <span class="node">src/styles/components/</span>
+            <span class="arrow">&rarr;</span>
+            <span class="node llm">sass build</span>
+            <span class="arrow">&rarr;</span>
+            <span class="node out">dist/luma-theme.css</span>
+            <span class="arrow">&rarr;</span>
+            <span class="node">Product imports CSS + uses Kendo directly</span>
+          </div>
+          <div class="arch-flow">
+            <span class="node warn">LumaAssistant</span>
+            <span class="arrow">&rarr;</span>
+            <span class="node">Keyword FAQ in Storybook</span>
+            <span class="arrow">&rarr;</span>
+            <span class="node">No repo access</span>
+          </div>
+
+          <div class="compare">
+            <div class="col future">
+              <h4>Stage 1 objective (proposal)</h4>
+              <ul>
+                <li>Production-ready versioned packages product teams adopt in their stacks</li>
+                <li>Separate assets: tokens, icons, fonts, components, patterns, templates, docs</li>
+                <li>Teams choose stack and release cadence independently</li>
+              </ul>
+            </div>
+            <div class="col today">
+              <h4>Current delivery model</h4>
+              <ul>
+                <li>One restricted package on GitHub Packages</li>
+                <li>Single CSS artifact; everything else is dev-time Storybook content</li>
+                <li>Consumers must install Kendo separately and wire components themselves</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card warning">
+            <div class="card-title">Internal version mismatch (already out of sync)</div>
+            <ul>
+              <li><code>package.json</code> version: <strong>1.4.0</strong></li>
+              <li><code>CHANGELOG.md</code> latest entry: <strong>2.7.0</strong> (10 Jun 2026)</li>
+              <li>README references <code>npm run test</code> but no <code>test</code> script exists</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ─── Package Model ─── -->
+        <section id="sec-packages" class="section">
+          <h2>Stage 1 &mdash; Package Model</h2>
+          <p class="section-subtitle">
+            The proposal lists multiple <code>@luma/*</code> packages. The repository publishes one
+            monolithic CSS file. Every proposed package type has a gap.
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Proposed package</th>
+                <th>Current reality</th>
+                <th>Gap severity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="row-critical">
+                <td><code>@luma/tokens</code></td>
+                <td>
+                  Tokens live in <code>src/styles/luma-tokens/</code> (SCSS + CSS custom properties).
+                  Compiled into CSS &mdash; not published separately. No JSON/TS export.
+                </td>
+                <td><span class="badge critical">Critical</span></td>
+              </tr>
+              <tr class="row-critical">
+                <td><code>@luma/icons</code></td>
+                <td>
+                  Uses <code>@tabler/icons</code> and <code>@progress/kendo-font-icons</code> as
+                  dependencies. No Luma-owned or curated icon package.
+                </td>
+                <td><span class="badge high">High</span></td>
+              </tr>
+              <tr class="row-gap">
+                <td><code>@luma/fonts</code> (implied)</td>
+                <td>
+                  Noto Sans embedded via <code>@fontsource/noto-sans</code> in
+                  <code>main.scss</code>. Bundled in CSS, not a standalone package.
+                </td>
+                <td><span class="badge high">High</span></td>
+              </tr>
+              <tr class="row-critical">
+                <td><code>@luma/angular-kendo</code></td>
+                <td>
+                  No Angular package. Getting Started docs show CSS import + Kendo Angular in
+                  consumer apps only.
+                </td>
+                <td><span class="badge critical">Critical</span></td>
+              </tr>
+              <tr class="row-critical">
+                <td><code>@luma/react-material</code></td>
+                <td><strong>Zero</strong> Material UI code, dependencies, or stories in the repo.</td>
+                <td><span class="badge critical">Critical</span></td>
+              </tr>
+              <tr class="row-critical">
+                <td><code>@luma/react-shadcn</code></td>
+                <td><strong>Zero</strong> shadcn/Radix code, dependencies, or stories in the repo.</td>
+                <td><span class="badge critical">Critical</span></td>
+              </tr>
+              <tr class="row-critical">
+                <td><code>@luma/react-kendo</code> <em>(missing from proposal)</em></td>
+                <td>
+                  <strong>This is what the project actually is</strong> &mdash; React + Kendo is the
+                  primary Storybook stack, but the proposal does not list this package.
+                </td>
+                <td><span class="badge critical">Critical</span></td>
+              </tr>
+              <tr class="row-gap">
+                <td>Component packages</td>
+                <td>
+                  No components published. <code>src/index.ts</code> only exports a theme path
+                  string. Consumers import Kendo components directly.
+                </td>
+                <td><span class="badge critical">Critical</span></td>
+              </tr>
+              <tr class="row-gap">
+                <td>Pattern / template packages</td>
+                <td>
+                  Page Shell, Wizard, Top Bar exist as Storybook stories and
+                  <code>template.ts</code> copy-paste strings &mdash; not npm packages.
+                </td>
+                <td><span class="badge high">High</span></td>
+              </tr>
+              <tr class="row-gap">
+                <td>Documentation package</td>
+                <td>
+                  Storybook MDX + <code>build-storybook</code> static output. Not published or
+                  hosted as a versioned product deliverable.
+                </td>
+                <td><span class="badge medium">Medium</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>What actually ships today</h3>
+          <pre><code><span class="c-com">// package.json</span>
+{
+  <span class="c-key">"name"</span>: <span class="c-str">"@arcadis-intelligence/luma-design-system"</span>,
+  <span class="c-key">"version"</span>: <span class="c-str">"1.4.0"</span>,
+  <span class="c-key">"main"</span>: <span class="c-str">"./dist/luma-theme.css"</span>,
+  <span class="c-key">"files"</span>: [<span class="c-str">"dist"</span>]
+}</code></pre>
+
+          <div class="card brand">
+            <div class="card-title">Naming &amp; registry non-sync</div>
+            <ul>
+              <li>Proposal scope: <code>@luma/*</code></li>
+              <li>Actual scope: <code>@arcadis-intelligence/luma-design-system</code></li>
+              <li>Registry: private GitHub Packages only (<code>access: restricted</code>)</li>
+              <li>No monorepo: no <code>packages/</code> folder, no npm workspaces</li>
+            </ul>
+          </div>
+
+          <h3>What &ldquo;component package&rdquo; could mean (undefined in proposal)</h3>
+          <div class="example-grid">
+            <div class="example-step">
+              <div class="num">A</div>
+              <strong>Thin Kendo wrappers</strong><br />
+              e.g. <code>&lt;LumaButton&gt;</code> wrapping <code>@progress/kendo-react-buttons</code>
+            </div>
+            <div class="example-step">
+              <div class="num">B</div>
+              <strong>Theme CSS only</strong><br />
+              Current model &mdash; docs show Kendo usage, no installable components
+            </div>
+            <div class="example-step">
+              <div class="num">C</div>
+              <strong>Full stack libraries</strong><br />
+              Material or shadcn implementations with Luma tokens &mdash; greenfield build
+            </div>
+          </div>
+          <p class="footnote">
+            The codebase only supports <strong>option B</strong> today. The proposal implies A or C
+            without specifying which.
+          </p>
+        </section>
+
+        <!-- ─── Technology Stack ─── -->
+        <section id="sec-stack" class="section">
+          <h2>Stage 1 &mdash; Technology Stack</h2>
+          <p class="section-subtitle">
+            Nearly all investment in the repository is Kendo-specific. The proposal introduces
+            parallel stacks that have no implementation.
+          </p>
+
+          <div class="compare">
+            <div class="col today">
+              <h4>100% of current codebase</h4>
+              <ul>
+                <li><code>@progress/kendo-theme-default</code> via Sass <code>@use ... with</code></li>
+                <li>44 component SCSS files targeting Kendo class names</li>
+                <li>Storybook demos using <code>@progress/kendo-react-*</code> (v11.2)</li>
+                <li>Tabler icons for Storybook examples</li>
+              </ul>
+            </div>
+            <div class="col future">
+              <h4>Listed in proposal, absent from repo</h4>
+              <ul>
+                <li>Material UI (<code>@luma/react-material</code>)</li>
+                <li>shadcn / Radix (<code>@luma/react-shadcn</code>)</li>
+                <li>Any non-Kendo component implementation</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3>Stack inconsistencies within the proposal itself</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Issue</th>
+                <th>Detail</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Angular listed, React-Kendo omitted</strong></td>
+                <td>
+                  Proposal lists <code>@luma/angular-kendo</code> but not
+                  <code>@luma/react-kendo</code>, even though React+Kendo is the dominant Storybook
+                  stack.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Multi-framework without token strategy</strong></td>
+                <td>
+                  Unclear whether tokens stay framework-agnostic (CSS vars) while components are
+                  stack-specific, or whether each stack gets its own token format.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Web components not mentioned</strong></td>
+                <td>
+                  Changelog records &ldquo;Removed Web Components export from build.&rdquo; Draft
+                  <code>arcadis-checklist</code> Lit component still exists in
+                  <code>src/web-components/</code> under &ldquo;Draft Web Components&rdquo; in
+                  Storybook.
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Kendo licensing</strong></td>
+                <td>
+                  Kendo is commercial. Packaging component libraries that bundle or wrap Kendo has
+                  license implications not addressed in the proposal.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="card warning">
+            <div class="card-title">Font policy conflict (internal doc non-sync)</div>
+            <ul>
+              <li>
+                <strong>Getting Started:</strong> Noto Sans is mandatory &mdash; &ldquo;Do not
+                replace or override this font.&rdquo;
+              </li>
+              <li>
+                <strong>README / main.scss:</strong> Products can override via
+                <code>--lm-font-family</code>.
+              </li>
+              <li>
+                <strong>Proposal:</strong> Separate <code>@luma/fonts</code> package &mdash; format
+                and override rules undefined.
+              </li>
+            </ul>
+          </div>
+
+          <div class="card warning">
+            <div class="card-title">Angular icons compatibility gap</div>
+            <p style="margin: 0.4rem 0 0">
+              TablerIcons.mdx documents breaking issues with <code>angular-tabler-icons</code> on
+              Angular 20+. Proposal assumes smooth multi-stack adoption but this is an active
+              consumer pain point today.
+            </p>
+          </div>
+        </section>
+
+        <!-- ─── Adoption Model ─── -->
+        <section id="sec-adoption" class="section">
+          <h2>Stage 1 &mdash; Adoption Model</h2>
+          <p class="section-subtitle">
+            How product teams are expected to adopt Luma today vs. how the proposal describes
+            adoption.
+          </p>
+
+          <h3>Current adoption path (5 steps)</h3>
+          <div class="example-grid">
+            <div class="example-step">
+              <div class="num">1</div>
+              Configure GitHub Packages auth (<code>.npmrc</code> + PAT + SSO)
+            </div>
+            <div class="example-step">
+              <div class="num">2</div>
+              Install <code>@progress/kendo-theme-default</code>
+            </div>
+            <div class="example-step">
+              <div class="num">3</div>
+              Install <code>@arcadis-intelligence/luma-design-system</code>
+            </div>
+            <div class="example-step">
+              <div class="num">4</div>
+              Import <code>dist/luma-theme.css</code> once
+            </div>
+            <div class="example-step">
+              <div class="num">5</div>
+              Use Kendo components directly in app code
+            </div>
+          </div>
+
+          <div class="compare">
+            <div class="col future">
+              <h4>Proposal assumes</h4>
+              <ul>
+                <li>Teams pick packages matching their stack</li>
+                <li>Versioned tokens, icons, fonts installed independently</li>
+                <li>Component and pattern packages reduce manual wiring</li>
+                <li>Incremental adoption across release cadences</li>
+              </ul>
+            </div>
+            <div class="col today">
+              <h4>Reality today</h4>
+              <ul>
+                <li>All-or-nothing CSS import (tokens not separable)</li>
+                <li>No migration path from current package to <code>@luma/*</code></li>
+                <li>Page Shell / Wizard = copy from Storybook, not <code>npm install</code></li>
+                <li>No codemods, no upgrade CLI, no compatibility matrix</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3>Pattern &amp; template deliverable ambiguity</h3>
+          <p>Page Shell implementations (Top Bar, Page Header, Wizard, Collapse Sidebar) exist as:</p>
+          <ul>
+            <li>Storybook stories with live React demos</li>
+            <li><code>template.ts</code> files exporting code strings for copy-paste</li>
+            <li>Co-located SCSS not included in published <code>dist/</code></li>
+          </ul>
+          <p>
+            The proposal says &ldquo;template implementations&rdquo; will be published packages, but
+            does not define format: npm package? CLI scaffold? Storybook-only reference?
+          </p>
+
+          <div class="card brand">
+            <div class="card-title">No defined migration path</div>
+            Existing products using
+            <code>@arcadis-intelligence/luma-design-system</code> have no documented path to
+            <code>@luma/tokens</code> + stack-specific packages. Breaking changes, deprecation
+            timeline, and aliasing strategy are all undefined.
+          </div>
+        </section>
+
+        <!-- ─── AI Stage 2 ─── -->
+        <section id="sec-ai" class="section">
+          <h2>Stage 2 &mdash; AI-Assisted Adoption</h2>
+          <p class="section-subtitle">
+            The proposal describes AI agents that analyze product codebases and generate migrations.
+            What exists today is a Storybook FAQ chatbot with a static knowledge base.
+          </p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Stage 2 capability (proposal)</th>
+                <th><code>LumaAssistant</code> today</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="row-critical">
+                <td>Analyze product repositories</td>
+                <td>No repo access; runs client-side in Storybook only</td>
+                <td><span class="badge critical">Missing</span></td>
+              </tr>
+              <tr class="row-critical">
+                <td>Identify Luma adoption opportunities in real code</td>
+                <td>Keyword-matched FAQ entries (~2,600 lines hardcoded KB)</td>
+                <td><span class="badge critical">Missing</span></td>
+              </tr>
+              <tr class="row-critical">
+                <td>Recommend replacements for custom UI</td>
+                <td>Answers &ldquo;how to use Button&rdquo; style questions from docs</td>
+                <td><span class="badge critical">Missing</span></td>
+              </tr>
+              <tr class="row-gap">
+                <td>Assist with Luma version upgrades</td>
+                <td>No version logic, migration spec, or codemods</td>
+                <td><span class="badge critical">Missing</span></td>
+              </tr>
+              <tr class="row-gap">
+                <td>Generate implementation proposals and PRs</td>
+                <td>No code generation or PR tooling</td>
+                <td><span class="badge critical">Missing</span></td>
+              </tr>
+              <tr class="row-gap">
+                <td>Incremental migration toward Luma standards</td>
+                <td>Not implemented</td>
+                <td><span class="badge critical">Missing</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="compare">
+            <div class="col future">
+              <h4>Proposal framing</h4>
+              <ul>
+                <li>AI as engineering assistant (engineers own decisions)</li>
+                <li>Agents gain awareness of product repositories</li>
+                <li>Generate PRs and migration proposals</li>
+                <li>Accelerate alignment with Luma standards</li>
+              </ul>
+            </div>
+            <div class="col today">
+              <h4>Internal contradiction in proposal</h4>
+              <ul>
+                <li>
+                  Says &ldquo;assistant, not automation&rdquo; but also &ldquo;generating pull
+                  requests&rdquo;
+                </li>
+                <li>No guardrails: repo access, SSO, secrets, compliance</li>
+                <li>No PR review workflow or validation requirements defined</li>
+                <li>No stack detection (Kendo vs Material vs shadcn per product)</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3>Stage 2 depends on Stage 1 (circular dependency)</h3>
+          <p>AI migration only works if agents know:</p>
+          <ul>
+            <li>Stable package names and import paths per stack</li>
+            <li>Component mapping catalog (custom <code>DataTable</code> &rarr; Kendo <code>Grid</code>)</li>
+            <li>Token migration rules between versions</li>
+            <li>Codemods or machine-readable migration guides</li>
+          </ul>
+          <p>
+            <strong>None of these exist.</strong> Today there is one CSS import and no mapping
+            catalog. Stage 2 cannot run meaningfully until Stage 1 defines stable package APIs.
+          </p>
+
+          <div class="card danger">
+            <div class="card-title">&ldquo;Luma equivalents&rdquo; do not exist</div>
+            Luma does not ship component equivalents &mdash; only styled Kendo primitives and layout
+            recipes in Storybook. An AI agent would need a
+            <strong>component mapping catalog</strong> that is not in the repository. Proposal
+            language assumes equivalents exist; the codebase contradicts this.
+          </div>
+
+          <div class="arch-flow">
+            <span class="node warn">Today</span>
+            <span class="arrow">&rarr;</span>
+            <span class="node">User asks in Storybook</span>
+            <span class="arrow">&rarr;</span>
+            <span class="node">Keyword match KB</span>
+            <span class="arrow">&rarr;</span>
+            <span class="node out">Static doc answer</span>
+          </div>
+          <div class="arch-flow">
+            <span class="node llm">Proposed</span>
+            <span class="arrow">&rarr;</span>
+            <span class="node">Agent reads product repo</span>
+            <span class="arrow">&rarr;</span>
+            <span class="node">Maps to @luma/* packages</span>
+            <span class="arrow">&rarr;</span>
+            <span class="node out">PR with migration</span>
+          </div>
+        </section>
+
+        <!-- ─── Full Registry ─── -->
+        <section id="sec-registry" class="section">
+          <h2>Full Non-Sync Registry</h2>
+          <p class="section-subtitle">
+            Complete numbered list of gaps between the upgrade proposal and the
+            <code>luma-design-system</code> repository as of June 2026.
+          </p>
+
+          <h3>Package &amp; distribution</h3>
+          <table>
+            <thead>
+              <tr>
+                <th class="num">ID</th>
+                <th>Non-sync item</th>
+                <th>Proposal says</th>
+                <th>Reality</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="num">1</td>
+                <td>Package scope</td>
+                <td><code>@luma/*</code></td>
+                <td><code>@arcadis-intelligence/luma-design-system</code></td>
+              </tr>
+              <tr>
+                <td class="num">2</td>
+                <td>Package count</td>
+                <td>Many versioned packages</td>
+                <td>1 package, 1 CSS file</td>
+              </tr>
+              <tr>
+                <td class="num">3</td>
+                <td>Tokens</td>
+                <td><code>@luma/tokens</code></td>
+                <td>Embedded in compiled CSS</td>
+              </tr>
+              <tr>
+                <td class="num">4</td>
+                <td>Icons</td>
+                <td><code>@luma/icons</code></td>
+                <td>Direct Tabler + Kendo font-icons deps</td>
+              </tr>
+              <tr>
+                <td class="num">5</td>
+                <td>Fonts</td>
+                <td>Separate font package</td>
+                <td>Bundled via @fontsource in CSS</td>
+              </tr>
+              <tr>
+                <td class="num">6</td>
+                <td>Versioning</td>
+                <td>Versioned ecosystem</td>
+                <td>package.json 1.4.0 vs CHANGELOG 2.7.0</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Technology stack</h3>
+          <table>
+            <thead>
+              <tr>
+                <th class="num">ID</th>
+                <th>Non-sync item</th>
+                <th>Proposal says</th>
+                <th>Reality</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="num">7</td>
+                <td>react-material</td>
+                <td><code>@luma/react-material</code></td>
+                <td>Zero implementation</td>
+              </tr>
+              <tr>
+                <td class="num">8</td>
+                <td>react-shadcn</td>
+                <td><code>@luma/react-shadcn</code></td>
+                <td>Zero implementation</td>
+              </tr>
+              <tr>
+                <td class="num">9</td>
+                <td>angular-kendo</td>
+                <td>Dedicated package</td>
+                <td>CSS import docs only</td>
+              </tr>
+              <tr>
+                <td class="num">10</td>
+                <td>react-kendo</td>
+                <td><em>Not listed</em></td>
+                <td>Primary Storybook stack</td>
+              </tr>
+              <tr>
+                <td class="num">11</td>
+                <td>Multi-framework</td>
+                <td>3+ UI stacks</td>
+                <td>100% Kendo</td>
+              </tr>
+              <tr>
+                <td class="num">12</td>
+                <td>Web components</td>
+                <td>Not mentioned</td>
+                <td>Removed from build; draft code remains</td>
+              </tr>
+              <tr>
+                <td class="num">13</td>
+                <td>Registry</td>
+                <td>Associated registries</td>
+                <td>Private GitHub Packages only</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Adoption model</h3>
+          <table>
+            <thead>
+              <tr>
+                <th class="num">ID</th>
+                <th>Non-sync item</th>
+                <th>Proposal says</th>
+                <th>Reality</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="num">14</td>
+                <td>Component packages</td>
+                <td>Published component libs</td>
+                <td>Theme CSS only; Kendo used directly</td>
+              </tr>
+              <tr>
+                <td class="num">15</td>
+                <td>Pattern packages</td>
+                <td>Installable patterns</td>
+                <td>Storybook copy-paste templates</td>
+              </tr>
+              <tr>
+                <td class="num">16</td>
+                <td>Documentation</td>
+                <td>Published versioned asset</td>
+                <td>Storybook dev/build only</td>
+              </tr>
+              <tr>
+                <td class="num">17</td>
+                <td>Font policy</td>
+                <td>Separate package</td>
+                <td>Getting Started vs README conflict</td>
+              </tr>
+              <tr>
+                <td class="num">18</td>
+                <td>Testing</td>
+                <td>Production-ready packages</td>
+                <td>README cites test; no test script</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Stage 2 / AI</h3>
+          <table>
+            <thead>
+              <tr>
+                <th class="num">ID</th>
+                <th>Non-sync item</th>
+                <th>Proposal says</th>
+                <th>Reality</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="num">19</td>
+                <td>Repo analysis</td>
+                <td>AI reads product codebases</td>
+                <td>LumaAssistant: no repo access</td>
+              </tr>
+              <tr>
+                <td class="num">20</td>
+                <td>Migration detection</td>
+                <td>Identify adoption opportunities</td>
+                <td>Keyword FAQ only</td>
+              </tr>
+              <tr>
+                <td class="num">21</td>
+                <td>PR generation</td>
+                <td>Generate pull requests</td>
+                <td>Not implemented</td>
+              </tr>
+              <tr>
+                <td class="num">22</td>
+                <td>Component mapping</td>
+                <td>Luma equivalents for custom UI</td>
+                <td>No mapping catalog exists</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Structural</h3>
+          <table>
+            <thead>
+              <tr>
+                <th class="num">ID</th>
+                <th>Non-sync item</th>
+                <th>Proposal says</th>
+                <th>Reality</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="num">23</td>
+                <td>Repo structure</td>
+                <td>Multi-package distribution</td>
+                <td>Flat single-package repo</td>
+              </tr>
+              <tr>
+                <td class="num">24</td>
+                <td>Migration path</td>
+                <td>Incremental adoption</td>
+                <td>No path from current &rarr; @luma/*</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p class="footnote">
+            Total: <strong>24 documented non-sync items</strong>, plus internal proposal
+            contradictions (assistant vs automation, Angular-Kendo vs React-Kendo listing).
+          </p>
+        </section>
+
+        <!-- ─── Decision Checklist ─── -->
+        <section id="sec-decisions" class="section">
+          <h2>Decision Checklist</h2>
+          <p class="section-subtitle">
+            Questions that must be answered before Stage 1 or Stage 2 work can align with the
+            repository. Unresolved items will keep the proposal and codebase out of sync.
+          </p>
+
+          <h3>Strategy</h3>
+          <table>
+            <thead>
+              <tr>
+                <th class="num">#</th>
+                <th>Question</th>
+                <th>Why it matters</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="num">1</td>
+                <td>Is Kendo the long-term primary stack?</td>
+                <td>95%+ of current investment is Kendo-specific SCSS</td>
+              </tr>
+              <tr>
+                <td class="num">2</td>
+                <td>Are Material/shadcn new parallel tracks or replacements?</td>
+                <td>Determines whether to build greenfield or deprecate Kendo path</td>
+              </tr>
+              <tr>
+                <td class="num">3</td>
+                <td>What happens to <code>@arcadis-intelligence/luma-design-system</code>?</td>
+                <td>Deprecate, alias, or keep as meta-package?</td>
+              </tr>
+              <tr>
+                <td class="num">4</td>
+                <td>Monorepo or multi-repo for <code>@luma/*</code>?</td>
+                <td>Affects CI, versioning, and release process</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Stage 1 &mdash; Package design</h3>
+          <table>
+            <thead>
+              <tr>
+                <th class="num">#</th>
+                <th>Question</th>
+                <th>Why it matters</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="num">5</td>
+                <td>What is in <code>@luma/tokens</code>?</td>
+                <td>CSS vars only? JSON? SCSS? TS for React?</td>
+              </tr>
+              <tr>
+                <td class="num">6</td>
+                <td>What is <code>@luma/icons</code>?</td>
+                <td>Tabler re-export? Custom set? Per-framework entry points?</td>
+              </tr>
+              <tr>
+                <td class="num">7</td>
+                <td>What is a &ldquo;component package&rdquo;?</td>
+                <td>Wrappers, theme CSS, or full libraries?</td>
+              </tr>
+              <tr>
+                <td class="num">8</td>
+                <td>Why Material/shadcn but not <code>@luma/react-kendo</code>?</td>
+                <td>Proposal omits the stack that actually exists</td>
+              </tr>
+              <tr>
+                <td class="num">9</td>
+                <td>How are patterns/templates published?</td>
+                <td>npm package, CLI, or Storybook-only?</td>
+              </tr>
+              <tr>
+                <td class="num">10</td>
+                <td>Unified or independent semver per package?</td>
+                <td>Breaking token change may affect all stacks</td>
+              </tr>
+              <tr>
+                <td class="num">11</td>
+                <td>Stay on private GitHub Packages or go public npm?</td>
+                <td>Affects adoption friction for product teams</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Stage 1 &mdash; Migration</h3>
+          <table>
+            <thead>
+              <tr>
+                <th class="num">#</th>
+                <th>Question</th>
+                <th>Why it matters</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="num">12</td>
+                <td>Can products keep one CSS import?</td>
+                <td>Backward compatibility vs forced multi-package adoption</td>
+              </tr>
+              <tr>
+                <td class="num">13</td>
+                <td>Codemod from current package to <code>@luma/*</code>?</td>
+                <td>No migration spec exists today</td>
+              </tr>
+              <tr>
+                <td class="num">14</td>
+                <td>Plan for web components?</td>
+                <td>Removed from build but draft code remains</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Stage 2 &mdash; AI scope</h3>
+          <table>
+            <thead>
+              <tr>
+                <th class="num">#</th>
+                <th>Question</th>
+                <th>Why it matters</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="num">15</td>
+                <td>Which tool delivers Stage 2?</td>
+                <td>Cursor agents, MCP server, custom platform, Copilot?</td>
+              </tr>
+              <tr>
+                <td class="num">16</td>
+                <td>Storybook-only or inside product repos?</td>
+                <td>Fundamentally different architecture</td>
+              </tr>
+              <tr>
+                <td class="num">17</td>
+                <td>Authoritative custom UI &rarr; Luma mapping catalog?</td>
+                <td>Required for &ldquo;Luma equivalents&rdquo; language</td>
+              </tr>
+              <tr>
+                <td class="num">18</td>
+                <td>PR/review workflow and repo access security?</td>
+                <td>Proposal says generate PRs but defines no guardrails</td>
+              </tr>
+              <tr>
+                <td class="num">19</td>
+                <td>How does AI handle Kendo license boundaries?</td>
+                <td>Commercial component suggestions need policy</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Documentation &amp; governance</h3>
+          <table>
+            <thead>
+              <tr>
+                <th class="num">#</th>
+                <th>Question</th>
+                <th>Why it matters</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="num">20</td>
+                <td>Who owns cross-stack parity?</td>
+                <td>Same Button on Kendo vs Material vs shadcn</td>
+              </tr>
+              <tr>
+                <td class="num">21</td>
+                <td>Where is hosted documentation for product teams?</td>
+                <td>Not just Storybook in dev</td>
+              </tr>
+              <tr>
+                <td class="num">22</td>
+                <td>Fix package.json vs CHANGELOG version drift?</td>
+                <td>Prerequisite before any multi-package release</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ─── Next Steps ─── -->
+        <section id="sec-next" class="section">
+          <h2>Recommended Next Steps</h2>
+          <p class="section-subtitle">
+            Minimum alignment work before engineering Stage 1 or Stage 2. Without these, the
+            proposal and repository will remain out of sync.
+          </p>
+
+          <div class="example-grid">
+            <div class="example-step">
+              <div class="num">1</div>
+              <strong>Confirm stack strategy</strong><br />
+              Kendo-first vs multi-framework. If Kendo-first, add
+              <code>@luma/react-kendo</code> to proposal and defer Material/shadcn.
+            </div>
+            <div class="example-step">
+              <div class="num">2</div>
+              <strong>Define package list</strong><br />
+              Exact <code>@luma/*</code> names, what each exports, and what stays in a legacy
+              meta-package.
+            </div>
+            <div class="example-step">
+              <div class="num">3</div>
+              <strong>Define &ldquo;component package&rdquo;</strong><br />
+              Document whether teams get wrappers, CSS-only, or full libraries per stack.
+            </div>
+            <div class="example-step">
+              <div class="num">4</div>
+              <strong>Resolve naming</strong><br />
+              <code>@luma</code> vs <code>@arcadis-intelligence</code> and registry strategy.
+            </div>
+            <div class="example-step">
+              <div class="num">5</div>
+              <strong>Fix versioning</strong><br />
+              Align <code>package.json</code>, CHANGELOG, and release process before splitting packages.
+            </div>
+            <div class="example-step">
+              <div class="num">6</div>
+              <strong>Publish migration path</strong><br />
+              How existing CSS consumers move to <code>@luma/*</code> without breaking apps.
+            </div>
+            <div class="example-step">
+              <div class="num">7</div>
+              <strong>Scope Stage 2 separately</strong><br />
+              Treat as new platform (repo-aware agent + mapping catalog), not LumaAssistant v2.
+            </div>
+            <div class="example-step">
+              <div class="num">8</div>
+              <strong>Build component mapping catalog</strong><br />
+              Prerequisite for AI migration: custom patterns &rarr; Luma/Kendo equivalents.
+            </div>
+          </div>
+
+          <div class="card success">
+            <div class="card-title">Suggested phasing</div>
+            <p style="margin-bottom: 0.5rem"><strong>Phase 0 (alignment):</strong> Answer decision checklist; fix version drift; update proposal to match Kendo reality.</p>
+            <p style="margin-bottom: 0.5rem"><strong>Phase 1a (low risk):</strong> Extract <code>@luma/tokens</code> and <code>@luma/icons</code> from existing SCSS without breaking monolithic CSS.</p>
+            <p style="margin-bottom: 0.5rem"><strong>Phase 1b:</strong> Monorepo + <code>@luma/react-kendo</code> / <code>@luma/angular-kendo</code> as documented adoption packages (theme + setup, not necessarily wrappers).</p>
+            <p style="margin-bottom: 0.5rem"><strong>Phase 1c:</strong> Pattern packages or CLI for Page Shell templates.</p>
+            <p style="margin: 0"><strong>Phase 2:</strong> Repo-aware AI with mapping catalog &mdash; only after package APIs are stable.</p>
+          </div>
+
+          <footer class="doc-footer">
+            Luma Design System &middot; Upgrade Gap Analysis &middot; Generated June 2026<br />
+            Repository: <code>luma-design-system</code> &middot; Compared against Stage 1 &amp; Stage 2 adoption proposal
+          </footer>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      function showSection(ev, sectionId) {
+        if (ev && ev.preventDefault) ev.preventDefault();
+
+        document.querySelectorAll(".section").forEach(function (section) {
+          section.classList.remove("active");
+        });
+        var target = document.getElementById(sectionId);
+        if (target) target.classList.add("active");
+
+        document.querySelectorAll(".nav-link").forEach(function (link) {
+          link.classList.remove("active");
+        });
+        var activeLink = document.querySelector('.nav-link[href="#' + sectionId + '"]');
+        if (activeLink) activeLink.classList.add("active");
+
+        if (history.replaceState) {
+          history.replaceState(null, "", "#" + sectionId);
+        } else {
+          window.location.hash = sectionId;
+        }
+
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }
+
+      window.addEventListener("DOMContentLoaded", function () {
+        var hash = (window.location.hash || "").slice(1);
+        if (hash && document.getElementById(hash)) {
+          showSection(null, hash);
+        }
+      });
+    </script>
+  </body>
+</html>
