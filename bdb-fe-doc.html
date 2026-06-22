@@ -1,0 +1,3019 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BDB UI External &mdash; Developer Onboarding Guide</title>
+    <meta
+      name="description"
+      content="Comprehensive onboarding documentation for the BDB UI External application including architecture, features, setup instructions, and development guidelines."
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="BDB UI External — Developer Onboarding Guide" />
+    <meta
+      property="og:description"
+      content="Complete technical documentation and knowledge transfer guide for BDB UI External React application."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --color-brand: #d85614;
+        --color-brand-soft: rgba(216, 86, 20, 0.06);
+        --color-brand-line: rgba(216, 86, 20, 0.12);
+        --color-brand-tint: rgba(216, 86, 20, 0.15);
+        --bg-canvas: #ffffff;
+        --bg-surface: #f9fafb;
+        --bg-elevated: #f3f4f6;
+        --border-default: #e5e7eb;
+        --text-primary: #111827;
+        --text-secondary: #1f2937;
+        --text-tertiary: #374151;
+        --text-muted: #6b7280;
+        --sidebar-width: 300px;
+        --spacing-6: 24px;
+        --spacing-3: 12px;
+      }
+
+      html,
+      body {
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      body {
+        font-family:
+          "Noto Sans",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        background-color: var(--bg-canvas);
+        color: var(--text-primary);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .layout {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: var(--sidebar-width);
+        background-color: var(--bg-surface);
+        border-right: 1px solid var(--border-default);
+        position: fixed;
+        height: 100vh;
+        overflow-y: auto;
+        padding: var(--spacing-6) var(--spacing-3);
+      }
+
+      .sidebar-header {
+        padding: 0 1rem 0.85rem;
+        border-bottom: 1px solid var(--border-default);
+        margin-bottom: 0.5rem;
+      }
+
+      .sidebar-header h1 {
+        font-size: 1rem;
+        font-weight: 800;
+        color: var(--color-brand);
+        margin-bottom: 0.15rem;
+        line-height: 1.3;
+      }
+
+      .sidebar-header p {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+      }
+
+      .nav-section {
+        padding: 0.25rem 0.75rem;
+      }
+
+      .nav-section-title {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--color-brand);
+        text-transform: uppercase;
+        padding: 0.85rem 0.5rem 0.35rem;
+        margin-bottom: 0.15rem;
+        border-top: 1px solid var(--border-default);
+        margin-top: 0.25rem;
+      }
+
+      .nav-section:first-of-type .nav-section-title {
+        border-top: none;
+        margin-top: 0;
+        padding-top: 0.25rem;
+      }
+
+      .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        position: relative;
+        padding: 0.6rem 0.75rem;
+        color: var(--text-tertiary);
+        text-decoration: none;
+        font-size: 0.95rem;
+        border-radius: 8px;
+        transition: all 0.15s ease;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      .nav-link:hover {
+        background-color: var(--bg-elevated);
+        color: var(--color-brand);
+      }
+
+      .nav-link.active {
+        background-color: var(--color-brand-soft);
+        color: var(--color-brand);
+        font-weight: 600;
+        border: 1px solid var(--color-brand-line);
+        border-radius: 12px;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02) inset;
+        padding-left: calc(0.6rem + 10px);
+      }
+
+      .nav-link.active::before {
+        content: "";
+        position: absolute;
+        left: -1px;
+        top: 8px;
+        bottom: 8px;
+        width: 3px;
+        background: var(--color-brand);
+        border-radius: 6px;
+      }
+
+      .main {
+        flex: 1;
+        min-width: 0;
+        margin-left: var(--sidebar-width);
+        padding: 2rem 3rem;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      .section {
+        display: none;
+        animation: fadeIn 0.3s ease;
+      }
+
+      .section.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      h2 {
+        font-size: 1.75rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        color: var(--color-brand);
+        line-height: 1.25;
+      }
+
+      h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin: 2rem 0 0.85rem;
+        color: var(--color-brand);
+      }
+
+      h4 {
+        font-size: 1rem;
+        font-weight: 700;
+        margin: 1.4rem 0 0.6rem;
+        color: var(--text-primary);
+      }
+
+      .section-subtitle {
+        color: var(--text-muted);
+        font-size: 1rem;
+        margin-bottom: 1.75rem;
+        max-width: 75ch;
+      }
+
+      p {
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+        font-weight: 400;
+      }
+
+      ul,
+      ol {
+        color: var(--text-secondary);
+        padding-left: 1.4rem;
+        margin-bottom: 1rem;
+      }
+
+      li {
+        margin-bottom: 0.45rem;
+      }
+
+      strong {
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+
+      em {
+        color: var(--text-tertiary);
+        font-style: italic;
+      }
+
+      code {
+        background-color: var(--bg-elevated);
+        padding: 0.18rem 0.4rem;
+        border-radius: 4px;
+        font-family: "JetBrains Mono", "Fira Code", monospace;
+        font-size: 0.85em;
+        color: var(--color-brand);
+      }
+
+      pre {
+        background-color: #0f172a;
+        color: #e2e8f0;
+        border: 1px solid #1e293b;
+        border-radius: 10px;
+        padding: 1rem 1.1rem;
+        max-width: 100%;
+        overflow-x: auto;
+        margin: 0.6rem 0 1rem;
+        font-family: "JetBrains Mono", "Fira Code", monospace;
+        font-size: 0.82rem;
+        line-height: 1.6;
+        white-space: pre;
+      }
+
+      pre code {
+        background: none;
+        padding: 0;
+        border-radius: 0;
+        color: inherit;
+        font-size: inherit;
+      }
+
+      pre .c-key {
+        color: #7dd3fc;
+      }
+
+      pre .c-str {
+        color: #86efac;
+      }
+
+      pre .c-com {
+        color: #94a3b8;
+        font-style: italic;
+      }
+
+      .arch-flow {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px;
+        margin: 0.75rem 0 1rem;
+      }
+
+      .arch-flow .node {
+        display: inline-block;
+        background: var(--bg-canvas);
+        border: 1px solid var(--border-default);
+        border-radius: 6px;
+        padding: 2px 7px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--text-tertiary);
+        white-space: nowrap;
+      }
+
+      .arch-flow .node.llm {
+        background: var(--color-brand-soft);
+        border-color: var(--color-brand-line);
+        color: var(--color-brand);
+      }
+
+      .arch-flow .node.out {
+        background: #ecfdf5;
+        border-color: #a7f3d0;
+        color: #047857;
+      }
+
+      .arch-flow .node.warn {
+        background: #fef2f2;
+        border-color: #fecaca;
+        color: #991b1b;
+      }
+
+      .arch-flow .arrow {
+        color: var(--text-muted);
+        font-size: 0.72rem;
+        font-weight: 700;
+      }
+
+      .footnote {
+        color: var(--text-muted);
+        font-size: 0.82rem;
+        margin: 0.5rem 0 1rem;
+      }
+
+      .card {
+        background-color: var(--bg-elevated);
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+        padding: 1.1rem 1.25rem;
+        margin: 1rem 0;
+      }
+
+      .card-title {
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.45rem;
+        font-size: 0.95rem;
+      }
+
+      .card.brand {
+        background: var(--color-brand-soft);
+        border-color: var(--color-brand-line);
+      }
+
+      .card.brand .card-title {
+        color: var(--color-brand);
+      }
+
+      .card.success {
+        background: #ecfdf5;
+        border-color: #a7f3d0;
+      }
+
+      .card.success .card-title {
+        color: #047857;
+      }
+
+      .card.warning {
+        background: #fffbeb;
+        border-color: #fde68a;
+      }
+
+      .card.warning .card-title {
+        color: #92400e;
+      }
+
+      .card.danger {
+        background: #fef2f2;
+        border-color: #fecaca;
+      }
+
+      .card.danger .card-title {
+        color: #991b1b;
+      }
+
+      .card ul {
+        margin: 0.4rem 0 0;
+        padding-left: 1.2rem;
+      }
+
+      .card ul li {
+        margin-bottom: 0.3rem;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 0.85rem;
+        margin: 1rem 0 0.5rem;
+      }
+
+      .stat {
+        background-color: var(--bg-elevated);
+        border: 1px solid var(--border-default);
+        border-radius: 8px;
+        padding: 0.95rem 1rem;
+      }
+
+      .stat .label {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+      }
+
+      .stat .value {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+
+      .stat.accent {
+        background: var(--color-brand-soft);
+        border-color: var(--color-brand-line);
+      }
+
+      .stat.accent .label,
+      .stat.accent .value {
+        color: var(--color-brand);
+      }
+
+      .stat.danger {
+        background: #fef2f2;
+        border-color: #fecaca;
+      }
+
+      .stat.danger .label,
+      .stat.danger .value {
+        color: #991b1b;
+      }
+
+      .compare {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+
+      .compare .col {
+        min-width: 0;
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+        padding: 1rem 1.15rem;
+        background: var(--bg-elevated);
+      }
+
+      .compare .col.today {
+        background: #fef2f2;
+        border-color: #fecaca;
+      }
+
+      .compare .col.future {
+        background: #ecfdf5;
+        border-color: #a7f3d0;
+      }
+
+      .compare h4 {
+        margin: 0 0 0.5rem;
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--text-tertiary);
+      }
+
+      .compare .col.today h4 {
+        color: #991b1b;
+      }
+
+      .compare .col.future h4 {
+        color: #065f46;
+      }
+
+      .compare ul {
+        margin: 0;
+        padding-left: 1.1rem;
+        font-size: 0.9rem;
+      }
+
+      .compare ul li {
+        margin-bottom: 0.3rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+        font-size: 0.88rem;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 0.7rem 0.85rem;
+        border-bottom: 1px solid var(--border-default);
+        vertical-align: top;
+      }
+
+      th {
+        background-color: var(--bg-elevated);
+        color: var(--text-muted);
+        font-weight: 700;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+      }
+
+      td {
+        color: var(--text-secondary);
+        font-weight: 400;
+      }
+
+      td.num,
+      th.num {
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        width: 3rem;
+      }
+
+      tr.row-sync td {
+        background: #f9fafb;
+      }
+
+      tr.row-gap td:first-child {
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      tr.row-critical td {
+        background: #fef2f2;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 0.12rem 0.5rem;
+        border-radius: 999px;
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+      }
+
+      .badge.critical {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .badge.high {
+        background: #ffedd5;
+        color: #9a3412;
+      }
+
+      .badge.medium {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      .badge.low {
+        background: #ecfdf5;
+        color: #065f46;
+      }
+
+      .example-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 0.85rem;
+        margin: 1rem 0;
+      }
+
+      .example-step {
+        min-width: 0;
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+        padding: 0.9rem 1rem;
+        background: var(--bg-elevated);
+      }
+
+      .example-step .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--color-brand);
+        color: #fff;
+        font-size: 0.72rem;
+        font-weight: 700;
+        margin-bottom: 0.4rem;
+      }
+
+      footer.doc-footer {
+        margin-top: 3rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border-default);
+        text-align: center;
+        font-size: 0.82rem;
+        color: var(--text-muted);
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+          border-right: none;
+          border-bottom: 1px solid var(--border-default);
+        }
+        .main {
+          margin-left: 0;
+          padding: 1.5rem;
+        }
+        .layout {
+          flex-direction: column;
+        }
+        .compare {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media print {
+        .sidebar {
+          display: none;
+        }
+        .main {
+          margin-left: 0;
+          padding: 0;
+        }
+        body {
+          background: #fff;
+        }
+        .section {
+          display: block !important;
+          page-break-before: always;
+        }
+        .section:first-of-type {
+          page-break-before: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <nav class="sidebar" aria-label="Documentation navigation">
+        <div class="sidebar-header">
+          <h1>BDB UI External</h1>
+          <p>Developer Onboarding Guide &middot; v1.0</p>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Getting Started</div>
+          <a href="#sec-overview" class="nav-link active" onclick="showSection(event, 'sec-overview')"
+            >Project Overview</a
+          >
+          <a href="#sec-setup" class="nav-link" onclick="showSection(event, 'sec-setup')"
+            >Setup & Installation</a
+          >
+          <a href="#sec-architecture" class="nav-link" onclick="showSection(event, 'sec-architecture')"
+            >Architecture</a
+          >
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Core Features</div>
+          <a href="#sec-auth" class="nav-link" onclick="showSection(event, 'sec-auth')"
+            >Authentication (Azure B2C)</a
+          >
+          <a href="#sec-routing" class="nav-link" onclick="showSection(event, 'sec-routing')"
+            >Routing & Navigation</a
+          >
+          <a href="#sec-pages" class="nav-link" onclick="showSection(event, 'sec-pages')"
+            >Pages & Features</a
+          >
+          <a href="#sec-components" class="nav-link" onclick="showSection(event, 'sec-components')"
+            >Components</a
+          >
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Development</div>
+          <a href="#sec-services" class="nav-link" onclick="showSection(event, 'sec-services')"
+            >Services & API Integration</a
+          >
+          <a href="#sec-state" class="nav-link" onclick="showSection(event, 'sec-state')"
+            >State Management</a
+          >
+          <a href="#sec-i18n" class="nav-link" onclick="showSection(event, 'sec-i18n')"
+            >Internationalization</a
+          >
+          <a href="#sec-testing" class="nav-link" onclick="showSection(event, 'sec-testing')"
+            >Testing Strategy</a
+          >
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Reference</div>
+          <a href="#sec-env" class="nav-link" onclick="showSection(event, 'sec-env')"
+            >Environment Configuration</a
+          >
+          <a href="#sec-build" class="nav-link" onclick="showSection(event, 'sec-build')"
+            >Build & Deployment</a
+          >
+          <a href="#sec-conventions" class="nav-link" onclick="showSection(event, 'sec-conventions')"
+            >Coding Conventions</a
+          >
+          <a href="#sec-troubleshooting" class="nav-link" onclick="showSection(event, 'sec-troubleshooting')"
+            >Troubleshooting</a
+          >
+        </div>
+      </nav>
+
+      <main class="main">
+        <!-- ─── Project Overview ─── -->
+        <section id="sec-overview" class="section active">
+          <h2>Project Overview</h2>
+          <p class="section-subtitle">
+            <strong>BDB UI External</strong> is a React-based web application that provides external users 
+            with access to construction industry data, market indicators, and project management tools. 
+            Built with modern technologies and designed for scalability and maintainability.
+          </p>
+
+          <div class="stats">
+            <div class="stat accent">
+              <div class="label">Tech Stack</div>
+              <div class="value">React 18 + TypeScript</div>
+            </div>
+            <div class="stat">
+              <div class="label">Build Tool</div>
+              <div class="value">Vite 6</div>
+            </div>
+            <div class="stat">
+              <div class="label">UI Framework</div>
+              <div class="value">Material-UI v7</div>
+            </div>
+            <div class="stat">
+              <div class="label">Testing</div>
+              <div class="value">Vitest + RTL</div>
+            </div>
+          </div>
+
+          <h3>What is BDB?</h3>
+          <p>
+            BDB (likely "Bouw Database" - Construction Database) is a platform providing:
+          </p>
+          <ul>
+            <li><strong>Market Indicators:</strong> Real-time construction industry trends and analytics</li>
+            <li><strong>Monthly Figures:</strong> Historical and forecast construction cost indices</li>
+            <li><strong>Aspect Ratios:</strong> Detailed cost breakdowns by construction categories</li>
+            <li><strong>Parametric Elements:</strong> Construction element cost analysis</li>
+            <li><strong>Reference Projects:</strong> Project-based budget and cost tracking</li>
+            <li><strong>Flexible Indices:</strong> Customizable index calculations</li>
+          </ul>
+
+          <div class="card brand">
+            <div class="card-title">Key Application Features</div>
+            <ul>
+              <li>Multi-tenant architecture with company-based access control</li>
+              <li>Role-based permissions (Admin, Standard User)</li>
+              <li>Subscription-based feature access</li>
+              <li>Comprehensive data export capabilities (Excel, PDF)</li>
+              <li>Internationalized interface (Dutch/English support)</li>
+              <li>Customizable dashboard with drag-and-drop tiles</li>
+              <li>Session timeout management and security controls</li>
+            </ul>
+          </div>
+
+          <h3>Repository Information</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Repository Name</strong></td>
+                <td>bdb-ui-external</td>
+              </tr>
+              <tr>
+                <td><strong>Owner</strong></td>
+                <td>Arcadis</td>
+              </tr>
+              <tr>
+                <td><strong>Current Branch</strong></td>
+                <td>develop</td>
+              </tr>
+              <tr>
+                <td><strong>Package Manager</strong></td>
+                <td>npm</td>
+              </tr>
+              <tr>
+                <td><strong>Node Version</strong></td>
+                <td>>= 16.0.0</td>
+              </tr>
+              <tr>
+                <td><strong>License</strong></td>
+                <td>Private (Arcadis Internal)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Technology Stack</h3>
+          <div class="compare">
+            <div class="col future">
+              <h4>Frontend Core</h4>
+              <ul>
+                <li><strong>React 18.3.1:</strong> UI library with hooks and modern patterns</li>
+                <li><strong>TypeScript 5.6.2:</strong> Type-safe development</li>
+                <li><strong>Vite 6.0.3:</strong> Lightning-fast build tool and dev server</li>
+                <li><strong>React Router 7.0.2:</strong> Client-side routing</li>
+              </ul>
+            </div>
+            <div class="col today">
+              <h4>UI & Styling</h4>
+              <ul>
+                <li><strong>Material-UI 7.3.6:</strong> Comprehensive component library</li>
+                <li><strong>Emotion:</strong> CSS-in-JS styling solution</li>
+                <li><strong>AG Grid 33.1.1:</strong> Advanced data grid (Enterprise)</li>
+                <li><strong>Recharts 2.15.3:</strong> Charting library</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="compare">
+            <div class="col future">
+              <h4>Authentication & State</h4>
+              <ul>
+                <li><strong>@azure/msal-react 2.2.0:</strong> Azure B2C authentication</li>
+                <li><strong>Redux Toolkit 2.8.2:</strong> State management</li>
+                <li><strong>React Redux 9.2.0:</strong> React bindings for Redux</li>
+                <li><strong>Axios 1.7.9:</strong> HTTP client with interceptors</li>
+              </ul>
+            </div>
+            <div class="col today">
+              <h4>Utilities & Tools</h4>
+              <ul>
+                <li><strong>i18next:</strong> Internationalization framework</li>
+                <li><strong>date-fns & dayjs:</strong> Date manipulation</li>
+                <li><strong>@dnd-kit:</strong> Drag and drop functionality</li>
+                <li><strong>chart.js:</strong> Additional charting support</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3>Development Tools</h3>
+          <ul>
+            <li><strong>Vitest 3.2.4:</strong> Unit testing framework with coverage support</li>
+            <li><strong>@testing-library/react:</strong> React component testing utilities</li>
+            <li><strong>ESLint 9.15.0:</strong> Code quality and style enforcement</li>
+            <li><strong>TypeScript ESLint:</strong> TypeScript-specific linting rules</li>
+            <li><strong>jsdom:</strong> DOM simulation for testing</li>
+          </ul>
+        </section>
+
+        <!-- ─── Setup & Installation ─── -->
+        <section id="sec-setup" class="section">
+          <h2>Setup & Installation</h2>
+          <p class="section-subtitle">
+            Step-by-step guide to get the application running on your local machine.
+          </p>
+
+          <h3>Prerequisites</h3>
+          <div class="card warning">
+            <div class="card-title">Required Software</div>
+            <ul>
+              <li><strong>Node.js:</strong> Version 16.0.0 or higher</li>
+              <li><strong>npm:</strong> Version 8.0.0 or higher (comes with Node.js)</li>
+              <li><strong>Git:</strong> For cloning the repository</li>
+              <li><strong>Code Editor:</strong> VS Code recommended</li>
+            </ul>
+          </div>
+
+          <p>Check your installed versions:</p>
+          <pre><code>node -v
+npm -v
+git --version</code></pre>
+
+          <h3>Installation Steps</h3>
+          <div class="example-grid">
+            <div class="example-step">
+              <div class="num">1</div>
+              <strong>Clone the Repository</strong><br />
+              Clone from the Arcadis GitHub organization
+            </div>
+            <div class="example-step">
+              <div class="num">2</div>
+              <strong>Install Dependencies</strong><br />
+              Run <code>npm install</code> in the project root
+            </div>
+            <div class="example-step">
+              <div class="num">3</div>
+              <strong>Configure Environment</strong><br />
+              Set up .env files for your target environment
+            </div>
+            <div class="example-step">
+              <div class="num">4</div>
+              <strong>Start Development Server</strong><br />
+              Run <code>npm run dev</code> to start Vite
+            </div>
+          </div>
+
+          <h3>Detailed Instructions</h3>
+          <h4>1. Clone the Repository</h4>
+          <pre><code><span class="c-com"># Clone the repository</span>
+git clone https://github.com/Arcadis/bdb-ui-external.git
+
+<span class="c-com"># Navigate to project directory</span>
+cd bdb-ui-external
+
+<span class="c-com"># Checkout develop branch (if not already)</span>
+git checkout develop</code></pre>
+
+          <h4>2. Install Dependencies</h4>
+          <pre><code><span class="c-com"># Install all npm packages</span>
+npm install
+
+<span class="c-com"># This will install:</span>
+<span class="c-com"># - Production dependencies (React, MUI, etc.)</span>
+<span class="c-com"># - Development dependencies (Vite, ESLint, Vitest, etc.)</span></code></pre>
+
+          <h4>3. Environment Configuration</h4>
+          <p>The project uses different environment files for each deployment target:</p>
+          <table>
+            <thead>
+              <tr>
+                <th>File</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>.env.development</code></td>
+                <td>Local development environment</td>
+              </tr>
+              <tr>
+                <td><code>.env.uat</code></td>
+                <td>UAT (User Acceptance Testing) environment</td>
+              </tr>
+              <tr>
+                <td><code>.env.production</code></td>
+                <td>Production environment</td>
+              </tr>
+              <tr>
+                <td><code>.env</code></td>
+                <td>Fallback/default configuration</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="card brand">
+            <div class="card-title">Environment Variables</div>
+            <p style="margin-bottom: 0.5rem">Key variables you need to know about:</p>
+            <ul>
+              <li><code>VITE_REACT_APP_API_URL</code> - Backend API endpoint</li>
+              <li><code>VITE_REACT_APP_TENANT_NAME</code> - Azure B2C tenant</li>
+              <li><code>VITE_REACT_APP_CLIENT_ID_LANDING</code> - Azure B2C client ID</li>
+              <li><code>VITE_REACT_APP_OAUTH_SCOPES</code> - Required OAuth scopes</li>
+              <li><code>VITE_REACT_APP_REDIRECT_URL</code> - Post-auth redirect URL</li>
+            </ul>
+          </div>
+
+          <h4>4. Start Development Server</h4>
+          <pre><code><span class="c-com"># Start Vite dev server on port 3000</span>
+npm run dev
+
+<span class="c-com"># Access the application at:</span>
+<span class="c-com"># http://localhost:3000</span></code></pre>
+
+          <h3>Available Scripts</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>npm run dev</code></td>
+                <td>Start development server with hot reload</td>
+              </tr>
+              <tr>
+                <td><code>npm run build</code></td>
+                <td>Build for production (uses base .env)</td>
+              </tr>
+              <tr>
+                <td><code>npm run build:dev</code></td>
+                <td>Build with development environment variables</td>
+              </tr>
+              <tr>
+                <td><code>npm run build:uat</code></td>
+                <td>Build with UAT environment variables</td>
+              </tr>
+              <tr>
+                <td><code>npm run build:prd</code></td>
+                <td>Build with production environment variables</td>
+              </tr>
+              <tr>
+                <td><code>npm run lint</code></td>
+                <td>Run ESLint to check code quality</td>
+              </tr>
+              <tr>
+                <td><code>npm run preview</code></td>
+                <td>Preview production build locally</td>
+              </tr>
+              <tr>
+                <td><code>npm run test</code></td>
+                <td>Run unit tests with Vitest</td>
+              </tr>
+              <tr>
+                <td><code>npm run test:coverage</code></td>
+                <td>Run tests with coverage report</td>
+              </tr>
+              <tr>
+                <td><code>npm run test:ui</code></td>
+                <td>Run tests with interactive UI</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="card success">
+            <div class="card-title">First Run Checklist</div>
+            <ul>
+              <li>✓ Node.js and npm versions meet requirements</li>
+              <li>✓ All dependencies installed without errors</li>
+              <li>✓ Environment variables configured for development</li>
+              <li>✓ Dev server starts on <code>http://localhost:3000</code></li>
+              <li>✓ No console errors in browser developer tools</li>
+              <li>✓ Can navigate to welcome/login page</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ─── Architecture ─── -->
+        <section id="sec-architecture" class="section">
+          <h2>Architecture</h2>
+          <p class="section-subtitle">
+            Understanding the application's structure, patterns, and design decisions.
+          </p>
+
+          <h3>High-Level Architecture</h3>
+          <div class="arch-flow">
+            <span class="node">User Browser</span>
+            <span class="arrow">→</span>
+            <span class="node llm">React App (Vite)</span>
+            <span class="arrow">→</span>
+            <span class="node">Azure B2C Auth</span>
+          </div>
+          <div class="arch-flow">
+            <span class="node llm">React App</span>
+            <span class="arrow">→</span>
+            <span class="node">Axios HTTP Client</span>
+            <span class="arrow">→</span>
+            <span class="node out">BDB API Backend</span>
+          </div>
+          <div class="arch-flow">
+            <span class="node">i18next</span>
+            <span class="arrow">→</span>
+            <span class="node">Arcadis i18n API</span>
+            <span class="arrow">→</span>
+            <span class="node out">Translation Resources</span>
+          </div>
+
+          <h3>Folder Structure</h3>
+          <pre><code>bdb-ui-external/
+├── public/                  <span class="c-com"># Static assets served as-is</span>
+├── src/
+│   ├── assets/             <span class="c-com"># Images, SVGs, JSON data files</span>
+│   ├── auth/               <span class="c-com"># Authentication operations</span>
+│   ├── components/         <span class="c-com"># Reusable React components</span>
+│   │   ├── Header/
+│   │   ├── SideBar/
+│   │   ├── Footer/
+│   │   ├── PrivateRoute/   <span class="c-com"># Route guards</span>
+│   │   └── ...             <span class="c-com"># 40+ components</span>
+│   ├── context/            <span class="c-com"># React Context providers</span>
+│   │   └── appState.context.tsx
+│   ├── hooks/              <span class="c-com"># Custom React hooks</span>
+│   │   ├── auth.hook.ts
+│   │   ├── subscription.hook.ts
+│   │   └── ...
+│   ├── interfaces/         <span class="c-com"># TypeScript interfaces</span>
+│   ├── layout/             <span class="c-com"># Page layout components</span>
+│   │   ├── index.tsx       <span class="c-com"># BaseLayout</span>
+│   │   └── AccountSettings/
+│   ├── models/             <span class="c-com"># Data models & TypeScript types</span>
+│   │   ├── IMonthlyFigures.ts
+│   │   ├── IMarketIndicator.ts
+│   │   └── ...             <span class="c-com"># 20+ model files</span>
+│   ├── pages/              <span class="c-com"># Page-level components (routes)</span>
+│   │   ├── Dashboard/
+│   │   ├── MonthlyFigures/
+│   │   ├── MarketIndicator/
+│   │   └── ...             <span class="c-com"># 20+ pages</span>
+│   ├── services/           <span class="c-com"># API service layer</span>
+│   │   ├── common/
+│   │   │   └── HttpCommon.ts  <span class="c-com"># Axios instance</span>
+│   │   ├── MonthlyFiguresService.ts
+│   │   ├── ProfileService.ts
+│   │   └── ...             <span class="c-com"># 25+ services</span>
+│   ├── tests/              <span class="c-com"># Global test utilities</span>
+│   │   └── setupTests.ts
+│   ├── themes/             <span class="c-com"># MUI theme configuration</span>
+│   │   ├── BaseTheme.ts
+│   │   ├── LightTheme.ts
+│   │   ├── DarkTheme.ts
+│   │   ├── AgGridTheme.ts
+│   │   └── ThemeProvider.tsx
+│   ├── types/              <span class="c-com"># Global TypeScript types</span>
+│   ├── utils/              <span class="c-com"># Utility functions</span>
+│   │   ├── app-storage.ts
+│   │   ├── constants.ts
+│   │   └── ...
+│   ├── App.tsx             <span class="c-com"># Root application component</span>
+│   ├── main.tsx            <span class="c-com"># Application entry point</span>
+│   ├── router.tsx          <span class="c-com"># Route definitions</span>
+│   ├── auth-config.ts      <span class="c-com"># MSAL/Azure B2C config</span>
+│   └── i18n.ts             <span class="c-com"># Internationalization setup</span>
+├── .env.*                  <span class="c-com"># Environment configuration files</span>
+├── vite.config.ts          <span class="c-com"># Vite build configuration</span>
+├── vitest.config.ts        <span class="c-com"># Vitest test configuration</span>
+├── tsconfig.json           <span class="c-com"># TypeScript configuration</span>
+├── eslint.config.js        <span class="c-com"># ESLint rules</span>
+└── package.json            <span class="c-com"># Dependencies and scripts</span></code></pre>
+
+          <h3>Application Flow</h3>
+          <div class="example-grid">
+            <div class="example-step">
+              <div class="num">1</div>
+              <strong>Entry Point</strong><br />
+              <code>main.tsx</code> mounts React app to DOM
+            </div>
+            <div class="example-step">
+              <div class="num">2</div>
+              <strong>App Component</strong><br />
+              <code>App.tsx</code> handles auth and provides context
+            </div>
+            <div class="example-step">
+              <div class="num">3</div>
+              <strong>Router</strong><br />
+              <code>RouterProvider</code> manages navigation
+            </div>
+            <div class="example-step">
+              <div class="num">4</div>
+              <strong>Layout</strong><br />
+              <code>BaseLayout</code> wraps all pages
+            </div>
+            <div class="example-step">
+              <div class="num">5</div>
+              <strong>Route Guards</strong><br />
+              <code>PrivateRoute</code> checks authentication
+            </div>
+            <div class="example-step">
+              <div class="num">6</div>
+              <strong>Pages</strong><br />
+              Page components render based on route
+            </div>
+          </div>
+
+          <h3>Key Architectural Patterns</h3>
+
+          <h4>1. Component-Based Architecture</h4>
+          <p>
+            The application follows React best practices with functional components and hooks.
+            Components are organized by feature and reusability.
+          </p>
+          <ul>
+            <li><strong>Pages:</strong> Top-level route components in <code>src/pages/</code></li>
+            <li><strong>Components:</strong> Reusable UI components in <code>src/components/</code></li>
+            <li><strong>Layouts:</strong> Structural wrappers in <code>src/layout/</code></li>
+          </ul>
+
+          <h4>2. Service Layer Pattern</h4>
+          <p>
+            All API calls are abstracted into service modules. Each service corresponds to a backend resource or feature area.
+          </p>
+          <pre><code><span class="c-com">// Example: MonthlyFiguresService.ts</span>
+<span class="c-key">import</span> http <span class="c-key">from</span> <span class="c-str">"./common/HttpCommon.ts"</span>;
+
+<span class="c-key">const</span> getMonthlyFigures = <span class="c-key">async</span> (id, isForecastIncluded, referenceDates) => {
+  <span class="c-key">const</span> response = <span class="c-key">await</span> http.post(`ReportForecastFigures/${id}`, referenceDates);
+  <span class="c-key">return</span> response.data;
+};
+
+<span class="c-key">export default</span> { getMonthlyFigures };</code></pre>
+
+          <h4>3. Authentication & Authorization</h4>
+          <p>
+            Uses Microsoft Authentication Library (MSAL) for Azure B2C integration:
+          </p>
+          <ul>
+            <li>Token-based authentication with automatic refresh</li>
+            <li>Session storage for tokens and user data</li>
+            <li>HTTP interceptors add Bearer tokens to requests</li>
+            <li>Role-based route protection via <code>PrivateRoute</code></li>
+          </ul>
+
+          <h4>4. State Management</h4>
+          <div class="compare">
+            <div class="col future">
+              <h4>Global State (Redux)</h4>
+              <ul>
+                <li>Snackbar/notification state</li>
+                <li>Managed via Redux Toolkit</li>
+                <li>Used sparingly for cross-cutting concerns</li>
+              </ul>
+            </div>
+            <div class="col today">
+              <h4>Local State (Context + Hooks)</h4>
+              <ul>
+                <li>App-level state (clientId)</li>
+                <li>Component-specific state</li>
+                <li>Custom hooks for data fetching</li>
+              </ul>
+            </div>
+          </div>
+
+          <h4>5. Data Models</h4>
+          <p>
+            TypeScript interfaces define all data structures. Models are organized by feature:
+          </p>
+          <ul>
+            <li><code>IMonthlyFigures.ts</code> - Monthly construction figures data</li>
+            <li><code>IMarketIndicator.ts</code> - Market indicator data structures</li>
+            <li><code>IAspectRatio.ts</code> - Cost breakdown and analysis data</li>
+            <li><code>IProfile.ts</code> - User profile and company information</li>
+            <li><code>IProject.ts</code> - Reference project data</li>
+          </ul>
+        </section>
+
+        <!-- ─── Authentication (Azure B2C) ─── -->
+        <section id="sec-auth" class="section">
+          <h2>Authentication (Azure B2C)</h2>
+          <p class="section-subtitle">
+            The application uses Microsoft Azure AD B2C for user authentication and authorization.
+          </p>
+
+          <h3>Authentication Flow</h3>
+          <div class="arch-flow">
+            <span class="node">User visits app</span>
+            <span class="arrow">→</span>
+            <span class="node llm">useAuth hook</span>
+            <span class="arrow">→</span>
+            <span class="node">MSAL acquireToken</span>
+            <span class="arrow">→</span>
+            <span class="node out">Azure B2C</span>
+          </div>
+          <div class="arch-flow">
+            <span class="node">Token received</span>
+            <span class="arrow">→</span>
+            <span class="node">Stored in sessionStorage</span>
+            <span class="arrow">→</span>
+            <span class="node">Profile fetched</span>
+            <span class="arrow">→</span>
+            <span class="node out">App ready</span>
+          </div>
+
+          <h3>Configuration (<code>auth-config.ts</code>)</h3>
+          <pre><code><span class="c-key">export const</span> msalConfig = {
+  auth: {
+    <span class="c-key">clientId</span>: <span class="c-str">"27848361-a66e-4158-856c-8414a88f7053"</span>,  <span class="c-com">// From env</span>
+    <span class="c-key">authority</span>: `https://<span class="c-str">${tenant}</span>.b2clogin.com/...`,
+    <span class="c-key">knownAuthorities</span>: [<span class="c-str">"arcadisb2cdev.b2clogin.com"</span>],
+    <span class="c-key">redirectUri</span>: <span class="c-str">"https://devbdb.arcadis.com/dashboard"</span>,
+  },
+  cache: {
+    <span class="c-key">cacheLocation</span>: <span class="c-str">"sessionStorage"</span>,
+    <span class="c-key">storeAuthStateInCookie</span>: <span class="c-key">false</span>,
+  }
+};</code></pre>
+
+          <h3>Authentication Hook (<code>useAuth</code>)</h3>
+          <p>
+            Custom hook in <code>src/hooks/auth.hook.ts</code> manages token acquisition and caching:
+          </p>
+          <ul>
+            <li>Checks for valid token in sessionStorage first</li>
+            <li>If expired, attempts silent token renewal via MSAL</li>
+            <li>Falls back to interactive login if silent renewal fails</li>
+            <li>Stores token and expiration time in sessionStorage</li>
+          </ul>
+
+          <div class="card brand">
+            <div class="card-title">Token Lifecycle</div>
+            <ul>
+              <li><strong>Acquisition:</strong> <code>acquireTokenSilent()</code> or <code>acquireTokenPopup()</code></li>
+              <li><strong>Storage:</strong> <code>appStorage.setAccessToken()</code></li>
+              <li><strong>Injection:</strong> Axios interceptor adds Bearer token to all requests</li>
+              <li><strong>Refresh:</strong> Automatic via <code>authOperations.getRefreshToken()</code></li>
+              <li><strong>Expiration:</strong> Session timeout dialog warns before expiry</li>
+            </ul>
+          </div>
+
+          <h3>App.tsx Authentication Flow</h3>
+          <pre><code><span class="c-key">const</span> { accessToken, loading } = useAuth({ scopes: [scopes] });
+
+<span class="c-key">useEffect</span>(() => {
+  <span class="c-key">if</span> (!loading) {
+    <span class="c-key">if</span> (accessToken) {
+      appStorage.setAccessToken(accessToken);
+      
+      <span class="c-com">// Fetch user profile and company info</span>
+      ProfileService.getProfile()
+        .then((profile) => {
+          appStorage.setClientName(profile.companyName);
+          appStorage.setSelectedClientId(profile.companyId);
+        });
+    } <span class="c-key">else</span> {
+      <span class="c-com">// No token - clear storage</span>
+      appStorage.removeTokenFromStorage();
+    }
+  }
+}, [accessToken, loading]);</code></pre>
+
+          <h3>Route Protection</h3>
+          <p>
+            <code>PrivateRoute</code> component guards authenticated routes:
+          </p>
+          <pre><code><span class="c-com">// In router.tsx</span>
+{
+  path: <span class="c-str">"/dashboard"</span>,
+  element: <span class="c-key">&lt;PrivateRoute /&gt;</span>,  <span class="c-com">// Requires auth</span>
+  children: [
+    { path: <span class="c-str">"/dashboard"</span>, element: <span class="c-key">&lt;Dashboard /&gt;</span> }
+  ]
+},
+{
+  path: <span class="c-str">"/uploads/referenceBudgets"</span>,
+  element: <span class="c-key">&lt;PrivateRoute requiresAdmin /&gt;</span>,  <span class="c-com">// Admin only</span>
+  children: [...]
+}</code></pre>
+
+          <h3>HTTP Request Authorization</h3>
+          <p>
+            <code>HttpCommon.ts</code> configures Axios with token injection:
+          </p>
+          <pre><code>instance.interceptors.request.use(
+  <span class="c-key">async</span> (config) => {
+    <span class="c-key">await</span> authOperations.getRefreshToken();  <span class="c-com">// Ensure fresh token</span>
+    <span class="c-key">const</span> token = appStorage.getAccessToken();
+    
+    <span class="c-key">if</span> (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    <span class="c-key">return</span> config;
+  },
+  (error) => Promise.reject(error)
+);</code></pre>
+
+          <h3>Session Management</h3>
+          <div class="card warning">
+            <div class="card-title">Session Timeout</div>
+            <p>
+              <code>SessionTimeoutDialog</code> component monitors token expiration and warns users before session ends.
+              Users can extend their session or will be logged out automatically.
+            </p>
+          </div>
+
+          <h3>User Roles & Permissions</h3>
+          <p>Roles are stored in sessionStorage and checked throughout the app:</p>
+          <ul>
+            <li><strong>Admin:</strong> Full access including data uploads and all features</li>
+            <li><strong>Standard User:</strong> Access based on company subscriptions</li>
+          </ul>
+
+          <pre><code><span class="c-com">// Check if user has admin role</span>
+<span class="c-key">const</span> userRoles = appStorage.getLoggedInUserRoleForClient();
+<span class="c-key">const</span> isAdmin = userRoles.includes(<span class="c-str">"admin"</span>);</code></pre>
+        </section>
+
+        <!-- ─── Routing & Navigation ─── -->
+        <section id="sec-routing" class="section">
+          <h2>Routing & Navigation</h2>
+          <p class="section-subtitle">
+            The application uses React Router v7 for client-side routing with nested routes and breadcrumb support.
+          </p>
+
+          <h3>Router Configuration</h3>
+          <p>
+            Routes are defined in <code>src/router.tsx</code> using <code>createBrowserRouter</code>:
+          </p>
+
+          <pre><code><span class="c-key">const</span> routes = createBrowserRouter([
+  {
+    path: <span class="c-str">"/"</span>,
+    element: <span class="c-key">&lt;BaseLayout /&gt;</span>,
+    breadcrumb: <span class="c-str">"Home"</span>,
+    children: [
+      { path: <span class="c-str">"/login"</span>, element: <span class="c-key">&lt;LoginPage /&gt;</span> },
+      { path: <span class="c-str">"/"</span>, element: <span class="c-key">&lt;Welcome /&gt;</span> },
+      {
+        path: <span class="c-str">"/dashboard"</span>,
+        element: <span class="c-key">&lt;PrivateRoute /&gt;</span>,
+        breadcrumb: <span class="c-str">"Dashboard"</span>,
+        children: [...]
+      },
+      <span class="c-com">// ... more routes</span>
+    ]
+  }
+]);</code></pre>
+
+          <h3>Key Routes</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Path</th>
+                <th>Component</th>
+                <th>Auth Required</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>/</code></td>
+                <td>Welcome</td>
+                <td>No</td>
+                <td>Landing page</td>
+              </tr>
+              <tr>
+                <td><code>/login</code></td>
+                <td>LoginPage</td>
+                <td>No</td>
+                <td>Authentication entry point</td>
+              </tr>
+              <tr>
+                <td><code>/dashboard</code></td>
+                <td>Dashboard</td>
+                <td>Yes</td>
+                <td>Main dashboard with customizable tiles</td>
+              </tr>
+              <tr>
+                <td><code>/monthly-figures</code></td>
+                <td>MonthlyFigures</td>
+                <td>Yes</td>
+                <td>Construction cost indices over time</td>
+              </tr>
+              <tr>
+                <td><code>/market-indicator</code></td>
+                <td>MarketIndicator</td>
+                <td>Yes</td>
+                <td>Market trends and indicators</td>
+              </tr>
+              <tr>
+                <td><code>/aspect-ratio</code></td>
+                <td>AspectRatioPage</td>
+                <td>Yes</td>
+                <td>Cost breakdown analysis</td>
+              </tr>
+              <tr>
+                <td><code>/parametric-element</code></td>
+                <td>ParametricElement</td>
+                <td>Yes</td>
+                <td>Element cost analysis</td>
+              </tr>
+              <tr>
+                <td><code>/ad-hoc-projects</code></td>
+                <td>ProjectsPage</td>
+                <td>Yes</td>
+                <td>Project management</td>
+              </tr>
+              <tr>
+                <td><code>/uploads/*</code></td>
+                <td>Various</td>
+                <td>Admin</td>
+                <td>Data upload pages (admin only)</td>
+              </tr>
+              <tr>
+                <td><code>/account-settings/*</code></td>
+                <td>AccountSettings</td>
+                <td>Yes</td>
+                <td>User profile and subscription management</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Breadcrumb System</h3>
+          <p>
+            Custom breadcrumb support via <code>BreadcrumbRouteObject</code> type:
+          </p>
+          <pre><code><span class="c-key">export type</span> BreadcrumbRouteObject = RouteObject & {
+  breadcrumb?: <span class="c-key">string</span> | ((params: { [key: <span class="c-key">string</span>]: <span class="c-key">string</span> }) => <span class="c-key">string</span>);
+  children?: BreadcrumbRouteObject[];
+};</code></pre>
+
+          <p>
+            The <code>Breadcrumbs</code> component reads route configuration to build navigation breadcrumb trail.
+          </p>
+
+          <h3>Navigation Components</h3>
+          <div class="compare">
+            <div class="col future">
+              <h4>Header (<code>Header.tsx</code>)</h4>
+              <ul>
+                <li>Top application bar</li>
+                <li>Logo and branding</li>
+                <li>User menu and notifications</li>
+                <li>Language selector</li>
+                <li>Theme toggle</li>
+                <li>Mobile menu trigger</li>
+              </ul>
+            </div>
+            <div class="col today">
+              <h4>SideBar (<code>SideBar.tsx</code>)</h4>
+              <ul>
+                <li>Main navigation menu</li>
+                <li>Collapsible/expandable</li>
+                <li>Active route highlighting</li>
+                <li>Responsive (drawer on mobile)</li>
+                <li>Subscription-based visibility</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3>Layout Structure</h3>
+          <p>
+            <code>BaseLayout</code> provides consistent page structure:
+          </p>
+          <pre><code><span class="c-key">&lt;Box</span> sx={{ display: <span class="c-str">"flex"</span>, minHeight: <span class="c-str">"100vh"</span> }}&gt;
+  <span class="c-key">&lt;Header</span> handleDrawerToggle={handleDrawerToggle} /&gt;
+  
+  <span class="c-key">&lt;Box</span> sx={{ display: <span class="c-str">"flex"</span>, flexGrow: 1 }}&gt;
+    <span class="c-key">&lt;SideBar</span> 
+      mobileOpen={mobileOpen}
+      isExpanded={isExpanded}
+      onToggleExpand={handleSidebarToggle}
+    /&gt;
+    
+    <span class="c-key">&lt;Box</span> component=<span class="c-str">"main"</span> sx={{ flexGrow: 1, p: 3 }}&gt;
+      <span class="c-key">&lt;Outlet /&gt;</span>  <span class="c-com">{/* Child routes render here */}</span>
+    <span class="c-key">&lt;/Box&gt;</span>
+  <span class="c-key">&lt;/Box&gt;</span>
+  
+  <span class="c-key">&lt;Footer /&gt;</span>
+<span class="c-key">&lt;/Box&gt;</span></code></pre>
+        </section>
+
+        <!-- ─── Pages & Features ─── -->
+        <section id="sec-pages" class="section">
+          <h2>Pages & Features</h2>
+          <p class="section-subtitle">
+            Overview of the main application pages and their functionality.
+          </p>
+
+          <h3>Dashboard</h3>
+          <p>
+            The main landing page after login. Features a customizable tile-based layout.
+          </p>
+          <div class="card brand">
+            <div class="card-title">Dashboard Tiles</div>
+            <ul>
+              <li><strong>Your Products:</strong> Quick access to subscribed products</li>
+              <li><strong>BDB Monthly Figures:</strong> Latest construction cost indices</li>
+              <li><strong>BDB Market Indicator:</strong> Market trends visualization</li>
+              <li><strong>Your Info:</strong> Account and subscription information</li>
+              <li><strong>Your News:</strong> Latest updates and announcements</li>
+              <li><strong>Your Projects:</strong> Reference project carousel</li>
+            </ul>
+          </div>
+
+          <p><strong>Customization:</strong> Users can:</p>
+          <ul>
+            <li>Show/hide tiles based on preference</li>
+            <li>Drag and drop to reorder tiles</li>
+            <li>Settings persist in localStorage</li>
+            <li>Tiles auto-hide if subscription not available</li>
+          </ul>
+
+          <h3>Monthly Figures</h3>
+          <p>
+            Historical and forecast construction cost indices visualization.
+          </p>
+          <ul>
+            <li><strong>Data Display:</strong> Labor, material, and total cost indices</li>
+            <li><strong>Time Range:</strong> Selectable reference dates</li>
+            <li><strong>Forecasts:</strong> Optional forecast data inclusion</li>
+            <li><strong>Exports:</strong> Excel and PDF reports</li>
+            <li><strong>Charts:</strong> Interactive line charts using Recharts</li>
+          </ul>
+
+          <h3>Market Indicator</h3>
+          <p>
+            Construction market trends and economic indicators.
+          </p>
+          <ul>
+            <li>Multiple indicator types (labor market, materials, etc.)</li>
+            <li>Time series visualizations</li>
+            <li>Comparative analysis tools</li>
+            <li>Export capabilities</li>
+          </ul>
+
+          <h3>Aspect Ratio</h3>
+          <p>
+            Detailed cost breakdown analysis by construction categories.
+          </p>
+          <div class="card">
+            <div class="card-title">Aspect Ratio Features</div>
+            <ul>
+              <li><strong>Multi-dimensional Analysis:</strong> Country, category, project type</li>
+              <li><strong>AG Grid Integration:</strong> Advanced data grid with enterprise features</li>
+              <li><strong>Cost Categories:</strong> Labor, materials, overhead, equipment</li>
+              <li><strong>Filters:</strong> Dynamic filtering by multiple dimensions</li>
+              <li><strong>Export:</strong> Customizable Excel exports with multiple sheets</li>
+            </ul>
+          </div>
+
+          <p><strong>Two Variants:</strong></p>
+          <ul>
+            <li><code>/aspect-ratio</code> - Standard aspect ratio analysis</li>
+            <li><code>/e235-aspect-ratio</code> - E235 specific analysis</li>
+          </ul>
+
+          <h3>Parametric Elements</h3>
+          <p>
+            Construction element cost analysis and comparison.
+          </p>
+          <ul>
+            <li>Element-level cost breakdowns</li>
+            <li>Searchable parametric database</li>
+            <li>Comparison tools</li>
+            <li>Historical cost trends</li>
+          </ul>
+
+          <h3>Reference Projects</h3>
+          <p>
+            Project-based budget tracking and reference data.
+          </p>
+          <ul>
+            <li>Project selection and filtering</li>
+            <li>Budget comparison</li>
+            <li>Cost index application</li>
+            <li>Project-specific reports</li>
+          </ul>
+
+          <h3>Ad Hoc Projects</h3>
+          <p>
+            Custom project management and analysis.
+          </p>
+          <ul>
+            <li>Create and manage custom projects</li>
+            <li>Apply indices to project budgets</li>
+            <li>Export project reports</li>
+          </ul>
+
+          <h3>Flexible Indices</h3>
+          <p>
+            Custom index calculation and visualization.
+          </p>
+          <ul>
+            <li>Define custom index compositions</li>
+            <li>Apply weightings</li>
+            <li>Visualize results</li>
+            <li>Compare with standard indices</li>
+          </ul>
+
+          <h3>Uploads (Admin Only)</h3>
+          <p>
+            Data management pages for administrators.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Upload Type</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Reference Budgets</td>
+                <td>Upload project reference budget data</td>
+              </tr>
+              <tr>
+                <td>Forecast Figures</td>
+                <td>Upload forecast construction cost data</td>
+              </tr>
+              <tr>
+                <td>WOV Index</td>
+                <td>Woningbouw, onderhoud en verduurzamingsindex data</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Account Settings</h3>
+          <p>
+            User profile and account management.
+          </p>
+          <ul>
+            <li><strong>Personal Details:</strong> User profile information</li>
+            <li><strong>Company Details:</strong> Company/client information</li>
+            <li><strong>Subscription Details:</strong> Active subscriptions and entitlements</li>
+          </ul>
+        </section>
+
+        <!-- ─── Components ─── -->
+        <section id="sec-components" class="section">
+          <h2>Components</h2>
+          <p class="section-subtitle">
+            Reusable UI components organized by functionality.
+          </p>
+
+          <h3>Component Categories</h3>
+
+          <h4>Layout Components</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Header</code></td>
+                <td>Top navigation bar with user menu, notifications, language selector</td>
+              </tr>
+              <tr>
+                <td><code>SideBar</code></td>
+                <td>Main navigation sidebar with collapsible menu</td>
+              </tr>
+              <tr>
+                <td><code>Footer</code></td>
+                <td>Application footer with links and copyright</td>
+              </tr>
+              <tr>
+                <td><code>Breadcrumbs</code></td>
+                <td>Navigation breadcrumb trail</td>
+              </tr>
+              <tr>
+                <td><code>PageBasics</code></td>
+                <td>Page header template with title and subtitle</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Form Components</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>FormField</code></td>
+                <td>Reusable form input wrapper with validation</td>
+              </tr>
+              <tr>
+                <td><code>FormSection</code></td>
+                <td>Form section grouping container</td>
+              </tr>
+              <tr>
+                <td><code>DynamicParametricForm</code></td>
+                <td>Dynamic form generation for parametric searches</td>
+              </tr>
+              <tr>
+                <td><code>ProfileForm</code></td>
+                <td>User profile editing form</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Data Display Components</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>SimpleTable</code></td>
+                <td>Basic table component for simple data display</td>
+              </tr>
+              <tr>
+                <td><code>DetailedIndices</code></td>
+                <td>Complex indices data grid (AG Grid based)</td>
+              </tr>
+              <tr>
+                <td><code>BasicLineChart</code></td>
+                <td>Line chart visualization using Recharts</td>
+              </tr>
+              <tr>
+                <td><code>TrendsTile</code></td>
+                <td>Market trends mini-chart tile</td>
+              </tr>
+              <tr>
+                <td><code>IndexFigureTile</code></td>
+                <td>Monthly figures summary tile</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Selector Components</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>CurrencySelector</code></td>
+                <td>Currency selection dropdown</td>
+              </tr>
+              <tr>
+                <td><code>LanguageSelector</code></td>
+                <td>Application language switcher</td>
+              </tr>
+              <tr>
+                <td><code>ReferenceDateSelector</code></td>
+                <td>Date range selector for indices</td>
+              </tr>
+              <tr>
+                <td><code>ReferenceProjectSelector</code></td>
+                <td>Project selection dropdown</td>
+              </tr>
+              <tr>
+                <td><code>PresetSelector</code></td>
+                <td>Saved preset configurations selector</td>
+              </tr>
+              <tr>
+                <td><code>DatasetSelection</code></td>
+                <td>Multi-dataset selection component</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Dialog & Modal Components</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>CustomizeDashboardDialog</code></td>
+                <td>Dashboard tile customization modal</td>
+              </tr>
+              <tr>
+                <td><code>SessionTimeoutDialog</code></td>
+                <td>Session expiration warning dialog</td>
+              </tr>
+              <tr>
+                <td><code>ParametricNodeSearchPopup</code></td>
+                <td>Parametric element search modal</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Dashboard Tiles</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>ProductsPanel</code></td>
+                <td>Quick access to subscribed products</td>
+              </tr>
+              <tr>
+                <td><code>NewsPanel</code></td>
+                <td>Latest news and announcements</td>
+              </tr>
+              <tr>
+                <td><code>InfoPanel</code></td>
+                <td>Account and subscription information</td>
+              </tr>
+              <tr>
+                <td><code>ProjectPanel</code></td>
+                <td>Reference project carousel</td>
+              </tr>
+              <tr>
+                <td><code>SubscriptionTile</code></td>
+                <td>Subscription status and details</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Utility Components</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>LoadingOverlay</code></td>
+                <td>Full-page loading spinner</td>
+              </tr>
+              <tr>
+                <td><code>SnackbarNotification</code></td>
+                <td>Toast notifications (Redux-managed)</td>
+              </tr>
+              <tr>
+                <td><code>TruncatedText</code></td>
+                <td>Text with tooltip for overflow</td>
+              </tr>
+              <tr>
+                <td><code>ChartLegendTooltip</code></td>
+                <td>Info tooltip for charts</td>
+              </tr>
+              <tr>
+                <td><code>ThemeToggle</code></td>
+                <td>Dark/light theme switcher</td>
+              </tr>
+              <tr>
+                <td><code>ExportMenuButton</code></td>
+                <td>Export options menu (Excel/PDF)</td>
+              </tr>
+              <tr>
+                <td><code>StepNavigation</code></td>
+                <td>Multi-step process navigation</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Component Best Practices</h3>
+          <div class="card brand">
+            <div class="card-title">Component Organization</div>
+            <ul>
+              <li>Each component in its own folder with index file</li>
+              <li>Co-locate tests with components (<code>Component.test.tsx</code>)</li>
+              <li>Use TypeScript for all components</li>
+              <li>Export types alongside components</li>
+              <li>Keep components focused and single-purpose</li>
+            </ul>
+          </div>
+
+          <h3>Example Component Structure</h3>
+          <pre><code>src/components/Header/
+├── Header.tsx           <span class="c-com"># Main component</span>
+├── Header.test.tsx      <span class="c-com"># Unit tests</span>
+├── Header.styles.ts     <span class="c-com"># Styled components (if any)</span>
+└── index.tsx            <span class="c-com"># Re-export</span></code></pre>
+        </section>
+
+        <!-- ─── Services & API Integration ─── -->
+        <section id="sec-services" class="section">
+          <h2>Services & API Integration</h2>
+          <p class="section-subtitle">
+            API service layer architecture and how the application communicates with the backend.
+          </p>
+
+          <h3>Service Layer Architecture</h3>
+          <p>
+            All backend communication is abstracted into service modules located in <code>src/services/</code>.
+            Each service handles a specific domain or feature area.
+          </p>
+
+          <h4>HttpCommon.ts - Base Configuration</h4>
+          <pre><code><span class="c-key">import</span> axios <span class="c-key">from</span> <span class="c-str">'axios'</span>;
+
+<span class="c-key">const</span> instance = axios.create({
+  baseURL: import.meta.env.VITE_REACT_APP_API_URL,  <span class="c-com">// e.g., https://devbdb.arcadis.com/api/bdbapi/api/</span>
+  headers: {
+    Accept: <span class="c-str">'application/json'</span>,
+    <span class="c-str">'Content-Type'</span>: <span class="c-str">'application/json'</span>,
+  },
+});
+
+<span class="c-com">// Request interceptor - adds auth token</span>
+instance.interceptors.request.use(
+  <span class="c-key">async</span> (config) => {
+    <span class="c-key">await</span> authOperations.getRefreshToken();
+    <span class="c-key">const</span> token = appStorage.getAccessToken();
+    <span class="c-key">if</span> (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    <span class="c-key">return</span> config;
+  }
+);
+
+<span class="c-key">export default</span> instance;</code></pre>
+
+          <h3>Key Services</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th>Purpose</th>
+                <th>Key Methods</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>MonthlyFiguresService</code></td>
+                <td>Monthly construction figures</td>
+                <td>getMonthlyFigures, getMonthlyFiguresReport</td>
+              </tr>
+              <tr>
+                <td><code>MarketTrendsService</code></td>
+                <td>Market indicators and trends</td>
+                <td>getMarketTrends, exportMarketTrends</td>
+              </tr>
+              <tr>
+                <td><code>AspectRatioService</code></td>
+                <td>Cost ratio analysis</td>
+                <td>getData, export, getMetadata</td>
+              </tr>
+              <tr>
+                <td><code>ParametricElementsService</code></td>
+                <td>Parametric element data</td>
+                <td>getElements, searchElements</td>
+              </tr>
+              <tr>
+                <td><code>ProfileService</code></td>
+                <td>User profile management</td>
+                <td>getProfile, updateProfile</td>
+              </tr>
+              <tr>
+                <td><code>SubscriptionService</code></td>
+                <td>User subscriptions</td>
+                <td>getSubscriptions, checkAccess</td>
+              </tr>
+              <tr>
+                <td><code>ReferenceBudgetService</code></td>
+                <td>Reference budget data</td>
+                <td>getBudgets, uploadBudget</td>
+              </tr>
+              <tr>
+                <td><code>ForecastFigureService</code></td>
+                <td>Forecast data management</td>
+                <td>getForecast, uploadForecast</td>
+              </tr>
+              <tr>
+                <td><code>AdHocProjectsService</code></td>
+                <td>Custom project management</td>
+                <td>getProjects, createProject</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Service Pattern Example</h3>
+          <pre><code><span class="c-com">// MonthlyFiguresService.ts</span>
+<span class="c-key">import</span> http <span class="c-key">from</span> <span class="c-str">"./common/HttpCommon.ts"</span>;
+<span class="c-key">import</span> { MonthlyFiguresResponseData } <span class="c-key">from</span> <span class="c-str">"../models/IMonthlyFigures.ts"</span>;
+
+<span class="c-key">const</span> getMonthlyFigures = <span class="c-key">async</span> (
+  id: <span class="c-key">number</span>,
+  isForecastIncluded: <span class="c-key">boolean</span>,
+  referenceDates: <span class="c-key">string</span>[]
+): Promise&lt;MonthlyFiguresResponseData&gt; => {
+  <span class="c-key">const</span> response = <span class="c-key">await</span> http.post&lt;any&gt;(
+    `ReportForecastFigures/${id}?isForecastIncluded=${isForecastIncluded}`,
+    referenceDates
+  );
+  <span class="c-key">return</span> response.data;
+};
+
+<span class="c-key">const</span> MonthlyFiguresService = {
+  getMonthlyFigures,
+  getMonthlyFiguresReport,
+};
+
+<span class="c-key">export default</span> MonthlyFiguresService;</code></pre>
+
+          <h3>API Response Patterns</h3>
+          <div class="card brand">
+            <div class="card-title">Common Response Structures</div>
+            <ul>
+              <li><strong>Data Lists:</strong> <code>{ rows: T[], totalCount?: number }</code></li>
+              <li><strong>Single Entity:</strong> Entity object directly</li>
+              <li><strong>File Downloads:</strong> Blob with responseType: 'blob'</li>
+              <li><strong>Metadata:</strong> <code>{ lastUpdated: string, data: T }</code></li>
+            </ul>
+          </div>
+
+          <h3>Error Handling</h3>
+          <p>
+            Services throw errors that are caught by calling components. Common error handling pattern:
+          </p>
+          <pre><code><span class="c-key">try</span> {
+  <span class="c-key">const</span> data = <span class="c-key">await</span> MonthlyFiguresService.getMonthlyFigures(id, true, dates);
+  setData(data);
+} <span class="c-key">catch</span> (error) {
+  console.error(<span class="c-str">"Failed to fetch monthly figures:"</span>, error);
+  <span class="c-com">// Show snackbar notification</span>
+  dispatch(showSnackbar({ message: <span class="c-str">"Error loading data"</span>, severity: <span class="c-str">"error"</span> }));
+}</code></pre>
+
+          <h3>File Downloads</h3>
+          <p>
+            Export functionality uses a utility function for consistent download handling:
+          </p>
+          <pre><code><span class="c-key">import</span> { downloadAndLogReport } <span class="c-key">from</span> <span class="c-str">"../utils/reportDownloader.ts"</span>;
+
+<span class="c-key">const</span> response = <span class="c-key">await</span> http.post(
+  `ReportForecastFigures/report/${id}?format=excel`,
+  referenceDates,
+  { responseType: <span class="c-str">"blob"</span> }
+);
+
+downloadAndLogReport({
+  response,
+  fileName: <span class="c-str">"monthly-figures.xlsx"</span>,
+  reportName: <span class="c-str">"Monthly figures"</span>,
+  format: <span class="c-str">"excel"</span>,
+  json: metadata,
+});</code></pre>
+        </section>
+
+        <!-- ─── State Management ─── -->
+        <section id="sec-state" class="section">
+          <h2>State Management</h2>
+          <p class="section-subtitle">
+            How state is managed across the application using Context API and Redux.
+          </p>
+
+          <h3>State Architecture</h3>
+          <div class="compare">
+            <div class="col future">
+              <h4>Global State (Redux)</h4>
+              <ul>
+                <li><strong>Snackbar Notifications</strong></li>
+                <li>Managed by Redux Toolkit</li>
+                <li>Single centralized store</li>
+                <li>Used for cross-component communication</li>
+              </ul>
+            </div>
+            <div class="col today">
+              <h4>App Context (React Context)</h4>
+              <ul>
+                <li><strong>Client ID selection</strong></li>
+                <li>Lightweight app-level state</li>
+                <li>Avoids prop drilling</li>
+                <li>Used for session-scope data</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3>App State Context</h3>
+          <pre><code><span class="c-com">// appState.context.tsx</span>
+<span class="c-key">export type</span> AppStateContextType = {
+  clientId: <span class="c-key">number</span>;
+  setClientId: (clientId: <span class="c-key">number</span>) => <span class="c-key">void</span>;
+};
+
+<span class="c-key">export const</span> AppStateContext = createContext&lt;AppStateContextType&gt;({
+  clientId: 0,
+  setClientId: () => {},
+});
+
+<span class="c-com">// Usage in App.tsx</span>
+<span class="c-key">const</span> [clientId, setClientId] = useState&lt;<span class="c-key">number</span>&gt;(0);
+<span class="c-key">const</span> memoizedValue = useMemo(() => ({ clientId, setClientId }), [clientId]);
+
+<span class="c-key">return</span> (
+  <span class="c-key">&lt;AppStateContext.Provider</span> value={memoizedValue}&gt;
+    {children}
+  <span class="c-key">&lt;/AppStateContext.Provider&gt;</span>
+);</code></pre>
+
+          <h3>Redux Store (Notifications)</h3>
+          <pre><code><span class="c-com">// SnackbarNotification/store.ts</span>
+<span class="c-key">import</span> { configureStore, createSlice } <span class="c-key">from</span> <span class="c-str">"@reduxjs/toolkit"</span>;
+
+<span class="c-key">const</span> snackbarSlice = createSlice({
+  name: <span class="c-str">"snackbar"</span>,
+  initialState: { open: <span class="c-key">false</span>, message: <span class="c-str">""</span>, severity: <span class="c-str">"info"</span> },
+  reducers: {
+    showSnackbar: (state, action) => ({
+      ...state,
+      open: <span class="c-key">true</span>,
+      message: action.payload.message,
+      severity: action.payload.severity,
+    }),
+    hideSnackbar: (state) => ({ ...state, open: <span class="c-key">false</span> }),
+  },
+});
+
+<span class="c-key">const</span> store = configureStore({
+  reducer: { snackbar: snackbarSlice.reducer },
+});
+
+<span class="c-key">export default</span> store;</code></pre>
+
+          <h3>Local State (Component Level)</h3>
+          <p>
+            Most state is managed at the component level using <code>useState</code> and <code>useEffect</code>:
+          </p>
+          <ul>
+            <li>Form data and validation</li>
+            <li>Loading states</li>
+            <li>Local UI state (dropdowns, modals)</li>
+            <li>Fetched data specific to a page</li>
+          </ul>
+
+          <h3>Custom Hooks for State Logic</h3>
+          <p>
+            Complex state logic is extracted into custom hooks:
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Hook</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>useAuth</code></td>
+                <td>Authentication state and token management</td>
+              </tr>
+              <tr>
+                <td><code>useUserSubscriptions</code></td>
+                <td>User subscription data and role checking</td>
+              </tr>
+              <tr>
+                <td><code>useMonthlyFigures</code></td>
+                <td>Monthly figures data fetching and state</td>
+              </tr>
+              <tr>
+                <td><code>useMarketIndicator</code></td>
+                <td>Market indicator data management</td>
+              </tr>
+              <tr>
+                <td><code>useExportHandler</code></td>
+                <td>Export functionality state and logic</td>
+              </tr>
+              <tr>
+                <td><code>useBulkPublish</code></td>
+                <td>Bulk publish operations for admin</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Session Storage</h3>
+          <p>
+            <code>app-storage.ts</code> provides utilities for sessionStorage management:
+          </p>
+          <ul>
+            <li><strong>Token:</strong> Access token and expiration</li>
+            <li><strong>Client Info:</strong> Selected client ID and name</li>
+            <li><strong>User Roles:</strong> Role information per client</li>
+          </ul>
+
+          <h3>Local Storage</h3>
+          <p>
+            Used for user preferences that should persist across sessions:
+          </p>
+          <ul>
+            <li>Dashboard tile selection and order</li>
+            <li>Theme preference (light/dark)</li>
+            <li>Language preference</li>
+          </ul>
+        </section>
+
+        <!-- ─── Internationalization ─── -->
+        <section id="sec-i18n" class="section">
+          <h2>Internationalization (i18n)</h2>
+          <p class="section-subtitle">
+            Multi-language support using i18next with remote translation management.
+          </p>
+
+          <h3>i18n Setup</h3>
+          <pre><code><span class="c-com">// i18n.ts</span>
+<span class="c-key">import</span> i18n <span class="c-key">from</span> <span class="c-str">"i18next"</span>;
+<span class="c-key">import</span> { initReactI18next } <span class="c-key">from</span> <span class="c-str">"react-i18next"</span>;
+<span class="c-key">import</span> Backend <span class="c-key">from</span> <span class="c-str">"i18next-http-backend"</span>;
+<span class="c-key">import</span> LanguageDetector <span class="c-key">from</span> <span class="c-str">"i18next-browser-languagedetector"</span>;
+
+i18n
+  .use(Backend)
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    backend: {
+      loadPath: `https://i18n-api.arcadis.com/api/v1.0/${solutionId}/{{lng}}/namespaces/{{ns}}`,
+      queryStringParams: { code: code }
+    },
+    fallbackLng: <span class="c-str">"en"</span>,
+    ns: [<span class="c-str">'common'</span>, <span class="c-str">'pages'</span>],
+    defaultNS: <span class="c-str">'common'</span>,
+  });</code></pre>
+
+          <div class="card brand">
+            <div class="card-title">Translation Management</div>
+            <p>
+              Translations are managed via <strong>Arcadis i18n platform</strong>:<br />
+              <code>https://i18n.arcadis.com/021c7f6b-1b50-44da-8aa6-e6e9b269e360/namespaces</code>
+            </p>
+          </div>
+
+          <h3>Supported Languages</h3>
+          <ul>
+            <li><strong>Dutch (nl):</strong> Primary language for Dutch market</li>
+            <li><strong>English (en):</strong> Fallback and international users</li>
+          </ul>
+
+          <h3>Using Translations in Components</h3>
+          <pre><code><span class="c-key">import</span> { useTranslation } <span class="c-key">from</span> <span class="c-str">"react-i18next"</span>;
+
+<span class="c-key">function</span> MyComponent() {
+  <span class="c-key">const</span> { t } = useTranslation();
+
+  <span class="c-key">return</span> (
+    <span class="c-key">&lt;div&gt;</span>
+      <span class="c-key">&lt;h1&gt;</span>{t(<span class="c-str">"welcomeMessage"</span>)}<span class="c-key">&lt;/h1&gt;</span>
+      <span class="c-key">&lt;p&gt;</span>{t(<span class="c-str">"description"</span>, { defaultValue: <span class="c-str">"Default text"</span> })}<span class="c-key">&lt;/p&gt;</span>
+    <span class="c-key">&lt;/div&gt;</span>
+  );
+}</code></pre>
+
+          <h3>Namespaces</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Namespace</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>common</code></td>
+                <td>Shared UI text, buttons, labels, navigation</td>
+              </tr>
+              <tr>
+                <td><code>pages</code></td>
+                <td>Page-specific content and terminology</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Language Selector</h3>
+          <p>
+            <code>LanguageSelector</code> component in header allows users to switch languages.
+            Selection is persisted to localStorage and applied immediately.
+          </p>
+        </section>
+
+        <!-- ─── Testing Strategy ─── -->
+        <section id="sec-testing" class="section">
+          <h2>Testing Strategy</h2>
+          <p class="section-subtitle">
+            Comprehensive testing approach using Vitest and React Testing Library.
+          </p>
+
+          <h3>Test Configuration</h3>
+          <pre><code><span class="c-com">// vitest.config.ts</span>
+<span class="c-key">export default</span> defineConfig({
+  test: {
+    environment: <span class="c-str">'jsdom'</span>,
+    globals: <span class="c-key">true</span>,
+    setupFiles: <span class="c-str">'./src/tests/setupTests.ts'</span>,
+    coverage: {
+      provider: <span class="c-str">'v8'</span>,
+      reporter: [<span class="c-str">'lcov'</span>, <span class="c-str">'text-summary'</span>],
+      exclude: [<span class="c-str">'./src/pages/**'</span>],  <span class="c-com">// Pages excluded for now</span>
+    },
+  },
+});</code></pre>
+
+          <h3>Test Structure</h3>
+          <p>
+            Tests are co-located with their source files:
+          </p>
+          <pre><code>src/
+├── services/
+│   ├── MonthlyFiguresService.ts
+│   └── MonthlyFiguresService.test.ts     <span class="c-com"># Service tests</span>
+├── hooks/
+│   ├── auth.hook.ts
+│   └── auth.hook.test.ts                 <span class="c-com"># Hook tests</span>
+├── components/
+│   └── Header/
+│       ├── Header.tsx
+│       └── Header.test.tsx               <span class="c-com"># Component tests</span></code></pre>
+
+          <h3>Testing Patterns</h3>
+
+          <h4>Service Tests</h4>
+          <pre><code><span class="c-com">// MonthlyFiguresService.test.ts</span>
+<span class="c-key">import</span> { describe, it, expect, vi } <span class="c-key">from</span> <span class="c-str">"vitest"</span>;
+<span class="c-key">import</span> MonthlyFiguresService <span class="c-key">from</span> <span class="c-str">"./MonthlyFiguresService"</span>;
+
+vi.mock(<span class="c-str">"./common/HttpCommon"</span>);
+
+describe(<span class="c-str">"MonthlyFiguresService"</span>, () => {
+  it(<span class="c-str">"should fetch monthly figures"</span>, <span class="c-key">async</span> () => {
+    <span class="c-key">const</span> data = <span class="c-key">await</span> MonthlyFiguresService.getMonthlyFigures(1, <span class="c-key">true</span>, []);
+    expect(data).toBeDefined();
+  });
+});</code></pre>
+
+          <h4>Component Tests</h4>
+          <pre><code><span class="c-com">// Header.test.tsx</span>
+<span class="c-key">import</span> { render, screen } <span class="c-key">from</span> <span class="c-str">"@testing-library/react"</span>;
+<span class="c-key">import</span> { describe, it, expect } <span class="c-key">from</span> <span class="c-str">"vitest"</span>;
+<span class="c-key">import</span> Header <span class="c-key">from</span> <span class="c-str">"./Header"</span>;
+
+describe(<span class="c-str">"Header"</span>, () => {
+  it(<span class="c-str">"renders logo and navigation"</span>, () => {
+    render(<span class="c-key">&lt;Header</span> handleDrawerToggle={() => {}} /&gt;);
+    expect(screen.getByRole(<span class="c-str">"banner"</span>)).toBeInTheDocument();
+  });
+});</code></pre>
+
+          <h4>Hook Tests</h4>
+          <pre><code><span class="c-key">import</span> { renderHook } <span class="c-key">from</span> <span class="c-str">"@testing-library/react"</span>;
+<span class="c-key">import</span> { useAuth } <span class="c-key">from</span> <span class="c-str">"./auth.hook"</span>;
+
+describe(<span class="c-str">"useAuth"</span>, () => {
+  it(<span class="c-str">"should return loading state initially"</span>, () => {
+    <span class="c-key">const</span> { result } = renderHook(() => useAuth({ scopes: [<span class="c-str">"scope"</span>] }));
+    expect(result.current.loading).toBe(<span class="c-key">true</span>);
+  });
+});</code></pre>
+
+          <h3>Running Tests</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>npm test</code></td>
+                <td>Run all tests once</td>
+              </tr>
+              <tr>
+                <td><code>npm run test:coverage</code></td>
+                <td>Run tests with coverage report</td>
+              </tr>
+              <tr>
+                <td><code>npm run test:ui</code></td>
+                <td>Launch Vitest UI for interactive testing</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Test Coverage Goals</h3>
+          <div class="card success">
+            <div class="card-title">Current Coverage</div>
+            <ul>
+              <li><strong>Services:</strong> High coverage (~80%+)</li>
+              <li><strong>Hooks:</strong> Good coverage (~70%+)</li>
+              <li><strong>Components:</strong> Selective coverage for critical components</li>
+              <li><strong>Pages:</strong> Currently excluded, to be added incrementally</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ─── Environment Configuration ─── -->
+        <section id="sec-env" class="section">
+          <h2>Environment Configuration</h2>
+          <p class="section-subtitle">
+            Managing environment-specific configuration across development, UAT, and production.
+          </p>
+
+          <h3>Environment Files</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>File</th>
+                <th>Used For</th>
+                <th>API URL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>.env.development</code></td>
+                <td>Local development</td>
+                <td>https://devbdb.arcadis.com/api/bdbapi/api/</td>
+              </tr>
+              <tr>
+                <td><code>.env.uat</code></td>
+                <td>UAT environment</td>
+                <td>UAT-specific endpoint</td>
+              </tr>
+              <tr>
+                <td><code>.env.production</code></td>
+                <td>Production builds</td>
+                <td>https://bdb.eu/api/bdbapi/api</td>
+              </tr>
+              <tr>
+                <td><code>.env</code></td>
+                <td>Fallback/default</td>
+                <td>Production endpoint</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Key Environment Variables</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Variable</th>
+                <th>Purpose</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>VITE_REACT_APP_API_URL</code></td>
+                <td>Backend API base URL</td>
+                <td>https://devbdb.arcadis.com/api/bdbapi/api/</td>
+              </tr>
+              <tr>
+                <td><code>VITE_REACT_APP_TENANT_NAME</code></td>
+                <td>Azure B2C tenant</td>
+                <td>ArcadisB2CDEV</td>
+              </tr>
+              <tr>
+                <td><code>VITE_REACT_APP_CLIENT_ID_LANDING</code></td>
+                <td>B2C application ID</td>
+                <td>27848361-a66e-4158-856c-8414a88f7053</td>
+              </tr>
+              <tr>
+                <td><code>VITE_REACT_APP_OAUTH_SCOPES</code></td>
+                <td>Required OAuth scopes</td>
+                <td>https://...onmicrosoft.com/.../access-api</td>
+              </tr>
+              <tr>
+                <td><code>VITE_REACT_APP_REDIRECT_URL</code></td>
+                <td>Post-login redirect</td>
+                <td>https://devbdb.arcadis.com/dashboard</td>
+              </tr>
+              <tr>
+                <td><code>VITE_REACT_APP_POST_LOGOUT_REDIRECT_URL</code></td>
+                <td>Post-logout redirect</td>
+                <td>https://devbdb.arcadis.com/</td>
+              </tr>
+              <tr>
+                <td><code>VITE_REACT_APP_B2C_METADATA</code></td>
+                <td>B2C metadata JSON</td>
+                <td>JSON object with endpoints</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Accessing Environment Variables</h3>
+          <pre><code><span class="c-com">// In TypeScript files</span>
+<span class="c-key">const</span> apiUrl = import.meta.env.VITE_REACT_APP_API_URL <span class="c-key">as string</span>;
+<span class="c-key">const</span> clientId = import.meta.env.VITE_REACT_APP_CLIENT_ID_LANDING <span class="c-key">as string</span>;</code></pre>
+
+          <div class="card warning">
+            <div class="card-title">Important Notes</div>
+            <ul>
+              <li>All Vite env variables must be prefixed with <code>VITE_</code></li>
+              <li>Never commit secrets to <code>.env</code> files</li>
+              <li>Environment variables are embedded at build time</li>
+              <li>Changes require rebuild to take effect</li>
+            </ul>
+          </div>
+
+          <h3>Build Commands by Environment</h3>
+          <pre><code><span class="c-com"># Development build</span>
+npm run build:dev      <span class="c-com"># Uses .env.development</span>
+
+<span class="c-com"># UAT build</span>
+npm run build:uat      <span class="c-com"># Uses .env.uat</span>
+
+<span class="c-com"># Production build</span>
+npm run build:prd      <span class="c-com"># Uses .env.production</span></code></pre>
+        </section>
+
+        <!-- ─── Build & Deployment ─── -->
+        <section id="sec-build" class="section">
+          <h2>Build & Deployment</h2>
+          <p class="section-subtitle">
+            Build process, output structure, and deployment considerations.
+          </p>
+
+          <h3>Build Process</h3>
+          <div class="example-grid">
+            <div class="example-step">
+              <div class="num">1</div>
+              <strong>TypeScript Compilation</strong><br />
+              <code>tsc -b</code> checks types
+            </div>
+            <div class="example-step">
+              <div class="num">2</div>
+              <strong>Vite Build</strong><br />
+              Bundles and optimizes assets
+            </div>
+            <div class="example-step">
+              <div class="num">3</div>
+              <strong>Output Generation</strong><br />
+              Creates <code>dist/</code> folder
+            </div>
+            <div class="example-step">
+              <div class="num">4</div>
+              <strong>Asset Optimization</strong><br />
+              Minifies JS/CSS, optimizes images
+            </div>
+          </div>
+
+          <h3>Build Output (<code>dist/</code>)</h3>
+          <pre><code>dist/
+├── index.html                <span class="c-com"># Entry HTML file</span>
+├── assets/
+│   ├── index-[hash].js       <span class="c-com"># Main bundle</span>
+│   ├── index-[hash].css      <span class="c-com"># Styles</span>
+│   └── [images/fonts]        <span class="c-com"># Static assets</span>
+└── [other static files]</code></pre>
+
+          <h3>Vite Configuration Highlights</h3>
+          <pre><code><span class="c-com">// vite.config.ts</span>
+<span class="c-key">export default</span> defineConfig({
+  plugins: [
+    react(),
+    svgr({                    <span class="c-com">// SVG as React components</span>
+      include: <span class="c-str">"src/assets/**/*.svg"</span>,
+    })
+  ],
+  server: {
+    port: 3000,               <span class="c-com"># Dev server port</span>
+  },
+  base: <span class="c-str">'/'</span>,                  <span class="c-com"># Base public path</span>
+});</code></pre>
+
+          <h3>Deployment Checklist</h3>
+          <div class="card success">
+            <div class="card-title">Pre-Deployment</div>
+            <ul>
+              <li>✓ Run linter: <code>npm run lint</code></li>
+              <li>✓ Run tests: <code>npm run test</code></li>
+              <li>✓ Build for target environment</li>
+              <li>✓ Verify environment variables are correct</li>
+              <li>✓ Test build locally with <code>npm run preview</code></li>
+            </ul>
+          </div>
+
+          <h3>Deployment Targets</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Environment</th>
+                <th>URL</th>
+                <th>Build Command</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Development</td>
+                <td>https://devbdb.arcadis.com</td>
+                <td><code>npm run build:dev</code></td>
+              </tr>
+              <tr>
+                <td>UAT</td>
+                <td>UAT-specific URL</td>
+                <td><code>npm run build:uat</code></td>
+              </tr>
+              <tr>
+                <td>Production</td>
+                <td>https://bdb.eu</td>
+                <td><code>npm run build:prd</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Static File Hosting</h3>
+          <p>
+            The <code>dist/</code> folder contains a fully static build that can be served by any web server.
+            Requirements:
+          </p>
+          <ul>
+            <li>Serve <code>index.html</code> for all routes (SPA routing)</li>
+            <li>Set appropriate cache headers for assets (hash-based filenames)</li>
+            <li>Configure CORS if API is on different domain</li>
+          </ul>
+
+          <h3>Performance Optimizations</h3>
+          <div class="card brand">
+            <div class="card-title">Build Optimizations</div>
+            <ul>
+              <li><strong>Code Splitting:</strong> Automatic chunk splitting by Vite</li>
+              <li><strong>Tree Shaking:</strong> Removes unused code</li>
+              <li><strong>Minification:</strong> JS and CSS minified in production</li>
+              <li><strong>Asset Optimization:</strong> Images and fonts optimized</li>
+              <li><strong>Lazy Loading:</strong> Route-based code splitting</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ─── Coding Conventions ─── -->
+        <section id="sec-conventions" class="section">
+          <h2>Coding Conventions</h2>
+          <p class="section-subtitle">
+            Coding standards and best practices followed in the project.
+          </p>
+
+          <h3>TypeScript Guidelines</h3>
+          <ul>
+            <li><strong>Always use TypeScript:</strong> No <code>.js</code> or <code>.jsx</code> files</li>
+            <li><strong>Explicit types:</strong> Define interfaces for all data structures</li>
+            <li><strong>Avoid <code>any</code>:</strong> Use specific types or <code>unknown</code></li>
+            <li><strong>Use enums sparingly:</strong> Prefer union types or const objects</li>
+          </ul>
+
+          <h3>Component Conventions</h3>
+          <pre><code><span class="c-com">// Functional components with TypeScript</span>
+<span class="c-key">import</span> React <span class="c-key">from</span> <span class="c-str">"react"</span>;
+
+<span class="c-key">interface</span> MyComponentProps {
+  title: <span class="c-key">string</span>;
+  onAction?: () => <span class="c-key">void</span>;
+}
+
+<span class="c-key">const</span> MyComponent: React.FC&lt;MyComponentProps&gt; = ({ title, onAction }) => {
+  <span class="c-key">return</span> (
+    <span class="c-key">&lt;div&gt;</span>
+      <span class="c-key">&lt;h1&gt;</span>{title}<span class="c-key">&lt;/h1&gt;</span>
+      {onAction && <span class="c-key">&lt;button</span> onClick={onAction}&gt;Action<span class="c-key">&lt;/button&gt;</span>}
+    <span class="c-key">&lt;/div&gt;</span>
+  );
+};
+
+<span class="c-key">export default</span> MyComponent;</code></pre>
+
+          <h3>Naming Conventions</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Convention</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Components</td>
+                <td>PascalCase</td>
+                <td><code>Header.tsx</code>, <code>UserProfile.tsx</code></td>
+              </tr>
+              <tr>
+                <td>Hooks</td>
+                <td>camelCase with "use" prefix</td>
+                <td><code>useAuth.ts</code>, <code>useMonthlyFigures.ts</code></td>
+              </tr>
+              <tr>
+                <td>Services</td>
+                <td>PascalCase with "Service"</td>
+                <td><code>ProfileService.ts</code></td>
+              </tr>
+              <tr>
+                <td>Interfaces</td>
+                <td>PascalCase with "I" prefix</td>
+                <td><code>IProfile.ts</code>, <code>IMonthlyFigures.ts</code></td>
+              </tr>
+              <tr>
+                <td>Constants</td>
+                <td>UPPER_SNAKE_CASE</td>
+                <td><code>SESSION_STORAGE_KEY</code></td>
+              </tr>
+              <tr>
+                <td>Functions</td>
+                <td>camelCase</td>
+                <td><code>getProfile</code>, <code>handleSubmit</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>File Organization</h3>
+          <div class="card brand">
+            <div class="card-title">Component Folder Pattern</div>
+            <pre><code>ComponentName/
+├── ComponentName.tsx        <span class="c-com"># Main component</span>
+├── ComponentName.test.tsx   <span class="c-com"># Tests</span>
+├── index.tsx                <span class="c-com"># Re-export</span>
+└── types.ts                 <span class="c-com"># Component-specific types (optional)</span></code></pre>
+          </div>
+
+          <h3>Import Organization</h3>
+          <pre><code><span class="c-com">// 1. External libraries</span>
+<span class="c-key">import</span> React, { useState, useEffect } <span class="c-key">from</span> <span class="c-str">"react"</span>;
+<span class="c-key">import</span> { Box, Button } <span class="c-key">from</span> <span class="c-str">"@mui/material"</span>;
+
+<span class="c-com">// 2. Internal utilities and hooks</span>
+<span class="c-key">import</span> { useAuth } <span class="c-key">from</span> <span class="c-str">"../../hooks/auth.hook"</span>;
+<span class="c-key">import</span> appStorage <span class="c-key">from</span> <span class="c-str">"../../utils/app-storage"</span>;
+
+<span class="c-com">// 3. Components</span>
+<span class="c-key">import</span> Header <span class="c-key">from</span> <span class="c-str">"../../components/Header"</span>;
+
+<span class="c-com">// 4. Types and interfaces</span>
+<span class="c-key">import</span> { IProfile } <span class="c-key">from</span> <span class="c-str">"../../models/IProfile"</span>;</code></pre>
+
+          <h3>ESLint Configuration</h3>
+          <p>
+            The project uses ESLint with TypeScript and React plugins. Key rules:
+          </p>
+          <ul>
+            <li>No unused variables</li>
+            <li>Consistent quote style (double quotes preferred)</li>
+            <li>React hooks rules enforced</li>
+            <li>TypeScript strict mode enabled</li>
+          </ul>
+
+          <h3>Git Commit Conventions</h3>
+          <p>Follow conventional commit format:</p>
+          <pre><code>type(scope): description
+
+[optional body]
+
+[optional footer]</code></pre>
+
+          <p><strong>Types:</strong></p>
+          <ul>
+            <li><code>feat:</code> New feature</li>
+            <li><code>fix:</code> Bug fix</li>
+            <li><code>docs:</code> Documentation changes</li>
+            <li><code>style:</code> Code style changes (formatting)</li>
+            <li><code>refactor:</code> Code refactoring</li>
+            <li><code>test:</code> Adding or updating tests</li>
+            <li><code>chore:</code> Build process or auxiliary tool changes</li>
+          </ul>
+        </section>
+
+        <!-- ─── Troubleshooting ─── -->
+        <section id="sec-troubleshooting" class="section">
+          <h2>Troubleshooting</h2>
+          <p class="section-subtitle">
+            Common issues and their solutions.
+          </p>
+
+          <h3>Development Server Issues</h3>
+
+          <h4>Port 3000 Already in Use</h4>
+          <div class="card warning">
+            <div class="card-title">Solution</div>
+            <p>Kill the process using port 3000:</p>
+            <pre style="background: #f5f5f5; padding: 0.5rem; border-radius: 4px;"><code>lsof -ti:3000 | xargs kill -9</code></pre>
+            <p>Or change the port in <code>vite.config.ts</code></p>
+          </div>
+
+          <h4>Module Not Found Errors</h4>
+          <div class="card warning">
+            <div class="card-title">Solution</div>
+            <ol>
+              <li>Delete <code>node_modules/</code> and <code>package-lock.json</code></li>
+              <li>Run <code>npm install</code> again</li>
+              <li>Restart the dev server</li>
+            </ol>
+          </div>
+
+          <h3>Authentication Issues</h3>
+
+          <h4>Infinite Login Loop</h4>
+          <div class="card danger">
+            <div class="card-title">Possible Causes</div>
+            <ul>
+              <li>Token expiration time not set correctly</li>
+              <li>Azure B2C configuration mismatch</li>
+              <li>Redirect URL not matching environment</li>
+              <li>SessionStorage being cleared unexpectedly</li>
+            </ul>
+          </div>
+
+          <p><strong>Solution:</strong></p>
+          <ul>
+            <li>Check <code>VITE_REACT_APP_REDIRECT_URL</code> matches current URL</li>
+            <li>Verify Azure B2C app registration settings</li>
+            <li>Clear browser cache and sessionStorage</li>
+            <li>Check console for MSAL errors</li>
+          </ul>
+
+          <h4>401 Unauthorized on API Calls</h4>
+          <pre><code><span class="c-com">// Check if token is being sent</span>
+<span class="c-com">// Open browser DevTools → Network → Headers</span>
+<span class="c-com"># Look for: Authorization: Bearer [token]</span>
+
+<span class="c-com">// Debug token acquisition</span>
+console.log(appStorage.getAccessToken());
+console.log(appStorage.getExpirationTime());</code></pre>
+
+          <h3>Build Issues</h3>
+
+          <h4>TypeScript Compilation Errors</h4>
+          <div class="card warning">
+            <div class="card-title">Solution</div>
+            <ul>
+              <li>Run <code>npm run lint</code> to see all type errors</li>
+              <li>Check <code>tsconfig.json</code> for strict mode settings</li>
+              <li>Ensure all imports have correct types</li>
+              <li>Use <code>// @ts-expect-error</code> only as last resort</li>
+            </ul>
+          </div>
+
+          <h4>Environment Variables Not Loading</h4>
+          <div class="card danger">
+            <div class="card-title">Remember</div>
+            <ul>
+              <li>Vite env vars <strong>must</strong> start with <code>VITE_</code></li>
+              <li>Changes require server restart</li>
+              <li>Check you're using <code>import.meta.env</code> not <code>process.env</code></li>
+              <li>Verify the correct <code>.env.*</code> file for your build command</li>
+            </ul>
+          </div>
+
+          <h3>Data Grid Issues (AG Grid)</h3>
+
+          <h4>License Warning in Console</h4>
+          <p>
+            AG Grid Enterprise requires a license. Check <code>package.json</code> for <code>@mui/x-license</code> package.
+          </p>
+
+          <h4>Grid Not Rendering</h4>
+          <ul>
+            <li>Ensure parent container has explicit height</li>
+            <li>Check data format matches column definitions</li>
+            <li>Verify AG Grid styles are imported</li>
+          </ul>
+
+          <h3>Translation Issues</h3>
+
+          <h4>Translations Not Loading</h4>
+          <div class="card warning">
+            <div class="card-title">Checklist</div>
+            <ul>
+              <li>Check network tab for i18n API calls</li>
+              <li>Verify solution ID and code in <code>i18n.ts</code></li>
+              <li>Ensure translations exist on platform</li>
+              <li>Check browser console for i18next errors</li>
+            </ul>
+          </div>
+
+          <h3>Performance Issues</h3>
+
+          <h4>Slow Page Load</h4>
+          <ul>
+            <li>Check React DevTools Profiler for slow components</li>
+            <li>Look for unnecessary re-renders</li>
+            <li>Verify data fetching isn't happening in render</li>
+            <li>Use <code>useMemo</code> and <code>useCallback</code> appropriately</li>
+          </ul>
+
+          <h4>Large Bundle Size</h4>
+          <ul>
+            <li>Run <code>npm run build</code> and check dist/ folder size</li>
+            <li>Consider lazy loading heavy components</li>
+            <li>Check for duplicate dependencies</li>
+            <li>Use tree-shakeable imports (e.g., <code>import { Button } from "@mui/material"</code>)</li>
+          </ul>
+
+          <h3>Getting Help</h3>
+          <div class="card brand">
+            <div class="card-title">Resources</div>
+            <ul>
+              <li><strong>Team Members:</strong> Reach out to existing developers</li>
+              <li><strong>Documentation:</strong> Check this guide and inline code comments</li>
+              <li><strong>Azure DevOps:</strong> Search for related work items and discussions</li>
+              <li><strong>Logs:</strong> Check browser console and network tab</li>
+            </ul>
+          </div>
+
+          <footer class="doc-footer">
+            BDB UI External &middot; Developer Onboarding Guide &middot; Version 1.0<br />
+            Generated on June 22, 2026 &middot; For internal Arcadis use only
+          </footer>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      function showSection(ev, sectionId) {
+        if (ev && ev.preventDefault) ev.preventDefault();
+
+        document.querySelectorAll(".section").forEach(function (section) {
+          section.classList.remove("active");
+        });
+        var target = document.getElementById(sectionId);
+        if (target) target.classList.add("active");
+
+        document.querySelectorAll(".nav-link").forEach(function (link) {
+          link.classList.remove("active");
+        });
+        var activeLink = document.querySelector('.nav-link[href="#' + sectionId + '"]');
+        if (activeLink) activeLink.classList.add("active");
+
+        if (history.replaceState) {
+          history.replaceState(null, "", "#" + sectionId);
+        } else {
+          window.location.hash = sectionId;
+        }
+
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }
+
+      window.addEventListener("DOMContentLoaded", function () {
+        var hash = (window.location.hash || "").slice(1);
+        if (hash && document.getElementById(hash)) {
+          showSection(null, hash);
+        }
+      });
+    </script>
+  </body>
+</html>
