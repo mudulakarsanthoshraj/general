@@ -1,0 +1,3737 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BDB API Backend &mdash; Developer Onboarding Guide</title>
+    <meta
+      name="description"
+      content="Comprehensive onboarding documentation for the BDB API Backend application including architecture, features, setup instructions, and development guidelines."
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="BDB API Backend — Developer Onboarding Guide" />
+    <meta
+      property="og:description"
+      content="Complete technical documentation and knowledge transfer guide for BDB API Backend ASP.NET Core application."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --color-brand: #d85614;
+        --color-brand-soft: rgba(216, 86, 20, 0.06);
+        --color-brand-line: rgba(216, 86, 20, 0.12);
+        --color-brand-tint: rgba(216, 86, 20, 0.15);
+        --bg-canvas: #ffffff;
+        --bg-surface: #f9fafb;
+        --bg-elevated: #f3f4f6;
+        --border-default: #e5e7eb;
+        --text-primary: #111827;
+        --text-secondary: #1f2937;
+        --text-tertiary: #374151;
+        --text-muted: #6b7280;
+        --sidebar-width: 300px;
+        --spacing-6: 24px;
+        --spacing-3: 12px;
+      }
+
+      html,
+      body {
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      body {
+        font-family:
+          "Noto Sans",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        background-color: var(--bg-canvas);
+        color: var(--text-primary);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .layout {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: var(--sidebar-width);
+        background-color: var(--bg-surface);
+        border-right: 1px solid var(--border-default);
+        position: fixed;
+        height: 100vh;
+        overflow-y: auto;
+        padding: var(--spacing-6) var(--spacing-3);
+      }
+
+      .sidebar-header {
+        padding: 0 1rem 0.85rem;
+        border-bottom: 1px solid var(--border-default);
+        margin-bottom: 0.5rem;
+      }
+
+      .sidebar-header h1 {
+        font-size: 1rem;
+        font-weight: 800;
+        color: var(--color-brand);
+        margin-bottom: 0.15rem;
+        line-height: 1.3;
+      }
+
+      .sidebar-header p {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+      }
+
+      .nav-section {
+        padding: 0.25rem 0.75rem;
+      }
+
+      .nav-section-title {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--color-brand);
+        text-transform: uppercase;
+        padding: 0.85rem 0.5rem 0.35rem;
+        margin-bottom: 0.15rem;
+        border-top: 1px solid var(--border-default);
+        margin-top: 0.25rem;
+      }
+
+      .nav-section:first-of-type .nav-section-title {
+        border-top: none;
+        margin-top: 0;
+        padding-top: 0.25rem;
+      }
+
+      .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        position: relative;
+        padding: 0.6rem 0.75rem;
+        color: var(--text-tertiary);
+        text-decoration: none;
+        font-size: 0.95rem;
+        border-radius: 8px;
+        transition: all 0.15s ease;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      .nav-link:hover {
+        background-color: var(--bg-elevated);
+        color: var(--color-brand);
+      }
+
+      .nav-link.active {
+        background-color: var(--color-brand-soft);
+        color: var(--color-brand);
+        font-weight: 600;
+        border: 1px solid var(--color-brand-line);
+        border-radius: 12px;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02) inset;
+        padding-left: calc(0.6rem + 10px);
+      }
+
+      .nav-link.active::before {
+        content: "";
+        position: absolute;
+        left: -1px;
+        top: 8px;
+        bottom: 8px;
+        width: 3px;
+        background: var(--color-brand);
+        border-radius: 6px;
+      }
+
+      .main {
+        flex: 1;
+        min-width: 0;
+        margin-left: var(--sidebar-width);
+        padding: 2rem 3rem;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      .section {
+        display: none;
+        animation: fadeIn 0.3s ease;
+      }
+
+      .section.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      h2 {
+        font-size: 1.75rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        color: var(--color-brand);
+        line-height: 1.25;
+      }
+
+      h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin: 2rem 0 0.85rem;
+        color: var(--color-brand);
+      }
+
+      h4 {
+        font-size: 1rem;
+        font-weight: 700;
+        margin: 1.4rem 0 0.6rem;
+        color: var(--text-primary);
+      }
+
+      .section-subtitle {
+        color: var(--text-muted);
+        font-size: 1rem;
+        margin-bottom: 1.75rem;
+        max-width: 75ch;
+      }
+
+      p {
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+        font-weight: 400;
+      }
+
+      ul,
+      ol {
+        color: var(--text-secondary);
+        padding-left: 1.4rem;
+        margin-bottom: 1rem;
+      }
+
+      li {
+        margin-bottom: 0.45rem;
+      }
+
+      strong {
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+
+      em {
+        color: var(--text-tertiary);
+        font-style: italic;
+      }
+
+      code {
+        background-color: var(--bg-elevated);
+        padding: 0.18rem 0.4rem;
+        border-radius: 4px;
+        font-family: "JetBrains Mono", "Fira Code", monospace;
+        font-size: 0.85em;
+        color: var(--color-brand);
+      }
+
+      pre {
+        background-color: #0f172a;
+        color: #e2e8f0;
+        border: 1px solid #1e293b;
+        border-radius: 10px;
+        padding: 1rem 1.1rem;
+        max-width: 100%;
+        overflow-x: auto;
+        margin: 0.6rem 0 1rem;
+        font-family: "JetBrains Mono", "Fira Code", monospace;
+        font-size: 0.82rem;
+        line-height: 1.6;
+        white-space: pre;
+      }
+
+      pre code {
+        background: none;
+        padding: 0;
+        border-radius: 0;
+        color: inherit;
+        font-size: inherit;
+      }
+
+      pre .c-key {
+        color: #7dd3fc;
+      }
+
+      pre .c-str {
+        color: #86efac;
+      }
+
+      pre .c-com {
+        color: #94a3b8;
+        font-style: italic;
+      }
+
+      .arch-flow {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px;
+        margin: 0.75rem 0 1rem;
+      }
+
+      .arch-flow .node {
+        display: inline-block;
+        background: var(--bg-canvas);
+        border: 1px solid var(--border-default);
+        border-radius: 6px;
+        padding: 2px 7px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--text-tertiary);
+        white-space: nowrap;
+      }
+
+      .arch-flow .node.llm {
+        background: var(--color-brand-soft);
+        border-color: var(--color-brand-line);
+        color: var(--color-brand);
+      }
+
+      .arch-flow .node.out {
+        background: #ecfdf5;
+        border-color: #a7f3d0;
+        color: #047857;
+      }
+
+      .arch-flow .node.warn {
+        background: #fef2f2;
+        border-color: #fecaca;
+        color: #991b1b;
+      }
+
+      .arch-flow .arrow {
+        color: var(--text-muted);
+        font-size: 0.72rem;
+        font-weight: 700;
+      }
+
+      .footnote {
+        color: var(--text-muted);
+        font-size: 0.82rem;
+        margin: 0.5rem 0 1rem;
+      }
+
+      .card {
+        background-color: var(--bg-elevated);
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+        padding: 1.1rem 1.25rem;
+        margin: 1rem 0;
+      }
+
+      .card-title {
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.45rem;
+        font-size: 0.95rem;
+      }
+
+      .card.brand {
+        background: var(--color-brand-soft);
+        border-color: var(--color-brand-line);
+      }
+
+      .card.brand .card-title {
+        color: var(--color-brand);
+      }
+
+      .card.success {
+        background: #ecfdf5;
+        border-color: #a7f3d0;
+      }
+
+      .card.success .card-title {
+        color: #047857;
+      }
+
+      .card.warning {
+        background: #fffbeb;
+        border-color: #fde68a;
+      }
+
+      .card.warning .card-title {
+        color: #92400e;
+      }
+
+      .card.danger {
+        background: #fef2f2;
+        border-color: #fecaca;
+      }
+
+      .card.danger .card-title {
+        color: #991b1b;
+      }
+
+      .card ul {
+        margin: 0.4rem 0 0;
+        padding-left: 1.2rem;
+      }
+
+      .card ul li {
+        margin-bottom: 0.3rem;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 0.85rem;
+        margin: 1rem 0 0.5rem;
+      }
+
+      .stat {
+        background-color: var(--bg-elevated);
+        border: 1px solid var(--border-default);
+        border-radius: 8px;
+        padding: 0.95rem 1rem;
+      }
+
+      .stat .label {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+      }
+
+      .stat .value {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+
+      .stat.accent {
+        background: var(--color-brand-soft);
+        border-color: var(--color-brand-line);
+      }
+
+      .stat.accent .label,
+      .stat.accent .value {
+        color: var(--color-brand);
+      }
+
+      .stat.danger {
+        background: #fef2f2;
+        border-color: #fecaca;
+      }
+
+      .stat.danger .label,
+      .stat.danger .value {
+        color: #991b1b;
+      }
+
+      .compare {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+
+      .compare .col {
+        min-width: 0;
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+        padding: 1rem 1.15rem;
+        background: var(--bg-elevated);
+      }
+
+      .compare .col.today {
+        background: #fef2f2;
+        border-color: #fecaca;
+      }
+
+      .compare .col.future {
+        background: #ecfdf5;
+        border-color: #a7f3d0;
+      }
+
+      .compare h4 {
+        margin: 0 0 0.5rem;
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--text-tertiary);
+      }
+
+      .compare .col.today h4 {
+        color: #991b1b;
+      }
+
+      .compare .col.future h4 {
+        color: #065f46;
+      }
+
+      .compare ul {
+        margin: 0;
+        padding-left: 1.1rem;
+        font-size: 0.9rem;
+      }
+
+      .compare ul li {
+        margin-bottom: 0.3rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+        font-size: 0.88rem;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 0.7rem 0.85rem;
+        border-bottom: 1px solid var(--border-default);
+        vertical-align: top;
+      }
+
+      th {
+        background-color: var(--bg-elevated);
+        color: var(--text-muted);
+        font-weight: 700;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+      }
+
+      td {
+        color: var(--text-secondary);
+        font-weight: 400;
+      }
+
+      td.num,
+      th.num {
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        width: 3rem;
+      }
+
+      tr.row-sync td {
+        background: #f9fafb;
+      }
+
+      tr.row-gap td:first-child {
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      tr.row-critical td {
+        background: #fef2f2;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 0.12rem 0.5rem;
+        border-radius: 999px;
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+      }
+
+      .badge.critical {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .badge.high {
+        background: #ffedd5;
+        color: #9a3412;
+      }
+
+      .badge.medium {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      .badge.low {
+        background: #ecfdf5;
+        color: #065f46;
+      }
+
+      .example-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 0.85rem;
+        margin: 1rem 0;
+      }
+
+      .example-step {
+        min-width: 0;
+        border: 1px solid var(--border-default);
+        border-radius: 10px;
+        padding: 0.9rem 1rem;
+        background: var(--bg-elevated);
+      }
+
+      .example-step .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--color-brand);
+        color: #fff;
+        font-size: 0.72rem;
+        font-weight: 700;
+        margin-bottom: 0.4rem;
+      }
+
+      footer.doc-footer {
+        margin-top: 3rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border-default);
+        text-align: center;
+        font-size: 0.82rem;
+        color: var(--text-muted);
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+          border-right: none;
+          border-bottom: 1px solid var(--border-default);
+        }
+        .main {
+          margin-left: 0;
+          padding: 1.5rem;
+        }
+        .layout {
+          flex-direction: column;
+        }
+        .compare {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media print {
+        .sidebar {
+          display: none;
+        }
+        .main {
+          margin-left: 0;
+          padding: 0;
+        }
+        body {
+          background: #fff;
+        }
+        .section {
+          display: block !important;
+          page-break-before: always;
+        }
+        .section:first-of-type {
+          page-break-before: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <nav class="sidebar" aria-label="Documentation navigation">
+        <div class="sidebar-header">
+          <h1>BDB API Backend</h1>
+          <p>Developer Onboarding Guide &middot; v1.0</p>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Getting Started</div>
+          <a href="#sec-overview" class="nav-link active" onclick="showSection(event, 'sec-overview')"
+            >Project Overview</a
+          >
+          <a href="#sec-setup" class="nav-link" onclick="showSection(event, 'sec-setup')"
+            >Setup &amp; Installation</a
+          >
+          <a href="#sec-architecture" class="nav-link" onclick="showSection(event, 'sec-architecture')"
+            >Architecture</a
+          >
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Core API</div>
+          <a href="#sec-auth" class="nav-link" onclick="showSection(event, 'sec-auth')"
+            >Authentication &amp; Authorization</a
+          >
+          <a href="#sec-controllers" class="nav-link" onclick="showSection(event, 'sec-controllers')"
+            >Controllers &amp; Endpoints</a
+          >
+          <a href="#sec-services" class="nav-link" onclick="showSection(event, 'sec-services')"
+            >Services Layer</a
+          >
+          <a href="#sec-domain" class="nav-link" onclick="showSection(event, 'sec-domain')"
+            >Domain &amp; Data Models</a
+          >
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Development</div>
+          <a href="#sec-infrastructure" class="nav-link" onclick="showSection(event, 'sec-infrastructure')"
+            >Infrastructure &amp; Database</a
+          >
+          <a href="#sec-middleware" class="nav-link" onclick="showSection(event, 'sec-middleware')"
+            >Middleware Pipeline</a
+          >
+          <a href="#sec-background" class="nav-link" onclick="showSection(event, 'sec-background')"
+            >Background Processing &amp; Functions</a
+          >
+          <a href="#sec-testing" class="nav-link" onclick="showSection(event, 'sec-testing')"
+            >Testing Strategy</a
+          >
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Reference</div>
+          <a href="#sec-config" class="nav-link" onclick="showSection(event, 'sec-config')"
+            >Configuration &amp; Secrets</a
+          >
+          <a href="#sec-build" class="nav-link" onclick="showSection(event, 'sec-build')"
+            >Build &amp; Deployment</a
+          >
+          <a href="#sec-conventions" class="nav-link" onclick="showSection(event, 'sec-conventions')"
+            >Coding Conventions</a
+          >
+          <a href="#sec-faq" class="nav-link" onclick="showSection(event, 'sec-faq')"
+            >FAQ</a
+          >
+          <a href="#sec-troubleshooting" class="nav-link" onclick="showSection(event, 'sec-troubleshooting')"
+            >Troubleshooting</a
+          >
+        </div>
+      </nav>
+
+      <main class="main">
+
+        <!-- ─── Project Overview ─── -->
+        <section id="sec-overview" class="section active">
+          <h2>Project Overview</h2>
+          <p class="section-subtitle">
+            <strong>BDB API Backend</strong> is an ASP.NET Core Web API that powers the BDB (Bouw Database – Construction Database) platform.
+            It serves as the central data layer for all frontend clients, providing construction cost data, market analytics, forecasts, user management, and document export capabilities.
+          </p>
+
+          <div class="stats">
+            <div class="stat accent">
+              <div class="label">Framework</div>
+              <div class="value">ASP.NET Core 8</div>
+            </div>
+            <div class="stat">
+              <div class="label">Language</div>
+              <div class="value">C# (.NET 8)</div>
+            </div>
+            <div class="stat">
+              <div class="label">Database</div>
+              <div class="value">SQL Server (EF Core)</div>
+            </div>
+            <div class="stat">
+              <div class="label">Testing</div>
+              <div class="value">MSTest + Moq</div>
+            </div>
+          </div>
+
+          <h3>What is BDB?</h3>
+          <p>
+            <strong>BDB (Bouw Database – Construction Database)</strong> is a comprehensive platform for the Dutch construction industry. The backend API is the single source of truth for all data that the frontend (and external clients) consume. It provides:
+          </p>
+          <ul>
+            <li><strong>Monthly Figures (Maandcijfers):</strong> Construction cost indices (labor, material, equipment) served as structured data with historical time series and econometric forecasts</li>
+            <li><strong>Market Indicators (Marktindicatoren):</strong> Macro construction market trend data and analytics</li>
+            <li><strong>Aspect Ratios / Gi (Kengetallen):</strong> Cost breakdown model (Element Clusters, Stabu Chapters, Product Groups) across project types and regions</li>
+            <li><strong>Parametric Elements:</strong> Searchable catalog of standardized building components with unit costs</li>
+            <li><strong>Reference Projects (Referentieprojecten):</strong> Completed project budgets used as benchmarks</li>
+            <li><strong>Ad-Hoc Projects:</strong> User-created projects for custom budget tracking and scenario analysis</li>
+            <li><strong>WOV Index:</strong> Woningbouw, Onderhoud en Verduurzamingsindex – residential construction sustainability index</li>
+            <li><strong>Design Key Cost Figures (DFKK):</strong> Design-phase cost estimation model (construction, investment, operational costs)</li>
+            <li><strong>Excel Exports:</strong> Server-side generation of reports using Aspose.Cells for all data modules</li>
+            <li><strong>Subscription Management:</strong> Access control based on company subscriptions and user roles</li>
+          </ul>
+
+          <h3>Business Context</h3>
+          <p>
+            The backend serves <strong>construction companies, cost consultants, project managers, and real estate developers</strong> in the Netherlands via the BDB frontend. Key responsibilities of the API include:
+          </p>
+          <ul>
+            <li><strong>Data Aggregation:</strong> Querying and processing large SQL Server datasets (cube queries via DAX, stored procedures) into consumable API responses</li>
+            <li><strong>Access Control:</strong> Enforcing subscription-based and role-based access so users only receive data they are entitled to</li>
+            <li><strong>File Processing:</strong> Receiving Excel uploads from admins, parsing and validating them, and persisting to the database</li>
+            <li><strong>Report Generation:</strong> Building multi-sheet Excel and PDF reports using Aspose.Cells and returning them as downloadable blobs</li>
+            <li><strong>Integration:</strong> Communicating with Azure Blob Storage, Azure Key Vault, ECB exchange rate API, and Microsoft Graph for email</li>
+          </ul>
+
+          <h3>User Roles &amp; Access</h3>
+          <div class="compare">
+            <div class="col future">
+              <h4>Standard User (<code>"user"</code>)</h4>
+              <ul>
+                <li>Authenticated via Azure AD B2C JWT token</li>
+                <li>Access to API endpoints restricted by subscription modules</li>
+                <li>Can read data, generate reports, manage personal presets</li>
+                <li>Can create and manage their own ad-hoc projects</li>
+                <li>Cannot access upload or admin-only endpoints</li>
+                <li>Date ranges restricted by subscription tier</li>
+              </ul>
+            </div>
+            <div class="col today">
+              <h4>Admin User (<code>"admin"</code>)</h4>
+              <ul>
+                <li>All standard user capabilities</li>
+                <li>Access to upload endpoints (reference budgets, forecast figures, WOV)</li>
+                <li>Bypasses subscription date/module restrictions</li>
+                <li>Can publish data in bulk across the system</li>
+                <li>Can trigger workflow actions (publish, approve)</li>
+                <li>Full access to all data modules regardless of subscription</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card brand">
+            <div class="card-title">Key API Capabilities</div>
+            <ul>
+              <li>Multi-tenant architecture — all requests are scoped to a <code>clientId</code> (company)</li>
+              <li>Role-based authorization (admin / user) enforced at controller level</li>
+              <li>Subscription-gated data access with date-range enforcement</li>
+              <li>Server-side Excel report generation via Aspose.Cells (licensed)</li>
+              <li>Excel file import pipeline with validation, parsing, and persistence</li>
+              <li>API Key authentication for external client integrations (<code>/api/BDBClient</code>)</li>
+              <li>Background task queue for long-running operations (publish, bulk upload)</li>
+              <li>Azure Blob Storage for uploaded files and generated exports</li>
+              <li>Comprehensive action logging for audit trails</li>
+            </ul>
+          </div>
+
+          <h3>Repository Information</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Repository Name</strong></td>
+                <td>BDB-Backend</td>
+              </tr>
+              <tr>
+                <td><strong>Owner</strong></td>
+                <td>Arcadis</td>
+              </tr>
+              <tr>
+                <td><strong>Current Branch</strong></td>
+                <td>develop</td>
+              </tr>
+              <tr>
+                <td><strong>Solution File</strong></td>
+                <td>BDB-API.sln</td>
+              </tr>
+              <tr>
+                <td><strong>Target Framework</strong></td>
+                <td>.NET 8.0</td>
+              </tr>
+              <tr>
+                <td><strong>License</strong></td>
+                <td>Private (Arcadis Internal)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Technology Stack</h3>
+          <div class="compare">
+            <div class="col future">
+              <h4>Core Framework</h4>
+              <ul>
+                <li><strong>ASP.NET Core 8:</strong> Web API framework</li>
+                <li><strong>C# (.NET 8):</strong> Primary language</li>
+                <li><strong>Entity Framework Core:</strong> ORM for SQL Server</li>
+                <li><strong>Microsoft.Identity.Web 3.8:</strong> Azure AD B2C JWT auth</li>
+              </ul>
+            </div>
+            <div class="col today">
+              <h4>Azure &amp; Cloud</h4>
+              <ul>
+                <li><strong>Azure Key Vault:</strong> Secrets management</li>
+                <li><strong>Azure Blob Storage:</strong> File storage</li>
+                <li><strong>Azure Application Insights 2.22:</strong> Telemetry &amp; logging</li>
+                <li><strong>Azure AD B2C:</strong> External identity provider</li>
+              </ul>
+            </div>
+          </div>
+          <div class="compare">
+            <div class="col future">
+              <h4>Data &amp; Reports</h4>
+              <ul>
+                <li><strong>Aspose.Cells (licensed):</strong> Excel generation &amp; parsing</li>
+                <li><strong>SQL Server:</strong> Primary relational database</li>
+                <li><strong>DAX / Cube queries:</strong> OLAP analytics via <code>CubeRepository</code></li>
+                <li><strong>Stored Procedures:</strong> Complex data operations</li>
+              </ul>
+            </div>
+            <div class="col today">
+              <h4>Integrations &amp; Tools</h4>
+              <ul>
+                <li><strong>Microsoft Graph API:</strong> Sending transactional email</li>
+                <li><strong>ECB Exchange Rate API:</strong> Daily EUR currency rates</li>
+                <li><strong>Swashbuckle 7.2:</strong> Swagger/OpenAPI documentation</li>
+                <li><strong>nClam:</strong> File virus scanning</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3>Projects in the Solution</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Project</th>
+                <th>Type</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>BdbAPI</code></td>
+                <td>ASP.NET Core Web API</td>
+                <td>Entry point — controllers, middleware, startup, configuration</td>
+              </tr>
+              <tr>
+                <td><code>Application</code></td>
+                <td>Class Library</td>
+                <td>Business logic — services, interfaces, view models, Excel builders</td>
+              </tr>
+              <tr>
+                <td><code>Domain</code></td>
+                <td>Class Library</td>
+                <td>Domain models — EF Core entities, enums, base interfaces</td>
+              </tr>
+              <tr>
+                <td><code>Infrastructure</code></td>
+                <td>Class Library</td>
+                <td>Data access — DbContext, repositories, HTTP clients, Azure integrations</td>
+              </tr>
+              <tr>
+                <td><code>ExternalApiTriggerFunc</code></td>
+                <td>Azure Functions (.NET 8)</td>
+                <td>HTTP &amp; timer-triggered Azure Functions for external API calls</td>
+              </tr>
+              <tr>
+                <td><code>Application.Test</code></td>
+                <td>MSTest Project</td>
+                <td>Unit tests for Application layer services</td>
+              </tr>
+              <tr>
+                <td><code>BdbAPI.Test</code></td>
+                <td>MSTest Project</td>
+                <td>Unit tests for controllers, helpers, and middleware</td>
+              </tr>
+              <tr>
+                <td><code>Infrastructure.Test</code></td>
+                <td>MSTest Project</td>
+                <td>Unit tests for repositories and infrastructure components</td>
+              </tr>
+              <tr>
+                <td><code>ExternalApiTriggerFunc.Test</code></td>
+                <td>MSTest Project</td>
+                <td>Unit tests for Azure Functions</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ─── Setup & Installation ─── -->
+        <section id="sec-setup" class="section">
+          <h2>Setup &amp; Installation</h2>
+          <p class="section-subtitle">
+            Step-by-step guide to get the BDB API running on your local machine.
+          </p>
+
+          <h3>Prerequisites</h3>
+          <div class="card warning">
+            <div class="card-title">Required Software</div>
+            <ul>
+              <li><strong>.NET 8 SDK:</strong> Download from <code>https://dotnet.microsoft.com/download</code></li>
+              <li><strong>SQL Server:</strong> 2019 or later (or SQL Server LocalDB for dev)</li>
+              <li><strong>Azure CLI:</strong> Required for Key Vault access during local dev</li>
+              <li><strong>Git:</strong> For cloning the repository</li>
+              <li><strong>IDE:</strong> Visual Studio 2022 17.8+ or Rider recommended; VS Code works too</li>
+            </ul>
+          </div>
+
+          <p>Verify installed versions:</p>
+          <pre><code>dotnet --version          <span class="c-com"># Should output 8.x.x</span>
+az --version              <span class="c-com"># Azure CLI version</span>
+git --version</code></pre>
+
+          <h3>Installation Steps</h3>
+          <div class="example-grid">
+            <div class="example-step">
+              <div class="num">1</div>
+              <strong>Clone the Repository</strong><br />
+              Clone from the Arcadis GitHub organization
+            </div>
+            <div class="example-step">
+              <div class="num">2</div>
+              <strong>Configure App Settings</strong><br />
+              Set up <code>appsettings.Development.json</code> with local values
+            </div>
+            <div class="example-step">
+              <div class="num">3</div>
+              <strong>Restore Dependencies</strong><br />
+              Run <code>dotnet restore</code> to restore NuGet packages
+            </div>
+            <div class="example-step">
+              <div class="num">4</div>
+              <strong>Run the API</strong><br />
+              Run <code>dotnet run</code> from the <code>BdbAPI</code> project folder
+            </div>
+          </div>
+
+          <h3>Detailed Instructions</h3>
+          <h4>1. Clone the Repository</h4>
+          <pre><code><span class="c-com"># Clone the repository</span>
+git clone https://github.com/Arcadis/BDB-Backend.git
+
+<span class="c-com"># Navigate into the solution root</span>
+cd BDB-Backend/BDB-API
+
+<span class="c-com"># Checkout develop branch (if not already)</span>
+git checkout develop</code></pre>
+
+          <h4>2. Configure Development Settings</h4>
+          <p>
+            The API loads configuration from <code>appsettings.json</code> (committed, no secrets) and
+            <code>appsettings.Development.json</code> (local overrides, never committed). For local development, create
+            <code>BdbAPI/appsettings.Development.json</code> and supply the following:
+          </p>
+          <pre><code>{
+  <span class="c-key">"ConnectionStrings"</span>: {
+    <span class="c-str">"DefaultConnection"</span>: <span class="c-str">"Server=localhost;Database=BdbPlatform;Trusted_Connection=True;"</span>,
+    <span class="c-str">"AzureBlobStorage"</span>: <span class="c-str">"DefaultEndpointsProtocol=https;AccountName=...;"</span>
+  },
+  <span class="c-key">"AzureAdB2C"</span>: {
+    <span class="c-str">"Instance"</span>: <span class="c-str">"https://arcadisb2cdev.b2clogin.com"</span>,
+    <span class="c-str">"Domain"</span>: <span class="c-str">"arcadisb2cdev.onmicrosoft.com"</span>,
+    <span class="c-str">"ClientId"</span>: <span class="c-str">"&lt;your-client-id&gt;"</span>,
+    <span class="c-str">"SignUpSignInPolicyId"</span>: <span class="c-str">"B2C_1A_BDB_SIGNUP_SIGNIN"</span>
+  },
+  <span class="c-key">"KeyVaults"</span>: {
+    <span class="c-str">"BDBKeyVaultName"</span>: <span class="c-str">"https://&lt;your-keyvault&gt;.vault.azure.net/"</span>
+  }
+}</code></pre>
+
+          <div class="card brand">
+            <div class="card-title">Secrets via Azure Key Vault</div>
+            <p>In all environments (including local), the API uses <strong>Azure Key Vault</strong> to load secrets at startup via <code>DefaultAzureCredential</code>. On your local machine, authenticate the Azure CLI first:</p>
+            <pre style="margin: 0.5rem 0;"><code>az login
+<span class="c-com"># Then run the API — DefaultAzureCredential picks up your CLI login</span></code></pre>
+            <p>Secrets stored in Key Vault include: DB connection strings, B2C client secret, Blob Storage connection string, API keys.</p>
+          </div>
+
+          <h4>3. Restore &amp; Build</h4>
+          <pre><code><span class="c-com"># Restore all NuGet packages for the entire solution</span>
+dotnet restore BDB-API.sln
+
+<span class="c-com"># Build the solution</span>
+dotnet build BDB-API.sln</code></pre>
+
+          <h4>4. Run the API</h4>
+          <pre><code><span class="c-com"># Run the web API (listens on https://localhost:44338 by default)</span>
+cd BdbAPI
+dotnet run
+
+<span class="c-com"># Or from the solution root:</span>
+dotnet run --project BdbAPI/BdbAPI.csproj</code></pre>
+
+          <h4>5. Browse Swagger UI</h4>
+          <p>In Development mode, Swagger UI is automatically enabled:</p>
+          <pre><code>https://localhost:44338/swagger/index.html</code></pre>
+
+          <h3>Available Build Commands</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>dotnet restore</code></td>
+                <td>Restore all NuGet packages</td>
+              </tr>
+              <tr>
+                <td><code>dotnet build</code></td>
+                <td>Compile the solution</td>
+              </tr>
+              <tr>
+                <td><code>dotnet run --project BdbAPI</code></td>
+                <td>Start the API in Development mode</td>
+              </tr>
+              <tr>
+                <td><code>dotnet test</code></td>
+                <td>Run all unit tests across all test projects</td>
+              </tr>
+              <tr>
+                <td><code>dotnet test --collect:"XPlat Code Coverage"</code></td>
+                <td>Run tests with code coverage</td>
+              </tr>
+              <tr>
+                <td><code>dotnet publish -c Release</code></td>
+                <td>Publish production-ready build</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="card success">
+            <div class="card-title">First Run Checklist</div>
+            <ul>
+              <li>✓ .NET 8 SDK installed and <code>dotnet --version</code> returns 8.x</li>
+              <li>✓ <code>az login</code> completed for Key Vault access</li>
+              <li>✓ <code>appsettings.Development.json</code> created with DB connection string</li>
+              <li>✓ <code>dotnet restore</code> completes without errors</li>
+              <li>✓ <code>dotnet run</code> starts API on <code>https://localhost:44338</code></li>
+              <li>✓ Swagger UI accessible at <code>/swagger/index.html</code></li>
+              <li>✓ No unhandled exceptions in console output</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ─── Architecture ─── -->
+        <section id="sec-architecture" class="section">
+          <h2>Architecture</h2>
+          <p class="section-subtitle">
+            Understanding the solution's layered structure, project responsibilities, and design decisions.
+          </p>
+
+          <h3>High-Level Architecture</h3>
+          <p><strong>The solution follows Clean Architecture (Ports &amp; Adapters) with four distinct layers:</strong></p>
+
+          <div class="arch-flow">
+            <span class="node">Frontend / External Client</span>
+            <span class="arrow">→</span>
+            <span class="node llm">BdbAPI (Presentation)</span>
+            <span class="arrow">→</span>
+            <span class="node llm">Application (Business Logic)</span>
+          </div>
+          <div class="arch-flow">
+            <span class="node llm">Application</span>
+            <span class="arrow">→</span>
+            <span class="node">Domain (Entities)</span>
+            <span class="arrow">&amp;</span>
+            <span class="node">Infrastructure (Data Access)</span>
+            <span class="arrow">→</span>
+            <span class="node out">SQL Server / Azure</span>
+          </div>
+
+          <div class="card brand">
+            <div class="card-title">Why This Layered Architecture?</div>
+            <ul>
+              <li><strong>Separation of Concerns:</strong> Controllers know nothing about the database; services know nothing about HTTP — each layer has one job</li>
+              <li><strong>Testability:</strong> Services are injected via interfaces → easy to mock in unit tests without a real DB</li>
+              <li><strong>Maintainability:</strong> Changing the database (e.g., switching from EF to Dapper) only affects Infrastructure — Application and Domain are unchanged</li>
+              <li><strong>Scalability:</strong> New features are added as new services + controllers following the same pattern — no "big ball of mud"</li>
+            </ul>
+          </div>
+
+          <h3>Request Lifecycle</h3>
+          <div class="example-grid">
+            <div class="example-step">
+              <div class="num">1</div>
+              <strong>HTTP Request Arrives</strong><br />
+              Frontend sends request with <code>Authorization: Bearer {token}</code> and <code>?clientId=123</code>
+            </div>
+            <div class="example-step">
+              <div class="num">2</div>
+              <strong>Middleware Pipeline</strong><br />
+              CORS → ExceptionMiddleware → ApiKeyMiddleware → Authentication → Authorization
+            </div>
+            <div class="example-step">
+              <div class="num">3</div>
+              <strong>Controller</strong><br />
+              Controller method extracts params, calls service method
+            </div>
+            <div class="example-step">
+              <div class="num">4</div>
+              <strong>Service (Business Logic)</strong><br />
+              Service validates, applies business rules, calls repositories or cube client
+            </div>
+            <div class="example-step">
+              <div class="num">5</div>
+              <strong>Repository / DB</strong><br />
+              EF Core or stored procedure fetches/writes data from SQL Server
+            </div>
+            <div class="example-step">
+              <div class="num">6</div>
+              <strong>HTTP Response</strong><br />
+              Data returned as JSON (camelCase) or as file blob for exports
+            </div>
+          </div>
+
+          <h3>Folder Structure</h3>
+          <pre><code>BDB-API/
+├── BDB-API.sln                     <span class="c-com"># Solution file</span>
+├── Directory.Build.props           <span class="c-com"># Global NuGet security overrides</span>
+│
+├── BdbAPI/                         <span class="c-com"># Presentation layer (Web API)</span>
+│   ├── Program.cs                  <span class="c-com"># Entry point + Azure Key Vault setup</span>
+│   ├── Startup.cs                  <span class="c-com"># DI registration + middleware pipeline</span>
+│   ├── appsettings.json            <span class="c-com"># Base configuration (no secrets)</span>
+│   ├── appsettings.Development.json<span class="c-com"># Local dev overrides (gitignored)</span>
+│   ├── Controllers/                <span class="c-com"># API controllers (one per feature area)</span>
+│   │   ├── BaseApiController.cs    <span class="c-com"># Base class: [Authorize] + permission helper</span>
+│   │   ├── AuthController.cs
+│   │   ├── ProfileController.cs
+│   │   ├── ReportForecastFiguresController.cs
+│   │   ├── ReportMarketTrendsController.cs
+│   │   ├── ParametricController/   <span class="c-com"># Sub-folder for parametric endpoints</span>
+│   │   └── Uploads/                <span class="c-com"># Admin upload controllers</span>
+│   ├── Middleware/                 <span class="c-com"># Custom ASP.NET middleware</span>
+│   │   ├── ExceptionMiddleware.cs  <span class="c-com"># Global error handling</span>
+│   │   └── ApiKeyMiddleware.cs     <span class="c-com"># API key auth for /api/BDBClient</span>
+│   ├── Helpers/                    <span class="c-com"># Swagger setup helper</span>
+│   └── App_Data/                   <span class="c-com"># Excel templates, localization JSON</span>
+│
+├── Application/                    <span class="c-com"># Business logic layer</span>
+│   ├── DependencyInjection.cs      <span class="c-com"># Registers all services</span>
+│   ├── DependencyInjection.Function.cs <span class="c-com"># DI for Azure Functions</span>
+│   ├── Interfaces/                 <span class="c-com"># Service contracts (IProfileService, etc.)</span>
+│   ├── Services/                   <span class="c-com"># Service implementations</span>
+│   │   ├── ProfileService.cs
+│   │   ├── Reports/                <span class="c-com"># ReportForecastFiguresService, etc.</span>
+│   │   ├── Parametric/             <span class="c-com"># ParametricNodeService, etc.</span>
+│   │   ├── Upload/                 <span class="c-com"># UploadReferenceBudgetService, etc.</span>
+│   │   └── Queue/                  <span class="c-com"># Background task queue</span>
+│   ├── Excel/                      <span class="c-com"># Aspose.Cells Excel builder abstraction</span>
+│   ├── ViewModels/                 <span class="c-com"># DTOs returned to controllers</span>
+│   ├── Providers/                  <span class="c-com"># Token provider (reads claims from JWT)</span>
+│   └── Utility/                    <span class="c-com"># Localization, AuthUtility, helpers</span>
+│
+├── Domain/                         <span class="c-com"># Domain entities (no dependencies)</span>
+│   ├── IBaseEntity.cs
+│   ├── IWorkflowableEntity.cs
+│   ├── Data/Models/                <span class="c-com"># EF Core entity classes (User, Company, etc.)</span>
+│   ├── Data/ViewModels/            <span class="c-com"># Lightweight query result types</span>
+│   ├── Data/CubeModel/             <span class="c-com"># DAX cube query result models</span>
+│   ├── Data/SpModels/              <span class="c-com"># Stored procedure result models</span>
+│   └── Enums/                      <span class="c-com"># Domain enumerations</span>
+│
+├── Infrastructure/                 <span class="c-com"># Data access layer</span>
+│   ├── BdbPlatformDbContext.cs     <span class="c-com"># EF Core DbContext (all DbSets + model config)</span>
+│   ├── DependencyInjection.cs      <span class="c-com"># Registers DbContext + repositories</span>
+│   ├── Repositories/               <span class="c-com"># EF Core + ADO.NET repository implementations</span>
+│   ├── HttpClients/                <span class="c-com"># BaseHttpClient, DaxQueryClient</span>
+│   ├── EuropeanCentralBank/        <span class="c-com"># ECB exchange rate HTTP integration</span>
+│   └── Utilities/                  <span class="c-com"># Azure Blob client, upload utilities</span>
+│
+└── ExternalApiTriggerFunc/         <span class="c-com"># Azure Functions</span>
+    ├── Program.cs                  <span class="c-com"># Function host setup</span>
+    ├── TriggerCalculatePrice.cs    <span class="c-com"># HTTP-triggered function</span>
+    └── TimerTrigger/               <span class="c-com"># Timer-triggered functions</span></code></pre>
+
+          <h3>Dependency Flow (Clean Architecture)</h3>
+          <p><strong>Inner layers know nothing about outer layers. Dependencies always point inward:</strong></p>
+
+          <div class="card brand">
+            <div class="card-title">Layer Dependency Rules</div>
+            <ul>
+              <li><strong>Domain</strong> — zero dependencies. Pure C# classes (entities, enums, base interfaces). No NuGet packages.</li>
+              <li><strong>Application</strong> — depends on Domain only. Contains service interfaces. Infrastructure details injected via constructor DI.</li>
+              <li><strong>Infrastructure</strong> — depends on Domain + Application interfaces. Implements repositories, DB context, HTTP clients.</li>
+              <li><strong>BdbAPI (Presentation)</strong> — depends on Application interfaces. Controllers call services; never calls repositories directly.</li>
+            </ul>
+          </div>
+
+          <h3>Dependency Injection Pattern</h3>
+          <p>
+            All dependencies are registered in the two <code>DependencyInjection.cs</code> files — one in Application, one in Infrastructure — and both are called from <code>Startup.cs</code>:
+          </p>
+          <pre><code><span class="c-com">// Startup.cs - ConfigureServices()</span>
+services.AddInfrastructure(Configuration);  <span class="c-com">// DB context, repositories, HTTP clients</span>
+services.AddApplication(Configuration);     <span class="c-com">// All business services</span>
+
+<span class="c-com">// Application/DependencyInjection.cs (simplified)</span>
+services.AddScoped&lt;<span class="c-key">IProfileService</span>, ProfileService&gt;();
+services.AddScoped&lt;<span class="c-key">IReportForecastFiguresService</span>, ReportForecastFiguresService&gt;();
+services.AddScoped&lt;<span class="c-key">IParametricNodeService</span>, ParametricNodeService&gt;();
+<span class="c-com">// ... 30+ more service registrations</span>
+
+<span class="c-com">// Infrastructure/DependencyInjection.cs (simplified)</span>
+services.AddDbContext&lt;<span class="c-key">BdbPlatformDbContext</span>&gt;(options =&gt;
+    options.UseSqlServer(connectionString));
+services.AddScoped&lt;<span class="c-key">IUserRepository</span>, UserRepository&gt;();
+services.AddScoped&lt;<span class="c-key">ICubeRepository</span>, CubeRepository&gt;();
+<span class="c-com">// ... all repository registrations</span></code></pre>
+
+          <h3>Key Architectural Patterns</h3>
+
+          <h4>1. Repository Pattern</h4>
+          <p>
+            All data access goes through repositories. Services never use <code>BdbPlatformDbContext</code> directly — they inject repository interfaces.
+            <strong>Why?</strong> Repositories can be mocked in service unit tests, and all DB queries are in one place.
+          </p>
+          <ul>
+            <li><code>IGenericDatabaseRepo&lt;T&gt;</code> — generic CRUD for any entity</li>
+            <li><code>IUserRepository</code>, <code>IReferenceBudgetRepository</code>, etc. — entity-specific repositories with custom queries</li>
+            <li><code>IStoredProcedures</code> — wraps all stored procedure calls</li>
+            <li><code>ICubeRepository</code> — executes DAX queries against Analysis Services cube</li>
+          </ul>
+
+          <h4>2. Token Provider Pattern</h4>
+          <p>
+            <code>ITokenProvider</code> (implemented by <code>TokenProvider</code>) reads claims from the current JWT token (email, user ID, company ID).
+            Services inject this to identify the calling user without touching <code>HttpContext</code> directly.
+          </p>
+          <pre><code><span class="c-com">// TokenProvider extracts claims from the current HTTP request's JWT</span>
+<span class="c-key">public interface</span> ITokenProvider {
+    <span class="c-key">string</span> GetUserEmailId();
+    <span class="c-key">int</span> GetClientId();     <span class="c-com">// Extracted from query param ?clientId=</span>
+}</code></pre>
+
+          <h4>3. Service Scoping</h4>
+          <ul>
+            <li><strong>Scoped (<code>AddScoped</code>):</strong> Most services — created once per HTTP request, disposed at end. Used for services accessing DB (e.g., <code>ProfileService</code>, <code>ReportForecastFiguresService</code>)</li>
+            <li><strong>Transient (<code>AddTransient</code>):</strong> Lightweight, stateless services — new instance per injection (e.g., <code>ReferenceDatePublishedService</code>, <code>PathProvider</code>)</li>
+            <li><strong>Singleton (<code>AddSingleton</code>):</strong> One instance for the app lifetime — used for thread-safe shared resources (e.g., <code>IAzureBlobClient</code>, <code>IBackgroundTaskQueue</code>)</li>
+          </ul>
+        </section>
+
+        <!-- ─── Authentication & Authorization ─── -->
+        <section id="sec-auth" class="section">
+          <h2>Authentication &amp; Authorization</h2>
+          <p class="section-subtitle">
+            The API uses Azure AD B2C JWT Bearer tokens for user authentication and enforces role/subscription-based authorization at the controller level.
+          </p>
+
+          <h3>Authentication Flow</h3>
+          <div class="arch-flow">
+            <span class="node">Frontend sends request</span>
+            <span class="arrow">→</span>
+            <span class="node llm">Authorization: Bearer {JWT}</span>
+            <span class="arrow">→</span>
+            <span class="node">ASP.NET Core JWT Middleware</span>
+          </div>
+          <div class="arch-flow">
+            <span class="node">JWT validated against</span>
+            <span class="arrow">→</span>
+            <span class="node out">Azure AD B2C JWKS endpoint</span>
+            <span class="arrow">→</span>
+            <span class="node">Claims set on HttpContext.User</span>
+          </div>
+          <div class="arch-flow">
+            <span class="node">TokenProvider reads claims</span>
+            <span class="arrow">→</span>
+            <span class="node llm">User email + company resolved</span>
+            <span class="arrow">→</span>
+            <span class="node out">Service executes with user context</span>
+          </div>
+
+          <h3>JWT Bearer Configuration (<code>Startup.cs</code>)</h3>
+          <pre><code><span class="c-com">// Startup.cs — ConfigureServices</span>
+services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApi(options =&gt; {
+        Configuration.Bind(<span class="c-str">"AzureAdB2C"</span>, options);
+    },
+    options =&gt; {
+        Configuration.Bind(<span class="c-str">"AzureAdB2C"</span>, options);
+    });
+
+<span class="c-com">// Required settings in appsettings.json → AzureAdB2C section:</span>
+<span class="c-com">//   Instance, Domain, Tenant, ClientId, SignUpSignInPolicyId</span></code></pre>
+
+          <div class="card brand">
+            <div class="card-title">Azure AD B2C Settings</div>
+            <ul>
+              <li><strong>Policy:</strong> <code>B2C_1A_BDB_SIGNUP_SIGNIN</code> — custom sign-up/sign-in policy</li>
+              <li><strong>Token Lifetime:</strong> Controlled by B2C policy (<code>UseTokenLifetime: true</code>)</li>
+              <li><strong>PKCE:</strong> Enabled (<code>UsePkce: true</code>) for security</li>
+              <li><strong>Secrets:</strong> <code>ClientSecret</code> stored in Azure Key Vault (never in code or config files)</li>
+            </ul>
+          </div>
+
+          <h3>Base Controller &amp; Route Protection</h3>
+          <p>
+            All controllers inherit from <code>BaseApiController</code> which applies <code>[Authorize]</code> globally:
+          </p>
+          <pre><code><span class="c-com">// BaseApiController.cs — inherited by all controllers</span>
+[<span class="c-key">Authorize</span>]           <span class="c-com">// Requires valid JWT on every endpoint</span>
+[ApiController]
+[Route(<span class="c-str">"api/[controller]"</span>)]
+<span class="c-key">public class</span> BaseApiController : ControllerBase
+{
+    <span class="c-com">// Helper: checks if user has permission for the given date range</span>
+    <span class="c-key">protected bool</span> HasPermissionForDates(
+        List&lt;string&gt; userSubscription,
+        <span class="c-key">string</span> userRole,
+        DateTime minDate, DateTime maxDate,
+        List&lt;DateTime&gt; dates)
+    {
+        <span class="c-com">// Admin/operator role → always allowed</span>
+        <span class="c-key">if</span> (AuthUtility.CanAccessByOperator(userRole)) <span class="c-key">return true</span>;
+
+        <span class="c-com">// GisHc subscription → can access up to today</span>
+        <span class="c-key">if</span> (AuthUtility.CanAccessedByGisHcBasic(userSubscription)
+            &amp;&amp; dates.All(d =&gt; minDate &lt;= d &amp;&amp; d &lt;= DateTime.Now)) <span class="c-key">return true</span>;
+
+        <span class="c-com">// GisHcf subscription (with forecast) → can access up to maxDate</span>
+        <span class="c-key">if</span> (AuthUtility.CanAccessedByGisHcfBasic(userSubscription)
+            &amp;&amp; dates.All(d =&gt; minDate &lt;= d &amp;&amp; d &lt;= maxDate)) <span class="c-key">return true</span>;
+
+        <span class="c-key">return false</span>;
+    }
+}</code></pre>
+
+          <h3>Role-Based Authorization</h3>
+          <p>
+            The <code>AuthController</code> provides two endpoints used by the frontend to determine access:
+          </p>
+          <pre><code><span class="c-com">// GET api/Auth/GetRoles</span>
+<span class="c-com">// Returns: "admin" or "user" (single string)</span>
+[AllowAnonymous]
+[HttpGet(<span class="c-str">"GetRoles"</span>)]
+<span class="c-key">public</span> IActionResult GetUserRole()
+{
+    <span class="c-key">var</span> userRole = _authService.GetUserRole();
+    <span class="c-key">return</span> Ok(userRole);
+}
+
+<span class="c-com">// GET api/Auth/GetSubscriptions</span>
+<span class="c-com">// Returns: List&lt;string&gt; of subscription module codes</span>
+[AllowAnonymous]
+[HttpGet(<span class="c-str">"GetSubscriptions"</span>)]
+<span class="c-key">public</span> IActionResult GetUserSubscriptions()
+{
+    <span class="c-key">var</span> subscriptions = _authService.GetUserSubscriptions();
+    <span class="c-key">return</span> Ok(subscriptions);
+}</code></pre>
+
+          <div class="card brand">
+            <div class="card-title">How AuthorizationService Works</div>
+            <p><strong>1. Get email from token:</strong> <code>TokenProvider.GetUserEmailId()</code> reads the email claim from the JWT</p>
+            <p><strong>2. Look up user in DB:</strong> Queries <code>UserRepository</code> to find the <code>User</code> record by email</p>
+            <p><strong>3. Resolve company:</strong> Gets the <code>clientId</code> from the query parameter (passed by frontend on every request)</p>
+            <p><strong>4. Get role:</strong> Queries <code>UserRoleRepository</code> to find the user's role for that company — returns <code>"admin"</code> or <code>"user"</code></p>
+            <p><strong>5. Get subscriptions:</strong> Queries <code>ModuleCompany</code> to find all active module subscriptions for that company</p>
+          </div>
+
+          <h3>API Key Authentication (External Clients)</h3>
+          <p>
+            The <code>/api/BDBClient</code> route uses a separate API key mechanism (not JWT) for external system integrations:
+          </p>
+          <pre><code><span class="c-com">// ApiKeyMiddleware.cs — checks X-Api-Key header</span>
+<span class="c-com">// Only applies to /api/BDBClient route</span>
+<span class="c-com">// Key format: Base64(companyId:companyKey)</span>
+<span class="c-com">// Config key: "apikey-company{id}" from Azure Key Vault</span>
+
+<span class="c-com">// Example header:</span>
+X-Api-Key: <span class="c-str">Base64("42:supersecretkey")</span></code></pre>
+
+          <div class="card warning">
+            <div class="card-title">Important Security Notes</div>
+            <ul>
+              <li>JWT tokens are validated cryptographically against Azure AD B2C's JWKS — no shared secrets needed</li>
+              <li>API keys for BDBClient are stored in Azure Key Vault — never hardcode in source</li>
+              <li>The <code>[AllowAnonymous]</code> on Auth endpoints is intentional — the frontend calls these immediately after token acquisition to populate user context</li>
+              <li>Admin-only actions are protected by <code>ForbiddenAccessException</code> thrown from <code>AuthorizationService.RequireAdminRole()</code> → caught by <code>ExceptionMiddleware</code> → returns HTTP 403</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ─── Controllers & Endpoints ─── -->
+        <section id="sec-controllers" class="section">
+          <h2>Controllers &amp; Endpoints</h2>
+          <p class="section-subtitle">
+            Overview of all API controllers, their route groups, and responsibilities.
+            All routes follow the pattern <code>/api/[ControllerName]</code> and require JWT authorization unless marked <code>[AllowAnonymous]</code>.
+          </p>
+
+          <div class="card brand">
+            <div class="card-title">Controller Design Rules</div>
+            <ul>
+              <li>All controllers inherit <code>BaseApiController</code> → automatically get <code>[Authorize]</code> and <code>/api/[controller]</code> routing</li>
+              <li>Controllers are thin — they only validate input, call one service method, and return a result</li>
+              <li>Business logic lives exclusively in the <strong>Application layer services</strong></li>
+              <li>JSON responses use camelCase (configured globally in <code>Startup.cs</code>)</li>
+              <li>File responses return <code>FileStreamResult</code> or <code>FileContentResult</code> for Excel exports</li>
+            </ul>
+          </div>
+
+          <h3>Data Controllers</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Controller</th>
+                <th>Route</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>AuthController</code></td>
+                <td><code>/api/Auth</code></td>
+                <td>Get user role &amp; subscription list for the authenticated user</td>
+              </tr>
+              <tr>
+                <td><code>ProfileController</code></td>
+                <td><code>/api/Profile</code></td>
+                <td>Get/update user profile, company info, personal details</td>
+              </tr>
+              <tr>
+                <td><code>CompanyController</code></td>
+                <td><code>/api/Company</code></td>
+                <td>Company information and management</td>
+              </tr>
+              <tr>
+                <td><code>ReportForecastFiguresController</code></td>
+                <td><code>/api/ReportForecastFigures</code></td>
+                <td>Monthly figures &amp; forecast data, Excel report generation</td>
+              </tr>
+              <tr>
+                <td><code>ReportMarketTrendsController</code></td>
+                <td><code>/api/ReportMarketTrends</code></td>
+                <td>Market indicators and trend analytics, Excel export</td>
+              </tr>
+              <tr>
+                <td><code>ReportDesignKeyCostFiguresController</code></td>
+                <td><code>/api/ReportDesignKeyCostFigures</code></td>
+                <td>DFKK report data and Excel generation</td>
+              </tr>
+              <tr>
+                <td><code>ReportElementClustersController</code></td>
+                <td><code>/api/ReportElementClusters</code></td>
+                <td>Gi element cluster breakdown reports</td>
+              </tr>
+              <tr>
+                <td><code>FiguresModelController</code></td>
+                <td><code>/api/FiguresModel</code></td>
+                <td>Gi index figures model (element clusters, Stabu chapters, product groups)</td>
+              </tr>
+              <tr>
+                <td><code>ReferenceProjectController</code></td>
+                <td><code>/api/ReferenceProject</code></td>
+                <td>Reference project listing, data series, Excel export</td>
+              </tr>
+              <tr>
+                <td><code>DataSeriesController</code></td>
+                <td><code>/api/DataSeries</code></td>
+                <td>Available data series metadata</td>
+              </tr>
+              <tr>
+                <td><code>DesignKeyCostFiguresController</code></td>
+                <td><code>/api/DesignKeyCostFigures</code></td>
+                <td>DFKK dimension/output data</td>
+              </tr>
+              <tr>
+                <td><code>WovController</code></td>
+                <td><code>/api/Wov</code></td>
+                <td>WOV index data and reports</td>
+              </tr>
+              <tr>
+                <td><code>ProjectAdHocController</code></td>
+                <td><code>/api/ProjectAdHoc</code></td>
+                <td>CRUD for user ad-hoc projects and their files</td>
+              </tr>
+              <tr>
+                <td><code>ProjectIndexController</code></td>
+                <td><code>/api/ProjectIndex</code></td>
+                <td>Project index data (flexible index calculations)</td>
+              </tr>
+              <tr>
+                <td><code>SubscriptionController</code></td>
+                <td><code>/api/Subscription</code></td>
+                <td>User subscription information and access checks</td>
+              </tr>
+              <tr>
+                <td><code>UserPresetController</code></td>
+                <td><code>/api/UserPreset</code></td>
+                <td>Save/retrieve/delete user presets (saved filter configurations)</td>
+              </tr>
+              <tr>
+                <td><code>ReferenceDateController</code></td>
+                <td><code>/api/ReferenceDate</code></td>
+                <td>Available reference dates for data queries</td>
+              </tr>
+              <tr>
+                <td><code>ReferenceDatePublishedController</code></td>
+                <td><code>/api/ReferenceDatePublished</code></td>
+                <td>Published reference dates visible to users</td>
+              </tr>
+              <tr>
+                <td><code>CurrencyController</code></td>
+                <td><code>/api/Currency</code></td>
+                <td>Currency list and exchange rate data</td>
+              </tr>
+              <tr>
+                <td><code>CountryController</code></td>
+                <td><code>/api/Country</code></td>
+                <td>Country list for filtering</td>
+              </tr>
+              <tr>
+                <td><code>LogDataController</code></td>
+                <td><code>/api/LogData</code></td>
+                <td>Action log and audit data</td>
+              </tr>
+              <tr>
+                <td><code>BDBClientController</code></td>
+                <td><code>/api/BDBClient</code></td>
+                <td>External API for third-party system integrations (API key auth)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Parametric Controllers</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Controller</th>
+                <th>Route</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>ParametricNodeController</code></td>
+                <td><code>/api/Parametric/Node</code></td>
+                <td>Parametric element node search, retrieval, and calculation</td>
+              </tr>
+              <tr>
+                <td><code>ParametricFileController</code></td>
+                <td><code>/api/Parametric/File</code></td>
+                <td>Parametric file management and upload</td>
+              </tr>
+              <tr>
+                <td><code>ParametricUnitController</code></td>
+                <td><code>/api/Parametric/Unit</code></td>
+                <td>Unit definitions for parametric elements</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Admin Upload Controllers</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Controller</th>
+                <th>Route</th>
+                <th>Purpose</th>
+                <th>Admin Only?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>ReferenceBudgetController</code></td>
+                <td><code>/api/Uploads/ReferenceBudget</code></td>
+                <td>Upload and publish reference budget Excel files</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td><code>ForcastFigureController</code></td>
+                <td><code>/api/Uploads/ForcastFigure</code></td>
+                <td>Upload and publish forecast figure Excel files</td>
+                <td>Yes</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Typical Controller Example</h3>
+          <pre><code><span class="c-com">// Pattern used by all data controllers</span>
+<span class="c-key">public class</span> ProfileController : BaseApiController
+{
+    <span class="c-key">private readonly</span> IProfileService _profileService;
+
+    <span class="c-com">// Dependencies injected via constructor (never new'd up)</span>
+    <span class="c-key">public</span> ProfileController(IProfileService profileService)
+    {
+        _profileService = profileService;
+    }
+
+    [HttpGet(<span class="c-str">"GetProfile"</span>)]
+    [ProducesResponseType(<span class="c-key">typeof</span>(ProfileViewModel), StatusCodes.Status200OK)]
+    <span class="c-key">public async</span> Task&lt;IActionResult&gt; GetProfile()
+    {
+        <span class="c-com">// Controller just calls service — no business logic here</span>
+        <span class="c-key">var</span> profile = <span class="c-key">await</span> _profileService.GetProfileAsync();
+        <span class="c-key">return</span> Ok(profile);
+    }
+}</code></pre>
+
+          <h3>Response Conventions</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Scenario</th>
+                <th>HTTP Status</th>
+                <th>Return Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Successful data fetch</td>
+                <td>200 OK</td>
+                <td>JSON object / array (camelCase)</td>
+              </tr>
+              <tr>
+                <td>Successful file export</td>
+                <td>200 OK</td>
+                <td>File stream (Excel .xlsx or PDF)</td>
+              </tr>
+              <tr>
+                <td>Validation error / bad input</td>
+                <td>400 Bad Request</td>
+                <td><code>{ "error": "description" }</code></td>
+              </tr>
+              <tr>
+                <td>Missing/invalid JWT token</td>
+                <td>401 Unauthorized</td>
+                <td>ASP.NET Core default response</td>
+              </tr>
+              <tr>
+                <td>Insufficient permissions / role</td>
+                <td>403 Forbidden</td>
+                <td><code>{ "error": "description" }</code></td>
+              </tr>
+              <tr>
+                <td>Unhandled exception</td>
+                <td>500 Internal Server Error</td>
+                <td>No body (logged via App Insights)</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ─── Services Layer ─── -->
+        <section id="sec-services" class="section">
+          <h2>Services Layer</h2>
+          <p class="section-subtitle">
+            The Application layer contains all business logic. Each service encapsulates one feature domain.
+            <strong>Services are the only layer that controllers interact with.</strong>
+          </p>
+
+          <div class="card brand">
+            <div class="card-title">Why the Service Layer Pattern?</div>
+            <ul>
+              <li><strong>Testability:</strong> Services are injected as interfaces → easily mocked in unit tests without a real database</li>
+              <li><strong>Single Responsibility:</strong> Each service owns one domain (profile, forecast figures, parametric, etc.)</li>
+              <li><strong>Reusability:</strong> The same <code>ProfileService.GetProfileAsync()</code> is called from multiple controllers</li>
+              <li><strong>Maintainability:</strong> Business rule changes only require updating one service class</li>
+              <li><strong>Transaction Boundaries:</strong> Complex multi-step operations (upload → parse → validate → save → notify) are orchestrated entirely within a service</li>
+            </ul>
+          </div>
+
+          <h3>Core Services</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th>Interface</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>AuthorizationService</code></td>
+                <td><code>IAuthService</code></td>
+                <td>Resolve user role and subscription list from JWT claims + DB lookup</td>
+              </tr>
+              <tr>
+                <td><code>ProfileService</code></td>
+                <td><code>IProfileService</code></td>
+                <td>Get/update user profile (name, company, contact details)</td>
+              </tr>
+              <tr>
+                <td><code>CompanyService</code></td>
+                <td><code>ICompanyService</code></td>
+                <td>Company data retrieval and management</td>
+              </tr>
+              <tr>
+                <td><code>SubscriptionService</code></td>
+                <td><code>ISubscriptionService</code></td>
+                <td>Subscription module access checks per company</td>
+              </tr>
+              <tr>
+                <td><code>UserService</code></td>
+                <td><code>IUserService</code></td>
+                <td>User CRUD operations, role assignments</td>
+              </tr>
+              <tr>
+                <td><code>PresetService</code></td>
+                <td><code>IPresetService</code></td>
+                <td>Save and retrieve user-defined filter presets per data module</td>
+              </tr>
+              <tr>
+                <td><code>CountryService</code></td>
+                <td><code>ICountryService</code></td>
+                <td>Country list for filtering data</td>
+              </tr>
+              <tr>
+                <td><code>CurrencyService</code></td>
+                <td><code>ICurrencyService</code></td>
+                <td>Currency list and ECB exchange rate integration</td>
+              </tr>
+              <tr>
+                <td><code>ReferenceDatePublishedService</code></td>
+                <td><code>IReferenceDatePublishedService</code></td>
+                <td>Published reference dates available to users</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Report &amp; Data Services</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th>Interface</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>ReportForecastFiguresService</code></td>
+                <td><code>IReportForecastFiguresService</code></td>
+                <td>Monthly figures &amp; forecast data retrieval; generates Excel reports using Aspose.Cells templates</td>
+              </tr>
+              <tr>
+                <td><code>ReportTrendsService</code></td>
+                <td><code>IReportTrendsService</code></td>
+                <td>Market trend data aggregation; Excel export via product-specific templates</td>
+              </tr>
+              <tr>
+                <td><code>ReportGiService</code></td>
+                <td><code>IReportGiService</code></td>
+                <td>Gi (aspect ratio) data and report generation for Element Clusters, Stabu Chapters, Product Groups</td>
+              </tr>
+              <tr>
+                <td><code>FiguresModelService</code></td>
+                <td><code>IFiguresModelService</code></td>
+                <td>Index figures model computation and Excel workbook generation</td>
+              </tr>
+              <tr>
+                <td><code>ReferenceProjectService</code></td>
+                <td><code>IReferenceProjectService</code></td>
+                <td>Reference project listing, data retrieval, and report generation</td>
+              </tr>
+              <tr>
+                <td><code>DataSeriesService</code></td>
+                <td><code>IDataSeriesService</code></td>
+                <td>Available data series metadata queries</td>
+              </tr>
+              <tr>
+                <td><code>DesignKeyCostFiguresService</code></td>
+                <td><code>IDesignKeyCostFiguresService</code></td>
+                <td>DFKK dimension and output data queries</td>
+              </tr>
+              <tr>
+                <td><code>ReportDesignKeyCostFiguresService</code></td>
+                <td><code>IReportDesignKeyCostFiguresService</code></td>
+                <td>DFKK Excel report generation (construction/investment/operational)</td>
+              </tr>
+              <tr>
+                <td><code>WovService</code></td>
+                <td>(IWovService)</td>
+                <td>WOV index data retrieval and report generation</td>
+              </tr>
+              <tr>
+                <td><code>DimensionDescriptionService</code></td>
+                <td><code>IDimensionDescriptionService</code></td>
+                <td>Dimension metadata for Gi/aspect ratio filtering</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Parametric Services</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>ParametricNodeService</code></td>
+                <td>Parametric element node search, retrieval, price calculation</td>
+              </tr>
+              <tr>
+                <td><code>ParametricFileService</code></td>
+                <td>Upload and manage parametric Excel configuration files</td>
+              </tr>
+              <tr>
+                <td><code>ParametricUnitService</code></td>
+                <td>Unit definitions for parametric elements</td>
+              </tr>
+              <tr>
+                <td><code>ParametricExcelService</code></td>
+                <td>Generate Excel output from parametric calculation results</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Project &amp; Ad-Hoc Services</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>AdHocProjectsService</code></td>
+                <td>CRUD for user ad-hoc projects; apply inflation indices to project budgets</td>
+              </tr>
+              <tr>
+                <td><code>AdHocProjectFileService</code></td>
+                <td>File attachments for ad-hoc projects (upload/download from Azure Blob Storage)</td>
+              </tr>
+              <tr>
+                <td><code>ReferenceBudgetService</code></td>
+                <td>Reference budget data access and report generation</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Upload &amp; Admin Services</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>UploadReferenceBudgetService</code></td>
+                <td>Parse reference budget Excel upload, validate rows, persist to DB, trigger workflow</td>
+              </tr>
+              <tr>
+                <td><code>UploadForecastFigureService</code></td>
+                <td>Parse forecast figure Excel upload, validate, map to <code>ForecastItem</code> entities, persist</td>
+              </tr>
+              <tr>
+                <td><code>TemplateService</code></td>
+                <td>Manage Excel and report templates stored in Azure Blob Storage</td>
+              </tr>
+              <tr>
+                <td><code>ExcelImportService</code></td>
+                <td>General Excel import utility used by multiple upload flows</td>
+              </tr>
+              <tr>
+                <td><code>EmailMessageService</code></td>
+                <td>Send transactional email via Microsoft Graph API</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Logging &amp; Background Services</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>ActionLogService</code></td>
+                <td>Log user actions (data exports, uploads) to the audit log table</td>
+              </tr>
+              <tr>
+                <td><code>LogDataService</code></td>
+                <td>Query and display audit log data for admins</td>
+              </tr>
+              <tr>
+                <td><code>BackgroundTaskQueue</code></td>
+                <td>Thread-safe queue for enqueuing long-running tasks (singleton)</td>
+              </tr>
+              <tr>
+                <td><code>BackgroundProcessor</code></td>
+                <td>Hosted service that processes tasks from the queue asynchronously</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Service Pattern Example</h3>
+          <pre><code><span class="c-com">// ProfileService.cs — typical service pattern</span>
+<span class="c-key">public class</span> ProfileService : IProfileService
+{
+    <span class="c-key">private readonly</span> ITokenProvider _tokenProvider;
+    <span class="c-key">private readonly</span> IUserRepository _userRepo;
+    <span class="c-key">private readonly</span> IGenericDatabaseRepo&lt;Person&gt; _personRepo;
+
+    <span class="c-com">// All dependencies injected — never "new" them inside</span>
+    <span class="c-key">public</span> ProfileService(
+        ITokenProvider tokenProvider,
+        IUserRepository userRepo,
+        IGenericDatabaseRepo&lt;Person&gt; personRepo)
+    {
+        _tokenProvider = tokenProvider;
+        _userRepo = userRepo;
+        _personRepo = personRepo;
+    }
+
+    <span class="c-key">public async</span> Task&lt;ProfileViewModel&gt; GetProfileAsync()
+    {
+        <span class="c-com">// 1. Identify user from JWT</span>
+        <span class="c-key">var</span> email = _tokenProvider.GetUserEmailId();
+
+        <span class="c-com">// 2. Load entity from DB via repository</span>
+        <span class="c-key">var</span> user = <span class="c-key">await</span> _userRepo.GetByEmailAsync(email);
+
+        <span class="c-com">// 3. Map to ViewModel (never return EF entities directly)</span>
+        <span class="c-key">return new</span> ProfileViewModel {
+            FirstName = user.Person.FirstName,
+            LastName = user.Person.LastName,
+            Email = user.Email,
+            CompanyName = user.Company.Name
+        };
+    }
+}</code></pre>
+        </section>
+
+        <!-- ─── Domain & Data Models ─── -->
+        <section id="sec-domain" class="section">
+          <h2>Domain &amp; Data Models</h2>
+          <p class="section-subtitle">
+            The Domain project contains all EF Core entities (database tables) and has zero external dependencies — it is the innermost layer of the architecture.
+          </p>
+
+          <h3>Entity Overview</h3>
+          <p>
+            All entities are in <code>Domain/Data/Models/</code>. They map directly to SQL Server tables via EF Core.
+            Entity relationships and constraints are configured in <code>BdbPlatformDbContext.OnModelCreating()</code>.
+          </p>
+
+          <h4>User &amp; Company Entities</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Entity</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>User</code></td>
+                <td>System user (email, linked to Person and Company)</td>
+              </tr>
+              <tr>
+                <td><code>Person</code></td>
+                <td>Personal details (FirstName, LastName, phone)</td>
+              </tr>
+              <tr>
+                <td><code>Company</code></td>
+                <td>Tenant company (Name, Address, subscriptions)</td>
+              </tr>
+              <tr>
+                <td><code>Role</code></td>
+                <td>Role definitions (admin, user)</td>
+              </tr>
+              <tr>
+                <td><code>UserRole</code></td>
+                <td>Many-to-many: User ↔ Company ↔ Role (user can be admin for one company, user for another)</td>
+              </tr>
+              <tr>
+                <td><code>ModuleCompany</code></td>
+                <td>Company's subscribed modules (links Company ↔ Module)</td>
+              </tr>
+              <tr>
+                <td><code>Module</code></td>
+                <td>Feature module definitions (monthly figures, market indicator, etc.)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Construction Data Entities</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Entity</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>DataSeries</code></td>
+                <td>Time series definition (monthly figures, GI data, etc.) with date range metadata</td>
+              </tr>
+              <tr>
+                <td><code>Forecast</code></td>
+                <td>Forecast header (linked to DataSeries, reference project)</td>
+              </tr>
+              <tr>
+                <td><code>ForecastItem</code></td>
+                <td>Individual forecast data point (date, labor/material/equipment index values)</td>
+              </tr>
+              <tr>
+                <td><code>ForecastFile</code></td>
+                <td>Uploaded forecast Excel file metadata and blob reference</td>
+              </tr>
+              <tr>
+                <td><code>ReferenceDate</code></td>
+                <td>Reference date (peildatum) for data version control</td>
+              </tr>
+              <tr>
+                <td><code>ReferenceDatePublished</code></td>
+                <td>Reference date that has been published and is visible to users</td>
+              </tr>
+              <tr>
+                <td><code>TrendAnalyse</code></td>
+                <td>Market trend analysis header</td>
+              </tr>
+              <tr>
+                <td><code>TrendAnalyseItem</code></td>
+                <td>Individual trend data point</td>
+              </tr>
+              <tr>
+                <td><code>MarketAnalyse</code></td>
+                <td>Market analysis data</td>
+              </tr>
+              <tr>
+                <td><code>Dimension</code></td>
+                <td>Dimension definitions for Gi/aspect ratio analysis (building type, region, etc.)</td>
+              </tr>
+              <tr>
+                <td><code>DimensionDescription</code></td>
+                <td>Localized labels for dimensions</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Reference Project Entities</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Entity</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>ReferenceProject</code></td>
+                <td>Reference project header (name, type, location, year)</td>
+              </tr>
+              <tr>
+                <td><code>ReferenceProjectDataSeries</code></td>
+                <td>Links reference projects to available data series</td>
+              </tr>
+              <tr>
+                <td><code>ReferenceBudget</code></td>
+                <td>Reference budget header for a project</td>
+              </tr>
+              <tr>
+                <td><code>ReferenceBudgetItem</code></td>
+                <td>Individual line item in a reference budget (category, amount)</td>
+              </tr>
+              <tr>
+                <td><code>ReferenceBudgetFile</code></td>
+                <td>Uploaded reference budget Excel file metadata</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Ad-Hoc Project Entities</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Entity</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>AdHocProject</code></td>
+                <td>User-created project (name, type, budget estimate, user reference)</td>
+              </tr>
+              <tr>
+                <td><code>AdHocProjectType</code></td>
+                <td>Ad-hoc project type definitions</td>
+              </tr>
+              <tr>
+                <td><code>AdHocProjectFile</code></td>
+                <td>Files attached to an ad-hoc project (stored in Azure Blob)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Parametric Entities</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Entity</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>ParametricNode</code></td>
+                <td>A parametric element node (building component with specs)</td>
+              </tr>
+              <tr>
+                <td><code>ParametricFile</code></td>
+                <td>Source Excel file for parametric data</td>
+              </tr>
+              <tr>
+                <td><code>ParametricInput</code></td>
+                <td>Input parameter for a parametric node</td>
+              </tr>
+              <tr>
+                <td><code>ParametricInputOption</code></td>
+                <td>Dropdown options for parametric inputs</td>
+              </tr>
+              <tr>
+                <td><code>ParametricOutput</code></td>
+                <td>Output costs computed from parametric inputs</td>
+              </tr>
+              <tr>
+                <td><code>ParametricUnit</code></td>
+                <td>Unit of measure for parametric elements (m², m³, unit)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Other Entities</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>Entity</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Currency</code></td>
+                <td>Currency definitions (EUR, USD, GBP, etc.)</td>
+              </tr>
+              <tr>
+                <td><code>CurrencyBatch</code></td>
+                <td>Batch of exchange rates from ECB (daily fetch)</td>
+              </tr>
+              <tr>
+                <td><code>Country</code></td>
+                <td>Country definitions for regional filtering</td>
+              </tr>
+              <tr>
+                <td><code>Preset</code></td>
+                <td>Saved filter configuration definition</td>
+              </tr>
+              <tr>
+                <td><code>UserPreset</code></td>
+                <td>User's saved preset (links User ↔ Preset with filter JSON)</td>
+              </tr>
+              <tr>
+                <td><code>WorkflowLog</code> / <code>WorkflowLogEntry</code></td>
+                <td>Audit trail for workflow state changes (upload → review → publish)</td>
+              </tr>
+              <tr>
+                <td><code>ActionLog</code></td>
+                <td>User action audit log (who accessed/exported what, when)</td>
+              </tr>
+              <tr>
+                <td><code>LogData</code></td>
+                <td>System log records visible to admins</td>
+              </tr>
+              <tr>
+                <td><code>BulkUploadStatus</code></td>
+                <td>Status tracking for bulk upload operations</td>
+              </tr>
+              <tr>
+                <td><code>Wov</code></td>
+                <td>WOV index data points</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="card brand">
+            <div class="card-title">Entity Best Practices</div>
+            <ul>
+              <li>All entities implement <code>IBaseEntity</code> (Id, CreatedAt, UpdatedAt)</li>
+              <li>Workflow-enabled entities implement <code>IWorkflowableEntity</code> (WorkflowStatus)</li>
+              <li>Never expose EF entities directly in API responses — always map to a ViewModel</li>
+              <li>EF relationships are configured in <code>OnModelCreating()</code> in <code>BdbPlatformDbContext</code>, not via data annotations</li>
+              <li>Soft deletes are used where applicable (archived flag) to preserve audit trails</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ─── Infrastructure & Database ─── -->
+        <section id="sec-infrastructure" class="section">
+          <h2>Infrastructure &amp; Database</h2>
+          <p class="section-subtitle">
+            The Infrastructure layer handles all external concerns: database access, file storage, HTTP clients, and Azure integrations.
+          </p>
+
+          <h3>Database (EF Core + SQL Server)</h3>
+          <p>
+            <code>BdbPlatformDbContext</code> is the EF Core DbContext. It contains <strong>all DbSet properties</strong> (one per entity) and all model configuration in <code>OnModelCreating()</code>.
+          </p>
+          <pre><code><span class="c-com">// BdbPlatformDbContext.cs (simplified)</span>
+<span class="c-key">public class</span> BdbPlatformDbContext : DbContext
+{
+    <span class="c-com">// Key DbSets</span>
+    <span class="c-key">public</span> DbSet&lt;User&gt; User { <span class="c-key">get</span>; <span class="c-key">set</span>; }
+    <span class="c-key">public</span> DbSet&lt;Company&gt; Company { <span class="c-key">get</span>; <span class="c-key">set</span>; }
+    <span class="c-key">public</span> DbSet&lt;DataSeries&gt; DataSeries { <span class="c-key">get</span>; <span class="c-key">set</span>; }
+    <span class="c-key">public</span> DbSet&lt;Forecast&gt; Forecast { <span class="c-key">get</span>; <span class="c-key">set</span>; }
+    <span class="c-key">public</span> DbSet&lt;ReferenceBudget&gt; ReferenceBudget { <span class="c-key">get</span>; <span class="c-key">set</span>; }
+    <span class="c-key">public</span> DbSet&lt;ParametricNode&gt; ParametricNode { <span class="c-key">get</span>; <span class="c-key">set</span>; }
+    <span class="c-com">// ... 70+ more DbSets</span>
+
+    <span class="c-key">protected override void</span> OnModelCreating(ModelBuilder modelBuilder)
+    {
+        ConfigureUser(modelBuilder);
+        ConfigureCompany(modelBuilder);
+        ConfigureForecast(modelBuilder);
+        ConfigureMarketAnalyse(modelBuilder);
+        <span class="c-com">// ... all entity configurations</span>
+    }
+}</code></pre>
+
+          <div class="card brand">
+            <div class="card-title">DB Connection Settings</div>
+            <p><strong>Connection String:</strong> <code>ConnectionStrings:DefaultConnection</code> — stored in Azure Key Vault, injected at startup</p>
+            <p><strong>Command Timeout:</strong> <code>AppSettings:DBConnectionTimeout</code> (default: 180 seconds) — increased because some cube/stored procedure queries are long-running</p>
+            <p><strong>Read-Only Queries:</strong> Use <code>.AsNoTracking()</code> on all read-only queries to avoid EF change tracking overhead</p>
+          </div>
+
+          <h3>Repository Pattern</h3>
+          <p>
+            Repositories abstract all data access. Services never query <code>BdbPlatformDbContext</code> directly.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Repository</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>GenericDatabaseRepo&lt;T&gt;</code></td>
+                <td>Generic CRUD: <code>GetAll()</code>, <code>GetById()</code>, <code>Add()</code>, <code>Update()</code>, <code>Delete()</code> for any entity</td>
+              </tr>
+              <tr>
+                <td><code>UserRepository</code></td>
+                <td>User-specific queries: get by email, list by company, eager load Person + Company + Roles</td>
+              </tr>
+              <tr>
+                <td><code>UserGridRepository</code></td>
+                <td>Paginated/filtered user listing for admin grids</td>
+              </tr>
+              <tr>
+                <td><code>UserRoleRepository</code></td>
+                <td>Role assignment queries and updates</td>
+              </tr>
+              <tr>
+                <td><code>ReferenceDateRepository</code></td>
+                <td>Reference date lookups and filtering by product/company</td>
+              </tr>
+              <tr>
+                <td><code>ReferenceBudgetRepository</code></td>
+                <td>Reference budget header queries with eager loading of items</td>
+              </tr>
+              <tr>
+                <td><code>ReferenceBudgetItemRepository</code></td>
+                <td>Individual budget item operations (bulk insert, update)</td>
+              </tr>
+              <tr>
+                <td><code>CubeRepository</code></td>
+                <td>Executes DAX queries against the Analysis Services cube for GI/forecast figures</td>
+              </tr>
+              <tr>
+                <td><code>StoredProcedures</code></td>
+                <td>Wrapper for all stored procedure calls (complex aggregations too large for EF LINQ)</td>
+              </tr>
+              <tr>
+                <td><code>ForcastFigureRepository</code></td>
+                <td>Forecast figure data operations including bulk publish workflows</td>
+              </tr>
+              <tr>
+                <td><code>WorkflowLogEntryRepository</code></td>
+                <td>Workflow state transition logging</td>
+              </tr>
+              <tr>
+                <td><code>ActionLogRepo</code></td>
+                <td>User action audit log persistence</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Azure Blob Storage</h3>
+          <p>
+            Files (uploaded Excel files, generated reports, templates) are stored in Azure Blob Storage.
+            <code>IAzureBlobClient</code> and <code>IAzureBlobContainerClientProvider</code> wrap the Azure SDK.
+          </p>
+          <ul>
+            <li><strong>Upload containers:</strong> Uploaded reference budgets and forecast figures stored as blobs</li>
+            <li><strong>Template containers:</strong> Excel report templates for each product (e.g., <code>MFandFF.xlsx</code>, <code>MarketIndicator.xlsx</code>)</li>
+            <li><strong>Ad-hoc project files:</strong> User-uploaded attachments stored in Blob, referenced by URL</li>
+            <li><strong>WOV uploads:</strong> WOV index Excel files stored via <code>IWovBlobClient</code></li>
+          </ul>
+
+          <h3>External HTTP Clients</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Client</th>
+                <th>Purpose</th>
+                <th>Config Key</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>BaseHttpClient ("externalApi")</code></td>
+                <td>Calls classic BDB legacy API endpoints</td>
+                <td><code>AppSettings:BaseApi</code></td>
+              </tr>
+              <tr>
+                <td><code>BaseHttpClient ("migrationApi")</code></td>
+                <td>User account migration from classic system; uses API key header</td>
+                <td><code>AppSettings:MigrationApiUrl</code> + <code>MigrationApiKey</code></td>
+              </tr>
+              <tr>
+                <td><code>DaxQueryClient</code></td>
+                <td>Executes DAX queries against SQL Server Analysis Services cube</td>
+                <td>Connection string from Key Vault</td>
+              </tr>
+              <tr>
+                <td>ECB HTTP Client</td>
+                <td>Fetches daily EUR exchange rates XML from <code>ecb.europa.eu</code></td>
+                <td><code>AppSettings:EuropeanCentralBankUrl</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ─── Middleware Pipeline ─── -->
+        <section id="sec-middleware" class="section">
+          <h2>Middleware Pipeline</h2>
+          <p class="section-subtitle">
+            ASP.NET Core middleware processes every HTTP request in sequence. Understanding the order is critical for debugging authentication and error scenarios.
+          </p>
+
+          <h3>Pipeline Order</h3>
+          <p><strong>Order matters — middleware runs top-to-bottom on request, bottom-to-top on response:</strong></p>
+          <div class="example-grid">
+            <div class="example-step">
+              <div class="num">1</div>
+              <strong>Developer Exception Page</strong><br />
+              Only in Development. Shows full stack trace for unhandled exceptions.
+            </div>
+            <div class="example-step">
+              <div class="num">2</div>
+              <strong>Swagger UI</strong><br />
+              Only in Development. Serves <code>/swagger</code> endpoint for API exploration.
+            </div>
+            <div class="example-step">
+              <div class="num">3</div>
+              <strong>Routing</strong><br />
+              Matches the incoming URL to a controller endpoint.
+            </div>
+            <div class="example-step">
+              <div class="num">4</div>
+              <strong>CORS</strong><br />
+              Applies the <code>"test"</code> policy: allow any origin, any method, expose Authorization &amp; Content-Disposition headers.
+            </div>
+            <div class="example-step">
+              <div class="num">5</div>
+              <strong>ExceptionMiddleware</strong><br />
+              Custom global error handler. Catches <code>ForbiddenAccessException</code> → 403, <code>UploadExcelException</code> → 400.
+            </div>
+            <div class="example-step">
+              <div class="num">6</div>
+              <strong>ApiKeyMiddleware</strong><br />
+              Checks <code>X-Api-Key</code> header for <code>/api/BDBClient</code> routes only.
+            </div>
+            <div class="example-step">
+              <div class="num">7</div>
+              <strong>Authentication</strong><br />
+              Validates JWT Bearer token against Azure AD B2C JWKS.
+            </div>
+            <div class="example-step">
+              <div class="num">8</div>
+              <strong>Authorization</strong><br />
+              Enforces <code>[Authorize]</code> — rejects requests with invalid/missing tokens.
+            </div>
+          </div>
+
+          <h3>ExceptionMiddleware</h3>
+          <p>
+            Catches specific custom exceptions thrown anywhere in the pipeline and maps them to HTTP status codes.
+            <strong>Without this, all exceptions would result in unstructured 500 responses.</strong>
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Exception</th>
+                <th>HTTP Status</th>
+                <th>When Thrown</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>ForbiddenAccessException</code></td>
+                <td>403 Forbidden</td>
+                <td>User does not have admin role for an admin-only action</td>
+              </tr>
+              <tr>
+                <td><code>UploadExcelException</code></td>
+                <td>400 Bad Request</td>
+                <td>Uploaded Excel file fails validation (wrong format, missing columns, bad data)</td>
+              </tr>
+              <tr>
+                <td>Any other exception</td>
+                <td>500 (unhandled)</td>
+                <td>Unexpected error — logged to Application Insights</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <pre><code><span class="c-com">// ExceptionMiddleware.cs — catches known exceptions</span>
+<span class="c-key">catch</span> (ForbiddenAccessException ex) {
+    context.Response.StatusCode = 403;
+    <span class="c-key">await</span> context.Response.WriteAsJsonAsync(<span class="c-key">new</span> { error = ex.Message });
+}
+<span class="c-key">catch</span> (UploadExcelException ex) {
+    context.Response.StatusCode = 400;
+    <span class="c-key">await</span> context.Response.WriteAsJsonAsync(<span class="c-key">new</span> { error = ex.Description });
+}</code></pre>
+
+          <h3>ApiKeyMiddleware</h3>
+          <p>
+            Only intercepts requests to <code>/api/BDBClient</code>.
+            Validates <code>X-Api-Key</code> header (Base64-encoded <code>companyId:key</code>) against values stored in Azure Key Vault.
+          </p>
+          <pre><code><span class="c-com">// ApiKeyMiddleware — only for /api/BDBClient</span>
+<span class="c-com">// Header format: X-Api-Key: Base64("companyId:apiKey")</span>
+<span class="c-com">// Key vault key: "apikey-company{companyId}"</span>
+<span class="c-com">// Returns 401 if missing, 400 if malformed, 403 if invalid</span></code></pre>
+
+          <h3>CORS Configuration</h3>
+          <div class="card warning">
+            <div class="card-title">Current CORS Policy (Named "test")</div>
+            <p>The current policy allows all origins (<code>*</code>). This is intentional for development/integration flexibility but should be tightened for production to specific allowed frontend origins.</p>
+            <ul>
+              <li><strong>Allowed Origins:</strong> <code>*</code> (all origins)</li>
+              <li><strong>Allowed Methods:</strong> All (<code>AllowAnyMethod()</code>)</li>
+              <li><strong>Allowed Headers:</strong> All (<code>AllowAnyHeader()</code>)</li>
+              <li><strong>Exposed Headers:</strong> <code>Authorization</code>, <code>Content-Disposition</code> (needed for file download filenames)</li>
+            </ul>
+          </div>
+
+          <h3>Aspose.Cells License</h3>
+          <p>
+            The API uses <strong>Aspose.Cells</strong> (commercial library) for all Excel generation and parsing.
+            The license file is embedded as a resource in the assembly and loaded at startup in <code>Startup.SetAsposeLicense()</code>.
+          </p>
+          <div class="card danger">
+            <div class="card-title">Important: Aspose License</div>
+            <p>The license file <code>BdbAPI/License/Aspose.Cells.NET.lic</code> is embedded in the build output. If the license is expired or missing, Aspose will run in evaluation mode — Excel files will have watermarks. Contact the team lead for a valid license file.</p>
+          </div>
+        </section>
+
+        <!-- ─── Background Processing & Functions ─── -->
+        <section id="sec-background" class="section">
+          <h2>Background Processing &amp; Functions</h2>
+          <p class="section-subtitle">
+            Long-running tasks run asynchronously via a background task queue. Azure Functions handle scheduled and external-trigger operations.
+          </p>
+
+          <h3>Background Task Queue</h3>
+          <p>
+            Some operations (e.g., bulk publish of reference budgets, data migration) are too slow to run synchronously within an HTTP request's timeout.
+            The solution uses a <strong>producer-consumer queue</strong>:
+          </p>
+
+          <div class="arch-flow">
+            <span class="node">Controller receives request</span>
+            <span class="arrow">→</span>
+            <span class="node llm">Enqueues task to IBackgroundTaskQueue</span>
+            <span class="arrow">→</span>
+            <span class="node out">Returns 202 Accepted immediately</span>
+          </div>
+          <div class="arch-flow">
+            <span class="node">BackgroundProcessor (Hosted Service)</span>
+            <span class="arrow">→</span>
+            <span class="node">Dequeues and executes task</span>
+            <span class="arrow">→</span>
+            <span class="node out">Updates DB status on completion</span>
+          </div>
+
+          <pre><code><span class="c-com">// Enqueue a background task from a service</span>
+_taskQueue.QueueBackgroundWorkItem(<span class="c-key">async</span> (cancellationToken) =&gt;
+{
+    <span class="c-com">// This runs asynchronously after response is sent</span>
+    <span class="c-key">await</span> ProcessBulkUploadAsync(uploadId, cancellationToken);
+});
+
+<span class="c-com">// BackgroundProcessor (IHostedService) dequeues and runs tasks</span>
+<span class="c-key">while</span> (!cancellationToken.IsCancellationRequested)
+{
+    <span class="c-key">var</span> workItem = <span class="c-key">await</span> _taskQueue.DequeueAsync(cancellationToken);
+    <span class="c-key">await</span> workItem(cancellationToken);
+}</code></pre>
+
+          <div class="card brand">
+            <div class="card-title">Background Task Use Cases</div>
+            <ul>
+              <li><strong>Bulk Publish:</strong> Publishing 100s of reference budget items in one operation — long DB transaction</li>
+              <li><strong>Excel Processing:</strong> Parsing and validating large uploaded Excel files without HTTP timeout</li>
+              <li><strong>Email Notifications:</strong> Sending upload confirmation emails via Graph API after upload completes</li>
+              <li><strong>Data Migration:</strong> Classic system user migration via migration API</li>
+            </ul>
+          </div>
+
+          <h3>Azure Functions (<code>ExternalApiTriggerFunc</code>)</h3>
+          <p>
+            A separate Azure Functions project handles operations that run outside the main API — either on a schedule or triggered by external systems.
+          </p>
+
+          <h4>TriggerCalculatePrice (HTTP Trigger)</h4>
+          <p>
+            An HTTP-triggered Azure Function that acts as a secure proxy for calling the Parametric <code>CalculatePrice</code> endpoint.
+            External systems call this function with a parametric node ID, and the function forwards the request to the main API with a server-side API key.
+          </p>
+          <pre><code><span class="c-com">// HTTP POST: /api/CalculatePrice?id={parametricNodeId}</span>
+<span class="c-com">// Auth: Function key (AuthorizationLevel.Function)</span>
+<span class="c-com">// Forwards to: {ApiBaseUrl}/{id}/CalculatePrice with x-api-key header</span>
+[Function(<span class="c-str">"CalculatePrice"</span>)]
+<span class="c-key">public async</span> Task&lt;HttpResponseData&gt; Run(
+    [HttpTrigger(AuthorizationLevel.Function, <span class="c-str">"post"</span>)] HttpRequestData req)
+{
+    <span class="c-com">// Validates id query param, forwards body to main API</span>
+    <span class="c-com">// Returns ParametricNodeViewModel response</span>
+}</code></pre>
+
+          <h4>Timer Triggers</h4>
+          <p>
+            The <code>TimerTrigger/</code> folder contains timer-based functions that run on a schedule (e.g., daily currency rate refresh, periodic data jobs).
+          </p>
+
+          <div class="card accent">
+            <div class="card-title">Function Configuration</div>
+            <ul>
+              <li><strong>Runtime:</strong> .NET 8 Isolated Worker Process</li>
+              <li><strong>Authentication:</strong> Function keys (not Azure AD)</li>
+              <li><strong>Config:</strong> <code>host.json</code> for runtime settings; secrets via Application Settings in Azure</li>
+              <li><strong>API Key:</strong> <code>ConnectionStrings:ExpectedApiKey</code> — stored in Key Vault / Function App settings</li>
+              <li><strong>API Base URL:</strong> <code>ApiBaseUrl</code> — points to main BDB API deployment</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ─── Testing Strategy ─── -->
+        <section id="sec-testing" class="section">
+          <h2>Testing Strategy</h2>
+          <p class="section-subtitle">
+            Comprehensive unit testing across all four projects using MSTest and Moq.
+            <strong>Testing philosophy: test business logic in isolation — mock all external dependencies.</strong>
+          </p>
+
+          <div class="card brand">
+            <div class="card-title">Why MSTest + Moq?</div>
+            <ul>
+              <li><strong>MSTest:</strong> Microsoft's built-in test framework — first-class support in Visual Studio, CI/CD pipelines, and .NET tooling</li>
+              <li><strong>Moq:</strong> Industry-standard mocking library for .NET — clean, fluent syntax for setting up fake dependencies</li>
+              <li><strong>No integration tests (yet):</strong> All tests are pure unit tests — no real DB, no real HTTP calls. Faster CI, no test data setup needed</li>
+              <li><strong>Interface-driven design:</strong> Every dependency is injected as an interface → always mockable in tests</li>
+            </ul>
+          </div>
+
+          <h3>Test Projects Overview</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Test Project</th>
+                <th>Tests</th>
+                <th>What It Covers</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>Application.Test</code></td>
+                <td>Services (30+ service test classes)</td>
+                <td>Business logic: data transformations, validation rules, authorization checks, Excel generation</td>
+              </tr>
+              <tr>
+                <td><code>BdbAPI.Test</code></td>
+                <td>Controllers, helpers, middleware</td>
+                <td>HTTP response codes, controller input handling, middleware behavior</td>
+              </tr>
+              <tr>
+                <td><code>Infrastructure.Test</code></td>
+                <td>Repositories, HTTP clients, blob utilities</td>
+                <td>Repository query logic, ECB client parsing, Azure Blob interactions</td>
+              </tr>
+              <tr>
+                <td><code>ExternalApiTriggerFunc.Test</code></td>
+                <td>Azure Function handlers</td>
+                <td>Function request validation, proxy forwarding logic, error handling</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Test Structure &amp; Naming</h3>
+          <pre><code>Application.Test/
+├── Services/
+│   ├── ProfileServiceTest.cs         <span class="c-com"># Tests for ProfileService</span>
+│   ├── AuthorizationServiceTest.cs   <span class="c-com"># Tests for AuthorizationService</span>
+│   ├── Reports/
+│   │   └── ReportForecastFiguresServiceTest.cs
+│   └── Parametric/
+│       └── ParametricNodeServiceTest.cs
+BdbAPI.Test/
+├── Controllers/
+│   ├── ProfileControllerTest.cs
+│   └── ...
+├── Middleware/
+│   └── ExceptionMiddlewareTest.cs
+└── Helpers/</code></pre>
+
+          <h3>Test Patterns</h3>
+
+          <h4>1. Service Unit Test Pattern</h4>
+          <p><strong>Setup:</strong> Mock all repository and infrastructure dependencies. Inject mocks into the real service. Test real business logic.</p>
+          <pre><code><span class="c-com">// ProfileServiceTest.cs — typical service test</span>
+[TestClass]
+<span class="c-key">public class</span> ProfileServiceTest
+{
+    <span class="c-key">private</span> Mock&lt;ITokenProvider&gt; _mockTokenProvider;
+    <span class="c-key">private</span> Mock&lt;IUserRepository&gt; _mockUserRepo;
+    <span class="c-key">private</span> Mock&lt;IGenericDatabaseRepo&lt;Person&gt;&gt; _mockPersonRepo;
+    <span class="c-key">private</span> ProfileService _service;  <span class="c-com">// Real service, not mocked</span>
+
+    [TestInitialize]
+    <span class="c-key">public void</span> Setup()
+    {
+        <span class="c-com">// Create mocks for all dependencies</span>
+        _mockTokenProvider = <span class="c-key">new</span> Mock&lt;ITokenProvider&gt;();
+        _mockUserRepo = <span class="c-key">new</span> Mock&lt;IUserRepository&gt;();
+        _mockPersonRepo = <span class="c-key">new</span> Mock&lt;IGenericDatabaseRepo&lt;Person&gt;&gt;();
+
+        <span class="c-com">// Set up default behaviour</span>
+        _mockTokenProvider.Setup(t =&gt; t.GetUserEmailId())
+            .Returns(<span class="c-str">"john.doe@example.com"</span>);
+
+        <span class="c-com">// Inject mocks into REAL service</span>
+        _service = <span class="c-key">new</span> ProfileService(
+            _mockTokenProvider.Object,
+            _mockUserRepo.Object,
+            _mockPersonRepo.Object);
+    }
+
+    [TestMethod]
+    <span class="c-key">public async</span> Task GetProfileAsync_ReturnsProfile_WhenUserExists()
+    {
+        <span class="c-com">// Arrange: set up mock DB response</span>
+        _mockUserRepo.Setup(r =&gt; r.GetByEmailAsync(<span class="c-str">"john.doe@example.com"</span>))
+            .ReturnsAsync(<span class="c-key">new</span> User {
+                Email = <span class="c-str">"john.doe@example.com"</span>,
+                Person = <span class="c-key">new</span> Person { FirstName = <span class="c-str">"John"</span>, LastName = <span class="c-str">"Doe"</span> },
+                Company = <span class="c-key">new</span> Company { Name = <span class="c-str">"TestCorp"</span> }
+            });
+
+        <span class="c-com">// Act: call the real service method</span>
+        <span class="c-key">var</span> result = <span class="c-key">await</span> _service.GetProfileAsync();
+
+        <span class="c-com">// Assert: verify output</span>
+        Assert.AreEqual(<span class="c-str">"John"</span>, result.FirstName);
+        Assert.AreEqual(<span class="c-str">"Doe"</span>, result.LastName);
+        Assert.AreEqual(<span class="c-str">"TestCorp"</span>, result.CompanyName);
+    }
+
+    [TestMethod]
+    <span class="c-key">public async</span> Task GetProfileAsync_ThrowsException_WhenUserNotFound()
+    {
+        <span class="c-com">// Arrange: simulate user not in DB</span>
+        _mockUserRepo.Setup(r =&gt; r.GetByEmailAsync(It.IsAny&lt;<span class="c-key">string</span>&gt;()))
+            .ReturnsAsync((<span class="c-key">User</span>)<span class="c-key">null</span>);
+
+        <span class="c-com">// Act &amp; Assert: verify exception thrown</span>
+        <span class="c-key">await</span> Assert.ThrowsExceptionAsync&lt;Exception&gt;(
+            () =&gt; _service.GetProfileAsync()
+        );
+    }
+}</code></pre>
+
+          <h4>2. Controller Unit Test Pattern</h4>
+          <p><strong>Mock the service, call the controller action, verify HTTP status codes and response body.</strong></p>
+          <pre><code><span class="c-com">// ProfileControllerTest.cs</span>
+[TestClass]
+<span class="c-key">public class</span> ProfileControllerTest
+{
+    <span class="c-key">private</span> Mock&lt;IProfileService&gt; _mockService;
+    <span class="c-key">private</span> ProfileController _controller;
+
+    [TestInitialize]
+    <span class="c-key">public void</span> Setup()
+    {
+        _mockService = <span class="c-key">new</span> Mock&lt;IProfileService&gt;();
+        _controller = <span class="c-key">new</span> ProfileController(_mockService.Object);
+    }
+
+    [TestMethod]
+    <span class="c-key">public async</span> Task GetProfile_Returns200_WithValidData()
+    {
+        <span class="c-com">// Arrange</span>
+        _mockService.Setup(s =&gt; s.GetProfileAsync())
+            .ReturnsAsync(<span class="c-key">new</span> ProfileViewModel { FirstName = <span class="c-str">"John"</span> });
+
+        <span class="c-com">// Act</span>
+        <span class="c-key">var</span> result = <span class="c-key">await</span> _controller.GetProfile() <span class="c-key">as</span> OkObjectResult;
+
+        <span class="c-com">// Assert</span>
+        Assert.IsNotNull(result);
+        Assert.AreEqual(200, result.StatusCode);
+        <span class="c-key">var</span> profile = result.Value <span class="c-key">as</span> ProfileViewModel;
+        Assert.AreEqual(<span class="c-str">"John"</span>, profile.FirstName);
+    }
+}</code></pre>
+
+          <h4>3. Middleware Test Pattern</h4>
+          <p><strong>Test that custom exceptions produce the correct HTTP status and body.</strong></p>
+          <pre><code><span class="c-com">// ExceptionMiddlewareTest.cs</span>
+[TestMethod]
+<span class="c-key">public async</span> Task Invoke_Returns403_WhenForbiddenAccessExceptionThrown()
+{
+    <span class="c-com">// Arrange: next middleware throws ForbiddenAccessException</span>
+    <span class="c-key">var</span> middleware = <span class="c-key">new</span> ExceptionMiddleware(
+        next: (ctx) =&gt; <span class="c-key">throw new</span> ForbiddenAccessException(<span class="c-str">"No access"</span>),
+        logger: Mock.Of&lt;ILogger&lt;ExceptionMiddleware&gt;&gt;()
+    );
+    <span class="c-key">var</span> context = <span class="c-key">new</span> DefaultHttpContext();
+
+    <span class="c-com">// Act</span>
+    <span class="c-key">await</span> middleware.Invoke(context);
+
+    <span class="c-com">// Assert</span>
+    Assert.AreEqual(403, context.Response.StatusCode);
+}</code></pre>
+
+          <h3>Running Tests</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Command</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>dotnet test</code></td>
+                <td>Run all tests in the solution</td>
+              </tr>
+              <tr>
+                <td><code>dotnet test Application.Test</code></td>
+                <td>Run only Application layer tests</td>
+              </tr>
+              <tr>
+                <td><code>dotnet test --filter "TestCategory=Unit"</code></td>
+                <td>Run tests by category</td>
+              </tr>
+              <tr>
+                <td><code>dotnet test --collect:"XPlat Code Coverage"</code></td>
+                <td>Collect code coverage (generates coverage.cobertura.xml)</td>
+              </tr>
+              <tr>
+                <td><code>dotnet test --logger "trx;LogFileName=results.trx"</code></td>
+                <td>Generate TRX report for Azure DevOps</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="card success">
+            <div class="card-title">Test Coverage Goals</div>
+            <ul>
+              <li><strong>Application Services:</strong> High coverage (&gt;70%) — this is the most critical layer with all business rules</li>
+              <li><strong>Controllers:</strong> Medium coverage (&gt;50%) — focus on happy path + main error cases</li>
+              <li><strong>Infrastructure Repositories:</strong> Selective coverage — complex query logic tested; simple CRUD wrappers optional</li>
+              <li><strong>Azure Functions:</strong> Focus on input validation and error handling</li>
+            </ul>
+          </div>
+
+          <div class="card accent">
+            <div class="card-title">MSTestSettings.cs</div>
+            <p>Each test project has a <code>MSTestSettings.cs</code> file that configures shared test settings (e.g., parallelism, timeouts). Check this file if tests are running unexpectedly slow or fast.</p>
+          </div>
+        </section>
+
+        <!-- ─── Configuration & Secrets ─── -->
+        <section id="sec-config" class="section">
+          <h2>Configuration &amp; Secrets</h2>
+          <p class="section-subtitle">
+            How the API manages configuration across environments and keeps secrets secure using Azure Key Vault.
+          </p>
+
+          <h3>Configuration Loading Order</h3>
+          <p>ASP.NET Core loads configuration in this priority order (later sources override earlier ones):</p>
+          <div class="example-grid">
+            <div class="example-step">
+              <div class="num">1</div>
+              <strong>appsettings.json</strong><br />
+              Base config. Committed. No secrets. Contains all setting keys with empty values.
+            </div>
+            <div class="example-step">
+              <div class="num">2</div>
+              <strong>appsettings.{Environment}.json</strong><br />
+              Environment overrides (e.g., <code>appsettings.Development.json</code>). Local only, gitignored.
+            </div>
+            <div class="example-step">
+              <div class="num">3</div>
+              <strong>Environment Variables</strong><br />
+              Azure App Service / pipeline-injected variables override file config.
+            </div>
+            <div class="example-step">
+              <div class="num">4</div>
+              <strong>Azure Key Vault</strong><br />
+              Loaded at startup via <code>DefaultAzureCredential</code>. Highest priority — secrets always win.
+            </div>
+          </div>
+
+          <h3>Key Configuration Sections</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Section</th>
+                <th>Purpose</th>
+                <th>Secret?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>ConnectionStrings:DefaultConnection</code></td>
+                <td>SQL Server connection string</td>
+                <td>Yes — Key Vault</td>
+              </tr>
+              <tr>
+                <td><code>ConnectionStrings:AzureBlobStorage</code></td>
+                <td>Azure Blob Storage connection string</td>
+                <td>Yes — Key Vault</td>
+              </tr>
+              <tr>
+                <td><code>AzureAdB2C:ClientId</code></td>
+                <td>Azure AD B2C app registration ID</td>
+                <td>No (public)</td>
+              </tr>
+              <tr>
+                <td><code>AzureAdB2C:ClientSecret</code></td>
+                <td>Azure AD B2C app client secret</td>
+                <td>Yes — Key Vault</td>
+              </tr>
+              <tr>
+                <td><code>AzureAdB2C:Policy</code></td>
+                <td>B2C sign-in policy: <code>B2C_1A_BDB_SIGNUP_SIGNIN</code></td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><code>GraphEmail:ClientId</code></td>
+                <td>Microsoft Graph API app ID for email sending</td>
+                <td>No (public)</td>
+              </tr>
+              <tr>
+                <td><code>GraphEmail:ClientSecret</code></td>
+                <td>Graph API client secret</td>
+                <td>Yes — Key Vault</td>
+              </tr>
+              <tr>
+                <td><code>KeyVaults:BDBKeyVaultName</code></td>
+                <td>Key Vault URI (the only non-secret config that must exist before KV is loaded)</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><code>AppSettings:DBConnectionTimeout</code></td>
+                <td>SQL command timeout in seconds (default: 180)</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><code>AppSettings:MigrationApiKey</code></td>
+                <td>API key for classic BDB migration endpoint</td>
+                <td>Yes — Key Vault</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>App Data Paths</h3>
+          <p>
+            Many settings in <code>AppSettings</code> are paths to template Excel files stored in the <code>App_Data/</code> folder.
+            These templates are used by Aspose.Cells to generate reports:
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Setting</th>
+                <th>Path</th>
+                <th>Used By</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>ForecastTemplatePath</code></td>
+                <td><code>App_Data/ExcelTemplates/Model BDB Prognosecijfers...xlsx</code></td>
+                <td>Forecast figures upload processing</td>
+              </tr>
+              <tr>
+                <td><code>ReferenceBudgetTemplatePath</code></td>
+                <td><code>App_Data/UploadsExcelTemplates/referenceBudget_template.xlsx</code></td>
+                <td>Reference budget upload validation</td>
+              </tr>
+              <tr>
+                <td><code>FiguresModelTemplatePath</code></td>
+                <td><code>App_Data/DossierExcelTemplates/BDB Rekenmodel indexcijfers 2.0.xlsx</code></td>
+                <td>Gi figures model report</td>
+              </tr>
+              <tr>
+                <td><code>ProductMonthlyFiguresReportTemplatePath</code></td>
+                <td><code>App_Data/ProductExcelTemplates/{0}/MonthlyFiguresReport.xlsx</code></td>
+                <td>Monthly figures report (per product)</td>
+              </tr>
+              <tr>
+                <td><code>ProductMarketIndicatorReportTemplatePath</code></td>
+                <td><code>App_Data/ProductExcelTemplates/{0}/MarketIndicator.xlsx</code></td>
+                <td>Market indicator report</td>
+              </tr>
+              <tr>
+                <td><code>i18n</code></td>
+                <td><code>App_Data/Localization</code></td>
+                <td>Localization strings loaded at startup</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="card brand">
+            <div class="card-title">Azure Key Vault Setup</div>
+            <p><strong>Local development:</strong> <code>DefaultAzureCredential</code> uses your <code>az login</code> session to access Key Vault. Run <code>az login</code> before starting the API.</p>
+            <p><strong>Production/CI:</strong> <code>DefaultAzureCredential</code> automatically uses the App Service's Managed Identity — no secrets needed in config files.</p>
+            <p><strong>Key naming in Key Vault:</strong> ASP.NET Core replaces <code>:</code> with <code>--</code> for Key Vault secret names. For example, <code>ConnectionStrings:DefaultConnection</code> becomes the Key Vault secret <code>ConnectionStrings--DefaultConnection</code>.</p>
+          </div>
+
+          <h3>GiService Configuration</h3>
+          <p>
+            The <code>GiService</code> section controls template paths and offsets for Gi report generation (Element Clusters, Stabu Chapters, Product Groups).
+            Each sub-section has <code>Measures</code>, <code>Report</code>, <code>RimBasic</code>, and <code>Advance</code> variants with separate template paths and row/column offsets for Aspose.Cells to fill.
+          </p>
+
+          <h3>ForecastFigure Configuration</h3>
+          <p>
+            The <code>ForecastFigure</code> section maps each forecast dimension (ProductGroup, StabuChapter, ElementCluster) to its Excel sheet name and data offset configuration used during upload parsing.
+          </p>
+        </section>
+
+        <!-- ─── Build & Deployment ─── -->
+        <section id="sec-build" class="section">
+          <h2>Build &amp; Deployment</h2>
+          <p class="section-subtitle">
+            How the API is built, published, and deployed across development, UAT, and production environments.
+          </p>
+
+          <h3>Build Process</h3>
+          <div class="example-grid">
+            <div class="example-step">
+              <div class="num">1</div>
+              <strong>dotnet restore</strong><br />
+              Restores NuGet packages from nuget.org and Arcadis private feed
+            </div>
+            <div class="example-step">
+              <div class="num">2</div>
+              <strong>dotnet build</strong><br />
+              Compiles all projects in the solution with warnings-as-errors
+            </div>
+            <div class="example-step">
+              <div class="num">3</div>
+              <strong>dotnet test</strong><br />
+              Runs all unit tests; CI fails if any test fails or coverage drops below threshold
+            </div>
+            <div class="example-step">
+              <div class="num">4</div>
+              <strong>dotnet publish</strong><br />
+              Publishes <code>BdbAPI</code> and <code>ExternalApiTriggerFunc</code> in Release mode
+            </div>
+          </div>
+
+          <h3>Publish Commands</h3>
+          <pre><code><span class="c-com"># Publish the Web API</span>
+dotnet publish BdbAPI/BdbAPI.csproj \
+  -c Release \
+  -o ./publish/api \
+  --no-restore
+
+<span class="c-com"># Publish the Azure Functions</span>
+dotnet publish ExternalApiTriggerFunc/ExternalApiTriggerFunc.csproj \
+  -c Release \
+  -o ./publish/func \
+  --no-restore</code></pre>
+
+          <h3>Deployment Targets</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Environment</th>
+                <th>Frontend URL</th>
+                <th>API Deployment</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Development</td>
+                <td>https://devbdb.arcadis.com</td>
+                <td>Azure App Service (DEV slot)</td>
+              </tr>
+              <tr>
+                <td>UAT</td>
+                <td>UAT-specific URL</td>
+                <td>Azure App Service (UAT slot)</td>
+              </tr>
+              <tr>
+                <td>Production</td>
+                <td>https://bdb.eu</td>
+                <td>Azure App Service (PRD slot)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Azure App Service Configuration</h3>
+          <ul>
+            <li><strong>Hosting Model:</strong> Out-of-process (<code>AspNetCoreHostingModel=OutOfProcess</code> in csproj) — runs as a separate process behind IIS</li>
+            <li><strong>Managed Identity:</strong> System-assigned managed identity grants access to Key Vault and Blob Storage — no credentials in app settings</li>
+            <li><strong>Always On:</strong> Enabled — prevents cold starts on the production API</li>
+            <li><strong>App Insights:</strong> Connected via <code>Microsoft.ApplicationInsights.AspNetCore</code> — all logs, traces, and exceptions flow to the Azure portal</li>
+            <li><strong>web.config:</strong> Included for IIS hosting. Configured to not transform on publish (<code>IsTransformWebConfigDisabled=true</code>)</li>
+          </ul>
+
+          <h3>CI/CD Pipeline (Azure DevOps)</h3>
+          <div class="card brand">
+            <div class="card-title">Automated Deployment Flow</div>
+            <ol>
+              <li>Developer pushes to <code>develop</code> branch</li>
+              <li>Azure Pipeline triggers: restore → build → test → publish</li>
+              <li>Artifact deployed to Dev App Service slot</li>
+              <li>QA and smoke testing on Dev</li>
+              <li>Merge to <code>main</code> → triggers UAT deployment</li>
+              <li>UAT sign-off → production deployment (with slot swap or direct deploy)</li>
+            </ol>
+          </div>
+
+          <div class="card success">
+            <div class="card-title">Pre-Deployment Checklist</div>
+            <ul>
+              <li>✓ All tests pass: <code>dotnet test</code></li>
+              <li>✓ No build warnings promoted to errors</li>
+              <li>✓ Key Vault secrets updated if new config keys were added</li>
+              <li>✓ App_Data templates included in publish output</li>
+              <li>✓ Aspose license file embedded correctly</li>
+              <li>✓ Database migrations applied (if any schema changes)</li>
+              <li>✓ Application Insights connection string set in App Service</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ─── Coding Conventions ─── -->
+        <section id="sec-conventions" class="section">
+          <h2>Coding Conventions</h2>
+          <p class="section-subtitle">
+            Standards and best practices followed throughout the BDB API codebase.
+          </p>
+
+          <h3>C# Language Standards</h3>
+          <ul>
+            <li><strong>Target: .NET 8 / C# 12</strong> — use modern language features (record types, pattern matching, nullable reference types)</li>
+            <li><strong>Nullable enabled:</strong> <code>&lt;Nullable&gt;enable&lt;/Nullable&gt;</code> in all csproj files — treat nullable warnings as errors</li>
+            <li><strong>Implicit usings:</strong> <code>&lt;ImplicitUsings&gt;enable&lt;/ImplicitUsings&gt;</code> — no need to <code>using System;</code> in every file</li>
+            <li><strong>Async/Await:</strong> All I/O-bound methods must be async — never use <code>.Result</code> or <code>.Wait()</code> (deadlock risk)</li>
+            <li><strong>var keyword:</strong> Use <code>var</code> when the type is obvious from the right-hand side; use explicit types for clarity otherwise</li>
+          </ul>
+
+          <h3>Naming Conventions</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Convention</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Classes, Interfaces, Enums</td>
+                <td>PascalCase</td>
+                <td><code>ProfileService</code>, <code>IProfileService</code></td>
+              </tr>
+              <tr>
+                <td>Methods</td>
+                <td>PascalCase</td>
+                <td><code>GetProfileAsync()</code>, <code>HasPermissionForDates()</code></td>
+              </tr>
+              <tr>
+                <td>Properties</td>
+                <td>PascalCase</td>
+                <td><code>FirstName</code>, <code>CompanyId</code></td>
+              </tr>
+              <tr>
+                <td>Private fields</td>
+                <td>_camelCase</td>
+                <td><code>_profileService</code>, <code>_userRepo</code></td>
+              </tr>
+              <tr>
+                <td>Local variables</td>
+                <td>camelCase</td>
+                <td><code>userEmail</code>, <code>forecastItems</code></td>
+              </tr>
+              <tr>
+                <td>Constants</td>
+                <td>PascalCase or UPPER_CASE</td>
+                <td><code>APIKEYNAME</code>, <code>DefaultTimeout</code></td>
+              </tr>
+              <tr>
+                <td>Interfaces</td>
+                <td>PascalCase with "I" prefix</td>
+                <td><code>IProfileService</code>, <code>IUserRepository</code></td>
+              </tr>
+              <tr>
+                <td>ViewModels / DTOs</td>
+                <td>PascalCase + "ViewModel" suffix</td>
+                <td><code>ProfileViewModel</code>, <code>ForecastViewModel</code></td>
+              </tr>
+              <tr>
+                <td>Test classes</td>
+                <td>PascalCase + "Test" suffix</td>
+                <td><code>ProfileServiceTest</code></td>
+              </tr>
+              <tr>
+                <td>Test methods</td>
+                <td>MethodName_Scenario_ExpectedResult</td>
+                <td><code>GetProfile_ReturnsProfile_WhenUserExists</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Controller Conventions</h3>
+          <pre><code><span class="c-com">// ✅ Correct: thin controller, calls service, returns IActionResult</span>
+[HttpGet(<span class="c-str">"GetProfile"</span>)]
+[ProducesResponseType(<span class="c-key">typeof</span>(ProfileViewModel), StatusCodes.Status200OK)]
+<span class="c-key">public async</span> Task&lt;IActionResult&gt; GetProfile()
+{
+    <span class="c-key">var</span> profile = <span class="c-key">await</span> _profileService.GetProfileAsync();
+    <span class="c-key">return</span> Ok(profile);
+}
+
+<span class="c-com">// ❌ Wrong: business logic in controller</span>
+[HttpGet(<span class="c-str">"GetProfile"</span>)]
+<span class="c-key">public async</span> Task&lt;IActionResult&gt; GetProfile()
+{
+    <span class="c-key">var</span> email = User.Claims.First(c =&gt; c.Type == <span class="c-str">"email"</span>).Value;
+    <span class="c-key">var</span> user = <span class="c-key">await</span> _dbContext.Users.FirstAsync(u =&gt; u.Email == email);
+    <span class="c-com">// ... 50 lines of business logic ...</span>
+}</code></pre>
+
+          <h3>Service Conventions</h3>
+          <ul>
+            <li><strong>One interface per service:</strong> Every service has a matching <code>IXxxService</code> interface in the <code>Interfaces/</code> folder</li>
+            <li><strong>Never new dependencies:</strong> All dependencies injected via constructor — never <code>new ServiceClass()</code> inside another service</li>
+            <li><strong>No static state:</strong> All services are scoped or transient — no static fields holding state</li>
+            <li><strong>ViewModels for output:</strong> Never return EF entity objects from services — always map to a ViewModel</li>
+            <li><strong>Throw custom exceptions:</strong> Use <code>ForbiddenAccessException</code> for auth failures, <code>UploadExcelException</code> for file validation failures</li>
+          </ul>
+
+          <h3>Repository Conventions</h3>
+          <ul>
+            <li><strong>Use <code>AsNoTracking()</code></strong> on all read-only queries — avoids EF change tracking overhead</li>
+            <li><strong>Eager loading:</strong> Use <code>.Include()</code> explicitly for related entities — never rely on lazy loading</li>
+            <li><strong>Projection:</strong> Use <code>.Select()</code> to project only needed columns for large datasets</li>
+            <li><strong>No LINQ in services:</strong> Complex queries belong in repository methods, not in service code</li>
+          </ul>
+
+          <h3>JSON Serialization</h3>
+          <p>
+            Configured globally in <code>Startup.cs</code>:
+          </p>
+          <ul>
+            <li><strong>Property naming:</strong> <code>CamelCase</code> — all JSON responses use camelCase field names</li>
+            <li><strong>Max depth:</strong> 32 — prevents stack overflow on deeply nested objects</li>
+            <li><strong>Reference cycles:</strong> <code>ReferenceHandler.IgnoreCycles</code> — EF navigation properties won't cause circular reference errors</li>
+            <li><strong>NaN/Infinity:</strong> <code>AllowNamedFloatingPointLiterals</code> — allows <code>NaN</code> and <code>Infinity</code> in numeric fields</li>
+          </ul>
+
+          <h3>Git Commit Conventions</h3>
+          <p>Follow conventional commit format:</p>
+          <pre><code>type(scope): description
+
+[optional body]
+
+[optional footer]</code></pre>
+
+          <p><strong>Types:</strong></p>
+          <ul>
+            <li><code>feat:</code> New feature or endpoint</li>
+            <li><code>fix:</code> Bug fix</li>
+            <li><code>docs:</code> Documentation changes</li>
+            <li><code>refactor:</code> Code restructuring without behavior change</li>
+            <li><code>test:</code> Adding or updating tests</li>
+            <li><code>chore:</code> Build process, dependency updates</li>
+            <li><code>perf:</code> Performance improvement</li>
+          </ul>
+
+          <h3>ExcludeFromCodeCoverage</h3>
+          <p>
+            All infrastructure/bootstrapping classes (<code>Program</code>, <code>Startup</code>, <code>DependencyInjection</code>, <code>BdbPlatformDbContext</code>) are decorated with <code>[ExcludeFromCodeCoverage]</code>.
+            This keeps coverage metrics focused on testable business logic.
+          </p>
+        </section>
+
+        <!-- ─── FAQ ─── -->
+        <section id="sec-faq" class="section">
+          <h2>FAQ — Frequently Asked Questions</h2>
+          <p class="section-subtitle">
+            Quick answers to the most common questions when onboarding to the BDB API.
+          </p>
+
+          <h3>🚀 Getting Started</h3>
+
+          <div class="card brand">
+            <div class="card-title">What does this API do?</div>
+            <p><strong>BDB API</strong> is the backend for the BDB (Bouw Database) platform. It provides construction cost data, market indicators, forecasts, and file exports to the BDB frontend and external clients.</p>
+            <p><strong>Key users:</strong> Cost estimators, project managers, BDB data admins, external integration systems.</p>
+          </div>
+
+          <div class="card accent">
+            <div class="card-title">How do I run the API locally?</div>
+            <ol style="margin: 0.5rem 0 0 1rem;">
+              <li>Run <code>az login</code> for Key Vault access</li>
+              <li>Create <code>BdbAPI/appsettings.Development.json</code> with DB connection string</li>
+              <li>Run <code>dotnet run --project BdbAPI</code></li>
+              <li>Open <code>https://localhost:44338/swagger</code></li>
+            </ol>
+          </div>
+
+          <div class="card brand">
+            <div class="card-title">What is the tech stack?</div>
+            <ul style="margin: 0.5rem 0 0 1rem;">
+              <li><strong>API:</strong> ASP.NET Core 8 Web API</li>
+              <li><strong>Database:</strong> SQL Server + Entity Framework Core</li>
+              <li><strong>Auth:</strong> Azure AD B2C (JWT Bearer)</li>
+              <li><strong>Storage:</strong> Azure Blob Storage</li>
+              <li><strong>Excel:</strong> Aspose.Cells (licensed)</li>
+              <li><strong>Testing:</strong> MSTest + Moq</li>
+            </ul>
+          </div>
+
+          <h3>💻 Development</h3>
+
+          <div class="card accent">
+            <div class="card-title">How do I add a new API endpoint?</div>
+            <p><strong>Quick steps:</strong></p>
+            <ol style="margin: 0.5rem 0 0 1rem;">
+              <li><strong>Create interface:</strong> <code>Application/Interfaces/IMyNewService.cs</code></li>
+              <li><strong>Create service:</strong> <code>Application/Services/MyNewService.cs</code></li>
+              <li><strong>Register in DI:</strong> <code>Application/DependencyInjection.cs</code> — add <code>services.AddScoped&lt;IMyNewService, MyNewService&gt;()</code></li>
+              <li><strong>Create/update controller:</strong> <code>BdbAPI/Controllers/MyNewController.cs</code></li>
+              <li><strong>Write tests:</strong> <code>Application.Test/Services/MyNewServiceTest.cs</code></li>
+            </ol>
+          </div>
+
+          <div class="card brand">
+            <div class="card-title">Where does the business logic go?</div>
+            <table style="width: 100%; margin-top: 0.5rem; font-size: 0.9em;">
+              <tr><td style="padding: 0.3rem;"><strong>Controllers</strong></td><td style="padding: 0.3rem;">HTTP routing, input extraction, call service, return result. <em>No business logic.</em></td></tr>
+              <tr style="background: #f9f9f9;"><td style="padding: 0.3rem;"><strong>Services</strong></td><td style="padding: 0.3rem;">All business rules, validations, calculations, orchestration. <em>Core of the app.</em></td></tr>
+              <tr><td style="padding: 0.3rem;"><strong>Repositories</strong></td><td style="padding: 0.3rem;">Database queries only. No business logic, no HTTP awareness.</td></tr>
+              <tr style="background: #f9f9f9;"><td style="padding: 0.3rem;"><strong>Domain</strong></td><td style="padding: 0.3rem;">Entity definitions. No methods beyond simple computed properties.</td></tr>
+            </table>
+          </div>
+
+          <div class="card accent">
+            <div class="card-title">How do I make a DB query?</div>
+            <pre style="background: #f5f5f5; padding: 0.5rem; border-radius: 4px; margin: 0.5rem 0; font-size: 0.85em;"><code><span class="c-com">// 1. Use GenericDatabaseRepo for simple CRUD</span>
+<span class="c-key">var</span> users = <span class="c-key">await</span> _genericRepo.GetAllAsync();
+
+<span class="c-com">// 2. Use entity-specific repository for custom queries</span>
+<span class="c-key">var</span> user = <span class="c-key">await</span> _userRepo.GetByEmailAsync(email);
+
+<span class="c-com">// 3. Use StoredProcedures for complex aggregations</span>
+<span class="c-key">var</span> results = <span class="c-key">await</span> _storedProcedures.GetForecastDataAsync(id, dates);
+
+<span class="c-com">// 4. Use CubeRepository for DAX/OLAP queries</span>
+<span class="c-key">var</span> cubeData = <span class="c-key">await</span> _cubeRepo.ExecuteDaxAsync(daxQuery);</code></pre>
+          </div>
+
+          <h3>🔐 Authentication</h3>
+
+          <div class="card brand">
+            <div class="card-title">How does authentication work?</div>
+            <p><strong>1. Frontend</strong> obtains JWT from Azure AD B2C and sends it as <code>Authorization: Bearer {token}</code></p>
+            <p><strong>2. API</strong> validates JWT using <code>AddMicrosoftIdentityWebApi()</code> (checks signature via JWKS endpoint)</p>
+            <p><strong>3. Claims</strong> are available on <code>HttpContext.User</code> — <code>TokenProvider</code> reads email and client ID</p>
+            <p><strong>4. Role</strong> resolved by <code>AuthorizationService.GetUserRole()</code> from the database</p>
+          </div>
+
+          <div class="card accent">
+            <div class="card-title">How do I protect an endpoint for admins only?</div>
+            <pre style="background: #f5f5f5; padding: 0.5rem; border-radius: 4px; margin: 0.5rem 0; font-size: 0.85em;"><code><span class="c-com">// Option 1: Throw from service (recommended)</span>
+<span class="c-key">public async</span> Task AdminOnlyAction()
+{
+    <span class="c-key">var</span> role = _authService.GetUserRole();
+    <span class="c-key">if</span> (role != <span class="c-str">"admin"</span>)
+        <span class="c-key">throw new</span> ForbiddenAccessException(<span class="c-str">"Admin role required"</span>);
+    <span class="c-com">// proceed with admin action...</span>
+}
+
+<span class="c-com">// Option 2: Use AuthUtility helper</span>
+<span class="c-key">if</span> (!AuthUtility.CanAccessByOperator(userRole))
+    <span class="c-key">throw new</span> ForbiddenAccessException(<span class="c-str">"Access denied"</span>);</code></pre>
+            <p>The <code>ForbiddenAccessException</code> is caught by <code>ExceptionMiddleware</code> and returned as HTTP 403.</p>
+          </div>
+
+          <div class="card brand">
+            <div class="card-title">What is the clientId query parameter?</div>
+            <p>Every request from the frontend includes <code>?clientId={companyId}</code>. This identifies which company's data to serve (multi-tenant).</p>
+            <p><code>TokenProvider.GetClientId()</code> reads this parameter. Services pass it to repositories for data scoping.</p>
+            <p><strong>Example:</strong> <code>GET /api/ReportForecastFigures/1?clientId=42</code> — return forecast data for company 42.</p>
+          </div>
+
+          <h3>🗄️ Database</h3>
+
+          <div class="card brand">
+            <div class="card-title">How do I add a new DB table?</div>
+            <ol style="margin: 0.5rem 0 0 1rem;">
+              <li><strong>Create entity:</strong> <code>Domain/Data/Models/MyEntity.cs</code> implementing <code>IBaseEntity</code></li>
+              <li><strong>Add DbSet:</strong> <code>Infrastructure/BdbPlatformDbContext.cs</code> — add <code>public DbSet&lt;MyEntity&gt; MyEntity {'{get; set;}'}</code></li>
+              <li><strong>Configure model:</strong> Add <code>ConfigureMyEntity(modelBuilder)</code> in <code>OnModelCreating()</code></li>
+              <li><strong>Add migration:</strong> <code>dotnet ef migrations add AddMyEntity</code></li>
+              <li><strong>Update DB:</strong> <code>dotnet ef database update</code></li>
+            </ol>
+          </div>
+
+          <div class="card accent">
+            <div class="card-title">Why is my query timing out?</div>
+            <ul style="margin: 0.5rem 0 0 1rem;">
+              <li><strong>Default timeout:</strong> 180 seconds (<code>AppSettings:DBConnectionTimeout</code>)</li>
+              <li><strong>Check query plan:</strong> Run query in SQL Server Management Studio — look for missing indexes or table scans</li>
+              <li><strong>Use AsNoTracking:</strong> Add <code>.AsNoTracking()</code> to read-only queries</li>
+              <li><strong>Projection:</strong> Use <code>.Select()</code> to fetch only needed columns</li>
+              <li><strong>Cube queries:</strong> DAX queries are especially heavy — consider caching results</li>
+            </ul>
+          </div>
+
+          <h3>📁 File Handling</h3>
+
+          <div class="card brand">
+            <div class="card-title">How does Excel upload work?</div>
+            <ol style="margin: 0.5rem 0 0 1rem; font-size: 0.95em;">
+              <li>Admin sends Excel file as <code>multipart/form-data</code></li>
+              <li>Controller calls <code>UploadXxxService.ProcessUploadAsync(file)</code></li>
+              <li>Service uses <code>Aspose.Cells</code> to open and parse the workbook</li>
+              <li>Validates column headers, data types, business rules</li>
+              <li>On error: throws <code>UploadExcelException</code> → 400 Bad Request</li>
+              <li>On success: saves entities to DB, stores file in Azure Blob</li>
+              <li>Optionally: sends email notification via Graph API, logs action</li>
+            </ol>
+          </div>
+
+          <div class="card accent">
+            <div class="card-title">How does Excel report generation work?</div>
+            <ol style="margin: 0.5rem 0 0 1rem; font-size: 0.95em;">
+              <li>Controller calls <code>ReportXxxService.GenerateReportAsync(params)</code></li>
+              <li>Service loads the Excel template from <code>App_Data/</code> (or Azure Blob) using Aspose.Cells</li>
+              <li>Data from DB/cube is populated into the template cells/ranges</li>
+              <li>Workbook saved to a <code>MemoryStream</code></li>
+              <li>Stream returned as <code>FileContentResult</code> with <code>Content-Disposition: attachment</code></li>
+              <li>Frontend browser triggers file download</li>
+            </ol>
+          </div>
+
+          <h3>🐛 Debugging</h3>
+
+          <div class="card brand">
+            <div class="card-title">API returning 401 Unauthorized — how to debug?</div>
+            <ol style="margin: 0.5rem 0 0 1rem;">
+              <li>Check that <code>Authorization: Bearer {token}</code> header is present in the request</li>
+              <li>Decode the JWT at <code>jwt.io</code> — check audience (<code>aud</code>), issuer (<code>iss</code>), expiry (<code>exp</code>)</li>
+              <li>Verify <code>AzureAdB2C:ClientId</code> and <code>Instance</code> match the token's audience and issuer</li>
+              <li>Check Application Insights for <code>AuthenticationFailed</code> events</li>
+            </ol>
+          </div>
+
+          <div class="card accent">
+            <div class="card-title">API returning 403 Forbidden — why?</div>
+            <p><strong>Two cases:</strong></p>
+            <ul style="margin: 0.5rem 0 0 1rem;">
+              <li><strong>JwtBearer 403:</strong> Token is valid but user doesn't have the required claim/policy</li>
+              <li><strong>ForbiddenAccessException 403:</strong> User has a valid token but tried to perform an admin-only action. Check the response body <code>{ "error": "..." }</code> for details.</li>
+            </ul>
+          </div>
+
+          <div class="card brand">
+            <div class="card-title">How do I read Application Insights logs?</div>
+            <ol style="margin: 0.5rem 0 0 1rem;">
+              <li>Go to Azure Portal → Application Insights → BDB API resource</li>
+              <li><strong>Live metrics:</strong> Real-time request/exception feed</li>
+              <li><strong>Logs (KQL):</strong> Query <code>exceptions</code>, <code>requests</code>, <code>traces</code> tables</li>
+              <li><strong>Failures blade:</strong> All 4xx/5xx errors grouped by operation</li>
+            </ol>
+            <pre style="background: #f5f5f5; padding: 0.5rem; border-radius: 4px; margin-top: 0.5rem; font-size: 0.85em;"><code><span class="c-com">// KQL: Find recent exceptions</span>
+exceptions
+| where timestamp > ago(1h)
+| order by timestamp desc</code></pre>
+          </div>
+
+          <h3>⚡ Performance</h3>
+
+          <div class="card accent">
+            <div class="card-title">Why are cube/DAX queries slow?</div>
+            <ul style="margin: 0.5rem 0 0 1rem;">
+              <li>DAX queries hit Analysis Services — inherently heavier than SQL queries</li>
+              <li>Avoid triggering cube refreshes during peak hours</li>
+              <li>Consider pre-aggregating results and caching in Redis/in-memory for frequently-requested date ranges</li>
+              <li>The <code>DBConnectionTimeout</code> is set to 180s — if this still times out, the query needs optimization</li>
+            </ul>
+          </div>
+
+          <div class="card brand">
+            <div class="card-title">How to improve EF Core query performance?</div>
+            <ul style="margin: 0.5rem 0 0 1rem;">
+              <li>Always use <code>.AsNoTracking()</code> for read-only queries</li>
+              <li>Use <code>.Select()</code> to project only required columns</li>
+              <li>Avoid N+1 queries — use <code>.Include()</code> or explicit joins</li>
+              <li>Use <code>IQueryable</code> to build queries before calling <code>.ToListAsync()</code></li>
+              <li>For bulk inserts use <code>AddRange()</code> and a single <code>SaveChanges()</code></li>
+            </ul>
+          </div>
+
+          <h3>❓ Need More Help?</h3>
+
+          <div class="card brand">
+            <div class="card-title">Where to get help?</div>
+            <ul style="margin: 0.5rem 0 0 1rem;">
+              <li><strong>This Documentation:</strong> Read through all sections</li>
+              <li><strong>Swagger UI:</strong> <code>/swagger/index.html</code> on dev — explore all endpoints interactively</li>
+              <li><strong>Inline Code Comments:</strong> Services and repositories have doc comments on complex logic</li>
+              <li><strong>Azure DevOps:</strong> Work items and PR discussions have context on design decisions</li>
+              <li><strong>Application Insights:</strong> Live logs and error details in the Azure portal</li>
+              <li><strong>Team Members:</strong> Ask experienced developers — especially for Key Vault access and Azure setup</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ─── Troubleshooting ─── -->
+        <section id="sec-troubleshooting" class="section">
+          <h2>Troubleshooting</h2>
+          <p class="section-subtitle">
+            Common issues encountered when setting up or developing on the BDB API, and their solutions.
+          </p>
+
+          <h3>Startup Issues</h3>
+
+          <h4>Key Vault Access Denied</h4>
+          <div class="card danger">
+            <div class="card-title">Error: Azure.RequestFailedException — 403 Forbidden from Key Vault</div>
+            <ul>
+              <li>You haven't logged into Azure CLI: run <code>az login</code></li>
+              <li>Your user doesn't have Key Vault Secrets Reader role — ask your team lead to grant access</li>
+              <li>The Key Vault URI in <code>appsettings.Development.json</code> is wrong — verify <code>KeyVaults:BDBKeyVaultName</code></li>
+            </ul>
+          </div>
+
+          <h4>Database Connection Failed</h4>
+          <div class="card warning">
+            <div class="card-title">Solution</div>
+            <ol>
+              <li>Verify <code>ConnectionStrings:DefaultConnection</code> in your local <code>appsettings.Development.json</code></li>
+              <li>Check SQL Server is running: <code>sqlcmd -S localhost -Q "SELECT 1"</code></li>
+              <li>For LocalDB: <code>sqllocaldb start MSSQLLocalDB</code></li>
+              <li>Ensure the database schema is up to date (ask team for latest script or EF migration)</li>
+            </ol>
+          </div>
+
+          <h4>Aspose License Error on Startup</h4>
+          <div class="card danger">
+            <div class="card-title">Error: Could not find embedded Aspose.Cells.NET.lic resource</div>
+            <p>The license file is missing or not set to <strong>Embedded Resource</strong> in the csproj.</p>
+            <ol>
+              <li>Ensure <code>BdbAPI/License/Aspose.Cells.NET.lic</code> exists (get from team lead)</li>
+              <li>Verify the csproj has <code>&lt;EmbeddedResource Include="License\Aspose.Cells.NET.lic" /&gt;</code></li>
+              <li>Rebuild the project: <code>dotnet build BdbAPI</code></li>
+            </ol>
+          </div>
+
+          <h3>Authentication Issues</h3>
+
+          <h4>401 Unauthorized on All Endpoints</h4>
+          <div class="card warning">
+            <div class="card-title">Checklist</div>
+            <ul>
+              <li>Is the JWT token being sent in the <code>Authorization: Bearer</code> header?</li>
+              <li>Decode token at <code>jwt.io</code> — is the audience (<code>aud</code>) correct?</li>
+              <li>Is <code>AzureAdB2C:ClientId</code> in appsettings correct?</li>
+              <li>Is the token expired? Check <code>exp</code> claim</li>
+              <li>Is the B2C policy correct? <code>B2C_1A_BDB_SIGNUP_SIGNIN</code></li>
+            </ul>
+          </div>
+
+          <h4>403 Forbidden on Admin Endpoints</h4>
+          <pre><code><span class="c-com">// Check the response body for the error message</span>
+<span class="c-com">// e.g. { "error": "Admin role required" }</span>
+
+<span class="c-com">// Verify your user has admin role in the DB</span>
+<span class="c-com">// Table: UserRole — check RoleId for your UserId and the clientId you're using</span></code></pre>
+
+          <h3>Build Issues</h3>
+
+          <h4>NuGet Restore Fails</h4>
+          <div class="card warning">
+            <div class="card-title">Solution</div>
+            <ol>
+              <li>Check internet / VPN connectivity to nuget.org</li>
+              <li>Clear local NuGet cache: <code>dotnet nuget locals all --clear</code></li>
+              <li>Re-run: <code>dotnet restore BDB-API.sln</code></li>
+              <li>If a private package fails, verify Azure Artifacts/private NuGet source credentials</li>
+            </ol>
+          </div>
+
+          <h4>Build Errors: Nullable Reference Warnings</h4>
+          <div class="card warning">
+            <div class="card-title">Solution</div>
+            <ul>
+              <li>Nullable is enabled — handle null cases explicitly</li>
+              <li>Use null-forgiving operator <code>!</code> only as last resort: <code>user!.Email</code></li>
+              <li>Prefer null checks: <code>if (user == null) throw new ...</code></li>
+            </ul>
+          </div>
+
+          <h3>Test Issues</h3>
+
+          <h4>Tests Failing Due to Missing Moq Setup</h4>
+          <pre><code><span class="c-com">// Error: Invocation was not matched in Mock setup</span>
+<span class="c-com">// Fix: Add a Setup() for the called method</span>
+_mockRepo.Setup(r =&gt; r.GetByEmailAsync(It.IsAny&lt;<span class="c-key">string</span>&gt;()))
+    .ReturnsAsync(<span class="c-key">new</span> User { ... });
+
+<span class="c-com">// Or use It.IsAny&lt;T&gt;() to match any parameter value</span>
+<span class="c-com">// Or call mock.SetupAllProperties() for property getters</span></code></pre>
+
+          <h4>Tests Pass Locally But Fail in CI</h4>
+          <div class="card warning">
+            <div class="card-title">Common Causes</div>
+            <ul>
+              <li><strong>DateTime.Now dependency:</strong> Use injectable <code>IDateTimeProvider</code> instead of <code>DateTime.Now</code> in services</li>
+              <li><strong>File path differences:</strong> Use <code>Path.Combine()</code> instead of hardcoded separators</li>
+              <li><strong>Parallel test execution:</strong> If tests share static state, they fail when run in parallel</li>
+              <li><strong>Missing test data:</strong> Test setup (<code>[TestInitialize]</code>) must create all required data</li>
+            </ul>
+          </div>
+
+          <h3>Excel Issues</h3>
+
+          <h4>Aspose Running in Evaluation Mode (Watermarks)</h4>
+          <div class="card danger">
+            <div class="card-title">Problem: Excel files have "Evaluation" watermarks</div>
+            <p>Aspose license not loaded correctly.</p>
+            <ol>
+              <li>Check <code>Startup.SetAsposeLicense()</code> is called before any Aspose operations</li>
+              <li>Verify the license file resource name matches: <code>"BdbAPI.License.Aspose.Cells.NET.lic"</code></li>
+              <li>Ensure the license file hasn't expired — contact Arcadis procurement for renewal</li>
+            </ol>
+          </div>
+
+          <h4>Excel Template Not Found</h4>
+          <pre><code><span class="c-com">// Error: File not found at path App_Data/ExcelTemplates/...</span>
+<span class="c-com">// Cause: App_Data/ not included in publish output</span>
+
+<span class="c-com">// Fix: Ensure App_Data is set to "Copy to output directory" in the csproj</span>
+&lt;ItemGroup&gt;
+  &lt;None Update="App_Data/**"&gt;
+    &lt;CopyToOutputDirectory&gt;PreserveNewest&lt;/CopyToOutputDirectory&gt;
+  &lt;/None&gt;
+&lt;/ItemGroup&gt;</code></pre>
+
+          <h3>Performance Issues</h3>
+
+          <h4>Request Timeouts on Large Datasets</h4>
+          <ul>
+            <li>Increase <code>AppSettings:DBConnectionTimeout</code> in config (default 180s)</li>
+            <li>Add indexes on frequently-filtered columns in SQL Server</li>
+            <li>Consider moving heavy operations to the <strong>background task queue</strong> and returning 202 Accepted</li>
+            <li>Use stored procedures for complex joins instead of EF LINQ for better query plan control</li>
+          </ul>
+
+          <h3>Getting Help</h3>
+          <div class="card brand">
+            <div class="card-title">Resources</div>
+            <ul>
+              <li><strong>Swagger UI:</strong> <code>https://localhost:44338/swagger</code> — explore all endpoints</li>
+              <li><strong>Application Insights:</strong> Azure portal → BDB API → Failures / Logs</li>
+              <li><strong>Team Members:</strong> Reach out to existing backend developers</li>
+              <li><strong>Azure DevOps:</strong> Search work items for related issues and design discussions</li>
+              <li><strong>This Documentation:</strong> Read through all sections for architecture context</li>
+            </ul>
+          </div>
+
+          <footer class="doc-footer">
+            BDB API Backend &middot; Developer Onboarding Guide &middot; Version 1.0<br />
+            Generated on June 24, 2026 &middot; For internal Arcadis use only
+          </footer>
+        </section>
+
+      </main>
+    </div>
+
+    <script>
+      function showSection(ev, sectionId) {
+        if (ev && ev.preventDefault) ev.preventDefault();
+
+        document.querySelectorAll(".section").forEach(function (section) {
+          section.classList.remove("active");
+        });
+        var target = document.getElementById(sectionId);
+        if (target) target.classList.add("active");
+
+        document.querySelectorAll(".nav-link").forEach(function (link) {
+          link.classList.remove("active");
+        });
+        var activeLink = document.querySelector('.nav-link[href="#' + sectionId + '"]');
+        if (activeLink) activeLink.classList.add("active");
+
+        if (history.replaceState) {
+          history.replaceState(null, "", "#" + sectionId);
+        } else {
+          window.location.hash = sectionId;
+        }
+
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }
+
+      window.addEventListener("DOMContentLoaded", function () {
+        var hash = (window.location.hash || "").slice(1);
+        if (hash && document.getElementById(hash)) {
+          showSection(null, hash);
+        }
+      });
+    </script>
+  </body>
+</html>
