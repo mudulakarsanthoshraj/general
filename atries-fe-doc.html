@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ATRIES — Developer Documentation</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link href="luma-tokens/index.css" rel="stylesheet" />
+    <link href="css/base.css" rel="stylesheet" />
+
+    <style>
+      :root {
+        --doc-sidebar-width: 260px;
+      }
+
+      body {
+        margin: 0;
+        color: var(--lm-color-text-primary);
+      }
+
+      .doc-layout {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .doc-sidebar {
+        position: sticky;
+        top: 0;
+        align-self: flex-start;
+        width: var(--doc-sidebar-width);
+        height: 100vh;
+        overflow-y: auto;
+        flex-shrink: 0;
+        padding: var(--lm-spacing-5) var(--lm-spacing-4);
+        border-right: var(--lm-border-width-1) solid
+          var(--lm-color-border-subtle);
+        background: var(--lm-color-surface-default);
+      }
+
+      .doc-sidebar__title {
+        font-size: var(--lm-font-size-body-sm);
+        font-weight: var(--lm-font-weight-semibold);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--lm-color-text-tertiary);
+        margin-bottom: var(--lm-spacing-3);
+      }
+
+      .doc-sidebar a {
+        display: block;
+        padding: var(--lm-spacing-1) var(--lm-spacing-2);
+        border-radius: var(--lm-radius-sm);
+        color: var(--lm-color-text-secondary);
+        text-decoration: none;
+        font-size: var(--lm-font-size-body-sm);
+      }
+
+      .doc-sidebar a:hover {
+        background: var(--lm-color-surface-default-hover);
+        color: var(--lm-color-text-primary);
+      }
+
+      .doc-main {
+        flex: 1;
+        min-width: 0;
+        padding: var(--lm-spacing-6) var(--lm-spacing-8);
+        max-width: 820px;
+      }
+
+      .doc-hero {
+        margin-bottom: var(--lm-spacing-6);
+        padding-bottom: var(--lm-spacing-5);
+        border-bottom: var(--lm-border-width-1) solid
+          var(--lm-color-border-subtle);
+      }
+
+      .doc-hero h1 {
+        font-size: 2rem;
+        font-weight: var(--lm-font-weight-semibold);
+        margin-bottom: var(--lm-spacing-2);
+      }
+
+      .doc-hero p {
+        color: var(--lm-color-text-secondary);
+        margin: 0;
+        line-height: 1.6;
+      }
+
+      .doc-section {
+        margin-bottom: var(--lm-spacing-8);
+        scroll-margin-top: var(--lm-spacing-4);
+      }
+
+      .doc-section h2 {
+        font-size: 1.35rem;
+        font-weight: var(--lm-font-weight-semibold);
+        margin-bottom: var(--lm-spacing-3);
+        padding-bottom: var(--lm-spacing-2);
+        border-bottom: var(--lm-border-width-1) solid
+          var(--lm-color-border-subtle);
+      }
+
+      .doc-section h3 {
+        font-size: 1.05rem;
+        font-weight: var(--lm-font-weight-semibold);
+        margin-top: var(--lm-spacing-5);
+        margin-bottom: var(--lm-spacing-2);
+      }
+
+      .doc-section p,
+      .doc-section li {
+        color: var(--lm-color-text-secondary);
+        line-height: 1.65;
+      }
+
+      .doc-section ul,
+      .doc-section ol {
+        padding-left: 1.25rem;
+      }
+
+      .doc-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: var(--lm-font-size-body-sm);
+        margin: var(--lm-spacing-3) 0;
+      }
+
+      .doc-table th,
+      .doc-table td {
+        padding: var(--lm-spacing-2) var(--lm-spacing-3);
+        border: var(--lm-border-width-1) solid var(--lm-color-border-subtle);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .doc-table th {
+        background: var(--lm-color-surface-subtle);
+        font-weight: var(--lm-font-weight-semibold);
+        color: var(--lm-color-text-primary);
+      }
+
+      .doc-callout {
+        padding: var(--lm-spacing-4);
+        border-radius: var(--lm-radius-md);
+        border: var(--lm-border-width-1) solid var(--lm-color-border-subtle);
+        background: var(--lm-color-surface-subtle);
+        margin: var(--lm-spacing-4) 0;
+      }
+
+      .doc-callout strong {
+        color: var(--lm-color-text-primary);
+      }
+
+      @media (max-width: 900px) {
+        .doc-layout {
+          flex-direction: column;
+        }
+
+        .doc-sidebar {
+          position: static;
+          width: 100%;
+          height: auto;
+          border-right: none;
+          border-bottom: var(--lm-border-width-1) solid
+            var(--lm-color-border-subtle);
+        }
+
+        .doc-main {
+          padding: var(--lm-spacing-5);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="doc-layout">
+      <nav class="doc-sidebar" aria-label="Documentation sections">
+        <p class="doc-sidebar__title">ATRIES Docs</p>
+        <a href="#overview">Overview</a>
+        <a href="#accessibility">Accessibility</a>
+        <a href="#components">Components</a>
+        <a href="#usage">Getting Started</a>
+        <hr class="my-3" />
+        <a href="index.html">← Component gallery</a>
+        <a href="templates/dashboard.html">Open dashboard demo</a>
+      </nav>
+
+      <main class="doc-main" id="main-content">
+        <header class="doc-hero">
+          <h1>ATRIES Component Library</h1>
+          <p>
+            Arcadis Tailings Risk Information &amp; Engineering System — A collection of accessible, production-ready UI components built with design tokens and best practices.
+          </p>
+        </header>
+
+        <section class="doc-section" id="overview">
+          <h2>Overview</h2>
+          <p>
+            ATRIES provides a complete set of UI components for building tailings-management applications. Built with plain HTML, CSS, and JavaScript, every component follows accessibility standards and uses a consistent design token system.
+          </p>
+          <ul>
+            <li><strong>Design tokens</strong> — Colors, spacing, typography from a centralized token system</li>
+            <li><strong>Accessible by default</strong> — ARIA roles, keyboard navigation, focus management</li>
+            <li><strong>Production ready</strong> — Ready-to-use code that can be directly implemented in Angular framework</li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="accessibility">
+          <h2>Accessibility</h2>
+          <p>
+            ATRIES components are built with accessibility as a core principle. The application achieves a <strong>100% accessibility score</strong> in Lighthouse audits.
+          </p>
+          
+          <div style="margin: 2rem 0; padding: 1.5rem; border: 1px solid var(--lm-color-border-subtle); border-radius: var(--lm-radius-md); background: var(--lm-color-surface-subtle);">
+            <img src="images/a2.png" alt="Lighthouse accessibility score showing 100 out of 100 for Dashboard page" style="max-width: 100%; height: auto; border-radius: var(--lm-radius-sm); margin-bottom: 1rem;" />
+            <img src="images/a1.png" alt="Lighthouse accessibility score showing 100 out of 100 for TSFs page" style="max-width: 100%; height: auto; border-radius: var(--lm-radius-sm);" />
+          </div>
+
+          <h3>Key Features</h3>
+          <ul>
+            <li>Semantic HTML with proper landmark regions</li>
+            <li>ARIA roles and attributes for screen readers</li>
+            <li>Full keyboard navigation support</li>
+            <li>Visible focus indicators on all interactive elements</li>
+            <li>Skip link to main content</li>
+            <li>Dropdown menus with proper menu/menuitem roles</li>
+            <li>Form controls with accessible labels</li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="components">
+          <h2>Components</h2>
+          
+          <h3>Buttons</h3>
+          <p>Three button variants: Dark (primary), Outline Dark (secondary), and Flat (tertiary).</p>
+
+          <h3>Forms</h3>
+          <p>Search fields, checkboxes, radio buttons, and switches with consistent styling.</p>
+
+          <h3>Navigation</h3>
+          <p>Top navigation bar, collapsible sidebar with accordion groups, breadcrumbs, and tabs.</p>
+
+          <h3>Data Display</h3>
+          <p>Tables with sortable columns, pagination, and column visibility controls.</p>
+
+          <h3>Menus</h3>
+          <p>Dropdown menus with keyboard navigation and proper ARIA implementation.</p>
+
+          <h3>Cards</h3>
+          <p>Dashboard cards with icons, titles, and descriptions for navigation.</p>
+        </section>
+
+        <section class="doc-section" id="usage">
+          <h2>Getting Started</h2>
+          
+          <h3>For Developers</h3>
+          <ol>
+            <li>Browse the <a href="index.html">component gallery</a> to see all available components</li>
+            <li>View the <a href="templates/dashboard.html">dashboard demo</a> to see the full layout in action</li>
+            <li>Copy HTML markup and CSS classes from component pages</li>
+            <li>Use design tokens from <code>luma-tokens/</code> for consistent styling</li>
+          </ol>
+
+          <h3>Design Tokens</h3>
+          <p>All components use centralized design tokens for:</p>
+          <ul>
+            <li>Colors (text, surface, border)</li>
+            <li>Spacing (0.25rem to 12rem scale)</li>
+            <li>Typography (font sizes, weights, line heights)</li>
+            <li>Border radius and widths</li>
+          </ul>
+
+          <h3>File Structure</h3>
+          <ul>
+            <li><code>luma-tokens/</code> — Design token CSS variables</li>
+            <li><code>css/</code> — Component stylesheets</li>
+            <li><code>js/</code> — Component interactions</li>
+            <li><code>templates/</code> — Component demo pages</li>
+            <li><code>images/</code> — Icons and assets</li>
+          </ul>
+        </section>
+
+        <footer class="doc-section" style="border-top: 1px solid var(--lm-color-border-subtle); padding-top: 1.5rem;">
+          <p class="text-secondary mb-0">
+            ATRIES Component Library — Arcadis Intelligence. <a href="index.html">Back to gallery</a>
+          </p>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>
