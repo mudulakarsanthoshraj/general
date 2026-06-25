@@ -668,6 +668,9 @@
 
         <div class="nav-section">
           <div class="nav-section-title">Getting Started</div>
+          <a href="#sec-quickref" class="nav-link" onclick="showSection(event, 'sec-quickref')"
+            >⚡ Quick Reference</a
+          >
           <a href="#sec-overview" class="nav-link active" onclick="showSection(event, 'sec-overview')"
             >Project Overview</a
           >
@@ -722,13 +725,557 @@
           <a href="#sec-conventions" class="nav-link" onclick="showSection(event, 'sec-conventions')"
             >Coding Conventions</a
           >
+          <a href="#sec-faq" class="nav-link" onclick="showSection(event, 'sec-faq')"
+            >FAQ</a
+          >
           <a href="#sec-troubleshooting" class="nav-link" onclick="showSection(event, 'sec-troubleshooting')"
             >Troubleshooting</a
+          >
+          <a href="#sec-postman" class="nav-link" onclick="showSection(event, 'sec-postman')"
+            >🧪 Postman Guide</a
           >
         </div>
       </nav>
 
       <main class="main">
+
+        <!-- ─── Quick Reference ─── -->
+        <section id="sec-quickref" class="section">
+          <h2>⚡ Quick Reference</h2>
+          <p class="section-subtitle">
+            Everything a new team member needs in one place — start here. Sections are ordered from "first thing you need" to "deep reference".
+          </p>
+
+          <!-- ══════════════════════════════════════════════
+               1. QUICK START COMMANDS
+          ══════════════════════════════════════════════ -->
+          <h3>1 — 🚀 Quick Start Commands</h3>
+          <p>Clone the repo and run these commands to get started locally.</p>
+          <table>
+            <thead><tr><th>Command</th><th>What it Does</th><th>When to Use</th></tr></thead>
+            <tbody>
+              <tr><td><code>npm install</code></td><td>Install all dependencies</td><td>First time setup, or after pulling changes with new packages</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>npm run dev</code></td><td>Start dev server at <code>http://localhost:3000</code></td><td>Day-to-day development</td></tr>
+              <tr><td><code>npm test</code></td><td>Run all unit tests once</td><td>Before committing code</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>npm run test:coverage</code></td><td>Run tests + generate coverage report</td><td>Check test coverage</td></tr>
+              <tr><td><code>npm run test:ui</code></td><td>Open interactive Vitest UI in browser</td><td>Debugging individual test failures</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>npm run lint</code></td><td>Run ESLint on all <code>.ts</code> / <code>.tsx</code> files</td><td>Before raising a PR</td></tr>
+              <tr><td><code>npm run build:dev</code></td><td>Build bundle using <code>.env.development</code> → <code>dist/</code></td><td>Deploy to Dev environment</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>npm run build:uat</code></td><td>Build bundle using <code>.env.uat</code> → <code>dist/</code></td><td>Deploy to UAT environment</td></tr>
+              <tr><td><code>npm run build:prd</code></td><td>Build bundle using <code>.env.production</code> → <code>dist/</code></td><td>Deploy to Production</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>npm run preview</code></td><td>Serve the last built <code>dist/</code> bundle locally at <code>:4173</code></td><td>Verify a build before deploying</td></tr>
+            </tbody>
+          </table>
+
+          <!-- ══════════════════════════════════════════════
+               2. ENVIRONMENTS
+          ══════════════════════════════════════════════ -->
+          <h3>2 — 🌐 Environments</h3>
+          <p>Three deployed environments. All share the same codebase — only the <code>.env.*</code> file changes.</p>
+          <table>
+            <thead><tr><th>Environment</th><th>App URL</th><th>API Base URL</th><th>B2C Tenant</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Local Dev</strong></td>
+                <td><code>http://localhost:3000</code></td>
+                <td><code>https://devbdb.arcadis.com/api/bdbapi/api/</code> (via <code>.env.development</code>)</td>
+                <td><code>ArcadisB2CDEV</code></td>
+              </tr>
+              <tr style="background:#f9f9f9;">
+                <td><strong>Development</strong></td>
+                <td><code>https://devbdb.arcadis.com</code></td>
+                <td><code>https://devbdb.arcadis.com/api/bdbapi/api/</code></td>
+                <td><code>ArcadisB2CDEV</code></td>
+              </tr>
+              <tr>
+                <td><strong>UAT</strong></td>
+                <td><code>https://uatbdb.arcadis.com</code></td>
+                <td><code>https://uatbdb.arcadis.com/api/bdbapi/api/</code></td>
+                <td><code>ArcadisB2CDEV</code></td>
+              </tr>
+              <tr style="background:#f9f9f9;">
+                <td><strong>Production</strong></td>
+                <td><code>https://bdb.eu</code></td>
+                <td><code>https://bdb.eu/api/bdbapi/api</code></td>
+                <td><code>ArcadisB2C</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- ══════════════════════════════════════════════
+               3. AUTH & ROLES
+          ══════════════════════════════════════════════ -->
+          <h3>3 — 🔐 Authentication & Roles</h3>
+          <p>The app uses <strong>Azure B2C</strong> for login. Tokens are stored in <code>sessionStorage</code> and injected automatically into every API request via <code>src/services/common/HttpCommon.ts</code>.</p>
+
+          <h4>Azure B2C Configuration</h4>
+          <table>
+            <thead><tr><th>Config Key</th><th>Dev / UAT Value</th><th>Production Value</th></tr></thead>
+            <tbody>
+              <tr><td>Tenant Name</td><td><code>ArcadisB2CDEV</code></td><td><code>ArcadisB2C</code></td></tr>
+              <tr style="background:#f9f9f9;"><td>Client ID</td><td><code>27848361-a66e-4158-856c-8414a88f7053</code></td><td><code>f176f4a6-61ee-41b9-a3ff-c93a6e09e188</code></td></tr>
+              <tr><td>Sign-In Policy</td><td colspan="2"><code>B2C_1A_BDB_SIGNUPSIGNIN</code></td></tr>
+              <tr style="background:#f9f9f9;"><td>Password Reset Policy</td><td colspan="2"><code>B2C_1A_GLOBAL_PasswordReset</code></td></tr>
+              <tr><td>Token Endpoint (Dev/UAT)</td><td colspan="2"><code>https://arcadisb2cdev.b2clogin.com/arcadisb2cdev.onmicrosoft.com/b2c_1a_bdb_signup_signin/oauth2/v2.0/token</code></td></tr>
+              <tr style="background:#f9f9f9;"><td>Token Endpoint (Prod)</td><td colspan="2"><code>https://arcadisb2c.b2clogin.com/arcadisb2c.onmicrosoft.com/b2c_1a_bdb_signup_signin/oauth2/v2.0/token</code></td></tr>
+              <tr><td>Logout Endpoint</td><td colspan="2"><code>.../{tenant}/b2c_1a_global_signup_signin/oauth2/v2.0/logout</code></td></tr>
+              <tr style="background:#f9f9f9;"><td>Token Storage</td><td colspan="2"><code>sessionStorage</code> — clears automatically when the browser tab is closed</td></tr>
+              <tr><td>Config File</td><td colspan="2"><code>src/auth-config.ts</code></td></tr>
+            </tbody>
+          </table>
+
+          <h4>User Roles</h4>
+          <p>Returned as a single string from <code>GET Auth/GetRoles</code>. Exactly <strong>2 roles</strong> exist.</p>
+          <table>
+            <thead><tr><th>Role Value</th><th>What They Can Access</th><th>Subscription Check?</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><code>"user"</code></td>
+                <td>Product pages they have a subscription for. Cannot access <code>/uploads/*</code>.</td>
+                <td>✅ Yes — must have matching subscription</td>
+              </tr>
+              <tr style="background:#f9f9f9;">
+                <td><code>"admin"</code></td>
+                <td>All product pages + all <code>/uploads/*</code> admin pages. Bypasses all subscription checks.</td>
+                <td>❌ No — admin bypasses all subscription checks</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Subscription Modules</h4>
+          <p>These exact strings are returned by <code>GET Auth/GetSubscriptions</code> and matched in <code>&lt;PrivateRoute requiredSubscription="..." /&gt;</code>.</p>
+          <table>
+            <thead><tr><th>Subscription String</th><th>Unlocks These Pages</th></tr></thead>
+            <tbody>
+              <tr><td><code>BDB Maandcijfers</code></td><td><code>/products/monthly-figures</code>, <code>/products/figures-model</code>, <code>/products/flexible-indices</code> (partial)</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>BDB Marktindicator</code></td><td><code>/products/market-indicator</code>, <code>/products/indicator-trends</code></td></tr>
+              <tr><td><code>BDB Trends</code></td><td><code>/products/market-trends</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><code>BDB Vormfactoren en Kostenkengetallen</code></td><td><code>/products/aspect-ratio</code>, <code>/products/aspect-ratio/search</code></td></tr>
+              <tr><td><code>E235 RVB Benchmark</code></td><td><code>/products/e235-aspect-ratio</code>, <code>/products/e235-aspect-ratio/search</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><code>BDB GI S HC - basic</code></td><td><code>/products/detailed-indices</code>, <code>/products/flexible-indices</code> (partial)</td></tr>
+              <tr><td><code>BDB Parametric</code></td><td><code>/products/parametric-elements</code>, <code>/products/parametric-elements/:elementId</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><code>BDB WOV</code></td><td><code>/products/woningbouw-onderhoud-en-verduurzamingsindex</code></td></tr>
+            </tbody>
+          </table>
+
+          <!-- ══════════════════════════════════════════════
+               4. ALL ROUTES
+          ══════════════════════════════════════════════ -->
+          <h3>4 — 🗺️ All Application Routes</h3>
+          <p>Defined in <code>src/router.tsx</code>. Routes are grouped by access level below.</p>
+
+          <h4>Public Routes — No login required</h4>
+          <table>
+            <thead><tr><th>URL Path</th><th>Page Component</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><code>/</code></td><td><code>WelcomePage</code></td><td>Landing / welcome screen</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>/login</code></td><td><code>LoginPage</code></td><td>Redirects to Azure B2C login flow</td></tr>
+              <tr><td><code>/upgrade</code></td><td><code>UpgradePage</code></td><td>Shown when user lacks required subscription</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>/unauthorized</code></td><td><code>UnauthorizedPage</code></td><td>Shown when non-admin tries to access an admin-only route</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Authenticated Routes — Any logged-in user</h4>
+          <table>
+            <thead><tr><th>URL Path</th><th>Page Component</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><code>/dashboard</code></td><td><code>Dashboard</code></td><td>Main landing page after login — shows subscribed products</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>/profile</code></td><td><code>PersonalDetails</code></td><td>User profile (alias for account-settings/personal)</td></tr>
+              <tr><td><code>/account-settings/personal</code></td><td><code>PersonalDetails</code></td><td>Edit personal info</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>/account-settings/company</code></td><td><code>CompanyDetails</code></td><td>Edit company info</td></tr>
+              <tr><td><code>/account-settings/subscription</code></td><td><code>SubscriptionDetailsPage</code></td><td>View subscription details</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>/projects</code></td><td><code>ProjectsPage</code></td><td>Ad hoc projects list</td></tr>
+              <tr><td><code>/subscription-details</code></td><td><code>SubscriptionDetailsPage</code></td><td>Subscription overview (alternate path)</td></tr>
+            </tbody>
+          </table>
+
+          <h4>Product Routes — Require specific subscription (or admin)</h4>
+          <table>
+            <thead><tr><th>URL Path</th><th>Page Component</th><th>Required Subscription</th></tr></thead>
+            <tbody>
+              <tr><td><code>/products/monthly-figures</code></td><td><code>MonthlyFigures</code></td><td><code>BDB Maandcijfers</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><code>/products/figures-model</code></td><td><code>FigureModel</code></td><td><code>BDB Maandcijfers</code></td></tr>
+              <tr><td><code>/products/market-indicator</code></td><td><code>MarketIndicator</code></td><td><code>BDB Marktindicator</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><code>/products/indicator-trends</code></td><td><code>MarketIndicatorTrends</code></td><td><code>BDB Marktindicator</code></td></tr>
+              <tr><td><code>/products/market-trends</code></td><td><code>MarketTrends</code></td><td><code>BDB Trends</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><code>/products/aspect-ratio</code></td><td><code>AspectRatioPage</code></td><td><code>BDB Vormfactoren en Kostenkengetallen</code></td></tr>
+              <tr><td><code>/products/aspect-ratio/search</code></td><td><code>AspectRatioSearchPage</code></td><td><code>BDB Vormfactoren en Kostenkengetallen</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><code>/products/e235-aspect-ratio</code></td><td><code>E235AspectRatioPage</code></td><td><code>E235 RVB Benchmark</code></td></tr>
+              <tr><td><code>/products/e235-aspect-ratio/search</code></td><td><code>E235AspectRatioSearchPage</code></td><td><code>E235 RVB Benchmark</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><code>/products/detailed-indices</code></td><td><code>DetailedIndicesGrid</code></td><td><code>BDB GI S HC - basic</code></td></tr>
+              <tr><td><code>/products/flexible-indices</code></td><td><code>FlexibleIndices</code></td><td><code>BDB Maandcijfers</code> <strong>or</strong> <code>BDB GI S HC - basic</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><code>/products/parametric-elements</code></td><td><code>ParametricElements</code></td><td><code>BDB Parametric</code></td></tr>
+              <tr><td><code>/products/parametric-elements/:elementId</code></td><td><code>ParametricElement</code></td><td><code>BDB Parametric</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><code>/products/woningbouw-onderhoud-en-verduurzamingsindex</code></td><td><code>WoningbouwOnderhoudVerduurzamingsindex</code></td><td><code>BDB WOV</code></td></tr>
+            </tbody>
+          </table>
+
+          <h4>Admin-Only Routes — Role must be <code>"admin"</code></h4>
+          <table>
+            <thead><tr><th>URL Path</th><th>Page Component</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><code>/uploads/referenceBudgets</code></td><td><code>ReferenceBudget</code></td><td>Upload &amp; publish reference budget Excel files</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>/uploads/forecastFigures</code></td><td><code>ForecastFigures</code></td><td>Upload &amp; publish forecast figure Excel files</td></tr>
+              <tr><td><code>/uploads/woningbouw-onderhoud-en-verduurzamingsindex</code></td><td><code>WoningbouwOnderhoudVerduurzamingsindexUploads</code></td><td>Upload WOV index data</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>/uploads/WoningbouwOnderhoudenVerduurzamingsindex</code></td><td><code>WoningbouwOnderhoudVerduurzamingsindexUploads</code></td><td>Legacy URL alias — kept for backwards compatibility (React Router is case-sensitive)</td></tr>
+            </tbody>
+          </table>
+
+          <!-- ══════════════════════════════════════════════
+               5. ALL API ENDPOINTS
+          ══════════════════════════════════════════════ -->
+          <h3>5 — 🔌 All API Endpoints</h3>
+          <p>
+            All API calls are made through <code>src/services/common/HttpCommon.ts</code> — an Axios instance that automatically injects the Bearer token.<br/>
+            Prepend the base URL for your environment:
+            <strong>Dev:</strong> <code>https://devbdb.arcadis.com/api/bdbapi/api/</code> &nbsp;|&nbsp;
+            <strong>UAT:</strong> <code>https://uatbdb.arcadis.com/api/bdbapi/api/</code> &nbsp;|&nbsp;
+            <strong>Prod:</strong> <code>https://bdb.eu/api/bdbapi/api</code>
+          </p>
+          <div class="card info" style="margin-bottom:1rem;">
+            <div class="card-title">⚠️ ID parameters — always get them from a list endpoint first</div>
+            Every <code>{id}</code> in a URL is an <strong>internal database ID</strong>. You cannot guess it. Always call the list version first (e.g. <code>GET /ReferenceProject</code>) to get valid IDs, then call the detail endpoint.
+          </div>
+
+          <h4>🔑 Auth — <code>AuthService.ts</code></h4>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Returns</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Auth/GetRoles</code></td><td>String — <code>"user"</code> or <code>"admin"</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Auth/GetSubscriptions</code></td><td>Array of subscription name strings</td></tr>
+            </tbody>
+          </table>
+
+          <h4>👤 User Profile — <code>ProfileService.ts</code></h4>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/Profile</code></td><td>Get current user's profile (name, email, company)</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#4caf50;font-weight:bold;">PUT</span></td><td><code>/Profile</code></td><td>Update current user's profile. Body: Profile object</td></tr>
+            </tbody>
+          </table>
+
+          <h4>🌍 Country — <code>CountryService.ts</code></h4>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/Country</code></td><td>Get all countries. Used in aspect ratio, subscription lookups, and dropdowns across pages</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📅 Data Series — <code>DataSeriesService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">A "data series" is a versioned snapshot of the dataset (e.g. Q1-2024). Used as a selector on upload pages and reference project pages.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/DataSeries</code></td><td>Get all data series (all versions)</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/DataSeries/{id}</code></td><td>Get a specific data series by ID</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/DataSeries/GetLastDefinitiveDataSeries</code></td><td>Get the latest officially published data series — used as the default selection across the app</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📌 Reference Projects — <code>ReferenceProjectService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Reference projects are the benchmark construction projects. Their IDs are used in many other endpoints (monthly figures, figures model, etc.).</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject</code></td><td>Get all reference projects — <strong>start here to get valid IDs</strong></td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getById/{id}</code></td><td>Get a single reference project by ID</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getByName/{name}</code></td><td>Find a reference project by its name</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getByDataSeriesId/{id}</code></td><td>Get projects linked to a specific data series</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getByLastDataSeries</code></td><td>Get one project from the latest data series</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getListByLastDataSeries</code></td><td>Get all projects from the latest data series</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getListByLastDataSeriesBasedOnProduct/{name}</code></td><td>Get projects from latest data series filtered by product name</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📅 Reference Dates — <code>ReferenceDateService.ts</code> &amp; <code>ReferenceDatePublishedService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;"><strong>ReferenceDateService</strong> — all dates (including unpublished). Used in admin upload workflow.<br>
+          <strong>ReferenceDatePublishedService</strong> — only the latest published date. Used on user-facing product pages.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceDate</code></td><td>Get all reference dates (including unpublished)</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceDate/{id}</code></td><td>Get a single reference date by ID</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceDate/GetUsedByForecastSerie</code></td><td>Get reference dates that are linked to a forecast series</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceDate/GetReferenceDateToBePublished/{budgetTypeId}</code></td><td>Get dates pending publish for a specific budget type</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceDatePublished/getLatest/{budgetTypeId}</code></td><td>Get the latest <em>published</em> reference date for a budget type. Used on product pages to show current data version.</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📊 Subscriptions — <code>SubscriptionService.ts</code></h4>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Subscription/GetYears</code></td><td>Get all years that have subscription data</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Subscription/GetModulesByCountryAndYear/?countryId={id}&amp;year={year}&amp;includeCompanies=false</code></td><td>Get subscription modules available for a country and year</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📈 Monthly Figures — <code>MonthlyFiguresService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB Maandcijfers</code>. The <code>{id}</code> is a Reference Project ID — get it from <code>GET /ReferenceProject</code> first.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportForecastFigures/{id}?isForecastIncluded={bool}</code></td><td>Get monthly cost index data. Body: <code>string[]</code> of date strings (e.g. <code>["2023-01-01","2023-04-01"]</code>)</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportForecastFigures/report/{id}?isForecastIncluded={bool}&amp;format={excel|pdf}</code></td><td>Download monthly figures report as Excel or PDF blob. Body: same date array.</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📉 Market Indicator — <code>common/MarketIndicatorService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB Marktindicator</code>. Note: date range is currently <strong>hardcoded</strong> in the service.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportMarketIndicator?startDate=2022-10-01&amp;endDate=2024-09-22</code></td><td>Get market indicator chart data</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportMarketIndicator/report?startDate=2022-10-01&amp;endDate=2024-09-22</code></td><td>Download market indicator Excel report</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📉 Market Trends — <code>MarketTrendsService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB Trends</code>. Simple GET — no body, no date parameters.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportTrends</code></td><td>Get market trends data</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportTrends/report</code></td><td>Download market trends Excel report</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📉 Market Indicator Trends — <code>common/MarketIndicatorTrendsService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB Marktindicator</code>. Different from <code>MarketTrendsService</code> — uses <strong>POST</strong> with a body of reference dates.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportTrends?isTrendsIncluded={bool}</code></td><td>Get indicator trend data for selected dates. Body: <code>string[]</code> of date strings</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportTrends/report?isTrendsIncluded={bool}&amp;format={excel|pdf}</code></td><td>Download indicator trends report. Body: same date array.</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📐 Figures Model — <code>FiguresModelService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB Maandcijfers</code>. Generates a custom indexed project cost report for user-provided project details.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>FiguresModel/getFiguresModelExport?format={excel|pdf}</code></td><td>Export figures model report. Body: <code>{ projectName, projectNumber, city, levelOfDetail, referenceProjectId, dateList }</code></td></tr>
+            </tbody>
+          </table>
+
+          <h4>📐 Aspect Ratio — <code>AspectRatioService.ts</code> &amp; <code>AspectRatioExportService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB Vormfactoren en Kostenkengetallen</code>. Two services — one for fetching data, one for file exports.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/GetProjectAnalyseCountries</code></td><td>Get countries available for aspect ratio analysis</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/getCostCategories</code></td><td>Get available cost categories</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/getLevels?countryId={id}</code></td><td>Get levels for a country</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/getProjectUnderClasses?countryId={id}</code></td><td>Get project underclasses for a country</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/getProjects?countryId={id}</code></td><td>Get projects for a country</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportDesignKeyCostFigures/GetCountForDimensions</code></td><td>Get total record count for the selected filter combination</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportDesignKeyCostFigures/getData</code></td><td>Get paginated grid data for selected dimensions</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportDesignKeyCostFigures/GetDataForOneDimension</code></td><td>Get data for a single dimension (chart view)</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportDesignKeyCostFigures/exportDimensionGrid</code></td><td>Export grid as Excel blob</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportDesignKeyCostFigures/export</code></td><td>Export with dimensions. Body: <code>ExportWithDimensionRequestPayload</code></td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/downloadProjectAnalyseFile/{id}</code></td><td>Download a project analysis file by ID</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📐 E235 Export — <code>common/E235ExportService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Subscription: <code>E235 RVB Benchmark</code>. Downloads company-specific reference budget files. The <code>companyId</code> is read from <code>appStorage.getSelectedClientId()</code> automatically.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/download/{companyId}/{fileName}</code></td><td>Download an E235 reference budget file for the selected company</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📊 Detailed Indices — <code>DetailedIndicesService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB GI S HC - basic</code>. The <code>{id}</code> is a Reference Project ID. <code>giServiceEnum</code>: <code>1</code>=Element Clusters, <code>2</code>=Stabu Chapters, <code>3</code>=Product Groups.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportElementClusters/GetProductList</code></td><td>Get the list of subcategory options (product list)</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportElementClusters/{id}?giServiceEnum={1|2|3}</code></td><td>Get detailed index data. Body: filter parameters</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportElementClusters/report/{id}?giServiceEnum={enum}</code></td><td>Download detailed indices report as Excel blob</td></tr>
+            </tbody>
+          </table>
+
+          <h4>🔧 Parametric Elements — <code>ParametricElementsService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB Parametric</code>. Elements are structured in a tree — start with root nodes, then fetch children.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ParametricNode</code></td><td>Get all root-level parametric nodes — <strong>start here</strong></td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ParametricNode/GetByParent/{parentId}</code></td><td>Get child nodes for a given parent ID</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ParametricNode/{id}</code></td><td>Get a single node with full details and parameters</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ParametricNode/search?description={text}</code></td><td>Search nodes by description text</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ParametricNode/{id}/CalculatePrice</code></td><td>Calculate price using selected parameter values. Body: parameter input object</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ParametricNode/{id}/ExportExcel?format={excel|pdf}</code></td><td>Export a parametric node report</td></tr>
+            </tbody>
+          </table>
+
+          <h4>💾 User Presets — <code>UserPresetService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Used on <code>/products/flexible-indices</code>. Presets are named saved configurations of data-series selections.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>UserPreset/user/{email}</code></td><td>Get all presets for a user (by email address)</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>UserPreset/preset/{id}</code></td><td>Get a single preset by ID</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>UserPreset</code></td><td>Create a new preset. Body: <code>{ name, companyId, data: ApiData[] }</code>. Returns the created preset with its new ID.</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#4caf50;font-weight:bold;">PUT</span></td><td><code>UserPreset/preset/{id}</code></td><td>Update a preset. Body: <code>ApiPreset</code>. Returns 204 No Content.</td></tr>
+              <tr><td><span style="color:#f44336;font-weight:bold;">DELETE</span></td><td><code>UserPreset/{id}</code></td><td>Delete a preset by ID</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>UserPreset/user/preset/{id}</code></td><td>Associate an existing preset with the current user</td></tr>
+            </tbody>
+          </table>
+
+          <h4>🏗️ Ad Hoc Projects — <code>AdHocProjectsService.ts</code></h4>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ProjectAdHoc/GetProjectTypes</code></td><td>Get all available project types</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ProjectAdHoc/GetProjectTypeUsed</code></td><td>Get project types currently in use</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ProjectAdHoc/take</code></td><td>Get paginated list of ad hoc projects. Body: filter, skip, take, sort</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ProjectAdHoc/takeindex?take={n}&amp;skip={n}</code></td><td>Get paginated index projects</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ProjectAdHoc/PostFile</code></td><td>Upload a file for an ad hoc project</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#4caf50;font-weight:bold;">PUT</span></td><td><code>ProjectAdHoc/{id}</code></td><td>Update an ad hoc project by ID</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ProjectAdHoc/allowDelete/{id}</code></td><td>Check if a project is eligible for deletion</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ProjectAdHoc/file/{id}</code></td><td>Download project file as Excel blob</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ProjectIndex/take</code></td><td>Get paginated project index data</td></tr>
+            </tbody>
+          </table>
+
+          <h4>🏠 WOV (Woningbouw Index) — <code>wovService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB WOV</code>. Admin upload + user data view for the housing renovation index.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>Wov/upload</code></td><td>Upload WOV Excel file. Body: multipart/form-data</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Wov/data?fileName={name}</code></td><td>Get WOV data for a specific uploaded filename</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📤 Reference Budget Upload (Admin) — <code>ReferenceBudgetService.ts</code> &amp; <code>ReferenceBudgetUploadService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Admin only. Two services for the same API resource — <strong>ReferenceBudgetService</strong> handles basic operations; <strong>ReferenceBudgetUploadService</strong> handles the extended upload workflow (take, bulk, delete). The <code>{id}</code> is an internal upload record ID — get it from <code>POST ReferenceBudget/take</code> first.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/take</code></td><td>Get paginated list of uploaded records. Body: <code>{ skip, take, sort, filter }</code> → <strong>use this to find valid IDs</strong></td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/PostFiles</code></td><td>Upload reference budget files. Body: multipart/form-data with <code>files</code> field</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/validate-upload</code></td><td>Validate files before submission. Body: <code>{ referenceProjectIds, dataSeriesId, year, month }</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/bulk</code></td><td>Submit a bulk create request. Body: <code>ReferenceBudgetBulkRequest</code> with files, dataSeriesId, referenceDateId</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/bulk/{status}</code></td><td>Poll the status of a bulk operation</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/getAll/{id}</code></td><td>Get full details of an uploaded record. <code>{id}</code> comes from <code>ReferenceBudget/take</code> response.</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/file/{id}</code></td><td>Download the uploaded Excel file for a record</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/summary</code></td><td>Get summary statistics</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/delete/{id}</code></td><td>Delete an uploaded record by ID</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/publish</code></td><td>Publish selected records. Body: <code>number[]</code> of IDs</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/bulkpublish</code></td><td>Bulk publish multiple records. Body: <code>number[]</code> of IDs</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📤 Forecast Figure Upload (Admin) — <code>ForecastFigureService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Admin only. Note: the API path is spelled <code>ForcastFigure</code> (missing 'e') — this is a <strong>backend typo</strong>. Do not "fix" it in frontend code or it will break.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/PostFiles</code></td><td>Upload forecast figure files. Body: multipart/form-data</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/validate-upload</code></td><td>Validate uploaded files before submit</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/BulkGenerateFile</code></td><td>Trigger bulk file generation</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/GenerateFailedFile?requestId={id}</code></td><td>Retry generation for a specific failed request</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ForcastFigure/bulk/{statusId}</code></td><td>Poll bulk generation status by ID</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ForcastFigure/delete/{id}</code></td><td>Delete a forecast figure record by ID</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/publish</code></td><td>Publish forecast figures. Body: IDs array</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/bulkpublish</code></td><td>Bulk publish forecast figures. Body: IDs array</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📝 Download Logging — <code>LogDataService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Called automatically by <code>downloadAndLogReport()</code> in <code>src/utils/reportDownloader.ts</code> every time a user downloads a report. You do not call this directly.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>LogData</code></td><td>Log a download event. Body: multipart/form-data with report name, filename, file blob, and JSON metadata</td></tr>
+            </tbody>
+          </table>
+
+          <!-- ══════════════════════════════════════════════
+               6. KEY SOURCE FILES
+          ══════════════════════════════════════════════ -->
+          <h3>6 — 📁 Key Source Files</h3>
+          <p>The most important files to know when navigating the codebase.</p>
+          <table>
+            <thead><tr><th>File</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td><code>src/main.tsx</code></td><td>App entry point — mounts React, wraps with Redux <code>Provider</code> and MSAL <code>MsalProvider</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><code>src/App.tsx</code></td><td>Root component — acquires the auth token and fetches the user profile on first load</td></tr>
+              <tr><td><code>src/router.tsx</code></td><td>All route definitions — paths, page components, auth guards, and breadcrumbs</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>src/auth-config.ts</code></td><td>Azure B2C / MSAL configuration — tenant, client ID, policies, scopes, redirects</td></tr>
+              <tr><td><code>src/i18n.ts</code></td><td>i18next setup — fetches translations from the Arcadis cloud platform at runtime (not local files)</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>src/services/common/HttpCommon.ts</code></td><td>Axios base instance — sets base URL from env, and injects <code>Authorization: Bearer {token}</code> on every request</td></tr>
+              <tr><td><code>src/hooks/auth.hook.ts</code></td><td>Manages MSAL token acquisition and silent refresh</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>src/hooks/subscription.hook.ts</code></td><td>Fetches and caches user role + subscriptions — used by <code>PrivateRoute</code> to gate access</td></tr>
+              <tr><td><code>src/components/PrivateRoute/PrivateRoute.tsx</code></td><td>Route guard — checks auth, role, and subscriptions before rendering a page. Redirects to <code>/upgrade</code> if subscription missing, <code>/unauthorized</code> if not admin.</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>src/components/SideBar/SideBar.tsx</code></td><td>Left navigation — conditionally shows/hides product links based on user subscriptions and role</td></tr>
+              <tr><td><code>src/context/appState.context.tsx</code></td><td>React Context — holds the global <code>clientId</code> (selected company) shared across pages</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>src/utils/app-storage.ts</code></td><td>Thin wrapper over <code>sessionStorage</code> — get/set access token, clientId, userId</td></tr>
+              <tr><td><code>src/utils/reportDownloader.ts</code></td><td>Downloads blob responses as files and automatically logs each download via <code>LogDataService</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><code>src/components/SnackbarNotification/store.ts</code></td><td>Redux store — used <em>only</em> for snackbar/notification state. No other global state in Redux.</td></tr>
+              <tr><td><code>vite.config.ts</code></td><td>Vite build config — sets dev server port to <code>3000</code>, enables SVG-as-React-component via <code>vite-plugin-svgr</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><code>vitest.config.ts</code></td><td>Test config — jsdom environment, V8 coverage provider</td></tr>
+              <tr><td><code>src/tests/setupTests.ts</code></td><td>Global test setup file — runs before all tests (mock registrations, polyfills)</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>.env.development</code></td><td>Dev environment variables (API URL, B2C config, AG Grid license key)</td></tr>
+              <tr><td><code>.env.uat</code></td><td>UAT environment variables</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>.env.production</code></td><td>Production environment variables</td></tr>
+            </tbody>
+          </table>
+
+          <!-- ══════════════════════════════════════════════
+               7. ENVIRONMENT VARIABLES
+          ══════════════════════════════════════════════ -->
+          <h3>7 — ⚙️ All Environment Variables</h3>
+          <p>Set in <code>.env.development</code>, <code>.env.uat</code>, and <code>.env.production</code>. Only <code>VITE_*</code> prefixed variables are exposed to the browser bundle.</p>
+          <table>
+            <thead><tr><th>Variable</th><th>Dev Value</th><th>UAT Value</th><th>Prod Value</th></tr></thead>
+            <tbody>
+              <tr><td><code>VITE_REACT_APP_API_URL</code></td><td><code>https://devbdb.arcadis.com/api/bdbapi/api/</code></td><td><code>https://uatbdb.arcadis.com/api/bdbapi/api/</code></td><td><code>https://bdb.eu/api/bdbapi/api</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><code>VITE_REACT_APP_REDIRECT_URL</code></td><td><code>https://devbdb.arcadis.com/dashboard</code></td><td><code>https://uatbdb.arcadis.com/dashboard</code></td><td><code>https://bdb.eu/dashboard</code></td></tr>
+              <tr><td><code>VITE_REACT_APP_POST_LOGOUT_REDIRECT_URL</code></td><td><code>https://devbdb.arcadis.com/</code></td><td><code>https://uatbdb.arcadis.com/</code></td><td><code>https://bdb.eu/dashboard</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><code>VITE_REACT_APP_TENANT_NAME</code></td><td><code>ArcadisB2CDEV</code></td><td><code>ArcadisB2CDEV</code></td><td><code>ArcadisB2C</code></td></tr>
+              <tr><td><code>VITE_REACT_APP_CLIENT_ID_LANDING</code></td><td><code>27848361-a66e-4158-856c-8414a88f7053</code></td><td><code>27848361-a66e-4158-856c-8414a88f7053</code></td><td><code>f176f4a6-61ee-41b9-a3ff-c93a6e09e188</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><code>VITE_REACT_APP_OAUTH_SCOPES</code></td><td><code>https://ArcadisB2CDEV.onmicrosoft.com/27848361-.../access-api</code></td><td><code>https://ArcadisB2CDEV.onmicrosoft.com/27848361-.../access-api</code></td><td><code>https://ArcadisB2C.onmicrosoft.com/f176f4a6-.../access-api</code></td></tr>
+              <tr><td><code>VITE_REACT_APP_SIGN_UP_SIGN_IN_POLICY</code></td><td colspan="3"><code>B2C_1A_BDB_SIGNUPSIGNIN</code> (same across all environments)</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>VITE_REACT_APP_PASSWORD_RESET_POLICY</code></td><td colspan="3"><code>B2C_1A_GLOBAL_PasswordReset</code> (same across all environments)</td></tr>
+              <tr><td><code>VITE_REACT_APP_ENVIRONMENT</code></td><td><code>"development"</code></td><td><code>"uat"</code></td><td><code>"production"</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><code>VITE_REACT_APP_API_ENDPOINT</code></td><td><code>https://devbdb.arcadis.com/api/bdbapi/api</code></td><td><code>https://uatbdb.arcadis.com/api/bdbapi/api</code></td><td><code>https://bdb.eu/api/bdbapi/api</code></td></tr>
+              <tr><td><code>VITE_REACT_APP_PROXY_API_URL</code></td><td><code>https://arcadisiam-dev.azurefd.net/api/admin/v1.0</code></td><td><code>https://arcadisiam-dev.azurefd.net/api/admin/v1.0</code></td><td><code>https://arcadisiam.azurefd.net/api/admin/v1.0</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><code>VITE_REACT_APP_PROXY_API_LANDING_URL</code></td><td><code>https://arcadisiam-dev.azurefd.net/api/apps</code></td><td><code>https://arcadisiam-dev.azurefd.net/api/apps</code></td><td><code>https://arcadisiam.azurefd.net/api/apps</code></td></tr>
+              <tr><td><code>VITE_REACT_APP_B2C_METADATA</code></td><td colspan="3">Full B2C metadata JSON (issuer, token endpoint, logout endpoint, JWKS URI). Hardcoded in each <code>.env.*</code> file for reliability — see the env files for full JSON.</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>VITE_AGGRID_LICENSE_KEY</code></td><td colspan="3">AG Grid Enterprise license key. Same key across all environments. Expires <strong>19 Sep 2026</strong>. Licensed to Arcadis Global B.V. for the BDB application.</td></tr>
+              <tr><td><code>REACT_APP_FEATURE_SEARCH</code></td><td colspan="3"><code>false</code> — feature flag, currently disabled in all environments</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>REACT_APP_FEATURE_NOTIFICATIONS</code></td><td colspan="3"><code>false</code> — feature flag, currently disabled in all environments</td></tr>
+            </tbody>
+          </table>
+
+          <!-- ══════════════════════════════════════════════
+               8. I18N
+          ══════════════════════════════════════════════ -->
+          <h3>8 — 🌍 Translations (i18n)</h3>
+          <p>Translations are <strong>not stored locally</strong>. They are fetched at runtime from the Arcadis cloud translation platform.</p>
+          <table>
+            <thead><tr><th>Property</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Config file</td><td><code>src/i18n.ts</code></td></tr>
+              <tr style="background:#f9f9f9;"><td>Translation API URL</td><td><code>https://i18n-api.arcadis.com/api/v1.0/{solutionId}/{lng}/namespaces/{ns}</code></td></tr>
+              <tr><td>Solution ID</td><td><code>021c7f6b-1b50-44da-8aa6-e6e9b269e360</code></td></tr>
+              <tr style="background:#f9f9f9;"><td>API Code (query param)</td><td><code>EjmzCv2V4mM9PmRf2zWSnWfLaZ7dQmj4W2HQgeUNT57htPh25bxT</code></td></tr>
+              <tr><td>Supported Languages</td><td>English (<code>en</code>) and Dutch (<code>nl</code>). Fallback: <code>en</code></td></tr>
+              <tr style="background:#f9f9f9;"><td>Namespaces</td><td><code>common</code> (default) and <code>pages</code></td></tr>
+              <tr><td>How to use in a component</td><td><code>const { t } = useTranslation();</code> then <code>&lt;p&gt;{'{t("your.key")}'}&lt;/p&gt;</code></td></tr>
+              <tr style="background:#f9f9f9;"><td>Language switcher component</td><td><code>src/components/LanguageSelector/</code> — saves the selected language to <code>localStorage</code></td></tr>
+            </tbody>
+          </table>
+        </section>
+
         <!-- ─── Project Overview ─── -->
         <section id="sec-overview" class="section active">
           <h2>Project Overview</h2>
@@ -759,16 +1306,57 @@
 
           <h3>What is BDB?</h3>
           <p>
-            BDB (likely "Bouw Database" - Construction Database) is a platform providing:
+            <strong>BDB (Bouw Database - Construction Database)</strong> is a comprehensive platform for the Dutch construction industry that provides:
           </p>
           <ul>
-            <li><strong>Market Indicators:</strong> Real-time construction industry trends and analytics</li>
-            <li><strong>Monthly Figures:</strong> Historical and forecast construction cost indices</li>
-            <li><strong>Aspect Ratios:</strong> Detailed cost breakdowns by construction categories</li>
-            <li><strong>Parametric Elements:</strong> Construction element cost analysis</li>
-            <li><strong>Reference Projects:</strong> Project-based budget and cost tracking</li>
-            <li><strong>Flexible Indices:</strong> Customizable index calculations</li>
+            <li><strong>Market Indicators:</strong> Real-time construction industry trends and analytics tracking labor costs, material prices, and economic factors affecting construction</li>
+            <li><strong>Monthly Figures (Maandcijfers):</strong> Historical and forecast construction cost indices with labor/material breakdowns, showing trends over time to help predict future costs</li>
+            <li><strong>Aspect Ratios (Kengetallen):</strong> Detailed cost breakdowns by construction categories (e.g., foundations, structure, finishing) across different project types and regions</li>
+            <li><strong>Parametric Elements:</strong> Granular construction element cost analysis with searchable database of building components and their associated costs</li>
+            <li><strong>Reference Projects:</strong> Project-based budget tracking allowing comparison against actual construction projects as benchmarks</li>
+            <li><strong>Flexible Indices:</strong> Customizable index calculations where users can define their own weightings for labor/material/overhead to match their specific project profiles</li>
+            <li><strong>WOV Index:</strong> Woningbouw, Onderhoud en Verduurzamingsindex - specialized index for housing construction, maintenance, and sustainability projects</li>
           </ul>
+
+          <h3>Business Context</h3>
+          <p>
+            The BDB platform serves <strong>construction companies, cost consultants, project managers, and real estate developers</strong> in the Netherlands who need:
+          </p>
+          <ul>
+            <li><strong>Accurate cost estimation:</strong> Base their project budgets on real market data rather than estimates</li>
+            <li><strong>Trend analysis:</strong> Understand how construction costs evolve over time to plan long-term projects</li>
+            <li><strong>Benchmarking:</strong> Compare their project costs against industry standards and similar projects</li>
+            <li><strong>Budget forecasting:</strong> Predict future costs based on historical trends and forecast models</li>
+            <li><strong>Risk management:</strong> Identify cost volatility in specific materials or labor categories</li>
+            <li><strong>Competitive intelligence:</strong> Understand market positioning and pricing strategies</li>
+          </ul>
+
+          <h3>User Roles & Access</h3>
+          <div class="compare">
+            <div class="col future">
+              <h4>Standard User</h4>
+              <ul>
+                <li>Access based on company subscriptions</li>
+                <li>View and export data for subscribed products</li>
+                <li>Create and manage ad-hoc projects</li>
+                <li>Customize personal dashboard</li>
+                <li>Save custom presets and configurations</li>
+                <li>Limited to their company's data scope</li>
+              </ul>
+            </div>
+            <div class="col today">
+              <h4>Admin User</h4>
+              <ul>
+                <li>All standard user capabilities</li>
+                <li>Upload reference budget data</li>
+                <li>Upload forecast figures</li>
+                <li>Upload WOV index data</li>
+                <li>Bulk publish data across system</li>
+                <li>Access to all products regardless of subscription</li>
+                <li>Manage company-wide settings</li>
+              </ul>
+            </div>
+          </div>
 
           <div class="card brand">
             <div class="card-title">Key Application Features</div>
@@ -1059,6 +1647,7 @@ npm run dev
           </p>
 
           <h3>High-Level Architecture</h3>
+          <p><strong>Frontend Architecture:</strong> Single Page Application (SPA) with client-side routing</p>
           <div class="arch-flow">
             <span class="node">User Browser</span>
             <span class="arrow">→</span>
@@ -1079,6 +1668,50 @@ npm run dev
             <span class="node">Arcadis i18n API</span>
             <span class="arrow">→</span>
             <span class="node out">Translation Resources</span>
+          </div>
+
+          <div class="card brand">
+            <div class="card-title">Why This Architecture?</div>
+            <ul>
+              <li><strong>SPA Approach:</strong> Provides a responsive, app-like experience without page reloads, essential for data-heavy dashboards and charts</li>
+              <li><strong>Vite Build Tool:</strong> Extremely fast development server (HMR in milliseconds), optimized production builds with automatic code splitting</li>
+              <li><strong>Azure B2C:</strong> Enterprise-grade authentication with SSO, MFA support, and secure token management for B2B scenarios</li>
+              <li><strong>Centralized i18n:</strong> Translation management platform allows non-technical users to update Dutch/English content without code deployments</li>
+            </ul>
+          </div>
+
+          <h3>Data Flow Architecture</h3>
+          <div class="example-grid">
+            <div class="example-step">
+              <div class="num">1</div>
+              <strong>User Authentication</strong><br />
+              Azure B2C authenticates user, returns JWT token stored in sessionStorage
+            </div>
+            <div class="example-step">
+              <div class="num">2</div>
+              <strong>Profile Loading</strong><br />
+              App fetches user profile + company info, determines subscriptions and role
+            </div>
+            <div class="example-step">
+              <div class="num">3</div>
+              <strong>Route Access</strong><br />
+              Router checks if user has required subscription/role for requested page
+            </div>
+            <div class="example-step">
+              <div class="num">4</div>
+              <strong>Data Fetching</strong><br />
+              Page components call services which make authenticated API requests
+            </div>
+            <div class="example-step">
+              <div class="num">5</div>
+              <strong>State Updates</strong><br />
+              Data rendered in components, charts, grids with local state management
+            </div>
+            <div class="example-step">
+              <div class="num">6</div>
+              <strong>User Actions</strong><br />
+              Export, save presets, customize - all trigger API calls and UI updates
+            </div>
           </div>
 
           <h3>Folder Structure</h3>
@@ -1193,59 +1826,192 @@ npm run dev
           <h4>2. Service Layer Pattern</h4>
           <p>
             All API calls are abstracted into service modules. Each service corresponds to a backend resource or feature area.
+            <strong>This separation provides several benefits:</strong>
           </p>
+          <ul>
+            <li><strong>Testability:</strong> Services can be mocked in component tests</li>
+            <li><strong>Reusability:</strong> Same service methods used across multiple components</li>
+            <li><strong>Maintainability:</strong> API changes only require updating service files</li>
+            <li><strong>Type Safety:</strong> TypeScript interfaces ensure correct data structures</li>
+            <li><strong>Error Handling:</strong> Centralized error handling and retry logic</li>
+          </ul>
+
+          <div class="card brand">
+            <div class="card-title">Service Layer Benefits Example</div>
+            <p>If the backend API endpoint for monthly figures changes from:</p>
+            <pre style="background: #f5f5f5; padding: 0.5rem; border-radius: 4px; margin: 0.5rem 0;"><code>/api/ReportForecastFigures/{id}</code></pre>
+            <p>to:</p>
+            <pre style="background: #f5f5f5; padding: 0.5rem; border-radius: 4px; margin: 0.5rem 0;"><code>/api/v2/figures/{id}</code></pre>
+            <p>You only update <code>MonthlyFiguresService.ts</code> - all components using it continue to work without changes.</p>
+          </div>
+
           <pre><code><span class="c-com">// Example: MonthlyFiguresService.ts</span>
 <span class="c-key">import</span> http <span class="c-key">from</span> <span class="c-str">"./common/HttpCommon.ts"</span>;
+<span class="c-key">import</span> { MonthlyFiguresResponseData } <span class="c-key">from</span> <span class="c-str">"../models/IMonthlyFigures.ts"</span>;
 
-<span class="c-key">const</span> getMonthlyFigures = <span class="c-key">async</span> (id, isForecastIncluded, referenceDates) => {
+<span class="c-com">// Service method encapsulates API call + data transformation</span>
+<span class="c-key">const</span> getMonthlyFigures = <span class="c-key">async</span> (
+  id: <span class="c-key">number</span>,
+  isForecastIncluded: <span class="c-key">boolean</span>,
+  referenceDates: <span class="c-key">string</span>[]
+): Promise&lt;MonthlyFiguresResponseData&gt; => {
   <span class="c-key">const</span> response = <span class="c-key">await</span> http.post(`ReportForecastFigures/${id}`, referenceDates);
-  <span class="c-key">return</span> response.data;
+  <span class="c-key">return</span> response.data;  <span class="c-com">// Return typed data</span>
 };
 
 <span class="c-key">export default</span> { getMonthlyFigures };</code></pre>
 
           <h4>3. Authentication & Authorization</h4>
           <p>
-            Uses Microsoft Authentication Library (MSAL) for Azure B2C integration:
+            Uses Microsoft Authentication Library (MSAL) for Azure B2C integration.
+            <strong>Why Azure B2C?</strong>
           </p>
           <ul>
-            <li>Token-based authentication with automatic refresh</li>
-            <li>Session storage for tokens and user data</li>
-            <li>HTTP interceptors add Bearer tokens to requests</li>
-            <li>Role-based route protection via <code>PrivateRoute</code></li>
+            <li><strong>Enterprise SSO:</strong> Users authenticate once across all Arcadis platforms</li>
+            <li><strong>Security:</strong> OAuth 2.0 and OpenID Connect protocols with automatic token rotation</li>
+            <li><strong>Token Management:</strong> MSAL automatically refreshes expired tokens without user interaction</li>
+            <li><strong>Session Storage:</strong> Tokens stored in sessionStorage (cleared on browser close for security)</li>
+            <li><strong>HTTP Interceptors:</strong> Axios interceptor automatically adds Bearer tokens to all API requests</li>
+            <li><strong>Role-Based Access:</strong> Route guards (<code>PrivateRoute</code>) check authentication before rendering protected pages</li>
           </ul>
 
+          <div class="card accent">
+            <div class="card-title">Authentication Token Lifecycle</div>
+            <p><strong>1. Login:</strong> User redirects to Azure B2C login page → enters credentials → receives JWT access token</p>
+            <p><strong>2. Storage:</strong> Token stored in sessionStorage with expiry timestamp (typically 1 hour)</p>
+            <p><strong>3. API Calls:</strong> Axios interceptor reads token from storage → adds <code>Authorization: Bearer {'{token}'}</code> header to every request</p>
+            <p><strong>4. Refresh:</strong> MSAL silently acquires new token before expiry (happens in iframe without user seeing it)</p>
+            <p><strong>5. Logout:</strong> Token cleared from storage → user redirected to Azure B2C logout endpoint</p>
+          </div>
+
+          <pre><code><span class="c-com">// auth-config.ts - Azure B2C Configuration</span>
+<span class="c-key">export const</span> msalConfig = {
+  auth: {
+    clientId: <span class="c-str">"YOUR_CLIENT_ID"</span>,  <span class="c-com">// From Azure B2C app registration</span>
+    authority: <span class="c-str">"https://login.microsoftonline.com/..."</span>,
+    redirectUri: window.location.origin,
+    postLogoutRedirectUri: window.location.origin,
+  },
+  cache: {
+    cacheLocation: <span class="c-str">"sessionStorage"</span>,  <span class="c-com">// Token cleared when browser closes</span>
+    storeAuthStateInCookie: <span class="c-key">false</span>,
+  }
+};
+
+<span class="c-com">// HttpCommon.ts - Automatic token injection</span>
+http.interceptors.request.use(
+  (config) => {
+    <span class="c-key">const</span> token = sessionStorage.getItem(<span class="c-str">"msal.token"</span>);
+    <span class="c-key">if</span> (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    <span class="c-key">return</span> config;
+  }
+);</code></pre>
+
           <h4>4. State Management</h4>
+          <p><strong>The application uses a hybrid state management approach:</strong></p>
+          
           <div class="compare">
             <div class="col future">
-              <h4>Global State (Redux)</h4>
+              <h4>Global State (Redux Toolkit)</h4>
               <ul>
-                <li>Snackbar/notification state</li>
-                <li>Managed via Redux Toolkit</li>
-                <li>Used sparingly for cross-cutting concerns</li>
+                <li><strong>Purpose:</strong> Cross-cutting concerns only</li>
+                <li><strong>Use Case:</strong> Snackbar/notification system</li>
+                <li><strong>Why Redux here?</strong> Notifications can be triggered from any component, service, or error handler</li>
+                <li><strong>Benefits:</strong> Single source of truth for notifications, easy to dispatch from anywhere</li>
+                <li><strong>Store Setup:</strong> Minimal configuration, only <code>snackbarSlice</code> registered</li>
               </ul>
             </div>
             <div class="col today">
-              <h4>Local State (Context + Hooks)</h4>
+              <h4>Local State (Context API + Hooks)</h4>
               <ul>
-                <li>App-level state (clientId)</li>
-                <li>Component-specific state</li>
-                <li>Custom hooks for data fetching</li>
+                <li><strong>Purpose:</strong> Feature-specific state</li>
+                <li><strong>App Context:</strong> <code>clientId</code> (current project/client)</li>
+                <li><strong>Component State:</strong> Form data, UI toggles, local filters</li>
+                <li><strong>Custom Hooks:</strong> <code>useMonthlyFigures</code>, <code>useMarketIndicator</code> (data fetching + loading state)</li>
+                <li><strong>Why not Redux?</strong> Avoids prop drilling, simpler than Redux for local concerns, better performance</li>
               </ul>
             </div>
           </div>
 
-          <h4>5. Data Models</h4>
+          <div class="card brand">
+            <div class="card-title">State Management Decision Tree</div>
+            <p><strong>Use Redux when:</strong> State needs to be accessed from multiple unrelated components across the app (e.g., notifications, global settings)</p>
+            <p><strong>Use Context when:</strong> State is shared within a component tree (e.g., app-level settings like clientId)</p>
+            <p><strong>Use Local State when:</strong> State is only needed in one component or its children (e.g., form inputs, modal open/close)</p>
+            <p><strong>Use Custom Hooks when:</strong> Complex state logic needs to be reused (e.g., API data fetching with loading/error states)</p>
+          </div>
+
+          <pre><code><span class="c-com">// Example: appState.context.tsx - Context for clientId</span>
+<span class="c-key">export const</span> AppStateContext = createContext&lt;AppState&gt;(<span class="c-key">null</span>);
+
+<span class="c-key">export const</span> AppStateProvider = ({ children }) => {
+  <span class="c-key">const</span> [clientId, setClientId] = useState&lt;<span class="c-key">number</span>&gt;(<span class="c-key">null</span>);
+  
+  <span class="c-com">// clientId is used across Dashboard, Charts, Forms, etc.</span>
+  <span class="c-key">return</span> (
+    &lt;AppStateContext.Provider value={{ clientId, setClientId }}&gt;
+      {children}
+    &lt;/AppStateContext.Provider&gt;
+  );
+};
+
+<span class="c-com">// Example: Redux for notifications - used from anywhere</span>
+<span class="c-key">import</span> { useDispatch } <span class="c-key">from</span> <span class="c-str">"react-redux"</span>;
+<span class="c-key">import</span> { showSnackbar } <span class="c-key">from</span> <span class="c-str">"./store/snackbarSlice"</span>;
+
+<span class="c-com">// Can be called from any component, service, or error handler:</span>
+dispatch(showSnackbar({ message: <span class="c-str">"Data saved successfully"</span>, severity: <span class="c-str">"success"</span> }));</code></pre>
+
+          <h4>5. Data Models (TypeScript Interfaces)</h4>
           <p>
-            TypeScript interfaces define all data structures. Models are organized by feature:
+            <strong>All data structures are defined as TypeScript interfaces in <code>src/models/</code>.</strong>
+            This provides:
           </p>
           <ul>
-            <li><code>IMonthlyFigures.ts</code> - Monthly construction figures data</li>
-            <li><code>IMarketIndicator.ts</code> - Market indicator data structures</li>
-            <li><code>IAspectRatio.ts</code> - Cost breakdown and analysis data</li>
-            <li><code>IProfile.ts</code> - User profile and company information</li>
-            <li><code>IProject.ts</code> - Reference project data</li>
+            <li><strong>Type Safety:</strong> Compiler catches type errors before runtime</li>
+            <li><strong>IntelliSense:</strong> VS Code autocomplete for all object properties</li>
+            <li><strong>Documentation:</strong> Interfaces serve as self-documenting contracts</li>
+            <li><strong>Refactoring Safety:</strong> Renaming a property updates all usages</li>
+            <li><strong>API Contract:</strong> Frontend/backend teams share the same data structure definitions</li>
           </ul>
+
+          <div class="card accent">
+            <div class="card-title">Model Organization Pattern</div>
+            <p><strong>File Naming:</strong> Each interface file starts with <code>I</code> (e.g., <code>IMonthlyFigures.ts</code>, <code>IProfile.ts</code>)</p>
+            <p><strong>Grouping:</strong> Related models grouped by feature domain:</p>
+            <ul style="margin: 0.5rem 0 0 1.5rem; font-size: 0.95em;">
+              <li><code>IMonthlyFigures.ts</code> - Construction data (volumes, values, forecasts)</li>
+              <li><code>IMarketIndicator.ts</code> - Market trends and indicators</li>
+              <li><code>IAspectRatio.ts</code> - Cost breakdown analysis</li>
+              <li><code>IProject.ts</code> + <code>IReferenceBudget.ts</code> - Reference project data</li>
+              <li><code>IProfile.ts</code> + <code>ISubscription.ts</code> - User account information</li>
+            </ul>
+          </div>
+
+          <pre><code><span class="c-com">// Example: IMonthlyFigures.ts</span>
+<span class="c-key">export interface</span> MonthlyFiguresResponseData {
+  projectId: <span class="c-key">number</span>;
+  projectName: <span class="c-key">string</span>;
+  monthlyData: MonthlyFigure[];  <span class="c-com">// Array of monthly records</span>
+  forecastData?: ForecastFigure[];  <span class="c-com">// Optional forecast data</span>
+}
+
+<span class="c-key">export interface</span> MonthlyFigure {
+  referenceDate: <span class="c-key">string</span>;  <span class="c-com">// Format: "YYYY-MM-DD"</span>
+  volume: <span class="c-key">number</span>;  <span class="c-com">// Construction volume in units</span>
+  value: <span class="c-key">number</span>;  <span class="c-com">// Value in euros</span>
+  category: <span class="c-str">"Residential" | "Non-Residential" | "Infrastructure"</span>;
+}
+
+<span class="c-com">// Usage in service with type safety:</span>
+<span class="c-key">const</span> getMonthlyFigures = <span class="c-key">async</span> (
+  id: <span class="c-key">number</span>
+): Promise&lt;MonthlyFiguresResponseData&gt; => {  <span class="c-com">// Return type enforced</span>
+  <span class="c-key">const</span> response = <span class="c-key">await</span> http.post(`ReportForecastFigures/${id}`);
+  <span class="c-key">return</span> response.data;  <span class="c-com">// TypeScript validates structure</span>
+};</code></pre>
         </section>
 
         <!-- ─── Authentication (Azure B2C) ─── -->
@@ -1393,28 +2159,53 @@ npm run dev
           <h2>Routing & Navigation</h2>
           <p class="section-subtitle">
             The application uses React Router v7 for client-side routing with nested routes and breadcrumb support.
+            <strong>Why React Router v7?</strong> Type-safe routing, nested layouts, automatic code splitting, and built-in data loading patterns.
           </p>
+
+          <div class="card brand">
+            <div class="card-title">Routing Architecture Benefits</div>
+            <ul style="margin: 0.5rem 0 0 1rem;">
+              <li><strong>Nested Routes:</strong> <code>BaseLayout</code> wraps all pages → consistent header/sidebar without prop drilling</li>
+              <li><strong>Route Guards:</strong> <code>PrivateRoute</code> wrapper checks authentication before rendering → security at routing level</li>
+              <li><strong>Code Splitting:</strong> Each route lazy-loaded → faster initial page load (only dashboard code loads on <code>/dashboard</code>)</li>
+              <li><strong>Breadcrumbs:</strong> Custom <code>BreadcrumbRouteObject</code> type → automatic navigation trail (e.g., Home → Dashboard → Monthly Figures)</li>
+              <li><strong>Type Safety:</strong> TypeScript validates all route paths and params at compile time</li>
+            </ul>
+          </div>
 
           <h3>Router Configuration</h3>
           <p>
-            Routes are defined in <code>src/router.tsx</code> using <code>createBrowserRouter</code>:
+            Routes are defined in <code>src/router.tsx</code> using <code>createBrowserRouter</code>.
+            The structure follows a <strong>nested layout pattern:</strong>
           </p>
 
           <pre><code><span class="c-key">const</span> routes = createBrowserRouter([
   {
     path: <span class="c-str">"/"</span>,
-    element: <span class="c-key">&lt;BaseLayout /&gt;</span>,
+    element: <span class="c-key">&lt;BaseLayout /&gt;</span>,  <span class="c-com">// Root layout with Header + Sidebar + Footer</span>
     breadcrumb: <span class="c-str">"Home"</span>,
     children: [
+      <span class="c-com">// Public routes (no auth required)</span>
       { path: <span class="c-str">"/login"</span>, element: <span class="c-key">&lt;LoginPage /&gt;</span> },
       { path: <span class="c-str">"/"</span>, element: <span class="c-key">&lt;Welcome /&gt;</span> },
+      
+      <span class="c-com">// Protected routes (require authentication)</span>
       {
         path: <span class="c-str">"/dashboard"</span>,
-        element: <span class="c-key">&lt;PrivateRoute /&gt;</span>,
+        element: <span class="c-key">&lt;PrivateRoute /&gt;</span>,  <span class="c-com">// Auth guard wrapper</span>
         breadcrumb: <span class="c-str">"Dashboard"</span>,
-        children: [...]
+        children: [
+          { path: <span class="c-str">"/dashboard"</span>, element: <span class="c-key">&lt;Dashboard /&gt;</span> }
+        ]
       },
-      <span class="c-com">// ... more routes</span>
+      
+      <span class="c-com">// Admin-only routes (require authentication + admin role)</span>
+      {
+        path: <span class="c-str">"/uploads/referenceBudgets"</span>,
+        element: <span class="c-key">&lt;PrivateRoute requiresAdmin /&gt;</span>,  <span class="c-com">// Admin guard</span>
+        breadcrumb: <span class="c-str">"Upload Reference Budgets"</span>,
+        children: [...]
+      }
     ]
   }
 ]);</code></pre>
@@ -1495,40 +2286,92 @@ npm run dev
 
           <h3>Breadcrumb System</h3>
           <p>
-            Custom breadcrumb support via <code>BreadcrumbRouteObject</code> type:
+            Custom breadcrumb support via <code>BreadcrumbRouteObject</code> type.
+            <strong>How it works:</strong>
           </p>
-          <pre><code><span class="c-key">export type</span> BreadcrumbRouteObject = RouteObject & {
-  breadcrumb?: <span class="c-key">string</span> | ((params: { [key: <span class="c-key">string</span>]: <span class="c-key">string</span> }) => <span class="c-key">string</span>);
-  children?: BreadcrumbRouteObject[];
-};</code></pre>
+          <ol>
+            <li><strong>Type Definition:</strong> Extends React Router's <code>RouteObject</code> with optional <code>breadcrumb</code> property</li>
+            <li><strong>Static Breadcrumbs:</strong> Simple string value (e.g., <code>breadcrumb: "Dashboard"</code>)</li>
+            <li><strong>Dynamic Breadcrumbs:</strong> Function that receives route params (e.g., <code>breadcrumb: (params) => `Project ${params.id}`</code>)</li>
+            <li><strong>Auto-Generation:</strong> <code>Breadcrumbs</code> component traverses route tree, collects all breadcrumb values from root to current page</li>
+            <li><strong>Navigation:</strong> Each breadcrumb is clickable → navigates to that route level</li>
+          </ol>
 
-          <p>
-            The <code>Breadcrumbs</code> component reads route configuration to build navigation breadcrumb trail.
+          <pre><code><span class="c-com">// router.tsx - Custom type definition</span>
+<span class="c-key">export type</span> BreadcrumbRouteObject = RouteObject & {
+  breadcrumb?: <span class="c-key">string</span> | ((params: { [key: <span class="c-key">string</span>]: <span class="c-key">string</span> }) => <span class="c-key">string</span>);
+  children?: BreadcrumbRouteObject[];  <span class="c-com">// Recursive for nested routes</span>
+};
+
+<span class="c-com">// Example: Static breadcrumb</span>
+{
+  path: <span class="c-str">"/monthly-figures"</span>,
+  breadcrumb: <span class="c-str">"Monthly Figures"</span>,  <span class="c-com">// Simple string</span>
+  element: <span class="c-key">&lt;MonthlyFigures /&gt;</span>
+}
+
+<span class="c-com">// Example: Dynamic breadcrumb with route params</span>
+{
+  path: <span class="c-str">"/projects/:projectId"</span>,
+  breadcrumb: (params) => `Project ${params.projectId}`,  <span class="c-com">// Dynamic based on URL param</span>
+  element: <span class="c-key">&lt;ProjectDetail /&gt;</span>
+}
+
+<span class="c-com">// Result: Home > Dashboard > Projects > Project 123</span></code></pre>
+
+          <div class="card accent">
+            <div class="card-title">Breadcrumb Trail Example</div>
+            <p><strong>User navigates to:</strong> <code>/dashboard/monthly-figures</code></p>
+            <p><strong>Breadcrumb component generates:</strong></p>
+            <p style="font-family: monospace; background: #f5f5f5; padding: 0.5rem; border-radius: 4px; margin: 0.5rem 0;">
+              Home › Dashboard › Monthly Figures
+            </p>
+            <p><strong>How:</strong> Traverses route tree from root (<code>/</code>) → <code>/dashboard</code> → <code>/monthly-figures</code>, collects breadcrumb values</p>
+          </div>
+          
+          <p style="margin-top: 1rem;">
+            The <code>Breadcrumbs</code> component (in <code>src/components/Breadcrumbs/</code>) reads route configuration to build navigation breadcrumb trail.
           </p>
 
           <h3>Navigation Components</h3>
+          <p><strong>The application uses a dual navigation pattern: top Header + side Sidebar</strong></p>
+          
           <div class="compare">
             <div class="col future">
               <h4>Header (<code>Header.tsx</code>)</h4>
+              <p style="font-size: 0.95em; margin-bottom: 0.75rem;"><strong>Purpose:</strong> Global actions and user controls</p>
               <ul>
-                <li>Top application bar</li>
-                <li>Logo and branding</li>
-                <li>User menu and notifications</li>
-                <li>Language selector</li>
-                <li>Theme toggle</li>
-                <li>Mobile menu trigger</li>
+                <li><strong>Logo & Branding:</strong> Arcadis logo, clickable → returns to dashboard</li>
+                <li><strong>User Menu:</strong> Profile dropdown with account settings, logout</li>
+                <li><strong>Notifications:</strong> Bell icon with unread count badge</li>
+                <li><strong>Language Selector:</strong> Switch between Dutch (nl) and English (en)</li>
+                <li><strong>Theme Toggle:</strong> Light/dark mode switcher</li>
+                <li><strong>Mobile Menu:</strong> Hamburger icon triggers sidebar drawer on small screens</li>
               </ul>
             </div>
             <div class="col today">
               <h4>SideBar (<code>SideBar.tsx</code>)</h4>
+              <p style="font-size: 0.95em; margin-bottom: 0.75rem;"><strong>Purpose:</strong> Primary page navigation</p>
               <ul>
-                <li>Main navigation menu</li>
-                <li>Collapsible/expandable</li>
-                <li>Active route highlighting</li>
-                <li>Responsive (drawer on mobile)</li>
-                <li>Subscription-based visibility</li>
+                <li><strong>Navigation Menu:</strong> All main pages (Dashboard, Monthly Figures, Market Indicators, etc.)</li>
+                <li><strong>Collapsible:</strong> Expand/collapse button → saves screen space</li>
+                <li><strong>Active Highlighting:</strong> Current page highlighted with accent color</li>
+                <li><strong>Responsive Drawer:</strong> Fixed sidebar on desktop, drawer overlay on mobile</li>
+                <li><strong>Subscription-Based:</strong> Menu items shown/hidden based on user's subscription tier</li>
+                <li><strong>Admin Section:</strong> Upload pages only visible to admin users</li>
               </ul>
             </div>
+          </div>
+
+          <div class="card brand">
+            <div class="card-title">Subscription-Based Navigation Logic</div>
+            <p><strong>Problem:</strong> Not all users have access to all features (depends on subscription plan)</p>
+            <p><strong>Solution:</strong> SideBar reads user profile → filters menu items based on <code>user.subscriptionModules</code></p>
+            <p><strong>Example:</strong> User with "Basic" plan sees: Dashboard, Monthly Figures. User with "Premium" plan also sees: Market Indicator, Aspect Ratio, Parametric Elements</p>
+            <pre style="background: #f5f5f5; padding: 0.5rem; border-radius: 4px; margin-top: 0.5rem;"><code style="font-size: 0.9em;"><span class="c-com">// In SideBar.tsx</span>
+<span class="c-key">const</span> visibleMenuItems = menuItems.filter(item => 
+  user.subscriptionModules.includes(item.moduleId)
+);</code></pre>
           </div>
 
           <h3>Layout Structure</h3>
@@ -1559,145 +2402,396 @@ npm run dev
           <h2>Pages & Features</h2>
           <p class="section-subtitle">
             Overview of the main application pages and their functionality.
+            <strong>Each page is a complete feature module with its own data fetching, state management, and UI components.</strong>
           </p>
 
           <h3>Dashboard</h3>
           <p>
-            The main landing page after login. Features a customizable tile-based layout.
+            The main landing page after login. Features a customizable tile-based layout providing quick access to all BDB features.
+            <strong>Think of it as a personalized control center.</strong>
           </p>
+          
           <div class="card brand">
-            <div class="card-title">Dashboard Tiles</div>
+            <div class="card-title">Dashboard Tiles (6 Customizable Widgets)</div>
             <ul>
-              <li><strong>Your Products:</strong> Quick access to subscribed products</li>
-              <li><strong>BDB Monthly Figures:</strong> Latest construction cost indices</li>
-              <li><strong>BDB Market Indicator:</strong> Market trends visualization</li>
-              <li><strong>Your Info:</strong> Account and subscription information</li>
-              <li><strong>Your News:</strong> Latest updates and announcements</li>
-              <li><strong>Your Projects:</strong> Reference project carousel</li>
+              <li><strong>Your Products:</strong> Quick access links to subscribed products → click to jump directly to that feature</li>
+              <li><strong>BDB Monthly Figures:</strong> Preview of latest construction cost indices → full data on Monthly Figures page</li>
+              <li><strong>BDB Market Indicator:</strong> Market trends mini-chart → click to see detailed analysis</li>
+              <li><strong>Your Info:</strong> Account details, subscription tier, expiry date → link to account settings</li>
+              <li><strong>Your News:</strong> Latest announcements, updates, and industry news → scrollable feed</li>
+              <li><strong>Your Projects:</strong> Carousel of saved reference projects → click to open project details</li>
             </ul>
           </div>
 
-          <p><strong>Customization:</strong> Users can:</p>
+          <p><strong>Customization Features:</strong></p>
           <ul>
-            <li>Show/hide tiles based on preference</li>
-            <li>Drag and drop to reorder tiles</li>
-            <li>Settings persist in localStorage</li>
-            <li>Tiles auto-hide if subscription not available</li>
+            <li><strong>Show/Hide:</strong> Click customize button → toggle which tiles display (minimum 1 tile required)</li>
+            <li><strong>Drag & Drop:</strong> Reorder tiles by dragging → layout persists in localStorage</li>
+            <li><strong>Responsive Grid:</strong> 2 columns on desktop, 1 column on mobile</li>
+            <li><strong>Auto-Hide Logic:</strong> Tiles for unsubscribed products automatically hidden (e.g., no Market Indicator subscription = tile hidden)</li>
+            <li><strong>Settings Persistence:</strong> <code>localStorage.dashboardLayout</code> stores user preferences → survives page refresh</li>
           </ul>
+
+          <div class="card accent">
+            <div class="card-title">Dashboard User Flow</div>
+            <p><strong>1. User lands on dashboard:</strong> <code>Dashboard.tsx</code> fetches profile → checks subscriptions → renders visible tiles</p>
+            <p><strong>2. Tile data loading:</strong> Each tile makes its own API call (e.g., <code>MonthlyFiguresService.getLatest()</code> for figures tile)</p>
+            <p><strong>3. Customization:</strong> User clicks customize icon → <code>CustomizeDashboardDialog</code> opens → checkboxes for each tile</p>
+            <p><strong>4. Reordering:</strong> User drags tile → <code>react-beautiful-dnd</code> library handles drag logic → new order saved to localStorage</p>
+          </div>
 
           <h3>Monthly Figures</h3>
           <p>
-            Historical and forecast construction cost indices visualization.
+            <strong>Core Feature:</strong> Historical and forecast construction cost indices visualization.
+            This is one of BDB's most-used features - tracks how construction costs change over time.
           </p>
+          
+          <div class="card brand">
+            <div class="card-title">What Are Monthly Figures?</div>
+            <p>Monthly construction cost indices show how prices for labor, materials, and equipment change month-over-month and year-over-year. Used by project managers to:</p>
+            <ul style="margin: 0.5rem 0 0 1rem;">
+              <li><strong>Budget Forecasting:</strong> "If labor costs increased 3% this quarter, add 3% to next year's budget"</li>
+              <li><strong>Contract Escalation:</strong> Adjust contract prices based on actual index changes</li>
+              <li><strong>Trend Analysis:</strong> Identify seasonal patterns (e.g., material costs spike in spring)</li>
+            </ul>
+          </div>
+
+          <p><strong>Key Features:</strong></p>
           <ul>
-            <li><strong>Data Display:</strong> Labor, material, and total cost indices</li>
-            <li><strong>Time Range:</strong> Selectable reference dates</li>
-            <li><strong>Forecasts:</strong> Optional forecast data inclusion</li>
-            <li><strong>Exports:</strong> Excel and PDF reports</li>
-            <li><strong>Charts:</strong> Interactive line charts using Recharts</li>
+            <li><strong>Data Display Types:</strong> 
+              <ul style="margin-left: 1.5rem;">
+                <li>Labor Cost Index (wages, benefits)</li>
+                <li>Material Cost Index (concrete, steel, wood, etc.)</li>
+                <li>Equipment Cost Index (rental rates)</li>
+                <li>Total Construction Cost Index (weighted average)</li>
+              </ul>
+            </li>
+            <li><strong>Time Range Selector:</strong> Pick any date range (e.g., Jan 2020 - Dec 2024) → chart updates dynamically</li>
+            <li><strong>Forecast Toggle:</strong> Show/hide forecast data (next 6-12 months) → forecast uses econometric models</li>
+            <li><strong>Data Granularity:</strong> Monthly, quarterly, or yearly views</li>
+            <li><strong>Multiple Series:</strong> Compare up to 4 different index types on same chart</li>
+            <li><strong>Interactive Charts:</strong> Hover over data point → tooltip shows exact value and date</li>
+            <li><strong>Export Options:</strong> 
+              <ul style="margin-left: 1.5rem;">
+                <li>Excel: Raw data with formulas for custom analysis</li>
+                <li>PDF: Professional report with charts and tables</li>
+              </ul>
+            </li>
           </ul>
+
+          <div class="card accent">
+            <div class="card-title">Technical Implementation</div>
+            <p><strong>Component:</strong> <code>MonthlyFigures.tsx</code> in <code>src/pages/</code></p>
+            <p><strong>Data Hook:</strong> <code>useMonthlyFigures(projectId, referenceDates)</code> → handles API call + loading state</p>
+            <p><strong>Service:</strong> <code>MonthlyFiguresService.getMonthlyFigures()</code> → fetches from <code>/api/ReportForecastFigures/{'{id}'}</code></p>
+            <p><strong>Chart Library:</strong> Recharts <code>&lt;LineChart&gt;</code> with custom tooltips and legends</p>
+            <p><strong>Grid Display:</strong> AG Grid Enterprise for tabular data view (sortable, filterable, exportable)</p>
+          </div>
 
           <h3>Market Indicator</h3>
           <p>
-            Construction market trends and economic indicators.
+            <strong>Core Feature:</strong> Construction market trends and economic indicators.
+            Provides macro-level view of the entire construction industry (not project-specific).
           </p>
+          
+          <div class="card brand">
+            <div class="card-title">What Are Market Indicators?</div>
+            <p>Economic signals that predict construction market health. Examples:</p>
+            <ul style="margin: 0.5rem 0 0 1rem;">
+              <li><strong>Labor Market Indicator:</strong> Construction job openings → high openings = labor shortage = higher wages</li>
+              <li><strong>Material Supply Indicator:</strong> Cement production levels → low production = supply shortage = price increases</li>
+              <li><strong>Permitting Trends:</strong> Building permits issued → spike in permits = more projects coming = higher demand for labor/materials</li>
+              <li><strong>Business Confidence:</strong> Survey of construction firms → optimism = more projects planned</li>
+            </ul>
+            <p style="margin-top: 0.5rem;"><strong>Use Case:</strong> Company CEO deciding whether to expand capacity → checks market indicators → sees labor shortage indicator rising → decides to delay expansion.</p>
+          </div>
+
+          <p><strong>Key Features:</strong></p>
           <ul>
-            <li>Multiple indicator types (labor market, materials, etc.)</li>
-            <li>Time series visualizations</li>
-            <li>Comparative analysis tools</li>
-            <li>Export capabilities</li>
+            <li><strong>Multiple Indicator Types:</strong> Labor market, materials availability, permitting trends, business confidence, GDP construction contribution</li>
+            <li><strong>Time Series Analysis:</strong> View indicators over 1, 3, 5, or 10 years</li>
+            <li><strong>Comparative Tools:</strong> Compare 2-3 indicators side-by-side (e.g., labor shortage vs wage inflation)</li>
+            <li><strong>Forecasting:</strong> Econometric models predict next 6-12 months</li>
+            <li><strong>Regional Breakdown:</strong> National vs regional indicators (if available)</li>
+            <li><strong>Export & Share:</strong> PDF reports, Excel data dumps</li>
           </ul>
+
+          <div class="card accent">
+            <div class="card-title">Technical Implementation</div>
+            <p><strong>Component:</strong> <code>MarketIndicator.tsx</code> in <code>src/pages/</code></p>
+            <p><strong>Data Hook:</strong> <code>useMarketIndicator(indicatorType, dateRange)</code></p>
+            <p><strong>Service:</strong> <code>MarketIndicatorService.getIndicators()</code> → <code>/api/MarketIndicators/{'{type}'}</code></p>
+            <p><strong>Visualization:</strong> Recharts multi-series line charts with trend lines and confidence intervals</p>
+            <p><strong>Data Update:</strong> Indicators refreshed monthly from external economic data sources</p>
+          </div>
 
           <h3>Aspect Ratio</h3>
           <p>
-            Detailed cost breakdown analysis by construction categories.
+            <strong>Core Feature:</strong> Detailed cost breakdown analysis by construction categories.
+            This is the most <em>data-intensive</em> page - handles thousands of rows with complex filtering.
           </p>
+          
+          <div class="card brand">
+            <div class="card-title">What Is Aspect Ratio Analysis?</div>
+            <p><strong>Definition:</strong> Breakdown of total construction costs into standardized categories (labor %, materials %, equipment %, overhead %).</p>
+            <p><strong>Example:</strong> For a €10M office building:</p>
+            <ul style="margin: 0.5rem 0 0 1rem; font-size: 0.95em;">
+              <li>Labor: 45% (€4.5M) - wages, subcontractors</li>
+              <li>Materials: 35% (€3.5M) - concrete, steel, glass</li>
+              <li>Equipment: 12% (€1.2M) - crane rental, tools</li>
+              <li>Overhead: 8% (€0.8M) - permits, insurance, profit</li>
+            </ul>
+            <p style="margin-top: 0.5rem;"><strong>Use Case:</strong> Estimator bidding on hospital project → checks aspect ratios for similar hospitals in same region → sees labor typically runs 50% → adjusts bid accordingly.</p>
+          </div>
+
           <div class="card">
-            <div class="card-title">Aspect Ratio Features</div>
+            <div class="card-title">Aspect Ratio Features (Enterprise Data Grid)</div>
             <ul>
-              <li><strong>Multi-dimensional Analysis:</strong> Country, category, project type</li>
-              <li><strong>AG Grid Integration:</strong> Advanced data grid with enterprise features</li>
-              <li><strong>Cost Categories:</strong> Labor, materials, overhead, equipment</li>
-              <li><strong>Filters:</strong> Dynamic filtering by multiple dimensions</li>
-              <li><strong>Export:</strong> Customizable Excel exports with multiple sheets</li>
+              <li><strong>Multi-Dimensional Analysis:</strong> Filter by:
+                <ul style="margin-left: 1.5rem; font-size: 0.95em;">
+                  <li>Country (Netherlands, Belgium, Germany, etc.)</li>
+                  <li>Category (Residential, Commercial, Infrastructure, Industrial)</li>
+                  <li>Project Type (New Build, Renovation, Extension)</li>
+                  <li>Building Subcategory (Office, Hospital, School, Warehouse)</li>
+                  <li>Cost Element (Foundation, Structure, MEP, Finishes)</li>
+                </ul>
+              </li>
+              <li><strong>AG Grid Enterprise:</strong> Advanced data grid with:
+                <ul style="margin-left: 1.5rem;">
+                  <li>Column sorting (click header → sort by labor %, materials %, etc.)</li>
+                  <li>Column filtering (type in filter box → grid updates instantly)</li>
+                  <li>Grouped rows (group by country → expand/collapse)</li>
+                  <li>Aggregated totals (sum, average, count)</li>
+                  <li>Column pinning (freeze first 2 columns while scrolling)</li>
+                  <li>CSV export (entire grid or filtered subset)</li>
+                </ul>
+              </li>
+              <li><strong>Cost Categories Breakdown:</strong> 20+ standardized cost elements (e.g., Earthwork, Concrete Structure, HVAC, Electrical, Plumbing)</li>
+              <li><strong>Dynamic Filters:</strong> Select country → category dropdown updates with relevant categories → project type dropdown updates with relevant types</li>
+              <li><strong>Excel Export:</strong> Multi-sheet workbook with:
+                <ul style="margin-left: 1.5rem;">
+                  <li>Sheet 1: Summary statistics</li>
+                  <li>Sheet 2: Detailed data (all rows, all columns)</li>
+                  <li>Sheet 3: Charts (auto-generated bar charts of ratios)</li>
+                </ul>
+              </li>
             </ul>
           </div>
 
           <p><strong>Two Variants:</strong></p>
           <ul>
-            <li><code>/aspect-ratio</code> - Standard aspect ratio analysis</li>
-            <li><code>/e235-aspect-ratio</code> - E235 specific analysis</li>
+            <li><strong><code>/aspect-ratio</code>:</strong> Standard aspect ratio analysis (general construction projects)</li>
+            <li><strong><code>/e235-aspect-ratio</code>:</strong> E235 specific analysis (Dutch cost classification system for residential projects)</li>
           </ul>
+
+          <div class="card accent">
+            <div class="card-title">Technical Implementation</div>
+            <p><strong>Component:</strong> <code>AspectRatioPage.tsx</code> in <code>src/pages/</code></p>
+            <p><strong>Service:</strong> <code>AspectRatioService.getAspectRatios(filters)</code> → <code>/api/AspectRatios</code></p>
+            <p><strong>Data Volume:</strong> 5,000-50,000 rows depending on filters (AG Grid handles virtualization for performance)</p>
+            <p><strong>Grid Library:</strong> AG Grid Enterprise v33.1.1 (licensed) with all enterprise features enabled</p>
+            <p><strong>Performance:</strong> Client-side filtering/sorting for <10k rows, server-side for >10k rows</p>
+            <p><strong>State Management:</strong> Filter state in URL query params → shareable links (e.g., <code>/aspect-ratio?country=NL&category=Residential</code>)</p>
+          </div>
 
           <h3>Parametric Elements</h3>
           <p>
-            Construction element cost analysis and comparison.
+            <strong>Core Feature:</strong> Construction element cost analysis and comparison.
+            Think of this as a <em>catalog</em> of building components with detailed cost breakdowns.
           </p>
+          
+          <div class="card brand">
+            <div class="card-title">What Are Parametric Elements?</div>
+            <p><strong>Definition:</strong> Standardized building components with detailed specifications and costs.</p>
+            <p><strong>Examples:</strong></p>
+            <ul style="margin: 0.5rem 0 0 1rem; font-size: 0.95em;">
+              <li><strong>Wall:</strong> Concrete block wall, 200mm thick, insulated, plastered → €85/m²</li>
+              <li><strong>Floor:</strong> Concrete slab, 250mm, reinforced, finished → €120/m²</li>
+              <li><strong>Window:</strong> Double-glazed, aluminum frame, 1.5m x 1.5m → €450/unit</li>
+              <li><strong>Door:</strong> Fire-rated steel door, 900mm wide → €800/unit</li>
+            </ul>
+            <p style="margin-top: 0.5rem;"><strong>Use Case:</strong> Estimator pricing out office renovation → searches "interior partition wall" → finds 10 parametric options with costs → picks closest match → applies to estimate.</p>
+          </div>
+
           <ul>
-            <li>Element-level cost breakdowns</li>
-            <li>Searchable parametric database</li>
-            <li>Comparison tools</li>
-            <li>Historical cost trends</li>
+            <li><strong>Element-Level Cost Breakdowns:</strong> Each element shows labor, materials, equipment costs separately</li>
+            <li><strong>Searchable Database:</strong> Full-text search across 10,000+ elements (search "concrete floor" → finds all concrete floor types)</li>
+            <li><strong>Advanced Filters:</strong> Filter by category (Structure, MEP, Finishes), subcategory, unit type (m², m³, unit)</li>
+            <li><strong>Comparison Tools:</strong> Select 2-5 elements → side-by-side comparison table → see cost differences</li>
+            <li><strong>Historical Trends:</strong> View how element costs changed over time (e.g., "windows increased 8% last year due to energy requirements")</li>
+            <li><strong>Parametric Search:</strong> Search by parameters (e.g., "wall thickness 200-300mm, insulation R-value > 3.0")</li>
           </ul>
+
+          <div class="card accent">
+            <div class="card-title">Technical Implementation</div>
+            <p><strong>Component:</strong> <code>ParametricElement.tsx</code> + <code>ParametricNodeSearchPopup.tsx</code></p>
+            <p><strong>Service:</strong> <code>ParametricService.searchElements(query, filters)</code></p>
+            <p><strong>Search:</strong> Debounced search (300ms delay) → prevents API spam while typing</li>
+            <p><strong>Data Grid:</strong> MUI X Data Grid Pro for element listing (supports row selection, sorting)</p>
+            <p><strong>Comparison View:</strong> Custom <code>ComparisonTable</code> component with side-by-side cost breakdown</p>
+          </div>
 
           <h3>Reference Projects</h3>
           <p>
-            Project-based budget tracking and reference data.
+            <strong>Core Feature:</strong> Project-based budget tracking and reference data.
+            Library of <em>real completed projects</em> with actual costs - used as benchmarks for new projects.
           </p>
+          
+          <div class="card brand">
+            <div class="card-title">What Are Reference Projects?</div>
+            <p><strong>Definition:</strong> Completed construction projects with documented budgets, timelines, and cost breakdowns.</p>
+            <p><strong>Example Project in Database:</strong></p>
+            <ul style="margin: 0.5rem 0 0 1rem; font-size: 0.95em;">
+              <li><strong>Name:</strong> "Amsterdam Office Tower 2023"</li>
+              <li><strong>Type:</strong> Commercial Office, 12 stories, 8,500 m²</li>
+              <li><strong>Total Cost:</strong> €12.5M (€1,470/m²)</li>
+              <li><strong>Breakdown:</strong> Structure 40%, MEP 25%, Finishes 25%, Site Work 10%</li>
+              <li><strong>Timeline:</strong> 18 months (foundation 3mo, structure 8mo, finishes 7mo)</li>
+            </ul>
+            <p style="margin-top: 0.5rem;"><strong>Use Case:</strong> Estimator bidding on similar 10-story office in Rotterdam → searches reference projects → finds 5 comparable offices → averages their $/m² → adjusts for location/time → creates initial budget.</p>
+          </div>
+
           <ul>
-            <li>Project selection and filtering</li>
-            <li>Budget comparison</li>
-            <li>Cost index application</li>
-            <li>Project-specific reports</li>
+            <li><strong>Project Selection:</strong> Browse library of 500+ reference projects with filters (type, size, location, year completed)</li>
+            <li><strong>Budget Comparison:</strong> Select your project → compare to 3-5 reference projects → see cost variance analysis</li>
+            <li><strong>Cost Index Application:</strong> Reference project from 2020 → apply inflation indices → adjust to current year costs</li>
+            <li><strong>Detailed Breakdown:</strong> View element-level costs (foundation, structure, MEP, finishes) for each reference project</li>
+            <li><strong>Project Reports:</strong> Generate PDF with reference project details, photos, cost breakdown, lessons learned</li>
+            <li><strong>Favorites:</strong> Save frequently-used reference projects to personal favorites list</li>
           </ul>
+
+          <div class="card accent">
+            <div class="card-title">Technical Implementation</div>
+            <p><strong>Component:</strong> <code>ReferenceProjectPage.tsx</code> + <code>ReferenceProjectSelector.tsx</code></p>
+            <p><strong>Service:</strong> <code>ReferenceProjectService.getProjects(filters)</code> + <code>ReferenceBudgetService.getBudget(projectId)</code></p>
+            <p><strong>Data Model:</strong> <code>IProject.ts</code> (project metadata) + <code>IReferenceBudget.ts</code> (detailed cost breakdown)</p>
+            <p><strong>Comparison Logic:</strong> <code>calculateVariance()</code> function compares project costs per m², per element, per category</p>
+          </div>
 
           <h3>Ad Hoc Projects</h3>
           <p>
-            Custom project management and analysis.
+            <strong>Core Feature:</strong> Custom project management and analysis.
+            Users create their <em>own</em> projects (not from reference library) and track budgets.
           </p>
+          
+          <div class="card brand">
+            <div class="card-title">Ad Hoc vs Reference Projects</div>
+            <p><strong>Reference Projects:</strong> Pre-loaded completed projects from BDB database (read-only, used for benchmarking)</p>
+            <p><strong>Ad Hoc Projects:</strong> User-created projects (editable, used for tracking current/future projects)</p>
+            <p><strong>Example Use Case:</strong> Company wins bid for new hospital → creates ad hoc project "General Hospital 2025" → enters estimated budget → tracks actual costs as project progresses → applies inflation indices monthly to see budget drift.</p>
+          </div>
+
           <ul>
-            <li>Create and manage custom projects</li>
-            <li>Apply indices to project budgets</li>
-            <li>Export project reports</li>
+            <li><strong>Create Projects:</strong> Form to enter project name, type, location, start date, estimated budget, area (m²)</li>
+            <li><strong>Budget Tracking:</strong> Enter estimated costs per category (structure, MEP, finishes) → track actual costs → view variance</li>
+            <li><strong>Apply Indices:</strong> Select monthly figures index → apply to budget categories → see inflation-adjusted costs</li>
+            <li><strong>Scenario Analysis:</strong> Create multiple budget scenarios (optimistic, realistic, pessimistic) → compare outcomes</li>
+            <li><strong>Cost Updates:</strong> Monthly updates - enter actual costs → system calculates variance vs estimate</li>
+            <li><strong>Export Reports:</strong> PDF project summary with budget status, variance analysis, trend charts</li>
+            <li><strong>Project Sharing:</strong> Share project with team members (if multi-user subscription)</li>
           </ul>
+
+          <div class="card accent">
+            <div class="card-title">Technical Implementation</div>
+            <p><strong>Component:</strong> <code>ProjectsPage.tsx</code> + <code>ProjectForm.tsx</code> + <code>ProjectDetail.tsx</code></p>
+            <p><strong>Service:</strong> <code>ProjectService.createProject()</code>, <code>updateProject()</code>, <code>getProjects()</code></p>
+            <p><strong>Data Model:</strong> <code>IProject.ts</code> with budget tracking fields (estimated, actual, variance)</p>
+            <p><strong>State Management:</strong> Local component state + Context API (projectId shared across detail tabs)</p>
+            <p><strong>CRUD Operations:</strong> Full create, read, update, delete functionality (soft delete - archived flag)</p>
+          </div>
 
           <h3>Flexible Indices</h3>
           <p>
-            Custom index calculation and visualization.
+            <strong>Core Feature:</strong> Custom index calculation and visualization.
+            Create your own custom cost indices by mixing different components with custom weights.
           </p>
+          
+          <div class="card brand">
+            <div class="card-title">What Are Flexible Indices?</div>
+            <p><strong>Problem:</strong> Standard indices (labor, materials, equipment) may not match your specific project mix.</p>
+            <p><strong>Example Scenario:</strong> Building data centers → uses 70% equipment, 20% materials, 10% labor (very different from typical office building at 45% labor, 35% materials, 20% equipment)</p>
+            <p><strong>Solution:</strong> Create custom "Data Center Index" = (Labor × 10%) + (Materials × 20%) + (Equipment × 70%)</p>
+          </div>
+
           <ul>
-            <li>Define custom index compositions</li>
-            <li>Apply weightings</li>
-            <li>Visualize results</li>
-            <li>Compare with standard indices</li>
+            <li><strong>Define Custom Compositions:</strong> Select 2-10 base indices (labor, materials, equipment, specific material types)</li>
+            <li><strong>Apply Weightings:</strong> Assign percentage weight to each component (must total 100%)</li>
+            <li><strong>Save Custom Indices:</strong> Save for reuse across projects → name it (e.g., "Hospitals Index", "Industrial Index")</li>
+            <li><strong>Visualize Results:</strong> Line chart showing custom index over time vs standard indices</li>
+            <li><strong>Compare with Standards:</strong> Side-by-side comparison - how does your custom index track vs BDB standard indices?</li>
+            <li><strong>Export & Share:</strong> Export custom index data, share configuration with team</li>
           </ul>
+
+          <div class="card accent">
+            <div class="card-title">Technical Implementation</div>
+            <p><strong>Component:</strong> <code>FlexibleIndices.tsx</code> + <code>IndexCompositionForm.tsx</code></p>
+            <p><strong>Service:</strong> <code>FlexibleIndicesService.calculateCustomIndex(components, weights)</code></p>
+            <p><strong>Calculation:</strong> Client-side weighted average calculation for real-time preview, server validates and stores</p>
+            <p><strong>Storage:</strong> Custom indices saved to user profile (personal) or company (shared)</p>
+          </div>
 
           <h3>Uploads (Admin Only)</h3>
           <p>
-            Data management pages for administrators.
+            <strong>Admin Feature:</strong> Data management pages for administrators.
+            Only users with <code>role: "admin"</code> can access these pages (protected by <code>&lt;PrivateRoute requiresAdmin /&gt;</code>).
           </p>
+          
+          <div class="card brand">
+            <div class="card-title">Why Upload Pages Exist</div>
+            <p><strong>BDB Data Pipeline:</strong> BDB researchers collect construction cost data monthly → clean and validate → admins upload via these pages → data becomes available to all users</p>
+            <p><strong>Security:</strong> Only designated BDB staff have admin role → prevents unauthorized data changes</p>
+          </div>
+
           <table>
             <thead>
               <tr>
                 <th>Upload Type</th>
                 <th>Purpose</th>
+                <th>File Format</th>
+                <th>Frequency</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Reference Budgets</td>
-                <td>Upload project reference budget data</td>
+                <td><strong>Reference Budgets</strong></td>
+                <td>Upload completed project budget data for reference library</td>
+                <td>Excel (.xlsx) with specific template</td>
+                <td>Ad-hoc (when new projects completed)</td>
               </tr>
               <tr>
-                <td>Forecast Figures</td>
-                <td>Upload forecast construction cost data</td>
+                <td><strong>Forecast Figures</strong></td>
+                <td>Upload monthly construction cost indices and forecasts</td>
+                <td>Excel (.xlsx) with monthly data columns</td>
+                <td>Monthly (first week of each month)</td>
               </tr>
               <tr>
-                <td>WOV Index</td>
-                <td>Woningbouw, onderhoud en verduurzamingsindex data</td>
+                <td><strong>WOV Index</strong></td>
+                <td>Woningbouw, onderhoud en verduurzamingsindex (Dutch residential construction sustainability index)</td>
+                <td>Excel (.xlsx) with WOV-specific format</td>
+                <td>Quarterly</td>
               </tr>
             </tbody>
           </table>
+
+          <p><strong>Upload Process:</strong></p>
+          <ol>
+            <li><strong>Select File:</strong> Admin clicks "Upload" → file picker opens → selects Excel file</li>
+            <li><strong>Validation:</strong> Frontend validates file format/structure → shows preview of data</li>
+            <li><strong>Review:</strong> Admin reviews parsed data in table → checks for errors</li>
+            <li><strong>Submit:</strong> Admin clicks "Submit" → data sent to backend API</li>
+            <li><strong>Backend Validation:</strong> API validates data integrity, business rules, duplicates</li>
+            <li><strong>Database Insert:</strong> If valid, data inserted to database → success message</li>
+            <li><strong>Audit Log:</strong> Upload recorded in audit log (who, when, what file)</li>
+          </ol>
+
+          <div class="card accent">
+            <div class="card-title">Technical Implementation</div>
+            <p><strong>Components:</strong> <code>UploadReferenceBudgets.tsx</code>, <code>UploadForecastFigures.tsx</code>, <code>UploadWOVIndex.tsx</code></p>
+            <p><strong>File Parsing:</strong> <code>xlsx</code> library (SheetJS) parses Excel files in browser</p>
+            <p><strong>Validation:</strong> Custom validation rules per upload type (e.g., forecast figures require date + 10 cost columns)</p>
+            <p><strong>Bulk Upload:</strong> <code>useBulkPublish</code> hook handles batch operations (upload 100 records at once)</p>
+            <p><strong>Progress Tracking:</strong> Progress bar shows upload status (e.g., "Uploading row 50 of 200...")</p>
+          </div>
 
           <h3>Account Settings</h3>
           <p>
@@ -1968,38 +3062,95 @@ npm run dev
           <h2>Services & API Integration</h2>
           <p class="section-subtitle">
             API service layer architecture and how the application communicates with the backend.
+            <strong>All API calls go through service modules - components NEVER call axios directly.</strong>
           </p>
+
+          <div class="card brand">
+            <div class="card-title">Why the Service Layer Pattern?</div>
+            <ul style="margin: 0.5rem 0 0 1rem;">
+              <li><strong>Single Responsibility:</strong> Components focus on UI, services focus on data fetching</li>
+              <li><strong>Testability:</strong> Easy to mock services in component tests (mock <code>MonthlyFiguresService.getMonthlyFigures()</code> → return fake data)</li>
+              <li><strong>Reusability:</strong> Same service method used by multiple components (Dashboard tile + full page both call same service)</li>
+              <li><strong>Maintainability:</strong> API endpoint changes only require updating service file, not 20 components</li>
+              <li><strong>Error Handling:</strong> Centralized error handling, retry logic, timeout configuration</li>
+              <li><strong>Type Safety:</strong> Services return typed data → TypeScript validates usage in components</li>
+            </ul>
+          </div>
 
           <h3>Service Layer Architecture</h3>
           <p>
             All backend communication is abstracted into service modules located in <code>src/services/</code>.
             Each service handles a specific domain or feature area.
+            <strong>All services extend the base HTTP client for consistent behavior.</strong>
           </p>
 
-          <h4>HttpCommon.ts - Base Configuration</h4>
+          <h4>HttpCommon.ts - Base HTTP Client Configuration</h4>
+          <p><strong>This is the foundation of all API communication.</strong> Every service imports this configured Axios instance.</p>
+          
           <pre><code><span class="c-key">import</span> axios <span class="c-key">from</span> <span class="c-str">'axios'</span>;
 
+<span class="c-com">// Create configured axios instance</span>
 <span class="c-key">const</span> instance = axios.create({
-  baseURL: import.meta.env.VITE_REACT_APP_API_URL,  <span class="c-com">// e.g., https://devbdb.arcadis.com/api/bdbapi/api/</span>
+  baseURL: import.meta.env.VITE_REACT_APP_API_URL,  <span class="c-com">// Dev: https://devbdb.arcadis.com/api/bdbapi/api/</span>
   headers: {
     Accept: <span class="c-str">'application/json'</span>,
     <span class="c-str">'Content-Type'</span>: <span class="c-str">'application/json'</span>,
   },
+  timeout: 30000,  <span class="c-com">// 30 second timeout for all requests</span>
 });
 
-<span class="c-com">// Request interceptor - adds auth token</span>
+<span class="c-com">// REQUEST INTERCEPTOR - Runs before every API call</span>
 instance.interceptors.request.use(
   <span class="c-key">async</span> (config) => {
+    <span class="c-com">// 1. Check if token is expired, refresh if needed</span>
     <span class="c-key">await</span> authOperations.getRefreshToken();
+    
+    <span class="c-com">// 2. Get token from sessionStorage</span>
     <span class="c-key">const</span> token = appStorage.getAccessToken();
+    
+    <span class="c-com">// 3. Add Bearer token to Authorization header</span>
     <span class="c-key">if</span> (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    <span class="c-com">// 4. Add clientId to URL query params (for multi-tenant API)</span>
+    <span class="c-key">const</span> clientId = appStorage.getSelectedClientId();
+    <span class="c-key">if</span> (clientId) {
+      config.params = { ...config.params, clientId };
+    }
+    
     <span class="c-key">return</span> config;
+  },
+  (error) => Promise.reject(error)
+);
+
+<span class="c-com">// RESPONSE INTERCEPTOR - Runs after every API response</span>
+instance.interceptors.response.use(
+  (response) => response,  <span class="c-com">// Success - pass through</span>
+  (error) => {
+    <span class="c-com">// Handle common errors globally</span>
+    <span class="c-key">if</span> (error.response?.status === 401) {
+      <span class="c-com">// Unauthorized - token expired or invalid → redirect to login</span>
+      window.location.href = <span class="c-str">'/login'</span>;
+    } <span class="c-key">else if</span> (error.response?.status === 403) {
+      <span class="c-com">// Forbidden - user lacks permission → show error snackbar</span>
+      dispatch(showSnackbar({ message: <span class="c-str">'Access denied'</span>, severity: <span class="c-str">'error'</span> }));
+    } <span class="c-key">else if</span> (error.response?.status >= 500) {
+      <span class="c-com">// Server error → show generic error message</span>
+      dispatch(showSnackbar({ message: <span class="c-str">'Server error. Please try again.'</span>, severity: <span class="c-str">'error'</span> }));
+    }
+    <span class="c-key">return</span> Promise.reject(error);
   }
 );
 
 <span class="c-key">export default</span> instance;</code></pre>
+
+          <div class="card accent">
+            <div class="card-title">Interceptor Benefits</div>
+            <p><strong>Request Interceptor:</strong> Automatically adds auth token to EVERY API call → components don't need to handle authentication</p>
+            <p><strong>Response Interceptor:</strong> Handles common errors (401, 403, 500) in ONE place → consistent error UX across entire app</p>
+            <p><strong>Without Interceptors:</strong> Every component would need 20+ lines of auth + error handling code → massive duplication</p>
+          </div>
 
           <h3>Key Services</h3>
           <table>
@@ -2362,19 +3513,39 @@ i18n
           <h2>Testing Strategy</h2>
           <p class="section-subtitle">
             Comprehensive testing approach using Vitest and React Testing Library.
+            <strong>Testing Philosophy: Test behavior, not implementation.</strong>
           </p>
+
+          <div class="card brand">
+            <div class="card-title">Why This Testing Stack?</div>
+            <ul style="margin: 0.5rem 0 0 1rem;">
+              <li><strong>Vitest:</strong> Fast Jest-compatible test runner built for Vite → reuses Vite config → faster than Jest</li>
+              <li><strong>React Testing Library:</strong> Tests components like users interact with them → queries by text, role, label (not by class/ID)</li>
+              <li><strong>jsdom:</strong> Simulates browser DOM in Node.js → no need for real browser (fast, can run in CI)</li>
+              <li><strong>Why not Enzyme?</strong> Enzyme tests implementation details (internal state, private methods) → brittle tests. RTL tests behavior (what user sees) → robust tests</li>
+            </ul>
+          </div>
 
           <h3>Test Configuration</h3>
           <pre><code><span class="c-com">// vitest.config.ts</span>
 <span class="c-key">export default</span> defineConfig({
   test: {
-    environment: <span class="c-str">'jsdom'</span>,
-    globals: <span class="c-key">true</span>,
-    setupFiles: <span class="c-str">'./src/tests/setupTests.ts'</span>,
+    environment: <span class="c-str">'jsdom'</span>,  <span class="c-com">// Simulate browser environment</span>
+    globals: <span class="c-key">true</span>,  <span class="c-com">// No need to import describe, it, expect in every file</span>
+    setupFiles: <span class="c-str">'./src/tests/setupTests.ts'</span>,  <span class="c-com">// Runs before all tests (sets up mocks, polyfills)</span>
     coverage: {
-      provider: <span class="c-str">'v8'</span>,
-      reporter: [<span class="c-str">'lcov'</span>, <span class="c-str">'text-summary'</span>],
-      exclude: [<span class="c-str">'./src/pages/**'</span>],  <span class="c-com">// Pages excluded for now</span>
+      provider: <span class="c-str">'v8'</span>,  <span class="c-com">// V8 coverage (built into Node.js) - faster than Istanbul</span>
+      reporter: [<span class="c-str">'lcov'</span>, <span class="c-str">'text-summary'</span>],  <span class="c-com">// lcov for CI, text-summary for terminal</span>
+      exclude: [
+        <span class="c-str">'./src/pages/**'</span>,  <span class="c-com">// Pages excluded for now (will add incrementally)</span>
+        <span class="c-str">'**/*.test.{ts,tsx}'</span>,  <span class="c-com">// Don't count test files in coverage</span>
+        <span class="c-str">'**/vite-env.d.ts'</span>,  <span class="c-com">// Type definition files</span>
+      ],
+      thresholds: {  <span class="c-com">// Fail build if coverage drops below thresholds</span>
+        lines: 60,
+        functions: 60,
+        branches: 50,
+      },
     },
   },
 });</code></pre>
@@ -2396,42 +3567,209 @@ i18n
 │       └── Header.test.tsx               <span class="c-com"># Component tests</span></code></pre>
 
           <h3>Testing Patterns</h3>
+          <p><strong>We test three layers: Services (API), Hooks (logic), and Components (UI)</strong></p>
 
-          <h4>Service Tests</h4>
+          <h4>1. Service Tests (API Layer)</h4>
+          <p><strong>What to test:</strong> API calls return correct data structure, error handling, request parameters</p>
+          <p><strong>Why important:</strong> Services are the contract between frontend and backend → must handle API changes gracefully</p>
+          
           <pre><code><span class="c-com">// MonthlyFiguresService.test.ts</span>
-<span class="c-key">import</span> { describe, it, expect, vi } <span class="c-key">from</span> <span class="c-str">"vitest"</span>;
+<span class="c-key">import</span> { describe, it, expect, vi, beforeEach } <span class="c-key">from</span> <span class="c-str">"vitest"</span>;
 <span class="c-key">import</span> MonthlyFiguresService <span class="c-key">from</span> <span class="c-str">"./MonthlyFiguresService"</span>;
+<span class="c-key">import</span> http <span class="c-key">from</span> <span class="c-str">"./common/HttpCommon"</span>;
 
+<span class="c-com">// Mock the HTTP client</span>
 vi.mock(<span class="c-str">"./common/HttpCommon"</span>);
 
 describe(<span class="c-str">"MonthlyFiguresService"</span>, () => {
-  it(<span class="c-str">"should fetch monthly figures"</span>, <span class="c-key">async</span> () => {
-    <span class="c-key">const</span> data = <span class="c-key">await</span> MonthlyFiguresService.getMonthlyFigures(1, <span class="c-key">true</span>, []);
-    expect(data).toBeDefined();
+  beforeEach(() => {
+    vi.clearAllMocks();  <span class="c-com">// Reset mocks between tests</span>
+  });
+
+  it(<span class="c-str">"should fetch monthly figures with correct params"</span>, <span class="c-key">async</span> () => {
+    <span class="c-com">// Arrange: Set up mock response</span>
+    <span class="c-key">const</span> mockData = {
+      projectId: 1,
+      monthlyData: [{ date: <span class="c-str">"2024-01"</span>, value: 100 }]
+    };
+    http.post.mockResolvedValue({ data: mockData });
+
+    <span class="c-com">// Act: Call service method</span>
+    <span class="c-key">const</span> result = <span class="c-key">await</span> MonthlyFiguresService.getMonthlyFigures(1, <span class="c-key">true</span>, [<span class="c-str">"2024-01"</span>]);
+
+    <span class="c-com">// Assert: Verify correct API call and response</span>
+    expect(http.post).toHaveBeenCalledWith(
+      <span class="c-str">"ReportForecastFigures/1?isForecastIncluded=true"</span>,
+      [<span class="c-str">"2024-01"</span>]
+    );
+    expect(result.projectId).toBe(1);
+    expect(result.monthlyData).toHaveLength(1);
+  });
+
+  it(<span class="c-str">"should handle API errors gracefully"</span>, <span class="c-key">async</span> () => {
+    <span class="c-com">// Arrange: Mock error response</span>
+    http.post.mockRejectedValue(<span class="c-key">new</span> Error(<span class="c-str">"Network error"</span>));
+
+    <span class="c-com">// Act & Assert: Expect promise rejection</span>
+    <span class="c-key">await</span> expect(
+      MonthlyFiguresService.getMonthlyFigures(1, <span class="c-key">true</span>, [])
+    ).rejects.toThrow(<span class="c-str">"Network error"</span>);
   });
 });</code></pre>
 
-          <h4>Component Tests</h4>
+          <h4>2. Component Tests (UI Layer)</h4>
+          <p><strong>What to test:</strong> Component renders correctly, user interactions work, conditional rendering logic</p>
+          <p><strong>Philosophy:</strong> Test what the user sees and does, not internal implementation (state, props structure)</p>
+          
           <pre><code><span class="c-com">// Header.test.tsx</span>
-<span class="c-key">import</span> { render, screen } <span class="c-key">from</span> <span class="c-str">"@testing-library/react"</span>;
-<span class="c-key">import</span> { describe, it, expect } <span class="c-key">from</span> <span class="c-str">"vitest"</span>;
+<span class="c-key">import</span> { render, screen, fireEvent } <span class="c-key">from</span> <span class="c-str">"@testing-library/react"</span>;
+<span class="c-key">import</span> { describe, it, expect, vi } <span class="c-key">from</span> <span class="c-str">"vitest"</span>;
 <span class="c-key">import</span> Header <span class="c-key">from</span> <span class="c-str">"./Header"</span>;
+<span class="c-key">import</span> { BrowserRouter } <span class="c-key">from</span> <span class="c-str">"react-router-dom"</span>;
 
 describe(<span class="c-str">"Header"</span>, () => {
   it(<span class="c-str">"renders logo and navigation"</span>, () => {
-    render(<span class="c-key">&lt;Header</span> handleDrawerToggle={() => {}} /&gt;);
-    expect(screen.getByRole(<span class="c-str">"banner"</span>)).toBeInTheDocument();
+    <span class="c-com">// Arrange: Render component with router context</span>
+    render(
+      <span class="c-key">&lt;BrowserRouter&gt;</span>
+        <span class="c-key">&lt;Header</span> handleDrawerToggle={() => {}} /&gt;
+      <span class="c-key">&lt;/BrowserRouter&gt;</span>
+    );
+
+    <span class="c-com">// Assert: Check what user sees (accessible roles, text)</span>
+    expect(screen.getByRole(<span class="c-str">"banner"</span>)).toBeInTheDocument();  <span class="c-com">// &lt;header&gt; has role="banner"</span>
+    expect(screen.getByAltText(<span class="c-str">"BDB Logo"</span>)).toBeInTheDocument();  <span class="c-com">// Logo image</span>
+  });
+
+  it(<span class="c-str">"calls handleDrawerToggle when menu button clicked"</span>, () => {
+    <span class="c-com">// Arrange: Create mock function</span>
+    <span class="c-key">const</span> mockToggle = vi.fn();
+    
+    render(
+      <span class="c-key">&lt;BrowserRouter&gt;</span>
+        <span class="c-key">&lt;Header</span> handleDrawerToggle={mockToggle} /&gt;
+      <span class="c-key">&lt;/BrowserRouter&gt;</span>
+    );
+
+    <span class="c-com">// Act: User clicks menu button</span>
+    <span class="c-key">const</span> menuButton = screen.getByRole(<span class="c-str">"button"</span>, { name: <span class="c-str">/menu/i</span> });
+    fireEvent.click(menuButton);
+
+    <span class="c-com">// Assert: Callback was called</span>
+    expect(mockToggle).toHaveBeenCalledTimes(1);
+  });
+
+  it(<span class="c-str">"shows user menu when authenticated"</span>, () => {
+    <span class="c-com">// Arrange: Mock authentication context</span>
+    <span class="c-key">const</span> mockUser = { name: <span class="c-str">"John Doe"</span>, email: <span class="c-str">"john@example.com"</span> };
+    
+    render(
+      <span class="c-key">&lt;BrowserRouter&gt;</span>
+        <span class="c-key">&lt;Header</span> user={mockUser} handleDrawerToggle={() => {}} /&gt;
+      <span class="c-key">&lt;/BrowserRouter&gt;</span>
+    );
+
+    <span class="c-com">// Assert: User name appears in header</span>
+    expect(screen.getByText(<span class="c-str">"John Doe"</span>)).toBeInTheDocument();
   });
 });</code></pre>
 
-          <h4>Hook Tests</h4>
-          <pre><code><span class="c-key">import</span> { renderHook } <span class="c-key">from</span> <span class="c-str">"@testing-library/react"</span>;
-<span class="c-key">import</span> { useAuth } <span class="c-key">from</span> <span class="c-str">"./auth.hook"</span>;
+          <div class="card accent">
+            <div class="card-title">React Testing Library Best Practices</div>
+            <ul style="margin: 0.5rem 0 0 1rem;">
+              <li><strong>Query by role/label/text:</strong> <code>getByRole("button")</code>, <code>getByLabelText("Email")</code>, <code>getByText("Submit")</code> - accessible to screen readers = robust tests</li>
+              <li><strong>Avoid query by class/ID:</strong> <code>getByClassName("btn-primary")</code> - brittle, breaks when CSS changes</li>
+              <li><strong>Fire events like users:</strong> <code>fireEvent.click(button)</code>, <code>fireEvent.change(input, {'{target: {value: "text"}}'})}</code></li>
+              <li><strong>Wait for async:</strong> <code>await waitFor(() => expect(...).toBeInTheDocument())</code> - for API calls, delays</li>
+              <li><strong>Don't test implementation:</strong> Don't check component state, props structure - test what renders</li>
+            </ul>
+          </div>
 
-describe(<span class="c-str">"useAuth"</span>, () => {
+          <h4>3. Hook Tests (Logic Layer)</h4>
+          <p><strong>What to test:</strong> Custom hooks return correct values, state updates work, side effects trigger properly</p>
+          <p><strong>Why important:</strong> Hooks encapsulate complex logic → bugs here affect multiple components</p>
+          
+          <pre><code><span class="c-com">// useMonthlyFigures.hook.test.ts</span>
+<span class="c-key">import</span> { renderHook, waitFor } <span class="c-key">from</span> <span class="c-str">"@testing-library/react"</span>;
+<span class="c-key">import</span> { describe, it, expect, vi, beforeEach } <span class="c-key">from</span> <span class="c-str">"vitest"</span>;
+<span class="c-key">import</span> { useMonthlyFigures } <span class="c-key">from</span> <span class="c-str">"./useMonthlyFigures.hook"</span>;
+<span class="c-key">import</span> MonthlyFiguresService <span class="c-key">from</span> <span class="c-str">"../services/MonthlyFiguresService"</span>;
+
+vi.mock(<span class="c-str">"../services/MonthlyFiguresService"</span>);
+
+describe(<span class="c-str">"useMonthlyFigures"</span>, () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it(<span class="c-str">"should return loading state initially"</span>, () => {
-    <span class="c-key">const</span> { result } = renderHook(() => useAuth({ scopes: [<span class="c-str">"scope"</span>] }));
+    <span class="c-com">// Arrange: Mock service to never resolve (simulate slow API)</span>
+    MonthlyFiguresService.getMonthlyFigures.mockReturnValue(<span class="c-key">new</span> Promise(() => {}));
+
+    <span class="c-com">// Act: Render hook</span>
+    <span class="c-key">const</span> { result } = renderHook(() => 
+      useMonthlyFigures(1, [<span class="c-str">"2024-01"</span>])
+    );
+
+    <span class="c-com">// Assert: Should be loading, no data yet</span>
     expect(result.current.loading).toBe(<span class="c-key">true</span>);
+    expect(result.current.data).toBe(<span class="c-key">null</span>);
+    expect(result.current.error).toBe(<span class="c-key">null</span>);
+  });
+
+  it(<span class="c-str">"should return data after successful fetch"</span>, <span class="c-key">async</span> () => {
+    <span class="c-com">// Arrange: Mock successful API response</span>
+    <span class="c-key">const</span> mockData = { projectId: 1, monthlyData: [{...}] };
+    MonthlyFiguresService.getMonthlyFigures.mockResolvedValue(mockData);
+
+    <span class="c-com">// Act: Render hook</span>
+    <span class="c-key">const</span> { result } = renderHook(() => 
+      useMonthlyFigures(1, [<span class="c-str">"2024-01"</span>])
+    );
+
+    <span class="c-com">// Assert: Wait for data to load</span>
+    <span class="c-key">await</span> waitFor(() => {
+      expect(result.current.loading).toBe(<span class="c-key">false</span>);
+      expect(result.current.data).toEqual(mockData);
+      expect(result.current.error).toBe(<span class="c-key">null</span>);
+    });
+  });
+
+  it(<span class="c-str">"should return error on fetch failure"</span>, <span class="c-key">async</span> () => {
+    <span class="c-com">// Arrange: Mock API error</span>
+    <span class="c-key">const</span> errorMsg = <span class="c-str">"API Error"</span>;
+    MonthlyFiguresService.getMonthlyFigures.mockRejectedValue(<span class="c-key">new</span> Error(errorMsg));
+
+    <span class="c-com">// Act: Render hook</span>
+    <span class="c-key">const</span> { result } = renderHook(() => 
+      useMonthlyFigures(1, [<span class="c-str">"2024-01"</span>])
+    );
+
+    <span class="c-com">// Assert: Wait for error state</span>
+    <span class="c-key">await</span> waitFor(() => {
+      expect(result.current.loading).toBe(<span class="c-key">false</span>);
+      expect(result.current.error).toBe(errorMsg);
+      expect(result.current.data).toBe(<span class="c-key">null</span>);
+    });
+  });
+
+  it(<span class="c-str">"should refetch when parameters change"</span>, <span class="c-key">async</span> () => {
+    <span class="c-com">// Arrange: Mock service</span>
+    MonthlyFiguresService.getMonthlyFigures.mockResolvedValue({});
+
+    <span class="c-com">// Act: Render hook with initial params</span>
+    <span class="c-key">const</span> { rerender } = renderHook(
+      ({ id, dates }) => useMonthlyFigures(id, dates),
+      { initialProps: { id: 1, dates: [<span class="c-str">"2024-01"</span>] } }
+    );
+
+    <span class="c-com">// Act: Change parameters</span>
+    rerender({ id: 2, dates: [<span class="c-str">"2024-02"</span>] });
+
+    <span class="c-com">// Assert: Service called twice (initial + rerender)</span>
+    <span class="c-key">await</span> waitFor(() => {
+      expect(MonthlyFiguresService.getMonthlyFigures).toHaveBeenCalledTimes(2);
+    });
   });
 });</code></pre>
 
@@ -2836,6 +4174,837 @@ npm run build:prd      <span class="c-com"># Uses .env.production</span></code><
             <li><code>test:</code> Adding or updating tests</li>
             <li><code>chore:</code> Build process or auxiliary tool changes</li>
           </ul>
+        </section>
+
+        <!-- ─── FAQ ─── -->
+        <section id="sec-faq" class="section">
+          <h2>FAQ - Frequently Asked Questions</h2>
+          <p class="section-subtitle">
+            Quick answers to common questions.
+          </p>
+
+          <h3>🚀 Getting Started</h3>
+
+          <div class="card brand">
+            <div class="card-title">What is BDB?</div>
+            <p><strong>BDB (Construction Data Bank)</strong> provides construction cost data, market trends, and forecasts for Dutch construction industry.</p>
+            <p><strong>Users:</strong> Cost estimators, project managers, procurement specialists, business analysts.</p>
+          </div>
+
+          <div class="card accent">
+            <div class="card-title">How do I start developing?</div>
+            <ol style="margin: 0.5rem 0 0 1rem;">
+              <li>Clone repo: <code>git clone [repo-url]</code></li>
+              <li>Install: <code>npm install</code></li>
+              <li>Start: <code>npm run dev</code></li>
+              <li>Open: <code>http://localhost:5173</code></li>
+            </ol>
+          </div>
+
+          <div class="card brand">
+            <div class="card-title">What's the tech stack?</div>
+            <ul style="margin: 0.5rem 0 0 1rem;">
+              <li><strong>Frontend:</strong> React 18 + TypeScript 5.6 + Vite 6</li>
+              <li><strong>UI:</strong> Material-UI 7 + AG Grid Enterprise</li>
+              <li><strong>Auth:</strong> Azure B2C (MSAL)</li>
+              <li><strong>State:</strong> Redux Toolkit + Context API</li>
+              <li><strong>Testing:</strong> Vitest + React Testing Library</li>
+            </ul>
+          </div>
+
+          <h3>💻 Development</h3>
+
+          <div class="card accent">
+            <div class="card-title">How do I add a new page?</div>
+            <p><strong>Quick steps:</strong></p>
+            <ol style="margin: 0.5rem 0 0 1rem;">
+              <li><strong>Create page:</strong> <code>src/pages/NewPage/NewPage.tsx</code></li>
+              <li><strong>Add route:</strong> Edit <code>router.tsx</code>, add path and component</li>
+              <li><strong>Add to menu:</strong> Edit <code>SideBar.tsx</code>, add menu item</li>
+              <li><strong>Test:</strong> Navigate to <code>/new-page</code></li>
+            </ol>
+            <pre style="background: #f5f5f5; padding: 0.5rem; border-radius: 4px; margin-top: 0.5rem; font-size: 0.85em;"><code><span class="c-com">// router.tsx</span>
+{
+  path: <span class="c-str">"/new-page"</span>,
+  element: <span class="c-key">&lt;PrivateRoute /&gt;</span>,
+  breadcrumb: <span class="c-str">"New Page"</span>,
+  children: [{ path: <span class="c-str">"/new-page"</span>, element: <span class="c-key">&lt;NewPage /&gt;</span> }]
+}</code></pre>
+          </div>
+
+          <div class="card brand">
+            <div class="card-title">How do I call an API?</div>
+            <p><strong>Always use service layer:</strong></p>
+            <pre style="background: #f5f5f5; padding: 0.5rem; border-radius: 4px; margin: 0.5rem 0; font-size: 0.85em;"><code><span class="c-com">// 1. Create service (src/services/MyService.ts)</span>
+<span class="c-key">import</span> http <span class="c-key">from</span> <span class="c-str">"./common/HttpCommon"</span>;
+
+<span class="c-key">const</span> getData = <span class="c-key">async</span> (id: <span class="c-key">number</span>) => {
+  <span class="c-key">const</span> response = <span class="c-key">await</span> http.get(`/endpoint/${id}`);
+  <span class="c-key">return</span> response.data;
+};
+
+<span class="c-key">export default</span> { getData };
+
+<span class="c-com">// 2. Use in component</span>
+<span class="c-key">import</span> MyService <span class="c-key">from</span> <span class="c-str">"../services/MyService"</span>;
+
+<span class="c-key">const</span> { data, loading } = useQuery(() => MyService.getData(123));</code></pre>
+          </div>
+
+          <div class="card accent">
+            <div class="card-title">Where do I put my code?</div>
+            <table style="width: 100%; margin-top: 0.5rem; font-size: 0.9em;">
+              <tr>
+                <td style="padding: 0.3rem;"><strong>Pages</strong></td>
+                <td style="padding: 0.3rem;"><code>src/pages/</code></td>
+                <td style="padding: 0.3rem;">Full page components</td>
+              </tr>
+              <tr style="background: #f9f9f9;">
+                <td style="padding: 0.3rem;"><strong>Components</strong></td>
+                <td style="padding: 0.3rem;"><code>src/components/</code></td>
+                <td style="padding: 0.3rem;">Reusable UI pieces</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.3rem;"><strong>Services</strong></td>
+                <td style="padding: 0.3rem;"><code>src/services/</code></td>
+                <td style="padding: 0.3rem;">API calls</td>
+              </tr>
+              <tr style="background: #f9f9f9;">
+                <td style="padding: 0.3rem;"><strong>Hooks</strong></td>
+                <td style="padding: 0.3rem;"><code>src/hooks/</code></td>
+                <td style="padding: 0.3rem;">Custom React hooks</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.3rem;"><strong>Models</strong></td>
+                <td style="padding: 0.3rem;"><code>src/models/</code></td>
+                <td style="padding: 0.3rem;">TypeScript interfaces</td>
+              </tr>
+              <tr style="background: #f9f9f9;">
+                <td style="padding: 0.3rem;"><strong>Utils</strong></td>
+                <td style="padding: 0.3rem;"><code>src/utils/</code></td>
+                <td style="padding: 0.3rem;">Helper functions</td>
+              </tr>
+            </table>
+          </div>
+
+          <h3>🔐 Authentication</h3>
+
+          <div class="card brand">
+            <div class="card-title">Why does my token keep expiring?</div>
+            <p><strong>Normal behavior:</strong> Azure B2C tokens expire after 1 hour. MSAL auto-refreshes in background.</p>
+            <p><strong>If not working:</strong></p>
+            <ul style="margin: 0.5rem 0 0 1rem;">
+              <li>Check <code>auth.hook.ts</code> → ensure <code>getRefreshToken()</code> is called</li>
+              <li>Check sessionStorage in DevTools → look for MSAL keys</li>
+              <li>Check Network tab → look for token refresh requests</li>
+            </ul>
+          </div>
+
+          <div class="card accent">
+            <div class="card-title">Standard user vs Admin user?</div>
+            <p>There are exactly <strong>2 roles</strong> in the system. The role is returned as a single string from <code>Auth/GetRoles</code> API and stored in sessionStorage.</p>
+            <table style="width: 100%; margin-top: 0.5rem; border-collapse: collapse; font-size: 0.9em;">
+              <tr style="background: #f5f5f5;">
+                <th style="padding: 0.5rem; border: 1px solid #ddd;">Feature</th>
+                <th style="padding: 0.5rem; border: 1px solid #ddd;"><code>"user"</code> — Standard</th>
+                <th style="padding: 0.5rem; border: 1px solid #ddd;"><code>"admin"</code> — Admin</th>
+              </tr>
+              <tr>
+                <td style="padding: 0.5rem; border: 1px solid #ddd;">View data pages</td>
+                <td style="padding: 0.5rem; border: 1px solid #ddd;">✓ Only subscribed modules</td>
+                <td style="padding: 0.5rem; border: 1px solid #ddd;">✓ All modules (bypasses subscription checks)</td>
+              </tr>
+              <tr style="background: #f9f9f9;">
+                <td style="padding: 0.5rem; border: 1px solid #ddd;">Upload data pages</td>
+                <td style="padding: 0.5rem; border: 1px solid #ddd;">✗ Redirected to <code>/unauthorized</code></td>
+                <td style="padding: 0.5rem; border: 1px solid #ddd;">✓ Full access</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.5rem; border: 1px solid #ddd;">Manage users</td>
+                <td style="padding: 0.5rem; border: 1px solid #ddd;">✗</td>
+                <td style="padding: 0.5rem; border: 1px solid #ddd;">✓</td>
+              </tr>
+              <tr style="background: #f9f9f9;">
+                <td style="padding: 0.5rem; border: 1px solid #ddd;">Export data</td>
+                <td style="padding: 0.5rem; border: 1px solid #ddd;">✓ Based on subscription</td>
+                <td style="padding: 0.5rem; border: 1px solid #ddd;">✓ All data</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.5rem; border: 1px solid #ddd;">Route guard used</td>
+                <td style="padding: 0.5rem; border: 1px solid #ddd;"><code>&lt;PrivateRoute /&gt;</code></td>
+                <td style="padding: 0.5rem; border: 1px solid #ddd;"><code>&lt;PrivateRoute requiresAdmin /&gt;</code></td>
+              </tr>
+            </table>
+            <p style="margin-top: 0.75rem; font-size: 0.9em;">
+              <strong>How role check works in code:</strong>
+            </p>
+            <pre style="background: #f5f5f5; padding: 0.5rem; border-radius: 4px; font-size: 0.85em;"><code><span class="c-com">// PrivateRoute.tsx — used on every protected route</span>
+<span class="c-key">if</span> (requiresAdmin && role.toLowerCase() !== <span class="c-str">"admin"</span>) {
+  <span class="c-key">return</span> <span class="c-key">&lt;Navigate</span> to=<span class="c-str">"/unauthorized"</span> replace /&gt;;
+}
+
+<span class="c-com">// subscription.hook.ts — role returned as a single string from API</span>
+<span class="c-key">const</span> [role, setRole] = useState&lt;<span class="c-key">string</span>&gt;(<span class="c-str">""</span>);
+AuthService.GetRoles(); <span class="c-com">// returns Promise&lt;string&gt; e.g. "admin" or "user"</span></code></pre>
+          </div>
+
+          <h3>🐛 Debugging</h3>
+
+          <div class="card brand">
+            <div class="card-title">API call failing - how to debug?</div>
+            <ol style="margin: 0.5rem 0 0 1rem;">
+              <li><strong>Open DevTools:</strong> F12 → Network tab</li>
+              <li><strong>Find request:</strong> Filter by XHR, find failing call</li>
+              <li><strong>Check request:</strong>
+                <ul style="margin-left: 1rem;">
+                  <li>URL correct?</li>
+                  <li>Auth header present? (<code>Authorization: Bearer ...</code>)</li>
+                  <li>Request body correct format?</li>
+                </ul>
+              </li>
+              <li><strong>Check response:</strong>
+                <ul style="margin-left: 1rem;">
+                  <li>401 → Token expired</li>
+                  <li>403 → No permission</li>
+                  <li>400 → Bad request format</li>
+                  <li>500 → Server error</li>
+                </ul>
+              </li>
+            </ol>
+          </div>
+
+          <div class="card accent">
+            <div class="card-title">How to run tests?</div>
+            <pre style="background: #f5f5f5; padding: 0.5rem; border-radius: 4px; margin: 0.5rem 0; font-size: 0.85em;"><code><span class="c-com"># Run all tests</span>
+npm test
+
+<span class="c-com"># Run single file</span>
+npm test -- MyFile.test.ts
+
+<span class="c-com"># Watch mode (auto-rerun)</span>
+npm test -- --watch
+
+<span class="c-com"># With coverage</span>
+npm run test:coverage
+
+<span class="c-com"># Interactive UI</span>
+npm run test:ui</code></pre>
+          </div>
+
+          <h3>📊 Data & API</h3>
+
+          <div class="card brand">
+            <div class="card-title">Why is API slow (5+ seconds)?</div>
+            <p><strong>Common causes:</strong></p>
+            <ul style="margin: 0.5rem 0 0 1rem;">
+              <li><strong>Large data:</strong> 50k+ rows → use pagination or server-side filtering</li>
+              <li><strong>Multiple calls:</strong> Use <code>Promise.all()</code> to parallelize</li>
+              <li><strong>No caching:</strong> Add caching with React Query (5-10 min TTL)</li>
+              <li><strong>Complex calculations:</strong> Move to backend or pre-calculate</li>
+            </ul>
+          </div>
+
+          <div class="card accent">
+            <div class="card-title">How often is data updated?</div>
+            <ul style="margin: 0.5rem 0 0 1rem; font-size: 0.95em;">
+              <li><strong>Monthly Figures:</strong> First week of each month</li>
+              <li><strong>Market Indicators:</strong> Monthly (some quarterly)</li>
+              <li><strong>Reference Projects:</strong> Ad-hoc (5-10 per month)</li>
+              <li><strong>Parametric Elements:</strong> Quarterly</li>
+            </ul>
+          </div>
+
+          <h3>🎨 UI & Components</h3>
+
+          <div class="card brand">
+            <div class="card-title">When to create a new component?</div>
+            <p><strong>Create new component if:</strong></p>
+            <ul style="margin: 0.5rem 0 0 1rem;">
+              <li>Used in 3+ places (DRY principle)</li>
+              <li>Component is >200 lines</li>
+              <li>Has its own state/lifecycle</li>
+            </ul>
+            <p><strong>Use existing if:</strong></p>
+            <ul style="margin: 0.5rem 0 0 1rem;">
+              <li>Similar component exists in <code>src/components/</code></li>
+              <li>MUI component covers 90% of needs</li>
+              <li>One-off UI that won't be reused</li>
+            </ul>
+          </div>
+
+          <div class="card accent">
+            <div class="card-title">How to customize MUI components?</div>
+            <pre style="background: #f5f5f5; padding: 0.5rem; border-radius: 4px; margin: 0.5rem 0; font-size: 0.85em;"><code><span class="c-com">// 1. Props (quick one-off)</span>
+<span class="c-key">&lt;Button</span> variant=<span class="c-str">"contained"</span> size=<span class="c-str">"large"</span> color=<span class="c-str">"primary"</span> /&gt;
+
+<span class="c-com">// 2. sx prop (inline styles)</span>
+<span class="c-key">&lt;Button</span> sx={{ bgcolor: <span class="c-str">"#ff5722"</span>, p: 2 }} /&gt;
+
+<span class="c-com">// 3. Theme (app-wide)</span>
+<span class="c-com">// Edit src/themes/theme.ts</span>
+<span class="c-key">const</span> theme = createTheme({
+  palette: { primary: { main: <span class="c-str">"#1976d2"</span> } }
+});</code></pre>
+          </div>
+
+          <h3>⚡ Performance</h3>
+
+          <div class="card brand">
+            <div class="card-title">App slow on first load?</div>
+            <p><strong>Quick fixes:</strong></p>
+            <ul style="margin: 0.5rem 0 0 1rem;">
+              <li><strong>Lazy load pages:</strong> <code>const Page = lazy(() => import("./Page"))</code></li>
+              <li><strong>Tree-shake imports:</strong> <code>import {'{Button}'} from "@mui/material"</code></li>
+              <li><strong>Remove unused deps:</strong> Check <code>package.json</code></li>
+              <li><strong>Check bundle size:</strong> Run <code>npm run build</code> → check <code>dist/</code></li>
+            </ul>
+          </div>
+
+          <div class="card accent">
+            <div class="card-title">AG Grid slow with 50k rows?</div>
+            <ul style="margin: 0.5rem 0 0 1rem;">
+              <li><strong>Enable virtualization:</strong> <code>domLayout="normal"</code> (NOT autoHeight)</li>
+              <li><strong>Server-side pagination:</strong> <code>rowModelType="serverSide"</code></li>
+              <li><strong>Disable animations:</strong> <code>animateRows={false}</code></li>
+              <li><strong>Use formatters:</strong> Not cell renderers (faster)</li>
+            </ul>
+          </div>
+
+          <h3>🚀 Deployment</h3>
+
+          <div class="card brand">
+            <div class="card-title">How does deployment work?</div>
+            <p><strong>Automated CI/CD pipeline:</strong></p>
+            <ol style="margin: 0.5rem 0 0 1rem; font-size: 0.95em;">
+              <li>Push to <code>develop</code> branch</li>
+              <li>Azure Pipeline: lint → test → build</li>
+              <li>Auto-deploy to dev (<code>devbdb.arcadis.com</code>)</li>
+              <li>QA testing</li>
+              <li>Merge to <code>main</code></li>
+              <li>Deploy to UAT → Production (<code>bdb.eu</code>)</li>
+            </ol>
+          </div>
+
+          <div class="card accent">
+            <div class="card-title">Which version is in production?</div>
+            <p><strong>Check version:</strong></p>
+            <ul style="margin: 0.5rem 0 0 1rem;">
+              <li><strong>Browser console:</strong> <code>console.log(import.meta.env.VITE_APP_VERSION)</code></li>
+              <li><strong>Network tab:</strong> Check response headers (<code>X-Build-Version</code>)</li>
+              <li><strong>Footer:</strong> Version number displayed at bottom</li>
+              <li><strong>Azure DevOps:</strong> Releases → Production</li>
+            </ul>
+          </div>
+
+          <h3>🌍 Translations</h3>
+
+          <div class="card brand">
+            <div class="card-title">How to add translations?</div>
+            <ol style="margin: 0.5rem 0 0 1rem;">
+              <li><strong>Add key in code:</strong> <code>t("pages.mypage.title")</code></li>
+              <li><strong>Go to translation platform:</strong> <code>https://translation.arcadis.com</code></li>
+              <li><strong>Find solution:</strong> ID <code>021c7f6b-1b50-44da-8aa6-e6e9b269e360</code></li>
+              <li><strong>Add translations:</strong> EN + NL</li>
+              <li><strong>Publish:</strong> Available in 5 minutes</li>
+            </ol>
+            <p style="margin-top: 0.5rem;"><strong>Note:</strong> No local files - translations fetched from cloud platform.</p>
+          </div>
+
+          <h3>📚 Testing</h3>
+
+          <div class="card accent">
+            <div class="card-title">What should I test?</div>
+            <p><strong>Priority order:</strong></p>
+            <table style="width: 100%; margin-top: 0.5rem; border-collapse: collapse; font-size: 0.9em;">
+              <tr style="background: #f5f5f5;">
+                <th style="padding: 0.5rem; border: 1px solid #ddd;">Priority</th>
+                <th style="padding: 0.5rem; border: 1px solid #ddd;">What to Test</th>
+                <th style="padding: 0.5rem; border: 1px solid #ddd;">Target</th>
+              </tr>
+              <tr>
+                <td style="padding: 0.5rem; border: 1px solid #ddd;"><strong>HIGH</strong></td>
+                <td style="padding: 0.5rem; border: 1px solid #ddd;">Services, Hooks, Business Logic</td>
+                <td style="padding: 0.5rem; border: 1px solid #ddd;">80%+</td>
+              </tr>
+              <tr style="background: #f9f9f9;">
+                <td style="padding: 0.5rem; border: 1px solid #ddd;"><strong>MEDIUM</strong></td>
+                <td style="padding: 0.5rem; border: 1px solid #ddd;">Complex Components, Forms</td>
+                <td style="padding: 0.5rem; border: 1px solid #ddd;">60%+</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.5rem; border: 1px solid #ddd;"><strong>LOW</strong></td>
+                <td style="padding: 0.5rem; border: 1px solid #ddd;">Simple Components, Pages</td>
+                <td style="padding: 0.5rem; border: 1px solid #ddd;">Optional</td>
+              </tr>
+            </table>
+          </div>
+
+          <h3>❓ Need More Help?</h3>
+
+          <div class="card brand">
+            <div class="card-title">Where to get help?</div>
+            <ul style="margin: 0.5rem 0 0 1rem;">
+              <li><strong>This Documentation:</strong> Read through all sections</li>
+              <li><strong>Code Comments:</strong> Check inline comments in source files</li>
+              <li><strong>Team Members:</strong> Ask experienced developers</li>
+              <li><strong>Azure DevOps:</strong> Search work items and discussions</li>
+              <li><strong>Browser DevTools:</strong> Console + Network tab</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ─── Postman Guide ─── -->
+        <section id="sec-postman" class="section">
+          <h2>🧪 Postman Guide — Testing BDB APIs from Scratch</h2>
+          <p class="section-subtitle">
+            A complete step-by-step guide for a developer with zero Postman experience. 
+            You will be making real BDB API calls within 10 minutes.
+          </p>
+
+          <!-- ══ WHAT IS POSTMAN ══ -->
+          <h3>Step 0 — What is Postman?</h3>
+          <div class="card">
+            <div class="card-title">Think of Postman as a browser for APIs</div>
+            <p>Instead of clicking through the app's UI, Postman lets you call backend API endpoints directly
+            and see the raw JSON response. This is essential for:</p>
+            <ul style="margin: 0.5rem 0 0 1.5rem;">
+              <li>Verifying what data the backend returns</li>
+              <li>Debugging API issues without running the frontend</li>
+              <li>Exploring what fields exist in a response</li>
+              <li>Testing admin-only endpoints</li>
+            </ul>
+          </div>
+          <p>
+            📥 <strong>Download:</strong> <a href="https://www.postman.com/downloads/" target="_blank">https://www.postman.com/downloads/</a> (free desktop app, no account needed to start)
+          </p>
+
+          <!-- ══ THE AUTH CHALLENGE ══ -->
+          <h3>Step 1 — Understand the Auth Challenge First</h3>
+          <div class="card brand">
+            <div class="card-title">⚠️ Every single BDB API endpoint requires a Bearer token</div>
+            <p>
+              BDB uses <strong>Azure B2C</strong> for login. There is no simple username/password API.
+              The only practical way to get a valid token is to <strong>log in through the browser</strong> 
+              and copy the token from the browser's Network tab.
+            </p>
+            <p>The token is a <code>JWT</code> string starting with <code>eyJ...</code> and it 
+            <strong>expires after ~1 hour</strong>. After expiry you need to grab a new one.</p>
+          </div>
+
+          <!-- ══ GET TOKEN ══ -->
+          <h3>Step 2 — Get Your Bearer Token from the Browser</h3>
+          <p>This is the most important step. Follow exactly:</p>
+
+          <div class="card">
+            <div class="card-title">🌐 Method A — Copy from Network Tab (Recommended, Easiest)</div>
+            <ol style="line-height:2;">
+              <li>Open <strong><a href="https://devbdb.arcadis.com" target="_blank">https://devbdb.arcadis.com</a></strong> in Chrome or Edge</li>
+              <li>Open <strong>DevTools</strong> → press <kbd style="background:#eee;padding:2px 6px;border-radius:3px;border:1px solid #ccc;">F12</kbd> (or right-click → Inspect)</li>
+              <li>Click the <strong>Network</strong> tab</li>
+              <li>Log in with your Arcadis credentials</li>
+              <li>After login, in the Network tab, look for any request going to <code>devbdb.arcadis.com/api</code><br>
+                  Hint: type <code>api</code> in the filter box at the top of the Network tab</li>
+              <li>Click on any of those API requests (e.g. <code>GetRoles</code>)</li>
+              <li>In the right panel → click <strong>Headers</strong> tab</li>
+              <li>Scroll down to <strong>Request Headers</strong> → find <code>Authorization</code></li>
+              <li>The value looks like: <code>Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ...</code></li>
+              <li><strong>Copy everything after the word "Bearer " (including the space)</strong> — that's your token</li>
+            </ol>
+            <p style="margin-top:0.5rem;color:#555;">💡 Tip: You can also open DevTools → Console tab and run:<br>
+            <code style="background:#f5f5f5;padding:4px 8px;border-radius:3px;display:inline-block;margin-top:4px;">
+              Object.entries(sessionStorage).find(([k]) =&gt; k.includes('accesstoken'))?.[1]
+            </code><br>
+            then parse the returned JSON and copy the <code>"secret"</code> field value.</p>
+          </div>
+
+          <!-- ══ POSTMAN ENVIRONMENT ══ -->
+          <h3>Step 3 — Create a Postman Environment</h3>
+          <p>An Environment in Postman stores variables so you don't retype URLs and tokens every request.</p>
+          <ol style="line-height:2;">
+            <li>Open Postman → click <strong>Environments</strong> in the left sidebar (gear icon)</li>
+            <li>Click <strong>+ Add</strong></li>
+            <li>Name it: <code>BDB Dev</code></li>
+            <li>Add the following variables:</li>
+          </ol>
+          <table>
+            <thead><tr><th>Variable</th><th>Initial Value</th><th>Current Value</th></tr></thead>
+            <tbody>
+              <tr><td><code>baseUrl</code></td><td><code>https://devbdb.arcadis.com/api/bdbapi/api</code></td><td>(same)</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>token</code></td><td>(leave empty)</td><td>← paste your Bearer token here after login</td></tr>
+            </tbody>
+          </table>
+          <p>5. Click <strong>Save</strong>.<br>
+             6. In the top-right corner of Postman, select <strong>BDB Dev</strong> from the environment dropdown.<br>
+             7. When your token expires, update the <code>token</code> variable here — all requests auto-update.</p>
+
+          <div class="card info">
+            <div class="card-title">📌 Create separate environments for UAT and Production</div>
+            Create <code>BDB UAT</code> with <code>baseUrl = https://uatbdb.arcadis.com/api/bdbapi/api</code><br>
+            Create <code>BDB Prod</code> with <code>baseUrl = https://bdb.eu/api/bdbapi/api</code>
+          </div>
+
+          <!-- ══ CREATE COLLECTION ══ -->
+          <h3>Step 4 — Create a Collection with Auth</h3>
+          <p>A Collection groups related requests and lets you set auth once for all of them.</p>
+          <ol style="line-height:2;">
+            <li>In Postman left sidebar → click <strong>Collections</strong> → click <strong>+</strong> → <strong>Blank Collection</strong></li>
+            <li>Name it: <code>BDB API</code></li>
+            <li>Click the collection name → go to <strong>Authorization</strong> tab</li>
+            <li>Type: select <strong>Bearer Token</strong></li>
+            <li>Token field: type <code>{{token}}</code> (double curly braces = use the environment variable)</li>
+            <li>Click <strong>Save</strong></li>
+          </ol>
+          <p>✅ Now every request inside this collection will automatically use your token. No need to add it per-request.</p>
+
+          <!-- ══ FIRST REQUEST ══ -->
+          <h3>Step 5 — Make Your First Request</h3>
+          <p>Let's test the simplest endpoint: check your role.</p>
+          <ol style="line-height:2;">
+            <li>Inside <code>BDB API</code> collection → click <strong>+</strong> to add a request</li>
+            <li>Change method to <code>GET</code></li>
+            <li>URL: type <code>{{baseUrl}}/Auth/GetRoles</code></li>
+            <li>Go to <strong>Authorization</strong> tab → set Type to <strong>Inherit auth from parent</strong></li>
+            <li>Click <strong>Send</strong></li>
+          </ol>
+          <div class="card">
+            <div class="card-title">✅ Expected Response (200 OK)</div>
+            <pre style="background:#1e1e1e;color:#d4d4d4;padding:0.8rem;border-radius:4px;font-size:0.85em;margin:0;"><code><span style="color:#ce9178;">"user"</span>
+<span style="color:#6a9955;">// OR</span>
+<span style="color:#ce9178;">"admin"</span></code></pre>
+          </div>
+          <div class="card warning" style="margin-top:0.5rem;">
+            <div class="card-title">❌ If you get 401 Unauthorized</div>
+            Your token is missing or expired. Go back to Step 2 and get a fresh token, then update the <code>token</code> environment variable.
+          </div>
+
+          <!-- ══ REQUEST TYPES ══ -->
+          <h3>Step 6 — Examples for Every Request Type</h3>
+
+          <h4>📘 GET — Simple (No Body)</h4>
+          <p>Example: Get all reference projects</p>
+          <table>
+            <thead><tr><th>Field</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Method</strong></td><td><code>GET</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><strong>URL</strong></td><td><code>{{baseUrl}}/ReferenceProject</code></td></tr>
+              <tr><td><strong>Authorization</strong></td><td>Inherit from parent</td></tr>
+              <tr style="background:#f9f9f9;"><td><strong>Body</strong></td><td>None</td></tr>
+            </tbody>
+          </table>
+          <p>Click <strong>Send</strong>. Response panel shows JSON array of reference projects.</p>
+
+          <h4>📘 GET — With Query Parameters</h4>
+          <p>Example: Get subscription modules for a country and year</p>
+          <table>
+            <thead><tr><th>Field</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Method</strong></td><td><code>GET</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><strong>URL</strong></td><td><code>{{baseUrl}}/Subscription/GetModulesByCountryAndYear/</code></td></tr>
+              <tr><td><strong>Params tab</strong></td><td>Add key <code>countryId</code> = <code>1</code>, key <code>year</code> = <code>2024</code>, key <code>includeCompanies</code> = <code>false</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><strong>Body</strong></td><td>None</td></tr>
+            </tbody>
+          </table>
+          <p>💡 Postman automatically appends params to the URL: <code>?countryId=1&amp;year=2024&amp;includeCompanies=false</code></p>
+
+          <h4>📗 POST — With JSON Body</h4>
+          <p>Example: Get monthly figures data</p>
+          <table>
+            <thead><tr><th>Field</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Method</strong></td><td><code>POST</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><strong>URL</strong></td><td><code>{{baseUrl}}/ReportForecastFigures/1?isForecastIncluded=false</code></td></tr>
+              <tr><td><strong>Body tab</strong></td><td>Select <strong>raw</strong> → set format to <strong>JSON</strong></td></tr>
+              <tr style="background:#f9f9f9;"><td><strong>Body content</strong></td><td>See below</td></tr>
+            </tbody>
+          </table>
+          <pre style="background:#1e1e1e;color:#d4d4d4;padding:0.8rem;border-radius:4px;font-size:0.85em;"><code>[
+  <span style="color:#ce9178;">"2023-01-01"</span>,
+  <span style="color:#ce9178;">"2023-04-01"</span>,
+  <span style="color:#ce9178;">"2023-07-01"</span>
+]</code></pre>
+          <p>Replace <code>1</code> in the URL with an actual reference project ID from <code>GET /ReferenceProject</code>.</p>
+
+          <h4>📗 POST — With Form Data (File Upload)</h4>
+          <p>Example: Upload a reference budget file (admin only)</p>
+          <table>
+            <thead><tr><th>Field</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Method</strong></td><td><code>POST</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><strong>URL</strong></td><td><code>{{baseUrl}}/ReferenceBudget/PostFiles</code></td></tr>
+              <tr><td><strong>Body tab</strong></td><td>Select <strong>form-data</strong></td></tr>
+              <tr style="background:#f9f9f9;"><td><strong>Key</strong></td><td>Type <code>files</code> → hover the key → change type from Text to <strong>File</strong></td></tr>
+              <tr><td><strong>Value</strong></td><td>Click <strong>Select Files</strong> → pick your Excel file</td></tr>
+            </tbody>
+          </table>
+          <p>⚠️ Do NOT set <code>Content-Type</code> header manually — Postman sets it automatically for form-data.</p>
+
+          <h4>📙 GET — File Download (Blob)</h4>
+          <p>Example: Download a monthly figures report as Excel</p>
+          <table>
+            <thead><tr><th>Field</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Method</strong></td><td><code>POST</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><strong>URL</strong></td><td><code>{{baseUrl}}/ReportForecastFigures/report/1?isForecastIncluded=false&amp;format=excel</code></td></tr>
+              <tr><td><strong>Body</strong></td><td>Same JSON array of date strings as the data endpoint above</td></tr>
+              <tr style="background:#f9f9f9;"><td><strong>To save the file</strong></td><td>After sending, click the <strong>⬇ Save Response</strong> dropdown → <strong>Save to a file</strong></td></tr>
+            </tbody>
+          </table>
+          <p>The response will show as binary in Postman. Use "Save to a file" to get the actual <code>.xlsx</code> file on your disk.</p>
+
+          <h4>📕 PUT — Update a Record</h4>
+          <p>Example: Update user profile</p>
+          <table>
+            <thead><tr><th>Field</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Method</strong></td><td><code>PUT</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><strong>URL</strong></td><td><code>{{baseUrl}}/Profile</code></td></tr>
+              <tr><td><strong>Body</strong></td><td>raw → JSON</td></tr>
+            </tbody>
+          </table>
+          <pre style="background:#1e1e1e;color:#d4d4d4;padding:0.8rem;border-radius:4px;font-size:0.85em;"><code>{
+  <span style="color:#9cdcfe;">"firstName"</span>: <span style="color:#ce9178;">"Santhosh"</span>,
+  <span style="color:#9cdcfe;">"lastName"</span>: <span style="color:#ce9178;">"Raj"</span>,
+  <span style="color:#9cdcfe;">"email"</span>: <span style="color:#ce9178;">"santhosh@example.com"</span>
+}</code></pre>
+
+          <!-- ══ READING RESPONSES ══ -->
+          <h3>Step 7 — How to Read Postman Responses</h3>
+          <table>
+            <thead><tr><th>Status Code</th><th>Meaning</th><th>What to do</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#4caf50;font-weight:bold;">200 OK</span></td><td>Success — response body has data</td><td>Read the Body tab → Pretty view for formatted JSON</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#4caf50;font-weight:bold;">201 Created</span></td><td>Resource was created</td><td>Response body usually contains the new record with its ID</td></tr>
+              <tr><td><span style="color:#4caf50;font-weight:bold;">204 No Content</span></td><td>Success but no response body (e.g. PUT/DELETE)</td><td>Empty body is expected — it worked</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">400 Bad Request</span></td><td>Your request body or params are wrong</td><td>Check the response body — it usually says which field failed</td></tr>
+              <tr><td><span style="color:#f44336;font-weight:bold;">401 Unauthorized</span></td><td>Token is missing or expired</td><td>Get a new token from browser (Step 2) and update environment variable</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#f44336;font-weight:bold;">403 Forbidden</span></td><td>You're authenticated but don't have permission</td><td>The endpoint may require <code>admin</code> role — check with your team</td></tr>
+              <tr><td><span style="color:#f44336;font-weight:bold;">404 Not Found</span></td><td>The ID in the URL doesn't exist</td><td>Try a different ID. First call a list endpoint to get valid IDs</td></tr>
+              <tr style="background:#f9f9f9;"><td><span style="color:#f44336;font-weight:bold;">500 Internal Server Error</span></td><td>Backend crashed</td><td>Check the response body for a message, report to backend team</td></tr>
+            </tbody>
+          </table>
+
+          <!-- ══ READY-TO-USE COLLECTION ══ -->
+          <h3>Step 8 — Recommended Request Order for New Members</h3>
+          <p>Start with these in order — each one builds on the previous to get the IDs you need:</p>
+          <table>
+            <thead><tr><th>#</th><th>Request</th><th>Why</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td><code>GET {{baseUrl}}/Auth/GetRoles</code></td><td>Confirm your auth is working and see your role</td></tr>
+              <tr style="background:#f9f9f9;"><td>2</td><td><code>GET {{baseUrl}}/Auth/GetSubscriptions</code></td><td>See which products you have access to</td></tr>
+              <tr><td>3</td><td><code>GET {{baseUrl}}/ReferenceProject</code></td><td>Get reference project list — you'll need IDs for other endpoints</td></tr>
+              <tr style="background:#f9f9f9;"><td>4</td><td><code>GET {{baseUrl}}/DataSeries/GetLastDefinitiveDataSeries</code></td><td>Get the current data series (latest version of data)</td></tr>
+              <tr><td>5</td><td><code>GET {{baseUrl}}/ReferenceDate</code></td><td>Get all reference dates</td></tr>
+              <tr style="background:#f9f9f9;"><td>6</td><td><code>GET {{baseUrl}}/Country</code></td><td>Get country list with IDs</td></tr>
+              <tr><td>7</td><td><code>GET {{baseUrl}}/Profile</code></td><td>See your own profile data</td></tr>
+              <tr style="background:#f9f9f9;"><td>8</td><td><code>POST {{baseUrl}}/ReportForecastFigures/{id}</code></td><td>Get monthly figures data (use a referenceProject ID from step 3)</td></tr>
+            </tbody>
+          </table>
+
+          <!-- ══ READY-TO-USE COLLECTION ══ -->
+          <h3>Step 8 — Recommended Request Order for New Members</h3>
+          <p>Start with these in order — each one builds on the previous to get the IDs you need:</p>
+          <table>
+            <thead><tr><th>#</th><th>Request</th><th>Why</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td><code>GET {{baseUrl}}/Auth/GetRoles</code></td><td>Confirm your auth is working and see your role</td></tr>
+              <tr style="background:#f9f9f9;"><td>2</td><td><code>GET {{baseUrl}}/Auth/GetSubscriptions</code></td><td>See which products you have access to</td></tr>
+              <tr><td>3</td><td><code>GET {{baseUrl}}/ReferenceProject</code></td><td>Get reference project list — you'll need IDs for other endpoints</td></tr>
+              <tr style="background:#f9f9f9;"><td>4</td><td><code>GET {{baseUrl}}/DataSeries/GetLastDefinitiveDataSeries</code></td><td>Get the current data series (latest version of data)</td></tr>
+              <tr><td>5</td><td><code>GET {{baseUrl}}/ReferenceDate</code></td><td>Get all reference dates</td></tr>
+              <tr style="background:#f9f9f9;"><td>6</td><td><code>GET {{baseUrl}}/Country</code></td><td>Get country list with IDs</td></tr>
+              <tr><td>7</td><td><code>GET {{baseUrl}}/Profile</code></td><td>See your own profile data</td></tr>
+              <tr style="background:#f9f9f9;"><td>8</td><td><code>POST {{baseUrl}}/ReportForecastFigures/{id}</code></td><td>Get monthly figures data (use a referenceProject ID from step 3)</td></tr>
+            </tbody>
+          </table>
+
+          <!-- ══ ID CHAINING GUIDE ══ -->
+          <h3>🔗 Understanding IDs — Why You Get 400 Errors</h3>
+          <div class="card brand">
+            <div class="card-title">⚠️ The Most Common Mistake — Using the Wrong Kind of ID</div>
+            <p>
+              Many BDB endpoints use <code>{id}</code> in the URL, but each endpoint expects a <strong>different type of ID</strong>.
+              There is no universal ID — you must first call a <strong>list endpoint</strong> to discover valid IDs before calling a detail endpoint.
+              Using a random number like <code>1</code> or <code>999</code> without checking will give you a <code>400</code> or <code>404</code>.
+            </p>
+          </div>
+
+          <h4>Types of IDs used in BDB API</h4>
+          <table>
+            <thead><tr><th>ID Type</th><th>What it is</th><th>How to get a valid one</th><th>Endpoints that use it</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Reference Project ID</strong></td>
+                <td>The ID of a configured construction project used as a benchmark</td>
+                <td><code>GET /ReferenceProject</code> → pick any <code>id</code> from the response array</td>
+                <td><code>ReportForecastFigures/{id}</code>, <code>ReferenceProject/getById/{id}</code>, <code>ReferenceDatePublished/getLatest/{id}</code></td>
+              </tr>
+              <tr style="background:#f9f9f9;">
+                <td><strong>Reference Date ID</strong></td>
+                <td>The ID of a specific publication date/quarter (e.g. Q1-2024)</td>
+                <td><code>GET /ReferenceDate</code> → pick any <code>id</code> from the response array</td>
+                <td><code>ReferenceDate/{id}</code></td>
+              </tr>
+              <tr>
+                <td><strong>Data Series ID</strong></td>
+                <td>The version of the dataset (datasets are versioned per release)</td>
+                <td><code>GET /DataSeries</code> or <code>GET /DataSeries/GetLastDefinitiveDataSeries</code> → use the <code>id</code> field</td>
+                <td><code>DataSeries/{id}</code></td>
+              </tr>
+              <tr style="background:#f9f9f9;">
+                <td><strong>Upload Record ID</strong> (ReferenceBudget)</td>
+                <td>The internal database row ID of a <em>previously uploaded</em> reference budget file. Does NOT exist until someone has uploaded files via the admin UI.</td>
+                <td><code>POST /ReferenceBudget/take</code> (see body below) → pick any <code>id</code> from <code>response.list</code></td>
+                <td><code>ReferenceBudget/getAll/{id}</code>, <code>ReferenceBudget/file/{id}</code>, <code>ReferenceBudget/delete/{id}</code></td>
+              </tr>
+              <tr>
+                <td><strong>Upload Record ID</strong> (ForecastFigure)</td>
+                <td>The internal row ID of an uploaded forecast figure file</td>
+                <td><code>POST /ForcastFigure/take</code> → pick any <code>id</code> from response list</td>
+                <td><code>ForcastFigure/delete/{id}</code></td>
+              </tr>
+              <tr style="background:#f9f9f9;">
+                <td><strong>Parametric Node ID</strong></td>
+                <td>The ID of a parametric element node in the tree</td>
+                <td><code>GET /ParametricNode</code> → pick any <code>id</code> from the response array</td>
+                <td><code>ParametricNode/{id}</code>, <code>ParametricNode/{id}/CalculatePrice</code></td>
+              </tr>
+              <tr>
+                <td><strong>User Preset ID</strong></td>
+                <td>The ID of a saved flexible-indices preset for a user</td>
+                <td><code>GET /UserPreset/user/{email}</code> → pick any <code>id</code> from the array</td>
+                <td><code>UserPreset/preset/{id}</code>, <code>UserPreset/{id}</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>🔍 Specific Fix: <code>ReferenceBudget/getAll/{id}</code> → 400 Error</h4>
+          <div class="card">
+            <div class="card-title">Why you got 400 — and the exact 3-step fix</div>
+            <p><strong>The problem:</strong> <code>ReferenceBudget/getAll/{id}</code> expects the <strong>internal upload record ID</strong> — a row ID that only exists if files have already been uploaded via the admin upload page. You cannot guess it or pick a random number.</p>
+            <p style="margin-top:0.75rem;"><strong>Step 1 — Get the list of uploaded records first:</strong></p>
+            <ul style="margin: 0.4rem 0 0 1.5rem;">
+              <li>Method: <code>POST</code></li>
+              <li>URL: <code>{{baseUrl}}/ReferenceBudget/take</code></li>
+              <li>Body (raw JSON):</li>
+            </ul>
+            <pre style="background:#1e1e1e;color:#d4d4d4;padding:0.8rem;border-radius:4px;font-size:0.85em;margin:0.5rem 0;"><code>{
+  <span style="color:#9cdcfe;">"skip"</span>: <span style="color:#b5cea8;">0</span>,
+  <span style="color:#9cdcfe;">"take"</span>: <span style="color:#b5cea8;">20</span>,
+  <span style="color:#9cdcfe;">"sort"</span>: [],
+  <span style="color:#9cdcfe;">"filter"</span>: <span style="color:#569cd6;">null</span>
+}</code></pre>
+            <p><strong>Step 2 — Look at the response:</strong></p>
+            <pre style="background:#1e1e1e;color:#d4d4d4;padding:0.8rem;border-radius:4px;font-size:0.85em;margin:0.5rem 0;"><code>{
+  <span style="color:#9cdcfe;">"list"</span>: [
+    {
+      <span style="color:#9cdcfe;">"id"</span>: <span style="color:#b5cea8;">42</span>,   <span style="color:#6a9955;">← THIS is the ID to use</span>
+      <span style="color:#9cdcfe;">"referenceProjectName"</span>: <span style="color:#ce9178;">"Project Amsterdam"</span>,
+      <span style="color:#9cdcfe;">"referenceDateValueFormat"</span>: <span style="color:#ce9178;">"Q1-2024"</span>,
+      <span style="color:#9cdcfe;">"status"</span>: <span style="color:#ce9178;">"Uploaded"</span>
+    }
+  ],
+  <span style="color:#9cdcfe;">"count"</span>: <span style="color:#b5cea8;">1</span>
+}</code></pre>
+            <p><strong>Step 3 — Use that ID in <code>getAll</code>:</strong></p>
+            <pre style="background:#1e1e1e;color:#d4d4d4;padding:0.8rem;border-radius:4px;font-size:0.85em;margin:0.5rem 0;"><code>GET {{baseUrl}}/ReferenceBudget/getAll/42   <span style="color:#6a9955;">← replace 42 with your actual id</span></code></pre>
+            <div style="margin-top:0.75rem;padding:0.6rem 0.8rem;background:#fff3e0;border-left:3px solid #ff9800;border-radius:4px;font-size:0.9em;">
+              ⚠️ <strong>Important:</strong> If <code>list</code> comes back empty (<code>[]</code>), it means <strong>no files have been uploaded yet</strong> to this environment. The <code>getAll/{id}</code> endpoint has nothing to return. You need to use the admin upload page first.
+            </div>
+            <div style="margin-top:0.5rem;padding:0.6rem 0.8rem;background:#fce4ec;border-left:3px solid #e91e63;border-radius:4px;font-size:0.9em;">
+              🔒 <strong>Also:</strong> Both <code>/ReferenceBudget/take</code> and <code>/ReferenceBudget/getAll/{id}</code> require <strong>admin role</strong>. If your token is for a <code>"user"</code> role account, you will get <code>403 Forbidden</code>, not <code>400</code>.
+            </div>
+          </div>
+
+          <h4>📌 General Rule — "List before Detail" Pattern</h4>
+          <p>This pattern applies to <strong>every</strong> <code>{id}</code> endpoint in BDB. Always follow this order:</p>
+          <table>
+            <thead><tr><th>Step</th><th>Call this first (List)</th><th>Then call this (Detail)</th></tr></thead>
+            <tbody>
+              <tr><td>1 → 2</td><td><code>GET /ReferenceProject</code></td><td><code>GET /ReferenceProject/getById/{id}</code></td></tr>
+              <tr style="background:#f9f9f9;"><td>1 → 2</td><td><code>GET /ReferenceDate</code></td><td><code>GET /ReferenceDate/{id}</code></td></tr>
+              <tr><td>1 → 2</td><td><code>GET /DataSeries</code></td><td><code>GET /DataSeries/{id}</code></td></tr>
+              <tr style="background:#f9f9f9;"><td>1 → 2</td><td><code>GET /ParametricNode</code></td><td><code>GET /ParametricNode/{id}</code></td></tr>
+              <tr><td>1 → 2</td><td><code>POST /ReferenceBudget/take</code> (body: <code>{skip:0, take:20, sort:[], filter:null}</code>)</td><td><code>GET /ReferenceBudget/getAll/{id}</code></td></tr>
+              <tr style="background:#f9f9f9;"><td>1 → 2</td><td><code>GET /UserPreset/user/{email}</code></td><td><code>GET /UserPreset/preset/{id}</code></td></tr>
+            </tbody>
+          </table>
+
+          <!-- ══ TIPS ══ -->
+          <h3>💡 Postman Tips for This Project</h3>
+          <table>
+            <thead><tr><th>Tip</th><th>How</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Token expired? Refresh in one place</strong></td>
+                <td>Just update the <code>token</code> variable in the <strong>BDB Dev</strong> environment — all requests auto-pick it up</td>
+              </tr>
+              <tr style="background:#f9f9f9;">
+                <td><strong>Copy the actual URL a request is using</strong></td>
+                <td>After clicking Send, hover over the URL bar — Postman shows the resolved URL with all variables substituted</td>
+              </tr>
+              <tr>
+                <td><strong>See request/response history</strong></td>
+                <td>Click <strong>History</strong> in the left sidebar — every past request is saved</td>
+              </tr>
+              <tr style="background:#f9f9f9;">
+                <td><strong>Save a request to the collection</strong></td>
+                <td>After building a request → click <strong>Save</strong> → choose the <code>BDB API</code> collection → give it a name</td>
+              </tr>
+              <tr>
+                <td><strong>Format JSON body nicely</strong></td>
+                <td>In the Body tab (raw/JSON), click the <strong>Beautify</strong> button (top right of body editor) to auto-indent</td>
+              </tr>
+              <tr style="background:#f9f9f9;">
+                <td><strong>Switch between Dev / UAT / Prod</strong></td>
+                <td>Just change the environment dropdown (top right) — the <code>{{baseUrl}}</code> variable switches automatically</td>
+              </tr>
+              <tr>
+                <td><strong>Don't set Content-Type manually</strong></td>
+                <td>For JSON bodies, Postman sets it automatically. Only set <code>Content-Type: application/json</code> manually if Postman isn't detecting it.</td>
+              </tr>
+              <tr style="background:#f9f9f9;">
+                <td><strong>Blob/binary response looks garbled?</strong></td>
+                <td>That's normal for Excel/PDF responses. Use <strong>Save Response → Save to file</strong> instead of trying to read it in the body panel</td>
+              </tr>
+              <tr>
+                <td><strong>Check exact URL the app calls</strong></td>
+                <td>In the browser Network tab → click the failing request → copy the full URL including path and query params → paste into Postman</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- ══ COMPLETE REQUEST REFERENCE ══ -->
+          <h3>📋 Copy-Paste Request Reference</h3>
+          <p>All endpoints with exact URLs ready to paste into Postman. Replace <code>{{baseUrl}}</code> with your environment variable.</p>
+          <table>
+            <thead><tr><th>Name</th><th>Method</th><th>URL</th><th>Body Required?</th></tr></thead>
+            <tbody>
+              <tr><td>Get My Role</td><td><code>GET</code></td><td><code>{{baseUrl}}/Auth/GetRoles</code></td><td>No</td></tr>
+              <tr style="background:#f9f9f9;"><td>Get My Subscriptions</td><td><code>GET</code></td><td><code>{{baseUrl}}/Auth/GetSubscriptions</code></td><td>No</td></tr>
+              <tr><td>Get My Profile</td><td><code>GET</code></td><td><code>{{baseUrl}}/Profile</code></td><td>No</td></tr>
+              <tr style="background:#f9f9f9;"><td>Update My Profile</td><td><code>PUT</code></td><td><code>{{baseUrl}}/Profile</code></td><td>Yes — JSON Profile object</td></tr>
+              <tr><td>Get All Countries</td><td><code>GET</code></td><td><code>{{baseUrl}}/Country</code></td><td>No</td></tr>
+              <tr style="background:#f9f9f9;"><td>Get All Reference Projects</td><td><code>GET</code></td><td><code>{{baseUrl}}/ReferenceProject</code></td><td>No</td></tr>
+              <tr><td>Get Reference Project by ID</td><td><code>GET</code></td><td><code>{{baseUrl}}/ReferenceProject/getById/1</code></td><td>No</td></tr>
+              <tr style="background:#f9f9f9;"><td>Get Latest Reference Project</td><td><code>GET</code></td><td><code>{{baseUrl}}/ReferenceProject/getByLastDataSeries</code></td><td>No</td></tr>
+              <tr><td>Get All Reference Dates</td><td><code>GET</code></td><td><code>{{baseUrl}}/ReferenceDate</code></td><td>No</td></tr>
+              <tr style="background:#f9f9f9;"><td>Get Latest Data Series</td><td><code>GET</code></td><td><code>{{baseUrl}}/DataSeries/GetLastDefinitiveDataSeries</code></td><td>No</td></tr>
+              <tr><td>Get All Data Series</td><td><code>GET</code></td><td><code>{{baseUrl}}/DataSeries</code></td><td>No</td></tr>
+              <tr style="background:#f9f9f9;"><td>Get Subscription Years</td><td><code>GET</code></td><td><code>{{baseUrl}}/Subscription/GetYears</code></td><td>No</td></tr>
+              <tr><td>Get Subscription Modules</td><td><code>GET</code></td><td><code>{{baseUrl}}/Subscription/GetModulesByCountryAndYear/?countryId=1&amp;year=2024&amp;includeCompanies=false</code></td><td>No</td></tr>
+              <tr style="background:#f9f9f9;"><td>Get Monthly Figures Data</td><td><code>POST</code></td><td><code>{{baseUrl}}/ReportForecastFigures/1?isForecastIncluded=false</code></td><td>Yes — <code>["2023-01-01","2023-04-01"]</code></td></tr>
+              <tr><td>Download Monthly Figures Excel</td><td><code>POST</code></td><td><code>{{baseUrl}}/ReportForecastFigures/report/1?isForecastIncluded=false&amp;format=excel</code></td><td>Yes — same date array</td></tr>
+              <tr style="background:#f9f9f9;"><td>Get Market Indicator</td><td><code>GET</code></td><td><code>{{baseUrl}}/ReportMarketIndicator?startDate=2022-10-01&amp;endDate=2024-09-22</code></td><td>No</td></tr>
+              <tr><td>Get Market Trends</td><td><code>GET</code></td><td><code>{{baseUrl}}/ReportTrends</code></td><td>No</td></tr>
+              <tr style="background:#f9f9f9;"><td>Get Indicator Trends</td><td><code>POST</code></td><td><code>{{baseUrl}}/ReportTrends?isTrendsIncluded=false</code></td><td>Yes — <code>["2023-01-01"]</code></td></tr>
+              <tr><td>Get Aspect Ratio Countries</td><td><code>GET</code></td><td><code>{{baseUrl}}/DesignKeyCostFigures/GetProjectAnalyseCountries</code></td><td>No</td></tr>
+              <tr style="background:#f9f9f9;"><td>Get Parametric Nodes</td><td><code>GET</code></td><td><code>{{baseUrl}}/ParametricNode</code></td><td>No</td></tr>
+              <tr><td>Search Parametric Nodes</td><td><code>GET</code></td><td><code>{{baseUrl}}/ParametricNode/search?description=beton</code></td><td>No</td></tr>
+              <tr style="background:#f9f9f9;"><td>Get Detailed Indices Products</td><td><code>GET</code></td><td><code>{{baseUrl}}/ReportElementClusters/GetProductList</code></td><td>No</td></tr>
+              <tr><td>Get User Presets</td><td><code>GET</code></td><td><code>{{baseUrl}}/UserPreset/user/your.email@arcadis.com</code></td><td>No</td></tr>
+              <tr style="background:#f9f9f9;"><td>Get Latest Published Date</td><td><code>GET</code></td><td><code>{{baseUrl}}/ReferenceDatePublished/getLatest/1</code></td><td>No</td></tr>
+            </tbody>
+          </table>
         </section>
 
         <!-- ─── Troubleshooting ─── -->
