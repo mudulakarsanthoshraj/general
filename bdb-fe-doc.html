@@ -858,6 +858,17 @@
             </tbody>
           </table>
 
+          <h4>Company-Specific Navigation (Company ID 55)</h4>
+          <p>The sidebar applies tenant-specific menu rules via <code>allowedCompanyIds</code> / <code>blockedCompanyIds</code> in <code>SideBar.tsx</code>:</p>
+          <table>
+            <thead><tr><th>Company ID</th><th>Aspect Ratio menu</th><th>E235 Benchmark menu</th></tr></thead>
+            <tbody>
+              <tr><td>All except 55</td><td>Visible</td><td>Hidden</td></tr>
+              <tr style="background:#f9f9f9;"><td>55 only</td><td>Hidden</td><td>Visible</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:0.9em;color:#555;">Route-level subscription checks still apply — company 55 users need <code>E235 RVB Benchmark</code>; other companies need <code>BDB Vormfactoren en Kostenkengetallen</code> for aspect ratio pages.</p>
+
           <!-- ══════════════════════════════════════════════
                4. ALL ROUTES
           ══════════════════════════════════════════════ -->
@@ -909,6 +920,7 @@
               <tr style="background:#f9f9f9;"><td><code>/products/woningbouw-onderhoud-en-verduurzamingsindex</code></td><td><code>WoningbouwOnderhoudVerduurzamingsindex</code></td><td><code>BDB WOV</code></td></tr>
             </tbody>
           </table>
+          <p style="font-size:0.9em;color:#555;"><strong>Sidebar note:</strong> <code>/products/market-indicator</code> and <code>/products/market-trends</code> are valid routes but are <em>not</em> linked in the sidebar. The sidebar links to <code>/products/indicator-trends</code> (combined view) instead.</p>
 
           <h4>Admin-Only Routes — Role must be <code>"admin"</code></h4>
           <table>
@@ -1206,16 +1218,17 @@
           <table>
             <thead><tr><th>File</th><th>What it does</th></tr></thead>
             <tbody>
-              <tr><td><code>src/main.tsx</code></td><td>App entry point — mounts React, wraps with Redux <code>Provider</code> and MSAL <code>MsalProvider</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><code>src/App.tsx</code></td><td>Root component — acquires the auth token and fetches the user profile on first load</td></tr>
+              <tr><td><code>src/main.tsx</code></td><td>App entry point — mounts React, wraps with MSAL <code>MsalProvider</code>, <code>ThemeProvider</code>, and sets AG Grid license key</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>src/App.tsx</code></td><td>Root component — acquires auth token, fetches profile, wraps with Redux <code>Provider</code>, snackbar, session timeout dialog, and router</td></tr>
               <tr><td><code>src/router.tsx</code></td><td>All route definitions — paths, page components, auth guards, and breadcrumbs</td></tr>
               <tr style="background:#f9f9f9;"><td><code>src/auth-config.ts</code></td><td>Azure B2C / MSAL configuration — tenant, client ID, policies, scopes, redirects</td></tr>
               <tr><td><code>src/i18n.ts</code></td><td>i18next setup — fetches translations from the Arcadis cloud platform at runtime (not local files)</td></tr>
               <tr style="background:#f9f9f9;"><td><code>src/services/common/HttpCommon.ts</code></td><td>Axios base instance — sets base URL from env, and injects <code>Authorization: Bearer {token}</code> on every request</td></tr>
               <tr><td><code>src/hooks/auth.hook.ts</code></td><td>Manages MSAL token acquisition and silent refresh</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>src/hooks/subscription.hook.ts</code></td><td>Fetches and caches user role + subscriptions — used by <code>PrivateRoute</code> to gate access</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>src/hooks/subscription.hook.ts</code></td><td>Fetches user role + subscriptions on mount — used by <code>PrivateRoute</code> to gate access</td></tr>
               <tr><td><code>src/components/PrivateRoute/PrivateRoute.tsx</code></td><td>Route guard — checks auth, role, and subscriptions before rendering a page. Redirects to <code>/upgrade</code> if subscription missing, <code>/unauthorized</code> if not admin.</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>src/components/SideBar/SideBar.tsx</code></td><td>Left navigation — conditionally shows/hides product links based on user subscriptions and role</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>src/components/SideBar/SideBar.tsx</code></td><td>Left navigation — filters menu items by auth, admin role, and company ID via <code>filterMenuItems.ts</code> (subscription gating is handled by <code>PrivateRoute</code>, not the sidebar)</td></tr>
+              <tr><td><code>src/utils/filterMenuItems.ts</code></td><td>Sidebar visibility rules — <code>requiresAuth</code>, <code>requiresAdmin</code>, <code>allowedCompanyIds</code>, <code>blockedCompanyIds</code></td></tr>
               <tr><td><code>src/context/appState.context.tsx</code></td><td>React Context — holds the global <code>clientId</code> (selected company) shared across pages</td></tr>
               <tr style="background:#f9f9f9;"><td><code>src/utils/app-storage.ts</code></td><td>Thin wrapper over <code>sessionStorage</code> — get/set access token, clientId, userId</td></tr>
               <tr><td><code>src/utils/reportDownloader.ts</code></td><td>Downloads blob responses as files and automatically logs each download via <code>LogDataService</code></td></tr>
@@ -1232,8 +1245,9 @@
           <!-- ══════════════════════════════════════════════
                7. ENVIRONMENT VARIABLES
           ══════════════════════════════════════════════ -->
-          <h3>7 — ⚙️ All Environment Variables</h3>
-          <p>Set in <code>.env.development</code>, <code>.env.uat</code>, and <code>.env.production</code>. Only <code>VITE_*</code> prefixed variables are exposed to the browser bundle.</p>
+          <h3>7 — ⚙️ Environment Variables</h3>
+          <p>Set in <code>.env.development</code>, <code>.env.uat</code>, and <code>.env.production</code>. Only <code>VITE_*</code> prefixed variables are exposed to the browser bundle by default.</p>
+          <h4>Used in source code</h4>
           <table>
             <thead><tr><th>Variable</th><th>Dev Value</th><th>UAT Value</th><th>Prod Value</th></tr></thead>
             <tbody>
@@ -1244,15 +1258,22 @@
               <tr><td><code>VITE_REACT_APP_CLIENT_ID_LANDING</code></td><td><code>27848361-a66e-4158-856c-8414a88f7053</code></td><td><code>27848361-a66e-4158-856c-8414a88f7053</code></td><td><code>f176f4a6-61ee-41b9-a3ff-c93a6e09e188</code></td></tr>
               <tr style="background:#f9f9f9;"><td><code>VITE_REACT_APP_OAUTH_SCOPES</code></td><td><code>https://ArcadisB2CDEV.onmicrosoft.com/27848361-.../access-api</code></td><td><code>https://ArcadisB2CDEV.onmicrosoft.com/27848361-.../access-api</code></td><td><code>https://ArcadisB2C.onmicrosoft.com/f176f4a6-.../access-api</code></td></tr>
               <tr><td><code>VITE_REACT_APP_SIGN_UP_SIGN_IN_POLICY</code></td><td colspan="3"><code>B2C_1A_BDB_SIGNUPSIGNIN</code> (same across all environments)</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>VITE_REACT_APP_PASSWORD_RESET_POLICY</code></td><td colspan="3"><code>B2C_1A_GLOBAL_PasswordReset</code> (same across all environments)</td></tr>
-              <tr><td><code>VITE_REACT_APP_ENVIRONMENT</code></td><td><code>"development"</code></td><td><code>"uat"</code></td><td><code>"production"</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><code>VITE_REACT_APP_API_ENDPOINT</code></td><td><code>https://devbdb.arcadis.com/api/bdbapi/api</code></td><td><code>https://uatbdb.arcadis.com/api/bdbapi/api</code></td><td><code>https://bdb.eu/api/bdbapi/api</code></td></tr>
-              <tr><td><code>VITE_REACT_APP_PROXY_API_URL</code></td><td><code>https://arcadisiam-dev.azurefd.net/api/admin/v1.0</code></td><td><code>https://arcadisiam-dev.azurefd.net/api/admin/v1.0</code></td><td><code>https://arcadisiam.azurefd.net/api/admin/v1.0</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><code>VITE_REACT_APP_PROXY_API_LANDING_URL</code></td><td><code>https://arcadisiam-dev.azurefd.net/api/apps</code></td><td><code>https://arcadisiam-dev.azurefd.net/api/apps</code></td><td><code>https://arcadisiam.azurefd.net/api/apps</code></td></tr>
-              <tr><td><code>VITE_REACT_APP_B2C_METADATA</code></td><td colspan="3">Full B2C metadata JSON (issuer, token endpoint, logout endpoint, JWKS URI). Hardcoded in each <code>.env.*</code> file for reliability — see the env files for full JSON.</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>VITE_AGGRID_LICENSE_KEY</code></td><td colspan="3">AG Grid Enterprise license key. Same key across all environments. Expires <strong>19 Sep 2026</strong>. Licensed to Arcadis Global B.V. for the BDB application.</td></tr>
-              <tr><td><code>REACT_APP_FEATURE_SEARCH</code></td><td colspan="3"><code>false</code> — feature flag, currently disabled in all environments</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>REACT_APP_FEATURE_NOTIFICATIONS</code></td><td colspan="3"><code>false</code> — feature flag, currently disabled in all environments</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>VITE_REACT_APP_B2C_METADATA</code></td><td colspan="3">Full B2C metadata JSON (issuer, token endpoint, logout endpoint, JWKS URI). Hardcoded in each <code>.env.*</code> file for reliability — see the env files for full JSON.</td></tr>
+              <tr><td><code>VITE_AGGRID_LICENSE_KEY</code></td><td colspan="3">AG Grid Enterprise license key. Same key across all environments. Expires <strong>19 Sep 2026</strong>. Licensed to Arcadis Global B.V. for the BDB application.</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>REACT_APP_FEATURE_SEARCH</code></td><td colspan="3"><code>false</code> — feature flag in <code>src/utils/features.ts</code>, currently disabled (note: uses <code>REACT_APP_</code> prefix, not <code>VITE_</code>)</td></tr>
+              <tr><td><code>REACT_APP_FEATURE_NOTIFICATIONS</code></td><td colspan="3"><code>false</code> — controls <code>NotificationCenter</code> in header; currently disabled in all environments</td></tr>
+            </tbody>
+          </table>
+          <h4>Present in env files but not referenced in <code>src/</code></h4>
+          <p style="font-size:0.9em;color:#555;">These may exist in <code>.env.*</code> files for legacy or external tooling — the frontend source does not read them:</p>
+          <table>
+            <thead><tr><th>Variable</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><code>VITE_REACT_APP_PASSWORD_RESET_POLICY</code></td><td><code>B2C_1A_GLOBAL_PasswordReset</code> — not used in <code>auth-config.ts</code></td></tr>
+              <tr style="background:#f9f9f9;"><td><code>VITE_REACT_APP_ENVIRONMENT</code></td><td>Environment label (<code>development</code> / <code>uat</code> / <code>production</code>)</td></tr>
+              <tr><td><code>VITE_REACT_APP_API_ENDPOINT</code></td><td>Duplicate of API URL — use <code>VITE_REACT_APP_API_URL</code> instead</td></tr>
+              <tr style="background:#f9f9f9;"><td><code>VITE_REACT_APP_PROXY_API_URL</code></td><td>Arcadis IAM proxy — not used by this app</td></tr>
+              <tr><td><code>VITE_REACT_APP_PROXY_API_LANDING_URL</code></td><td>Arcadis IAM apps proxy — not used by this app</td></tr>
             </tbody>
           </table>
 
@@ -1398,7 +1419,7 @@
               </tr>
               <tr>
                 <td><strong>Node Version</strong></td>
-                <td>>= 16.0.0</td>
+                <td>>= 18.0.0 (CI uses Node 18)</td>
               </tr>
               <tr>
                 <td><strong>License</strong></td>
@@ -1415,7 +1436,7 @@
                 <li><strong>React 18.3.1:</strong> UI library with hooks and modern patterns</li>
                 <li><strong>TypeScript 5.6.2:</strong> Type-safe development</li>
                 <li><strong>Vite 6.0.3:</strong> Lightning-fast build tool and dev server</li>
-                <li><strong>React Router 7.0.2:</strong> Client-side routing</li>
+                <li><strong>React Router 7.x:</strong> Client-side routing (nested layouts, route guards)</li>
               </ul>
             </div>
             <div class="col today">
@@ -1471,7 +1492,7 @@
           <div class="card warning">
             <div class="card-title">Required Software</div>
             <ul>
-              <li><strong>Node.js:</strong> Version 16.0.0 or higher</li>
+              <li><strong>Node.js:</strong> Version 18.0.0 or higher (matches CI workflows)</li>
               <li><strong>npm:</strong> Version 8.0.0 or higher (comes with Node.js)</li>
               <li><strong>Git:</strong> For cloning the repository</li>
               <li><strong>Code Editor:</strong> VS Code recommended</li>
@@ -1732,7 +1753,6 @@ npm run dev
 │   │   ├── auth.hook.ts
 │   │   ├── subscription.hook.ts
 │   │   └── ...
-│   ├── interfaces/         <span class="c-com"># TypeScript interfaces</span>
 │   ├── layout/             <span class="c-com"># Page layout components</span>
 │   │   ├── index.tsx       <span class="c-com"># BaseLayout</span>
 │   │   └── AccountSettings/
@@ -1786,7 +1806,7 @@ npm run dev
             <div class="example-step">
               <div class="num">2</div>
               <strong>App Component</strong><br />
-              <code>App.tsx</code> handles auth and provides context
+              <code>App.tsx</code> handles auth, profile load, Redux provider, snackbar, session timeout
             </div>
             <div class="example-step">
               <div class="num">3</div>
@@ -2159,17 +2179,17 @@ dispatch(showSnackbar({ message: <span class="c-str">"Data saved successfully"</
           <h2>Routing & Navigation</h2>
           <p class="section-subtitle">
             The application uses React Router v7 for client-side routing with nested routes and breadcrumb support.
-            <strong>Why React Router v7?</strong> Type-safe routing, nested layouts, automatic code splitting, and built-in data loading patterns.
+            <strong>Why React Router v7?</strong> Type-safe routing, nested layouts, and declarative route guards via <code>PrivateRoute</code>.
           </p>
 
           <div class="card brand">
             <div class="card-title">Routing Architecture Benefits</div>
             <ul style="margin: 0.5rem 0 0 1rem;">
               <li><strong>Nested Routes:</strong> <code>BaseLayout</code> wraps all pages → consistent header/sidebar without prop drilling</li>
-              <li><strong>Route Guards:</strong> <code>PrivateRoute</code> wrapper checks authentication before rendering → security at routing level</li>
-              <li><strong>Code Splitting:</strong> Each route lazy-loaded → faster initial page load (only dashboard code loads on <code>/dashboard</code>)</li>
-              <li><strong>Breadcrumbs:</strong> Custom <code>BreadcrumbRouteObject</code> type → automatic navigation trail (e.g., Home → Dashboard → Monthly Figures)</li>
-              <li><strong>Type Safety:</strong> TypeScript validates all route paths and params at compile time</li>
+              <li><strong>Route Guards:</strong> <code>PrivateRoute</code> wrapper checks authentication, admin role, and subscriptions before rendering</li>
+              <li><strong>Static Imports:</strong> All page components are eagerly imported in <code>router.tsx</code> (no <code>React.lazy</code> code splitting yet)</li>
+              <li><strong>Breadcrumbs:</strong> Custom <code>BreadcrumbRouteObject</code> type → automatic navigation trail (e.g., Home → Monthly & Forecast Figures)</li>
+              <li><strong>Type Safety:</strong> TypeScript validates route configuration at compile time</li>
             </ul>
           </div>
 
@@ -2211,6 +2231,7 @@ dispatch(showSnackbar({ message: <span class="c-str">"Data saved successfully"</
 ]);</code></pre>
 
           <h3>Key Routes</h3>
+          <p style="font-size:0.9em;color:#555;">Product pages live under <code>/products/*</code>. See Quick Reference section 4 for the full route table including subscription requirements.</p>
           <table>
             <thead>
               <tr>
@@ -2240,34 +2261,40 @@ dispatch(showSnackbar({ message: <span class="c-str">"Data saved successfully"</
                 <td>Main dashboard with customizable tiles</td>
               </tr>
               <tr>
-                <td><code>/monthly-figures</code></td>
+                <td><code>/products/monthly-figures</code></td>
                 <td>MonthlyFigures</td>
-                <td>Yes</td>
+                <td>Yes + subscription</td>
                 <td>Construction cost indices over time</td>
               </tr>
               <tr>
-                <td><code>/market-indicator</code></td>
+                <td><code>/products/market-indicator</code></td>
                 <td>MarketIndicator</td>
-                <td>Yes</td>
-                <td>Market trends and indicators</td>
+                <td>Yes + subscription</td>
+                <td>Market indicator (routable; not in sidebar)</td>
               </tr>
               <tr>
-                <td><code>/aspect-ratio</code></td>
+                <td><code>/products/indicator-trends</code></td>
+                <td>MarketIndicatorTrends</td>
+                <td>Yes + subscription</td>
+                <td>Combined indicator &amp; trends (linked in sidebar)</td>
+              </tr>
+              <tr>
+                <td><code>/products/aspect-ratio</code></td>
                 <td>AspectRatioPage</td>
-                <td>Yes</td>
-                <td>Cost breakdown analysis</td>
+                <td>Yes + subscription</td>
+                <td>Design key cost figures / aspect ratio</td>
               </tr>
               <tr>
-                <td><code>/parametric-element</code></td>
+                <td><code>/products/parametric-elements/:elementId</code></td>
                 <td>ParametricElement</td>
-                <td>Yes</td>
-                <td>Element cost analysis</td>
+                <td>Yes + subscription</td>
+                <td>Parametric element detail</td>
               </tr>
               <tr>
-                <td><code>/ad-hoc-projects</code></td>
+                <td><code>/projects</code></td>
                 <td>ProjectsPage</td>
                 <td>Yes</td>
-                <td>Project management</td>
+                <td>Ad hoc reference projects</td>
               </tr>
               <tr>
                 <td><code>/uploads/*</code></td>
@@ -2305,28 +2332,28 @@ dispatch(showSnackbar({ message: <span class="c-str">"Data saved successfully"</
 
 <span class="c-com">// Example: Static breadcrumb</span>
 {
-  path: <span class="c-str">"/monthly-figures"</span>,
-  breadcrumb: <span class="c-str">"Monthly Figures"</span>,  <span class="c-com">// Simple string</span>
+  path: <span class="c-str">"/products/monthly-figures"</span>,
+  breadcrumb: <span class="c-str">"Monthly & Forecast Figures"</span>,
   element: <span class="c-key">&lt;MonthlyFigures /&gt;</span>
 }
 
 <span class="c-com">// Example: Dynamic breadcrumb with route params</span>
 {
-  path: <span class="c-str">"/projects/:projectId"</span>,
-  breadcrumb: (params) => `Project ${params.projectId}`,  <span class="c-com">// Dynamic based on URL param</span>
-  element: <span class="c-key">&lt;ProjectDetail /&gt;</span>
+  path: <span class="c-str">":elementId"</span>,
+  breadcrumb: (params) => params.elementId,
+  element: <span class="c-key">&lt;ParametricElement /&gt;</span>
 }
 
-<span class="c-com">// Result: Home > Dashboard > Projects > Project 123</span></code></pre>
+<span class="c-com">// Result: Home > Parametric Elements > {elementId}</span></code></pre>
 
           <div class="card accent">
             <div class="card-title">Breadcrumb Trail Example</div>
-            <p><strong>User navigates to:</strong> <code>/dashboard/monthly-figures</code></p>
+            <p><strong>User navigates to:</strong> <code>/products/monthly-figures</code></p>
             <p><strong>Breadcrumb component generates:</strong></p>
             <p style="font-family: monospace; background: #f5f5f5; padding: 0.5rem; border-radius: 4px; margin: 0.5rem 0;">
-              Home › Dashboard › Monthly Figures
+              Home › Monthly & Forecast Figures
             </p>
-            <p><strong>How:</strong> Traverses route tree from root (<code>/</code>) → <code>/dashboard</code> → <code>/monthly-figures</code>, collects breadcrumb values</p>
+            <p><strong>How:</strong> Traverses route tree from root (<code>/</code>) → <code>/products/monthly-figures</code>, collects breadcrumb values</p>
           </div>
           
           <p style="margin-top: 1rem;">
@@ -2343,7 +2370,7 @@ dispatch(showSnackbar({ message: <span class="c-str">"Data saved successfully"</
               <ul>
                 <li><strong>Logo & Branding:</strong> Arcadis logo, clickable → returns to dashboard</li>
                 <li><strong>User Menu:</strong> Profile dropdown with account settings, logout</li>
-                <li><strong>Notifications:</strong> Bell icon with unread count badge</li>
+                <li><strong>Notifications:</strong> Shown only when <code>REACT_APP_FEATURE_NOTIFICATIONS=true</code> (currently disabled)</li>
                 <li><strong>Language Selector:</strong> Switch between Dutch (nl) and English (en)</li>
                 <li><strong>Theme Toggle:</strong> Light/dark mode switcher</li>
                 <li><strong>Mobile Menu:</strong> Hamburger icon triggers sidebar drawer on small screens</li>
@@ -2357,21 +2384,28 @@ dispatch(showSnackbar({ message: <span class="c-str">"Data saved successfully"</
                 <li><strong>Collapsible:</strong> Expand/collapse button → saves screen space</li>
                 <li><strong>Active Highlighting:</strong> Current page highlighted with accent color</li>
                 <li><strong>Responsive Drawer:</strong> Fixed sidebar on desktop, drawer overlay on mobile</li>
-                <li><strong>Subscription-Based:</strong> Menu items shown/hidden based on user's subscription tier</li>
+                <li><strong>Auth &amp; Admin Filtering:</strong> Menu items filtered by login state and admin role</li>
+                <li><strong>Company Filtering:</strong> E235 vs Aspect Ratio menus depend on company ID (see company 55 rules)</li>
                 <li><strong>Admin Section:</strong> Upload pages only visible to admin users</li>
               </ul>
             </div>
           </div>
 
           <div class="card brand">
-            <div class="card-title">Subscription-Based Navigation Logic</div>
-            <p><strong>Problem:</strong> Not all users have access to all features (depends on subscription plan)</p>
-            <p><strong>Solution:</strong> SideBar reads user profile → filters menu items based on <code>user.subscriptionModules</code></p>
-            <p><strong>Example:</strong> User with "Basic" plan sees: Dashboard, Monthly Figures. User with "Premium" plan also sees: Market Indicator, Aspect Ratio, Parametric Elements</p>
-            <pre style="background: #f5f5f5; padding: 0.5rem; border-radius: 4px; margin-top: 0.5rem;"><code style="font-size: 0.9em;"><span class="c-com">// In SideBar.tsx</span>
-<span class="c-key">const</span> visibleMenuItems = menuItems.filter(item => 
-  user.subscriptionModules.includes(item.moduleId)
-);</code></pre>
+            <div class="card-title">Navigation vs Subscription Access</div>
+            <p><strong>Sidebar</strong> does <em>not</em> hide items based on subscription. It filters by:</p>
+            <ul style="margin: 0.5rem 0 0 1rem;">
+              <li><code>requiresAuth</code> — must be logged in</li>
+              <li><code>requiresAdmin</code> — upload section for admins only</li>
+              <li><code>allowedCompanyIds</code> / <code>blockedCompanyIds</code> — company-specific menus (e.g. E235 for company 55)</li>
+            </ul>
+            <p><strong>Subscription gating</strong> happens at the route level via <code>PrivateRoute</code>. Users without the required subscription who click a product link are redirected to <code>/upgrade</code>.</p>
+            <pre style="background: #f5f5f5; padding: 0.5rem; border-radius: 4px; margin-top: 0.5rem;"><code style="font-size: 0.9em;"><span class="c-com">// In SideBar.tsx — via filterMenuItems.ts</span>
+<span class="c-key">const</span> visibleMenuItems = filterMenuItems(MenuItemsList, {
+  isAuthenticated,
+  isAdmin: role?.toLowerCase() === <span class="c-str">"admin"</span>,
+  companyId: resolvedCompanyId,
+});</code></pre>
           </div>
 
           <h3>Layout Structure</h3>
@@ -2426,18 +2460,18 @@ dispatch(showSnackbar({ message: <span class="c-str">"Data saved successfully"</
           <p><strong>Customization Features:</strong></p>
           <ul>
             <li><strong>Show/Hide:</strong> Click customize button → toggle which tiles display (minimum 1 tile required)</li>
-            <li><strong>Drag & Drop:</strong> Reorder tiles by dragging → layout persists in localStorage</li>
+            <li><strong>Drag & Drop:</strong> Reorder tiles in the <code>CustomizeDashboardDialog</code> via <code>@dnd-kit</code> → order persists in localStorage</li>
             <li><strong>Responsive Grid:</strong> 2 columns on desktop, 1 column on mobile</li>
-            <li><strong>Auto-Hide Logic:</strong> Tiles for unsubscribed products automatically hidden (e.g., no Market Indicator subscription = tile hidden)</li>
-            <li><strong>Settings Persistence:</strong> <code>localStorage.dashboardLayout</code> stores user preferences → survives page refresh</li>
+            <li><strong>Auto-Hide Logic:</strong> Tiles for unsubscribed products automatically hidden on the dashboard (e.g., no Market Indicator subscription = tile hidden)</li>
+            <li><strong>Settings Persistence:</strong> <code>localStorage.dashboard_selected_tiles</code> and <code>localStorage.dashboard_ordered_tiles</code> store user preferences</li>
           </ul>
 
           <div class="card accent">
             <div class="card-title">Dashboard User Flow</div>
-            <p><strong>1. User lands on dashboard:</strong> <code>Dashboard.tsx</code> fetches profile → checks subscriptions → renders visible tiles</p>
-            <p><strong>2. Tile data loading:</strong> Each tile makes its own API call (e.g., <code>MonthlyFiguresService.getLatest()</code> for figures tile)</p>
+            <p><strong>1. User lands on dashboard:</strong> <code>Dashboard.tsx</code> checks subscriptions via <code>useUserSubscriptions</code> → renders visible tiles</p>
+            <p><strong>2. Tile data loading:</strong> Each tile makes its own API call (e.g., monthly figures preview in <code>IndexFigureTile</code>)</p>
             <p><strong>3. Customization:</strong> User clicks customize icon → <code>CustomizeDashboardDialog</code> opens → checkboxes for each tile</p>
-            <p><strong>4. Reordering:</strong> User drags tile → <code>react-beautiful-dnd</code> library handles drag logic → new order saved to localStorage</p>
+            <p><strong>4. Reordering:</strong> User drags tiles in the dialog → <code>@dnd-kit</code> handles drag logic → new order saved to <code>dashboard_ordered_tiles</code></p>
           </div>
 
           <h3>Monthly Figures</h3>
@@ -3331,28 +3365,26 @@ downloadAndLogReport({
 );</code></pre>
 
           <h3>Redux Store (Notifications)</h3>
-          <pre><code><span class="c-com">// SnackbarNotification/store.ts</span>
-<span class="c-key">import</span> { configureStore, createSlice } <span class="c-key">from</span> <span class="c-str">"@reduxjs/toolkit"</span>;
-
+          <pre><code><span class="c-com">// SnackbarNotification/SnackbarSlice.ts</span>
 <span class="c-key">const</span> snackbarSlice = createSlice({
   name: <span class="c-str">"snackbar"</span>,
-  initialState: { open: <span class="c-key">false</span>, message: <span class="c-str">""</span>, severity: <span class="c-str">"info"</span> },
+  initialState: { isOpen: <span class="c-key">false</span>, message: <span class="c-str">""</span>, severity: <span class="c-str">"success"</span> },
   reducers: {
-    showSnackbar: (state, action) => ({
-      ...state,
-      open: <span class="c-key">true</span>,
-      message: action.payload.message,
-      severity: action.payload.severity,
-    }),
-    hideSnackbar: (state) => ({ ...state, open: <span class="c-key">false</span> }),
+    showSnackbar(state, action) {
+      state.isOpen = <span class="c-key">true</span>;
+      state.message = action.payload.message;
+      state.severity = action.payload.severity;
+    },
+    closeSnackbar(state) {
+      state.isOpen = <span class="c-key">false</span>;
+    },
   },
 });
 
+<span class="c-com">// SnackbarNotification/store.ts</span>
 <span class="c-key">const</span> store = configureStore({
-  reducer: { snackbar: snackbarSlice.reducer },
-});
-
-<span class="c-key">export default</span> store;</code></pre>
+  reducer: { snackbar: snackbarReducer },
+});</code></pre>
 
           <h3>Local State (Component Level)</h3>
           <p>
@@ -3834,7 +3866,7 @@ describe(<span class="c-str">"useMonthlyFigures"</span>, () => {
               <tr>
                 <td><code>.env.uat</code></td>
                 <td>UAT environment</td>
-                <td>UAT-specific endpoint</td>
+                <td>https://uatbdb.arcadis.com/api/bdbapi/api/</td>
               </tr>
               <tr>
                 <td><code>.env.production</code></td>
@@ -4007,13 +4039,52 @@ npm run build:prd      <span class="c-com"># Uses .env.production</span></code><
               </tr>
               <tr>
                 <td>UAT</td>
-                <td>UAT-specific URL</td>
+                <td>https://uatbdb.arcadis.com</td>
                 <td><code>npm run build:uat</code></td>
               </tr>
               <tr>
                 <td>Production</td>
                 <td>https://bdb.eu</td>
                 <td><code>npm run build:prd</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>GitHub Actions CI/CD</h3>
+          <p>Workflows in <code>.github/workflows/</code> run on self-hosted Linux runners with Node 18:</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Workflow</th>
+                <th>Trigger</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>sq.yml</code></td>
+                <td>PR / push to <code>develop</code> or <code>master</code></td>
+                <td>Tests + SonarQube quality gate</td>
+              </tr>
+              <tr>
+                <td><code>az-deploy.yml</code></td>
+                <td>Push to <code>develop</code></td>
+                <td>Build dev → deploy to <code>app-bdbui-dev-001</code></td>
+              </tr>
+              <tr>
+                <td><code>az-tst-deploy.yml</code></td>
+                <td>Push to <code>releases/*</code></td>
+                <td>Build UAT → deploy to <code>app-bdbui-tst-001</code></td>
+              </tr>
+              <tr>
+                <td><code>az-prd-deploy.yml</code></td>
+                <td>Push to <code>master</code></td>
+                <td>Build prod → deploy to <code>app-bdbui-prd-001</code></td>
+              </tr>
+              <tr>
+                <td><code>package-scanner.yml</code></td>
+                <td>Daily cron</td>
+                <td>NPM dependency security scan</td>
               </tr>
             </tbody>
           </table>
@@ -4033,11 +4104,10 @@ npm run build:prd      <span class="c-com"># Uses .env.production</span></code><
           <div class="card brand">
             <div class="card-title">Build Optimizations</div>
             <ul>
-              <li><strong>Code Splitting:</strong> Automatic chunk splitting by Vite</li>
+              <li><strong>Code Splitting:</strong> Vite automatic chunk splitting at build time (routes are not lazy-loaded yet)</li>
               <li><strong>Tree Shaking:</strong> Removes unused code</li>
               <li><strong>Minification:</strong> JS and CSS minified in production</li>
               <li><strong>Asset Optimization:</strong> Images and fonts optimized</li>
-              <li><strong>Lazy Loading:</strong> Route-based code splitting</li>
             </ul>
           </div>
         </section>
@@ -4197,7 +4267,7 @@ npm run build:prd      <span class="c-com"># Uses .env.production</span></code><
               <li>Clone repo: <code>git clone [repo-url]</code></li>
               <li>Install: <code>npm install</code></li>
               <li>Start: <code>npm run dev</code></li>
-              <li>Open: <code>http://localhost:5173</code></li>
+              <li>Open: <code>http://localhost:3000</code></li>
             </ol>
           </div>
 
@@ -4453,7 +4523,7 @@ npm run test:ui</code></pre>
             <div class="card-title">App slow on first load?</div>
             <p><strong>Quick fixes:</strong></p>
             <ul style="margin: 0.5rem 0 0 1rem;">
-              <li><strong>Lazy load pages:</strong> <code>const Page = lazy(() => import("./Page"))</code></li>
+              <li><strong>Consider lazy loading:</strong> Routes currently use static imports; add <code>React.lazy()</code> in <code>router.tsx</code> if bundle size is a concern</li>
               <li><strong>Tree-shake imports:</strong> <code>import {'{Button}'} from "@mui/material"</code></li>
               <li><strong>Remove unused deps:</strong> Check <code>package.json</code></li>
               <li><strong>Check bundle size:</strong> Run <code>npm run build</code> → check <code>dist/</code></li>
@@ -4474,14 +4544,12 @@ npm run test:ui</code></pre>
 
           <div class="card brand">
             <div class="card-title">How does deployment work?</div>
-            <p><strong>Automated CI/CD pipeline:</strong></p>
+            <p><strong>GitHub Actions CI/CD pipeline:</strong></p>
             <ol style="margin: 0.5rem 0 0 1rem; font-size: 0.95em;">
-              <li>Push to <code>develop</code> branch</li>
-              <li>Azure Pipeline: lint → test → build</li>
-              <li>Auto-deploy to dev (<code>devbdb.arcadis.com</code>)</li>
-              <li>QA testing</li>
-              <li>Merge to <code>main</code></li>
-              <li>Deploy to UAT → Production (<code>bdb.eu</code>)</li>
+              <li>Push to <code>develop</code> → <code>az-deploy.yml</code> → dev (<code>devbdb.arcadis.com</code>)</li>
+              <li>Push to <code>releases/*</code> → <code>az-tst-deploy.yml</code> → UAT (<code>uatbdb.arcadis.com</code>)</li>
+              <li>Push to <code>master</code> → <code>az-prd-deploy.yml</code> → production (<code>bdb.eu</code>)</li>
+              <li>All pipelines: SonarQube scan → environment-specific Vite build → Azure Web App deploy</li>
             </ol>
           </div>
 
@@ -4489,10 +4557,9 @@ npm run test:ui</code></pre>
             <div class="card-title">Which version is in production?</div>
             <p><strong>Check version:</strong></p>
             <ul style="margin: 0.5rem 0 0 1rem;">
-              <li><strong>Browser console:</strong> <code>console.log(import.meta.env.VITE_APP_VERSION)</code></li>
-              <li><strong>Network tab:</strong> Check response headers (<code>X-Build-Version</code>)</li>
-              <li><strong>Footer:</strong> Version number displayed at bottom</li>
-              <li><strong>Azure DevOps:</strong> Releases → Production</li>
+              <li><strong>package.json:</strong> <code>version</code> field (currently <code>0.0.0</code>)</li>
+              <li><strong>GitHub Actions:</strong> Check workflow run for the deployed commit SHA</li>
+              <li><strong>Azure DevOps / GitHub:</strong> Releases and deployment history</li>
             </ul>
           </div>
 
@@ -5128,7 +5195,7 @@ console.log(appStorage.getExpirationTime());</code></pre>
           <h4>Large Bundle Size</h4>
           <ul>
             <li>Run <code>npm run build</code> and check dist/ folder size</li>
-            <li>Consider lazy loading heavy components</li>
+            <li>Consider adding <code>React.lazy()</code> route splitting in <code>router.tsx</code> (not implemented yet)</li>
             <li>Check for duplicate dependencies</li>
             <li>Use tree-shakeable imports (e.g., <code>import { Button } from "@mui/material"</code>)</li>
           </ul>
@@ -5146,7 +5213,7 @@ console.log(appStorage.getExpirationTime());</code></pre>
 
           <footer class="doc-footer">
             BDB UI External &middot; Developer Onboarding Guide &middot; Version 1.0<br />
-            Generated on June 22, 2026 &middot; For internal Arcadis use only
+            Generated on June 25, 2026 &middot; For internal Arcadis use only
           </footer>
         </section>
       </main>
