@@ -8,7 +8,7 @@
       name="description"
       content="Comprehensive onboarding documentation for the BDB UI External application including architecture, features, setup instructions, and development guidelines."
     />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#141c28" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="BDB UI External — Developer Onboarding Guide" />
     <meta
@@ -18,7 +18,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -29,21 +29,36 @@
       }
 
       :root {
-        --color-brand: #d85614;
-        --color-brand-soft: rgba(216, 86, 20, 0.06);
-        --color-brand-line: rgba(216, 86, 20, 0.12);
-        --color-brand-tint: rgba(216, 86, 20, 0.15);
-        --bg-canvas: #ffffff;
-        --bg-surface: #f9fafb;
-        --bg-elevated: #f3f4f6;
-        --border-default: #e5e7eb;
-        --text-primary: #111827;
-        --text-secondary: #1f2937;
-        --text-tertiary: #374151;
-        --text-muted: #6b7280;
-        --sidebar-width: 300px;
-        --spacing-6: 24px;
-        --spacing-3: 12px;
+        --color-brand: #c44d12;
+        --color-brand-hover: #a33f0e;
+        --color-brand-soft: #fdf4ef;
+        --color-brand-muted: #f5e0d4;
+        --color-brand-line: #e8c4b0;
+        --color-accent: #2563eb;
+        --color-accent-soft: #eff6ff;
+        --color-accent-line: #bfdbfe;
+        --bg-canvas: #f8fafc;
+        --bg-surface: #ffffff;
+        --bg-subtle: #f1f5f9;
+        --bg-elevated: #ffffff;
+        --border-default: #e2e8f0;
+        --border-strong: #cbd5e1;
+        --text-primary: #0f172a;
+        --text-secondary: #334155;
+        --text-tertiary: #475569;
+        --text-muted: #64748b;
+        --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+        --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+        --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06);
+        --radius-sm: 6px;
+        --radius-md: 10px;
+        --radius-lg: 14px;
+        --sidebar-width: 272px;
+        --content-max: 1120px;
+      }
+
+      html {
+        scroll-behavior: smooth;
       }
 
       html,
@@ -54,14 +69,15 @@
 
       body {
         font-family:
-          "Noto Sans",
+          "Inter",
           -apple-system,
           BlinkMacSystemFont,
           "Segoe UI",
           sans-serif;
         background-color: var(--bg-canvas);
         color: var(--text-primary);
-        line-height: 1.6;
+        line-height: 1.65;
+        font-size: 15px;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
@@ -73,107 +89,169 @@
 
       .sidebar {
         width: var(--sidebar-width);
-        background-color: var(--bg-surface);
-        border-right: 1px solid var(--border-default);
+        background: linear-gradient(180deg, #1a2332 0%, #141c28 100%);
+        border-right: 1px solid rgba(255, 255, 255, 0.06);
         position: fixed;
         height: 100vh;
-        overflow-y: auto;
-        padding: var(--spacing-6) var(--spacing-3);
+        display: flex;
+        flex-direction: column;
+        z-index: 10;
       }
 
-      .sidebar-header {
-        padding: 0 1rem 0.85rem;
-        border-bottom: 1px solid var(--border-default);
-        margin-bottom: 0.5rem;
+      .sidebar a {
+        text-decoration: none;
       }
 
-      .sidebar-header h1 {
-        font-size: 1rem;
+      .sidebar a:hover {
+        text-decoration: none;
+      }
+
+      .sidebar-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1.35rem 1.125rem 1.25rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        flex-shrink: 0;
+      }
+
+      .sidebar-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--color-brand) 0%, #a33f0e 100%);
+        color: #fff;
+        font-size: 0.7rem;
         font-weight: 800;
-        color: var(--color-brand);
-        margin-bottom: 0.15rem;
+        letter-spacing: 0.04em;
+        flex-shrink: 0;
+        box-shadow: 0 2px 8px rgba(196, 77, 18, 0.35);
+      }
+
+      .sidebar-brand-text {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+      }
+
+      .sidebar-title {
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: #f1f5f9;
+        line-height: 1.25;
+        letter-spacing: -0.02em;
+      }
+
+      .sidebar-subtitle {
+        font-size: 0.7rem;
+        color: #94a3b8;
         line-height: 1.3;
       }
 
-      .sidebar-header p {
-        font-size: 0.78rem;
-        color: var(--text-muted);
+      .sidebar-nav {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0.75rem 0.625rem 1.5rem;
+      }
+
+      .sidebar-nav::-webkit-scrollbar {
+        width: 5px;
+      }
+
+      .sidebar-nav::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 999px;
       }
 
       .nav-section {
-        padding: 0.25rem 0.75rem;
+        margin-bottom: 0.35rem;
+      }
+
+      .nav-section + .nav-section {
+        margin-top: 0.25rem;
+        padding-top: 0.25rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
       }
 
       .nav-section-title {
-        font-size: 0.72rem;
-        font-weight: 700;
-        color: var(--color-brand);
+        font-size: 0.625rem;
+        font-weight: 600;
+        color: #64748b;
         text-transform: uppercase;
-        padding: 0.85rem 0.5rem 0.35rem;
-        margin-bottom: 0.15rem;
-        border-top: 1px solid var(--border-default);
-        margin-top: 0.25rem;
-      }
-
-      .nav-section:first-of-type .nav-section-title {
-        border-top: none;
-        margin-top: 0;
-        padding-top: 0.25rem;
+        letter-spacing: 0.1em;
+        padding: 0.625rem 0.75rem 0.35rem;
+        margin: 0;
+        user-select: none;
       }
 
       .nav-link {
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
+        display: block;
         position: relative;
-        padding: 0.6rem 0.75rem;
-        color: var(--text-tertiary);
+        padding: 0.5rem 0.75rem 0.5rem 1.625rem;
+        color: #94a3b8;
         text-decoration: none;
-        font-size: 0.95rem;
+        font-size: 0.8125rem;
+        line-height: 1.45;
         border-radius: 8px;
-        transition: all 0.15s ease;
+        transition: background 0.15s ease, color 0.15s ease;
         font-weight: 500;
         cursor: pointer;
+        margin: 1px 0;
+      }
+
+      .nav-link::before {
+        content: "";
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: #475569;
+        transition: background 0.15s ease, transform 0.15s ease;
       }
 
       .nav-link:hover {
-        background-color: var(--bg-elevated);
-        color: var(--color-brand);
+        background: rgba(255, 255, 255, 0.06);
+        color: #e2e8f0;
+      }
+
+      .nav-link:hover::before {
+        background: #94a3b8;
       }
 
       .nav-link.active {
-        background-color: var(--color-brand-soft);
-        color: var(--color-brand);
+        background: rgba(255, 255, 255, 0.09);
+        color: #f8fafc;
         font-weight: 600;
-        border: 1px solid var(--color-brand-line);
-        border-radius: 12px;
-        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02) inset;
-        padding-left: calc(0.6rem + 10px);
       }
 
       .nav-link.active::before {
-        content: "";
-        position: absolute;
-        left: -1px;
-        top: 8px;
-        bottom: 8px;
         width: 3px;
+        height: 14px;
+        border-radius: 2px;
         background: var(--color-brand);
-        border-radius: 6px;
+        left: 0.5rem;
       }
 
       .main {
         flex: 1;
         min-width: 0;
         margin-left: var(--sidebar-width);
-        padding: 2rem 3rem;
-        max-width: 100%;
+        padding: 2.5rem 2.5rem 4rem;
+        max-width: calc(100% - var(--sidebar-width));
         overflow-x: hidden;
       }
 
       .section {
         display: none;
-        animation: fadeIn 0.3s ease;
+        animation: fadeIn 0.25s ease;
+        max-width: var(--content-max);
       }
 
       .section.active {
@@ -183,7 +261,7 @@
       @keyframes fadeIn {
         from {
           opacity: 0;
-          transform: translateY(10px);
+          transform: translateY(6px);
         }
         to {
           opacity: 1;
@@ -192,32 +270,50 @@
       }
 
       h2 {
-        font-size: 1.75rem;
+        font-size: 1.875rem;
         font-weight: 800;
-        margin-bottom: 0.5rem;
-        color: var(--color-brand);
-        line-height: 1.25;
+        margin-bottom: 0.625rem;
+        color: var(--text-primary);
+        line-height: 1.2;
+        letter-spacing: -0.03em;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border-default);
       }
 
       h3 {
-        font-size: 1.2rem;
+        font-size: 1.125rem;
         font-weight: 700;
-        margin: 2rem 0 0.85rem;
-        color: var(--color-brand);
+        margin: 2.25rem 0 0.75rem;
+        color: var(--text-primary);
+        letter-spacing: -0.02em;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      h3::before {
+        content: "";
+        display: inline-block;
+        width: 3px;
+        height: 1.1em;
+        background: var(--color-brand);
+        border-radius: 2px;
+        flex-shrink: 0;
       }
 
       h4 {
-        font-size: 1rem;
+        font-size: 0.95rem;
         font-weight: 700;
-        margin: 1.4rem 0 0.6rem;
+        margin: 1.5rem 0 0.5rem;
         color: var(--text-primary);
       }
 
       .section-subtitle {
         color: var(--text-muted);
-        font-size: 1rem;
-        margin-bottom: 1.75rem;
-        max-width: 75ch;
+        font-size: 1.05rem;
+        margin-bottom: 2rem;
+        max-width: 72ch;
+        line-height: 1.6;
       }
 
       p {
@@ -229,12 +325,16 @@
       ul,
       ol {
         color: var(--text-secondary);
-        padding-left: 1.4rem;
+        padding-left: 1.35rem;
         margin-bottom: 1rem;
       }
 
       li {
-        margin-bottom: 0.45rem;
+        margin-bottom: 0.4rem;
+      }
+
+      li::marker {
+        color: var(--text-muted);
       }
 
       strong {
@@ -247,36 +347,50 @@
         font-style: italic;
       }
 
+      a {
+        color: var(--color-accent);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
       code {
-        background-color: var(--bg-elevated);
-        padding: 0.18rem 0.4rem;
-        border-radius: 4px;
-        font-family: "JetBrains Mono", "Fira Code", monospace;
-        font-size: 0.85em;
-        color: var(--color-brand);
+        background-color: var(--bg-subtle);
+        border: 1px solid var(--border-default);
+        padding: 0.15rem 0.4rem;
+        border-radius: 5px;
+        font-family: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+        font-size: 0.84em;
+        color: #1e293b;
+        font-weight: 500;
       }
 
       pre {
-        background-color: #0f172a;
+        background-color: #1e293b;
         color: #e2e8f0;
-        border: 1px solid #1e293b;
-        border-radius: 10px;
-        padding: 1rem 1.1rem;
+        border: 1px solid #334155;
+        border-radius: var(--radius-md);
+        padding: 1.125rem 1.25rem;
         max-width: 100%;
         overflow-x: auto;
-        margin: 0.6rem 0 1rem;
-        font-family: "JetBrains Mono", "Fira Code", monospace;
-        font-size: 0.82rem;
-        line-height: 1.6;
+        margin: 0.75rem 0 1.25rem;
+        font-family: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+        font-size: 0.8rem;
+        line-height: 1.65;
         white-space: pre;
+        box-shadow: var(--shadow-sm);
       }
 
       pre code {
         background: none;
+        border: none;
         padding: 0;
         border-radius: 0;
         color: inherit;
         font-size: inherit;
+        font-weight: 400;
       }
 
       pre .c-key {
@@ -296,44 +410,45 @@
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 4px;
+        gap: 6px;
         margin: 0.75rem 0 1rem;
       }
 
       .arch-flow .node {
         display: inline-block;
-        background: var(--bg-canvas);
+        background: var(--bg-surface);
         border: 1px solid var(--border-default);
-        border-radius: 6px;
-        padding: 2px 7px;
+        border-radius: var(--radius-sm);
+        padding: 4px 10px;
         font-size: 0.72rem;
         font-weight: 600;
         color: var(--text-tertiary);
         white-space: nowrap;
+        box-shadow: var(--shadow-xs);
       }
 
       .arch-flow .node.llm {
         background: var(--color-brand-soft);
         border-color: var(--color-brand-line);
-        color: var(--color-brand);
+        color: var(--color-brand-hover);
       }
 
       .arch-flow .node.out {
-        background: #ecfdf5;
-        border-color: #a7f3d0;
-        color: #047857;
+        background: #f0fdf4;
+        border-color: #bbf7d0;
+        color: #166534;
       }
 
       .arch-flow .node.warn {
-        background: #fef2f2;
-        border-color: #fecaca;
-        color: #991b1b;
+        background: #fff7ed;
+        border-color: #fed7aa;
+        color: #9a3412;
       }
 
       .arch-flow .arrow {
         color: var(--text-muted);
-        font-size: 0.72rem;
-        font-weight: 700;
+        font-size: 0.75rem;
+        font-weight: 600;
       }
 
       .footnote {
@@ -343,18 +458,19 @@
       }
 
       .card {
-        background-color: var(--bg-elevated);
+        background-color: var(--bg-surface);
         border: 1px solid var(--border-default);
-        border-radius: 10px;
-        padding: 1.1rem 1.25rem;
+        border-radius: var(--radius-md);
+        padding: 1.125rem 1.25rem;
         margin: 1rem 0;
+        box-shadow: var(--shadow-xs);
       }
 
       .card-title {
         font-weight: 700;
         color: var(--text-primary);
-        margin-bottom: 0.45rem;
-        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.925rem;
       }
 
       .card.brand {
@@ -363,16 +479,25 @@
       }
 
       .card.brand .card-title {
-        color: var(--color-brand);
+        color: var(--color-brand-hover);
+      }
+
+      .card.accent {
+        background: var(--color-accent-soft);
+        border-color: var(--color-accent-line);
+      }
+
+      .card.accent .card-title {
+        color: #1d4ed8;
       }
 
       .card.success {
-        background: #ecfdf5;
-        border-color: #a7f3d0;
+        background: #f0fdf4;
+        border-color: #bbf7d0;
       }
 
       .card.success .card-title {
-        color: #047857;
+        color: #166534;
       }
 
       .card.warning {
@@ -381,7 +506,7 @@
       }
 
       .card.warning .card-title {
-        color: #92400e;
+        color: #b45309;
       }
 
       .card.danger {
@@ -390,43 +515,53 @@
       }
 
       .card.danger .card-title {
-        color: #991b1b;
+        color: #b91c1c;
       }
 
-      .card ul {
-        margin: 0.4rem 0 0;
+      .card ul,
+      .card ol {
+        margin: 0.35rem 0 0;
         padding-left: 1.2rem;
       }
 
-      .card ul li {
+      .card ul li,
+      .card ol li {
         margin-bottom: 0.3rem;
+      }
+
+      .card pre {
+        margin-bottom: 0.5rem;
       }
 
       .stats {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-        gap: 0.85rem;
+        gap: 0.75rem;
         margin: 1rem 0 0.5rem;
       }
 
       .stat {
-        background-color: var(--bg-elevated);
+        background-color: var(--bg-surface);
         border: 1px solid var(--border-default);
-        border-radius: 8px;
-        padding: 0.95rem 1rem;
+        border-radius: var(--radius-md);
+        padding: 1rem 1.1rem;
+        box-shadow: var(--shadow-xs);
       }
 
       .stat .label {
-        font-size: 0.78rem;
+        font-size: 0.75rem;
         color: var(--text-muted);
         font-weight: 600;
-        margin-bottom: 0.3rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-bottom: 0.35rem;
       }
 
       .stat .value {
-        font-size: 1.2rem;
+        font-size: 1.15rem;
         font-weight: 700;
         color: var(--text-primary);
+        letter-spacing: -0.02em;
       }
 
       .stat.accent {
@@ -434,9 +569,12 @@
         border-color: var(--color-brand-line);
       }
 
-      .stat.accent .label,
+      .stat.accent .label {
+        color: var(--color-brand-hover);
+      }
+
       .stat.accent .value {
-        color: var(--color-brand);
+        color: var(--color-brand-hover);
       }
 
       .stat.danger {
@@ -446,7 +584,7 @@
 
       .stat.danger .label,
       .stat.danger .value {
-        color: #991b1b;
+        color: #b91c1c;
       }
 
       .compare {
@@ -459,35 +597,37 @@
       .compare .col {
         min-width: 0;
         border: 1px solid var(--border-default);
-        border-radius: 10px;
-        padding: 1rem 1.15rem;
-        background: var(--bg-elevated);
+        border-radius: var(--radius-md);
+        padding: 1.125rem 1.2rem;
+        background: var(--bg-surface);
+        box-shadow: var(--shadow-xs);
       }
 
       .compare .col.today {
-        background: #fef2f2;
-        border-color: #fecaca;
+        background: #f8fafc;
+        border-color: var(--border-strong);
       }
 
       .compare .col.future {
-        background: #ecfdf5;
-        border-color: #a7f3d0;
+        background: var(--color-accent-soft);
+        border-color: var(--color-accent-line);
       }
 
       .compare h4 {
-        margin: 0 0 0.5rem;
-        font-size: 0.82rem;
+        margin: 0 0 0.625rem;
+        font-size: 0.75rem;
         font-weight: 700;
         text-transform: uppercase;
-        color: var(--text-tertiary);
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
       }
 
       .compare .col.today h4 {
-        color: #991b1b;
+        color: var(--text-tertiary);
       }
 
       .compare .col.future h4 {
-        color: #065f46;
+        color: #1d4ed8;
       }
 
       .compare ul {
@@ -500,32 +640,63 @@
         margin-bottom: 0.3rem;
       }
 
+      .table-wrap {
+        overflow-x: auto;
+        margin: 1rem 0;
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-xs);
+        background: var(--bg-surface);
+      }
+
       table {
         width: 100%;
         border-collapse: collapse;
-        margin: 1rem 0;
-        font-size: 0.88rem;
+        margin: 0;
+        font-size: 0.875rem;
+      }
+
+      .table-wrap table {
+        margin: 0;
       }
 
       th,
       td {
         text-align: left;
-        padding: 0.7rem 0.85rem;
+        padding: 0.7rem 1rem;
         border-bottom: 1px solid var(--border-default);
         vertical-align: top;
       }
 
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+
       th {
-        background-color: var(--bg-elevated);
+        background-color: var(--bg-subtle);
         color: var(--text-muted);
-        font-weight: 700;
-        font-size: 0.75rem;
+        font-weight: 600;
+        font-size: 0.7rem;
         text-transform: uppercase;
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+      }
+
+      tbody tr:nth-child(even) {
+        background-color: #fafbfc;
+      }
+
+      tbody tr:hover {
+        background-color: #f1f5f9;
       }
 
       td {
         color: var(--text-secondary);
         font-weight: 400;
+      }
+
+      td code {
+        font-size: 0.82em;
       }
 
       td.num,
@@ -537,7 +708,7 @@
       }
 
       tr.row-sync td {
-        background: #f9fafb;
+        background: var(--bg-subtle);
       }
 
       tr.row-gap td:first-child {
@@ -551,89 +722,148 @@
 
       .badge {
         display: inline-block;
-        padding: 0.12rem 0.5rem;
+        padding: 0.15rem 0.55rem;
         border-radius: 999px;
-        font-size: 0.68rem;
+        font-size: 0.65rem;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.02em;
+        letter-spacing: 0.04em;
+        border: 1px solid transparent;
       }
 
       .badge.critical {
-        background: #fee2e2;
-        color: #991b1b;
+        background: #fef2f2;
+        color: #b91c1c;
+        border-color: #fecaca;
       }
 
       .badge.high {
-        background: #ffedd5;
-        color: #9a3412;
+        background: #fff7ed;
+        color: #c2410c;
+        border-color: #fed7aa;
       }
 
       .badge.medium {
-        background: #fef3c7;
-        color: #92400e;
+        background: #fffbeb;
+        color: #b45309;
+        border-color: #fde68a;
       }
 
       .badge.low {
-        background: #ecfdf5;
-        color: #065f46;
+        background: #f0fdf4;
+        color: #166534;
+        border-color: #bbf7d0;
       }
 
       .example-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 0.85rem;
+        gap: 0.75rem;
         margin: 1rem 0;
       }
 
       .example-step {
         min-width: 0;
         border: 1px solid var(--border-default);
-        border-radius: 10px;
-        padding: 0.9rem 1rem;
-        background: var(--bg-elevated);
+        border-radius: var(--radius-md);
+        padding: 1rem 1.1rem;
+        background: var(--bg-surface);
+        box-shadow: var(--shadow-xs);
+        transition: box-shadow 0.15s ease, border-color 0.15s ease;
+      }
+
+      .example-step:hover {
+        border-color: var(--border-strong);
+        box-shadow: var(--shadow-sm);
       }
 
       .example-step .num {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 22px;
-        height: 22px;
+        width: 24px;
+        height: 24px;
         border-radius: 50%;
-        background: var(--color-brand);
+        background: var(--text-primary);
         color: #fff;
-        font-size: 0.72rem;
+        font-size: 0.7rem;
         font-weight: 700;
-        margin-bottom: 0.4rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .example-step strong {
+        display: block;
+        margin-bottom: 0.25rem;
+        font-size: 0.9rem;
       }
 
       footer.doc-footer {
-        margin-top: 3rem;
+        margin-top: 3.5rem;
         padding-top: 1.5rem;
         border-top: 1px solid var(--border-default);
         text-align: center;
-        font-size: 0.82rem;
+        font-size: 0.8rem;
         color: var(--text-muted);
+        line-height: 1.5;
       }
 
-      @media (max-width: 768px) {
+      /* Inline snippet blocks inside cards */
+      pre[style*="background: #f5f5f5"],
+      pre[style*="background:#f5f5f5"] {
+        background: var(--bg-subtle) !important;
+        color: var(--text-primary) !important;
+        border: 1px solid var(--border-default) !important;
+        box-shadow: none !important;
+      }
+
+      pre[style*="background: #1e1e1e"],
+      pre[style*="background:#1e1e1e"] {
+        border-radius: var(--radius-md) !important;
+      }
+
+      p[style*="font-size:0.9em"],
+      p[style*="font-size: 0.9em"] {
+        color: var(--text-muted) !important;
+      }
+
+      p[style*="font-family: monospace"] {
+        background: var(--bg-subtle) !important;
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-sm);
+        color: var(--text-secondary) !important;
+      }
+
+      tr[style*="background: #f9f9f9"],
+      tr[style*="background:#f9f9f9"],
+      tr[style*="background: #f5f5f5"] {
+        background: #fafbfc !important;
+      }
+
+      @media (max-width: 900px) {
         .sidebar {
           width: 100%;
           height: auto;
+          max-height: none;
           position: relative;
           border-right: none;
-          border-bottom: 1px solid var(--border-default);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .sidebar-nav {
+          max-height: 50vh;
         }
         .main {
           margin-left: 0;
-          padding: 1.5rem;
+          padding: 1.5rem 1.25rem 3rem;
+          max-width: 100%;
         }
         .layout {
           flex-direction: column;
         }
         .compare {
           grid-template-columns: 1fr;
+        }
+        h2 {
+          font-size: 1.5rem;
         }
       }
 
@@ -644,6 +874,7 @@
         .main {
           margin-left: 0;
           padding: 0;
+          max-width: 100%;
         }
         body {
           background: #fff;
@@ -651,9 +882,13 @@
         .section {
           display: block !important;
           page-break-before: always;
+          max-width: 100%;
         }
         .section:first-of-type {
           page-break-before: avoid;
+        }
+        pre {
+          box-shadow: none;
         }
       }
     </style>
@@ -661,15 +896,19 @@
   <body>
     <div class="layout">
       <nav class="sidebar" aria-label="Documentation navigation">
-        <div class="sidebar-header">
-          <h1>BDB UI External</h1>
-          <p>Developer Onboarding Guide &middot; v1.0</p>
+        <div class="sidebar-brand">
+          <div class="sidebar-logo" aria-hidden="true">BDB</div>
+          <div class="sidebar-brand-text">
+            <span class="sidebar-title">BDB UI External</span>
+            <span class="sidebar-subtitle">Developer Guide · v1.0</span>
+          </div>
         </div>
 
+        <div class="sidebar-nav">
         <div class="nav-section">
           <div class="nav-section-title">Getting Started</div>
           <a href="#sec-quickref" class="nav-link" onclick="showSection(event, 'sec-quickref')"
-            >⚡ Quick Reference</a
+            >Quick Reference</a
           >
           <a href="#sec-overview" class="nav-link active" onclick="showSection(event, 'sec-overview')"
             >Project Overview</a
@@ -685,7 +924,7 @@
         <div class="nav-section">
           <div class="nav-section-title">Core Features</div>
           <a href="#sec-auth" class="nav-link" onclick="showSection(event, 'sec-auth')"
-            >Authentication (Azure B2C)</a
+            >Authentication</a
           >
           <a href="#sec-routing" class="nav-link" onclick="showSection(event, 'sec-routing')"
             >Routing & Navigation</a
@@ -701,7 +940,7 @@
         <div class="nav-section">
           <div class="nav-section-title">Development</div>
           <a href="#sec-services" class="nav-link" onclick="showSection(event, 'sec-services')"
-            >Services & API Integration</a
+            >Services & API</a
           >
           <a href="#sec-state" class="nav-link" onclick="showSection(event, 'sec-state')"
             >State Management</a
@@ -717,7 +956,7 @@
         <div class="nav-section">
           <div class="nav-section-title">Reference</div>
           <a href="#sec-env" class="nav-link" onclick="showSection(event, 'sec-env')"
-            >Environment Configuration</a
+            >Environment Config</a
           >
           <a href="#sec-build" class="nav-link" onclick="showSection(event, 'sec-build')"
             >Build & Deployment</a
@@ -732,8 +971,9 @@
             >Troubleshooting</a
           >
           <a href="#sec-postman" class="nav-link" onclick="showSection(event, 'sec-postman')"
-            >🧪 Postman Guide</a
+            >Postman Guide</a
           >
+        </div>
         </div>
       </nav>
 
@@ -755,15 +995,15 @@
             <thead><tr><th>Command</th><th>What it Does</th><th>When to Use</th></tr></thead>
             <tbody>
               <tr><td><code>npm install</code></td><td>Install all dependencies</td><td>First time setup, or after pulling changes with new packages</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>npm run dev</code></td><td>Start dev server at <code>http://localhost:3000</code></td><td>Day-to-day development</td></tr>
+              <tr><td><code>npm run dev</code></td><td>Start dev server at <code>http://localhost:3000</code></td><td>Day-to-day development</td></tr>
               <tr><td><code>npm test</code></td><td>Run all unit tests once</td><td>Before committing code</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>npm run test:coverage</code></td><td>Run tests + generate coverage report</td><td>Check test coverage</td></tr>
+              <tr><td><code>npm run test:coverage</code></td><td>Run tests + generate coverage report</td><td>Check test coverage</td></tr>
               <tr><td><code>npm run test:ui</code></td><td>Open interactive Vitest UI in browser</td><td>Debugging individual test failures</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>npm run lint</code></td><td>Run ESLint on all <code>.ts</code> / <code>.tsx</code> files</td><td>Before raising a PR</td></tr>
+              <tr><td><code>npm run lint</code></td><td>Run ESLint on all <code>.ts</code> / <code>.tsx</code> files</td><td>Before raising a PR</td></tr>
               <tr><td><code>npm run build:dev</code></td><td>Build bundle using <code>.env.development</code> → <code>dist/</code></td><td>Deploy to Dev environment</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>npm run build:uat</code></td><td>Build bundle using <code>.env.uat</code> → <code>dist/</code></td><td>Deploy to UAT environment</td></tr>
+              <tr><td><code>npm run build:uat</code></td><td>Build bundle using <code>.env.uat</code> → <code>dist/</code></td><td>Deploy to UAT environment</td></tr>
               <tr><td><code>npm run build:prd</code></td><td>Build bundle using <code>.env.production</code> → <code>dist/</code></td><td>Deploy to Production</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>npm run preview</code></td><td>Serve the last built <code>dist/</code> bundle locally at <code>:4173</code></td><td>Verify a build before deploying</td></tr>
+              <tr><td><code>npm run preview</code></td><td>Serve the last built <code>dist/</code> bundle locally at <code>:4173</code></td><td>Verify a build before deploying</td></tr>
             </tbody>
           </table>
 
@@ -781,7 +1021,7 @@
                 <td><code>https://devbdb.arcadis.com/api/bdbapi/api/</code> (via <code>.env.development</code>)</td>
                 <td><code>ArcadisB2CDEV</code></td>
               </tr>
-              <tr style="background:#f9f9f9;">
+              <tr>
                 <td><strong>Development</strong></td>
                 <td><code>https://devbdb.arcadis.com</code></td>
                 <td><code>https://devbdb.arcadis.com/api/bdbapi/api/</code></td>
@@ -793,7 +1033,7 @@
                 <td><code>https://uatbdb.arcadis.com/api/bdbapi/api/</code></td>
                 <td><code>ArcadisB2CDEV</code></td>
               </tr>
-              <tr style="background:#f9f9f9;">
+              <tr>
                 <td><strong>Production</strong></td>
                 <td><code>https://bdb.eu</code></td>
                 <td><code>https://bdb.eu/api/bdbapi/api</code></td>
@@ -813,13 +1053,13 @@
             <thead><tr><th>Config Key</th><th>Dev / UAT Value</th><th>Production Value</th></tr></thead>
             <tbody>
               <tr><td>Tenant Name</td><td><code>ArcadisB2CDEV</code></td><td><code>ArcadisB2C</code></td></tr>
-              <tr style="background:#f9f9f9;"><td>Client ID</td><td><code>27848361-a66e-4158-856c-8414a88f7053</code></td><td><code>f176f4a6-61ee-41b9-a3ff-c93a6e09e188</code></td></tr>
+              <tr><td>Client ID</td><td><code>27848361-a66e-4158-856c-8414a88f7053</code></td><td><code>f176f4a6-61ee-41b9-a3ff-c93a6e09e188</code></td></tr>
               <tr><td>Sign-In Policy</td><td colspan="2"><code>B2C_1A_BDB_SIGNUPSIGNIN</code></td></tr>
-              <tr style="background:#f9f9f9;"><td>Password Reset Policy</td><td colspan="2"><code>B2C_1A_GLOBAL_PasswordReset</code></td></tr>
+              <tr><td>Password Reset Policy</td><td colspan="2"><code>B2C_1A_GLOBAL_PasswordReset</code></td></tr>
               <tr><td>Token Endpoint (Dev/UAT)</td><td colspan="2"><code>https://arcadisb2cdev.b2clogin.com/arcadisb2cdev.onmicrosoft.com/b2c_1a_bdb_signup_signin/oauth2/v2.0/token</code></td></tr>
-              <tr style="background:#f9f9f9;"><td>Token Endpoint (Prod)</td><td colspan="2"><code>https://arcadisb2c.b2clogin.com/arcadisb2c.onmicrosoft.com/b2c_1a_bdb_signup_signin/oauth2/v2.0/token</code></td></tr>
+              <tr><td>Token Endpoint (Prod)</td><td colspan="2"><code>https://arcadisb2c.b2clogin.com/arcadisb2c.onmicrosoft.com/b2c_1a_bdb_signup_signin/oauth2/v2.0/token</code></td></tr>
               <tr><td>Logout Endpoint</td><td colspan="2"><code>.../{tenant}/b2c_1a_global_signup_signin/oauth2/v2.0/logout</code></td></tr>
-              <tr style="background:#f9f9f9;"><td>Token Storage</td><td colspan="2"><code>sessionStorage</code> — clears automatically when the browser tab is closed</td></tr>
+              <tr><td>Token Storage</td><td colspan="2"><code>sessionStorage</code> — clears automatically when the browser tab is closed</td></tr>
               <tr><td>Config File</td><td colspan="2"><code>src/auth-config.ts</code></td></tr>
             </tbody>
           </table>
@@ -834,7 +1074,7 @@
                 <td>Product pages they have a subscription for. Cannot access <code>/uploads/*</code>.</td>
                 <td>✅ Yes — must have matching subscription</td>
               </tr>
-              <tr style="background:#f9f9f9;">
+              <tr>
                 <td><code>"admin"</code></td>
                 <td>All product pages + all <code>/uploads/*</code> admin pages. Bypasses all subscription checks.</td>
                 <td>❌ No — admin bypasses all subscription checks</td>
@@ -848,13 +1088,13 @@
             <thead><tr><th>Subscription String</th><th>Unlocks These Pages</th></tr></thead>
             <tbody>
               <tr><td><code>BDB Maandcijfers</code></td><td><code>/products/monthly-figures</code>, <code>/products/figures-model</code>, <code>/products/flexible-indices</code> (partial)</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>BDB Marktindicator</code></td><td><code>/products/market-indicator</code>, <code>/products/indicator-trends</code></td></tr>
+              <tr><td><code>BDB Marktindicator</code></td><td><code>/products/market-indicator</code>, <code>/products/indicator-trends</code></td></tr>
               <tr><td><code>BDB Trends</code></td><td><code>/products/market-trends</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><code>BDB Vormfactoren en Kostenkengetallen</code></td><td><code>/products/aspect-ratio</code>, <code>/products/aspect-ratio/search</code></td></tr>
+              <tr><td><code>BDB Vormfactoren en Kostenkengetallen</code></td><td><code>/products/aspect-ratio</code>, <code>/products/aspect-ratio/search</code></td></tr>
               <tr><td><code>E235 RVB Benchmark</code></td><td><code>/products/e235-aspect-ratio</code>, <code>/products/e235-aspect-ratio/search</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><code>BDB GI S HC - basic</code></td><td><code>/products/detailed-indices</code>, <code>/products/flexible-indices</code> (partial)</td></tr>
+              <tr><td><code>BDB GI S HC - basic</code></td><td><code>/products/detailed-indices</code>, <code>/products/flexible-indices</code> (partial)</td></tr>
               <tr><td><code>BDB Parametric</code></td><td><code>/products/parametric-elements</code>, <code>/products/parametric-elements/:elementId</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><code>BDB WOV</code></td><td><code>/products/woningbouw-onderhoud-en-verduurzamingsindex</code></td></tr>
+              <tr><td><code>BDB WOV</code></td><td><code>/products/woningbouw-onderhoud-en-verduurzamingsindex</code></td></tr>
             </tbody>
           </table>
 
@@ -864,7 +1104,7 @@
             <thead><tr><th>Company ID</th><th>Aspect Ratio menu</th><th>E235 Benchmark menu</th></tr></thead>
             <tbody>
               <tr><td>All except 55</td><td>Visible</td><td>Hidden</td></tr>
-              <tr style="background:#f9f9f9;"><td>55 only</td><td>Hidden</td><td>Visible</td></tr>
+              <tr><td>55 only</td><td>Hidden</td><td>Visible</td></tr>
             </tbody>
           </table>
           <p style="font-size:0.9em;color:#555;">Route-level subscription checks still apply — company 55 users need <code>E235 RVB Benchmark</code>; other companies need <code>BDB Vormfactoren en Kostenkengetallen</code> for aspect ratio pages.</p>
@@ -880,9 +1120,9 @@
             <thead><tr><th>URL Path</th><th>Page Component</th><th>Purpose</th></tr></thead>
             <tbody>
               <tr><td><code>/</code></td><td><code>WelcomePage</code></td><td>Landing / welcome screen</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>/login</code></td><td><code>LoginPage</code></td><td>Redirects to Azure B2C login flow</td></tr>
+              <tr><td><code>/login</code></td><td><code>LoginPage</code></td><td>Redirects to Azure B2C login flow</td></tr>
               <tr><td><code>/upgrade</code></td><td><code>UpgradePage</code></td><td>Shown when user lacks required subscription</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>/unauthorized</code></td><td><code>UnauthorizedPage</code></td><td>Shown when non-admin tries to access an admin-only route</td></tr>
+              <tr><td><code>/unauthorized</code></td><td><code>UnauthorizedPage</code></td><td>Shown when non-admin tries to access an admin-only route</td></tr>
             </tbody>
           </table>
 
@@ -891,11 +1131,11 @@
             <thead><tr><th>URL Path</th><th>Page Component</th><th>Purpose</th></tr></thead>
             <tbody>
               <tr><td><code>/dashboard</code></td><td><code>Dashboard</code></td><td>Main landing page after login — shows subscribed products</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>/profile</code></td><td><code>PersonalDetails</code></td><td>User profile (alias for account-settings/personal)</td></tr>
+              <tr><td><code>/profile</code></td><td><code>PersonalDetails</code></td><td>User profile (alias for account-settings/personal)</td></tr>
               <tr><td><code>/account-settings/personal</code></td><td><code>PersonalDetails</code></td><td>Edit personal info</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>/account-settings/company</code></td><td><code>CompanyDetails</code></td><td>Edit company info</td></tr>
+              <tr><td><code>/account-settings/company</code></td><td><code>CompanyDetails</code></td><td>Edit company info</td></tr>
               <tr><td><code>/account-settings/subscription</code></td><td><code>SubscriptionDetailsPage</code></td><td>View subscription details</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>/projects</code></td><td><code>ProjectsPage</code></td><td>Ad hoc projects list</td></tr>
+              <tr><td><code>/projects</code></td><td><code>ProjectsPage</code></td><td>Ad hoc projects list</td></tr>
               <tr><td><code>/subscription-details</code></td><td><code>SubscriptionDetailsPage</code></td><td>Subscription overview (alternate path)</td></tr>
             </tbody>
           </table>
@@ -905,19 +1145,19 @@
             <thead><tr><th>URL Path</th><th>Page Component</th><th>Required Subscription</th></tr></thead>
             <tbody>
               <tr><td><code>/products/monthly-figures</code></td><td><code>MonthlyFigures</code></td><td><code>BDB Maandcijfers</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><code>/products/figures-model</code></td><td><code>FigureModel</code></td><td><code>BDB Maandcijfers</code></td></tr>
+              <tr><td><code>/products/figures-model</code></td><td><code>FigureModel</code></td><td><code>BDB Maandcijfers</code></td></tr>
               <tr><td><code>/products/market-indicator</code></td><td><code>MarketIndicator</code></td><td><code>BDB Marktindicator</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><code>/products/indicator-trends</code></td><td><code>MarketIndicatorTrends</code></td><td><code>BDB Marktindicator</code></td></tr>
+              <tr><td><code>/products/indicator-trends</code></td><td><code>MarketIndicatorTrends</code></td><td><code>BDB Marktindicator</code></td></tr>
               <tr><td><code>/products/market-trends</code></td><td><code>MarketTrends</code></td><td><code>BDB Trends</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><code>/products/aspect-ratio</code></td><td><code>AspectRatioPage</code></td><td><code>BDB Vormfactoren en Kostenkengetallen</code></td></tr>
+              <tr><td><code>/products/aspect-ratio</code></td><td><code>AspectRatioPage</code></td><td><code>BDB Vormfactoren en Kostenkengetallen</code></td></tr>
               <tr><td><code>/products/aspect-ratio/search</code></td><td><code>AspectRatioSearchPage</code></td><td><code>BDB Vormfactoren en Kostenkengetallen</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><code>/products/e235-aspect-ratio</code></td><td><code>E235AspectRatioPage</code></td><td><code>E235 RVB Benchmark</code></td></tr>
+              <tr><td><code>/products/e235-aspect-ratio</code></td><td><code>E235AspectRatioPage</code></td><td><code>E235 RVB Benchmark</code></td></tr>
               <tr><td><code>/products/e235-aspect-ratio/search</code></td><td><code>E235AspectRatioSearchPage</code></td><td><code>E235 RVB Benchmark</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><code>/products/detailed-indices</code></td><td><code>DetailedIndicesGrid</code></td><td><code>BDB GI S HC - basic</code></td></tr>
+              <tr><td><code>/products/detailed-indices</code></td><td><code>DetailedIndicesGrid</code></td><td><code>BDB GI S HC - basic</code></td></tr>
               <tr><td><code>/products/flexible-indices</code></td><td><code>FlexibleIndices</code></td><td><code>BDB Maandcijfers</code> <strong>or</strong> <code>BDB GI S HC - basic</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><code>/products/parametric-elements</code></td><td><code>ParametricElements</code></td><td><code>BDB Parametric</code></td></tr>
+              <tr><td><code>/products/parametric-elements</code></td><td><code>ParametricElements</code></td><td><code>BDB Parametric</code></td></tr>
               <tr><td><code>/products/parametric-elements/:elementId</code></td><td><code>ParametricElement</code></td><td><code>BDB Parametric</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><code>/products/woningbouw-onderhoud-en-verduurzamingsindex</code></td><td><code>WoningbouwOnderhoudVerduurzamingsindex</code></td><td><code>BDB WOV</code></td></tr>
+              <tr><td><code>/products/woningbouw-onderhoud-en-verduurzamingsindex</code></td><td><code>WoningbouwOnderhoudVerduurzamingsindex</code></td><td><code>BDB WOV</code></td></tr>
             </tbody>
           </table>
           <p style="font-size:0.9em;color:#555;"><strong>Sidebar note:</strong> <code>/products/market-indicator</code> and <code>/products/market-trends</code> are valid routes but are <em>not</em> linked in the sidebar. The sidebar links to <code>/products/indicator-trends</code> (combined view) instead.</p>
@@ -927,9 +1167,9 @@
             <thead><tr><th>URL Path</th><th>Page Component</th><th>Purpose</th></tr></thead>
             <tbody>
               <tr><td><code>/uploads/referenceBudgets</code></td><td><code>ReferenceBudget</code></td><td>Upload &amp; publish reference budget Excel files</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>/uploads/forecastFigures</code></td><td><code>ForecastFigures</code></td><td>Upload &amp; publish forecast figure Excel files</td></tr>
+              <tr><td><code>/uploads/forecastFigures</code></td><td><code>ForecastFigures</code></td><td>Upload &amp; publish forecast figure Excel files</td></tr>
               <tr><td><code>/uploads/woningbouw-onderhoud-en-verduurzamingsindex</code></td><td><code>WoningbouwOnderhoudVerduurzamingsindexUploads</code></td><td>Upload WOV index data</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>/uploads/WoningbouwOnderhoudenVerduurzamingsindex</code></td><td><code>WoningbouwOnderhoudVerduurzamingsindexUploads</code></td><td>Legacy URL alias — kept for backwards compatibility (React Router is case-sensitive)</td></tr>
+              <tr><td><code>/uploads/WoningbouwOnderhoudenVerduurzamingsindex</code></td><td><code>WoningbouwOnderhoudVerduurzamingsindexUploads</code></td><td>Legacy URL alias — kept for backwards compatibility (React Router is case-sensitive)</td></tr>
             </tbody>
           </table>
 
@@ -954,7 +1194,7 @@
             <thead><tr><th>Method</th><th>Endpoint</th><th>Returns</th></tr></thead>
             <tbody>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Auth/GetRoles</code></td><td>String — <code>"user"</code> or <code>"admin"</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Auth/GetSubscriptions</code></td><td>Array of subscription name strings</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Auth/GetSubscriptions</code></td><td>Array of subscription name strings</td></tr>
             </tbody>
           </table>
 
@@ -963,7 +1203,7 @@
             <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/Profile</code></td><td>Get current user's profile (name, email, company)</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#4caf50;font-weight:bold;">PUT</span></td><td><code>/Profile</code></td><td>Update current user's profile. Body: Profile object</td></tr>
+              <tr><td><span style="color:#4caf50;font-weight:bold;">PUT</span></td><td><code>/Profile</code></td><td>Update current user's profile. Body: Profile object</td></tr>
             </tbody>
           </table>
 
@@ -981,7 +1221,7 @@
             <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/DataSeries</code></td><td>Get all data series (all versions)</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/DataSeries/{id}</code></td><td>Get a specific data series by ID</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/DataSeries/{id}</code></td><td>Get a specific data series by ID</td></tr>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/DataSeries/GetLastDefinitiveDataSeries</code></td><td>Get the latest officially published data series — used as the default selection across the app</td></tr>
             </tbody>
           </table>
@@ -992,11 +1232,11 @@
             <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject</code></td><td>Get all reference projects — <strong>start here to get valid IDs</strong></td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getById/{id}</code></td><td>Get a single reference project by ID</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getById/{id}</code></td><td>Get a single reference project by ID</td></tr>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getByName/{name}</code></td><td>Find a reference project by its name</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getByDataSeriesId/{id}</code></td><td>Get projects linked to a specific data series</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getByDataSeriesId/{id}</code></td><td>Get projects linked to a specific data series</td></tr>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getByLastDataSeries</code></td><td>Get one project from the latest data series</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getListByLastDataSeries</code></td><td>Get all projects from the latest data series</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getListByLastDataSeries</code></td><td>Get all projects from the latest data series</td></tr>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getListByLastDataSeriesBasedOnProduct/{name}</code></td><td>Get projects from latest data series filtered by product name</td></tr>
             </tbody>
           </table>
@@ -1008,9 +1248,9 @@
             <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceDate</code></td><td>Get all reference dates (including unpublished)</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceDate/{id}</code></td><td>Get a single reference date by ID</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceDate/{id}</code></td><td>Get a single reference date by ID</td></tr>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceDate/GetUsedByForecastSerie</code></td><td>Get reference dates that are linked to a forecast series</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceDate/GetReferenceDateToBePublished/{budgetTypeId}</code></td><td>Get dates pending publish for a specific budget type</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceDate/GetReferenceDateToBePublished/{budgetTypeId}</code></td><td>Get dates pending publish for a specific budget type</td></tr>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceDatePublished/getLatest/{budgetTypeId}</code></td><td>Get the latest <em>published</em> reference date for a budget type. Used on product pages to show current data version.</td></tr>
             </tbody>
           </table>
@@ -1020,7 +1260,7 @@
             <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Subscription/GetYears</code></td><td>Get all years that have subscription data</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Subscription/GetModulesByCountryAndYear/?countryId={id}&amp;year={year}&amp;includeCompanies=false</code></td><td>Get subscription modules available for a country and year</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Subscription/GetModulesByCountryAndYear/?countryId={id}&amp;year={year}&amp;includeCompanies=false</code></td><td>Get subscription modules available for a country and year</td></tr>
             </tbody>
           </table>
 
@@ -1030,7 +1270,7 @@
             <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportForecastFigures/{id}?isForecastIncluded={bool}</code></td><td>Get monthly cost index data. Body: <code>string[]</code> of date strings (e.g. <code>["2023-01-01","2023-04-01"]</code>)</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportForecastFigures/report/{id}?isForecastIncluded={bool}&amp;format={excel|pdf}</code></td><td>Download monthly figures report as Excel or PDF blob. Body: same date array.</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportForecastFigures/report/{id}?isForecastIncluded={bool}&amp;format={excel|pdf}</code></td><td>Download monthly figures report as Excel or PDF blob. Body: same date array.</td></tr>
             </tbody>
           </table>
 
@@ -1040,7 +1280,7 @@
             <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportMarketIndicator?startDate=2022-10-01&amp;endDate=2024-09-22</code></td><td>Get market indicator chart data</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportMarketIndicator/report?startDate=2022-10-01&amp;endDate=2024-09-22</code></td><td>Download market indicator Excel report</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportMarketIndicator/report?startDate=2022-10-01&amp;endDate=2024-09-22</code></td><td>Download market indicator Excel report</td></tr>
             </tbody>
           </table>
 
@@ -1050,7 +1290,7 @@
             <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportTrends</code></td><td>Get market trends data</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportTrends/report</code></td><td>Download market trends Excel report</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportTrends/report</code></td><td>Download market trends Excel report</td></tr>
             </tbody>
           </table>
 
@@ -1060,7 +1300,7 @@
             <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportTrends?isTrendsIncluded={bool}</code></td><td>Get indicator trend data for selected dates. Body: <code>string[]</code> of date strings</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportTrends/report?isTrendsIncluded={bool}&amp;format={excel|pdf}</code></td><td>Download indicator trends report. Body: same date array.</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportTrends/report?isTrendsIncluded={bool}&amp;format={excel|pdf}</code></td><td>Download indicator trends report. Body: same date array.</td></tr>
             </tbody>
           </table>
 
@@ -1079,15 +1319,15 @@
             <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/GetProjectAnalyseCountries</code></td><td>Get countries available for aspect ratio analysis</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/getCostCategories</code></td><td>Get available cost categories</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/getCostCategories</code></td><td>Get available cost categories</td></tr>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/getLevels?countryId={id}</code></td><td>Get levels for a country</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/getProjectUnderClasses?countryId={id}</code></td><td>Get project underclasses for a country</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/getProjectUnderClasses?countryId={id}</code></td><td>Get project underclasses for a country</td></tr>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/getProjects?countryId={id}</code></td><td>Get projects for a country</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportDesignKeyCostFigures/GetCountForDimensions</code></td><td>Get total record count for the selected filter combination</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportDesignKeyCostFigures/GetCountForDimensions</code></td><td>Get total record count for the selected filter combination</td></tr>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportDesignKeyCostFigures/getData</code></td><td>Get paginated grid data for selected dimensions</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportDesignKeyCostFigures/GetDataForOneDimension</code></td><td>Get data for a single dimension (chart view)</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportDesignKeyCostFigures/GetDataForOneDimension</code></td><td>Get data for a single dimension (chart view)</td></tr>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportDesignKeyCostFigures/exportDimensionGrid</code></td><td>Export grid as Excel blob</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportDesignKeyCostFigures/export</code></td><td>Export with dimensions. Body: <code>ExportWithDimensionRequestPayload</code></td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportDesignKeyCostFigures/export</code></td><td>Export with dimensions. Body: <code>ExportWithDimensionRequestPayload</code></td></tr>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/downloadProjectAnalyseFile/{id}</code></td><td>Download a project analysis file by ID</td></tr>
             </tbody>
           </table>
@@ -1107,7 +1347,7 @@
             <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportElementClusters/GetProductList</code></td><td>Get the list of subcategory options (product list)</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportElementClusters/{id}?giServiceEnum={1|2|3}</code></td><td>Get detailed index data. Body: filter parameters</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportElementClusters/{id}?giServiceEnum={1|2|3}</code></td><td>Get detailed index data. Body: filter parameters</td></tr>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportElementClusters/report/{id}?giServiceEnum={enum}</code></td><td>Download detailed indices report as Excel blob</td></tr>
             </tbody>
           </table>
@@ -1118,11 +1358,11 @@
             <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ParametricNode</code></td><td>Get all root-level parametric nodes — <strong>start here</strong></td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ParametricNode/GetByParent/{parentId}</code></td><td>Get child nodes for a given parent ID</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ParametricNode/GetByParent/{parentId}</code></td><td>Get child nodes for a given parent ID</td></tr>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ParametricNode/{id}</code></td><td>Get a single node with full details and parameters</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ParametricNode/search?description={text}</code></td><td>Search nodes by description text</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ParametricNode/search?description={text}</code></td><td>Search nodes by description text</td></tr>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ParametricNode/{id}/CalculatePrice</code></td><td>Calculate price using selected parameter values. Body: parameter input object</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ParametricNode/{id}/ExportExcel?format={excel|pdf}</code></td><td>Export a parametric node report</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ParametricNode/{id}/ExportExcel?format={excel|pdf}</code></td><td>Export a parametric node report</td></tr>
             </tbody>
           </table>
 
@@ -1132,11 +1372,11 @@
             <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>UserPreset/user/{email}</code></td><td>Get all presets for a user (by email address)</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>UserPreset/preset/{id}</code></td><td>Get a single preset by ID</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>UserPreset/preset/{id}</code></td><td>Get a single preset by ID</td></tr>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>UserPreset</code></td><td>Create a new preset. Body: <code>{ name, companyId, data: ApiData[] }</code>. Returns the created preset with its new ID.</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#4caf50;font-weight:bold;">PUT</span></td><td><code>UserPreset/preset/{id}</code></td><td>Update a preset. Body: <code>ApiPreset</code>. Returns 204 No Content.</td></tr>
+              <tr><td><span style="color:#4caf50;font-weight:bold;">PUT</span></td><td><code>UserPreset/preset/{id}</code></td><td>Update a preset. Body: <code>ApiPreset</code>. Returns 204 No Content.</td></tr>
               <tr><td><span style="color:#f44336;font-weight:bold;">DELETE</span></td><td><code>UserPreset/{id}</code></td><td>Delete a preset by ID</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>UserPreset/user/preset/{id}</code></td><td>Associate an existing preset with the current user</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>UserPreset/user/preset/{id}</code></td><td>Associate an existing preset with the current user</td></tr>
             </tbody>
           </table>
 
@@ -1145,13 +1385,13 @@
             <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ProjectAdHoc/GetProjectTypes</code></td><td>Get all available project types</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ProjectAdHoc/GetProjectTypeUsed</code></td><td>Get project types currently in use</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ProjectAdHoc/GetProjectTypeUsed</code></td><td>Get project types currently in use</td></tr>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ProjectAdHoc/take</code></td><td>Get paginated list of ad hoc projects. Body: filter, skip, take, sort</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ProjectAdHoc/takeindex?take={n}&amp;skip={n}</code></td><td>Get paginated index projects</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ProjectAdHoc/takeindex?take={n}&amp;skip={n}</code></td><td>Get paginated index projects</td></tr>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ProjectAdHoc/PostFile</code></td><td>Upload a file for an ad hoc project</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#4caf50;font-weight:bold;">PUT</span></td><td><code>ProjectAdHoc/{id}</code></td><td>Update an ad hoc project by ID</td></tr>
+              <tr><td><span style="color:#4caf50;font-weight:bold;">PUT</span></td><td><code>ProjectAdHoc/{id}</code></td><td>Update an ad hoc project by ID</td></tr>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ProjectAdHoc/allowDelete/{id}</code></td><td>Check if a project is eligible for deletion</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ProjectAdHoc/file/{id}</code></td><td>Download project file as Excel blob</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ProjectAdHoc/file/{id}</code></td><td>Download project file as Excel blob</td></tr>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ProjectIndex/take</code></td><td>Get paginated project index data</td></tr>
             </tbody>
           </table>
@@ -1162,7 +1402,7 @@
             <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>Wov/upload</code></td><td>Upload WOV Excel file. Body: multipart/form-data</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Wov/data?fileName={name}</code></td><td>Get WOV data for a specific uploaded filename</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Wov/data?fileName={name}</code></td><td>Get WOV data for a specific uploaded filename</td></tr>
             </tbody>
           </table>
 
@@ -1172,15 +1412,15 @@
             <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/take</code></td><td>Get paginated list of uploaded records. Body: <code>{ skip, take, sort, filter }</code> → <strong>use this to find valid IDs</strong></td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/PostFiles</code></td><td>Upload reference budget files. Body: multipart/form-data with <code>files</code> field</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/PostFiles</code></td><td>Upload reference budget files. Body: multipart/form-data with <code>files</code> field</td></tr>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/validate-upload</code></td><td>Validate files before submission. Body: <code>{ referenceProjectIds, dataSeriesId, year, month }</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/bulk</code></td><td>Submit a bulk create request. Body: <code>ReferenceBudgetBulkRequest</code> with files, dataSeriesId, referenceDateId</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/bulk</code></td><td>Submit a bulk create request. Body: <code>ReferenceBudgetBulkRequest</code> with files, dataSeriesId, referenceDateId</td></tr>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/bulk/{status}</code></td><td>Poll the status of a bulk operation</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/getAll/{id}</code></td><td>Get full details of an uploaded record. <code>{id}</code> comes from <code>ReferenceBudget/take</code> response.</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/getAll/{id}</code></td><td>Get full details of an uploaded record. <code>{id}</code> comes from <code>ReferenceBudget/take</code> response.</td></tr>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/file/{id}</code></td><td>Download the uploaded Excel file for a record</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/summary</code></td><td>Get summary statistics</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/summary</code></td><td>Get summary statistics</td></tr>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/delete/{id}</code></td><td>Delete an uploaded record by ID</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/publish</code></td><td>Publish selected records. Body: <code>number[]</code> of IDs</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/publish</code></td><td>Publish selected records. Body: <code>number[]</code> of IDs</td></tr>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/bulkpublish</code></td><td>Bulk publish multiple records. Body: <code>number[]</code> of IDs</td></tr>
             </tbody>
           </table>
@@ -1191,13 +1431,13 @@
             <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/PostFiles</code></td><td>Upload forecast figure files. Body: multipart/form-data</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/validate-upload</code></td><td>Validate uploaded files before submit</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/validate-upload</code></td><td>Validate uploaded files before submit</td></tr>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/BulkGenerateFile</code></td><td>Trigger bulk file generation</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/GenerateFailedFile?requestId={id}</code></td><td>Retry generation for a specific failed request</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/GenerateFailedFile?requestId={id}</code></td><td>Retry generation for a specific failed request</td></tr>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ForcastFigure/bulk/{statusId}</code></td><td>Poll bulk generation status by ID</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ForcastFigure/delete/{id}</code></td><td>Delete a forecast figure record by ID</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ForcastFigure/delete/{id}</code></td><td>Delete a forecast figure record by ID</td></tr>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/publish</code></td><td>Publish forecast figures. Body: IDs array</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/bulkpublish</code></td><td>Bulk publish forecast figures. Body: IDs array</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/bulkpublish</code></td><td>Bulk publish forecast figures. Body: IDs array</td></tr>
             </tbody>
           </table>
 
@@ -1219,26 +1459,26 @@
             <thead><tr><th>File</th><th>What it does</th></tr></thead>
             <tbody>
               <tr><td><code>src/main.tsx</code></td><td>App entry point — mounts React, wraps with MSAL <code>MsalProvider</code>, <code>ThemeProvider</code>, and sets AG Grid license key</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>src/App.tsx</code></td><td>Root component — acquires auth token, fetches profile, wraps with Redux <code>Provider</code>, snackbar, session timeout dialog, and router</td></tr>
+              <tr><td><code>src/App.tsx</code></td><td>Root component — acquires auth token, fetches profile, wraps with Redux <code>Provider</code>, snackbar, session timeout dialog, and router</td></tr>
               <tr><td><code>src/router.tsx</code></td><td>All route definitions — paths, page components, auth guards, and breadcrumbs</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>src/auth-config.ts</code></td><td>Azure B2C / MSAL configuration — tenant, client ID, policies, scopes, redirects</td></tr>
+              <tr><td><code>src/auth-config.ts</code></td><td>Azure B2C / MSAL configuration — tenant, client ID, policies, scopes, redirects</td></tr>
               <tr><td><code>src/i18n.ts</code></td><td>i18next setup — fetches translations from the Arcadis cloud platform at runtime (not local files)</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>src/services/common/HttpCommon.ts</code></td><td>Axios base instance — sets base URL from env, and injects <code>Authorization: Bearer {token}</code> on every request</td></tr>
+              <tr><td><code>src/services/common/HttpCommon.ts</code></td><td>Axios base instance — sets base URL from env, and injects <code>Authorization: Bearer {token}</code> on every request</td></tr>
               <tr><td><code>src/hooks/auth.hook.ts</code></td><td>Manages MSAL token acquisition and silent refresh</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>src/hooks/subscription.hook.ts</code></td><td>Fetches user role + subscriptions on mount — used by <code>PrivateRoute</code> to gate access</td></tr>
+              <tr><td><code>src/hooks/subscription.hook.ts</code></td><td>Fetches user role + subscriptions on mount — used by <code>PrivateRoute</code> to gate access</td></tr>
               <tr><td><code>src/components/PrivateRoute/PrivateRoute.tsx</code></td><td>Route guard — checks auth, role, and subscriptions before rendering a page. Redirects to <code>/upgrade</code> if subscription missing, <code>/unauthorized</code> if not admin.</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>src/components/SideBar/SideBar.tsx</code></td><td>Left navigation — filters menu items by auth, admin role, and company ID via <code>filterMenuItems.ts</code> (subscription gating is handled by <code>PrivateRoute</code>, not the sidebar)</td></tr>
+              <tr><td><code>src/components/SideBar/SideBar.tsx</code></td><td>Left navigation — filters menu items by auth, admin role, and company ID via <code>filterMenuItems.ts</code> (subscription gating is handled by <code>PrivateRoute</code>, not the sidebar)</td></tr>
               <tr><td><code>src/utils/filterMenuItems.ts</code></td><td>Sidebar visibility rules — <code>requiresAuth</code>, <code>requiresAdmin</code>, <code>allowedCompanyIds</code>, <code>blockedCompanyIds</code></td></tr>
               <tr><td><code>src/context/appState.context.tsx</code></td><td>React Context — holds the global <code>clientId</code> (selected company) shared across pages</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>src/utils/app-storage.ts</code></td><td>Thin wrapper over <code>sessionStorage</code> — get/set access token, clientId, userId</td></tr>
+              <tr><td><code>src/utils/app-storage.ts</code></td><td>Thin wrapper over <code>sessionStorage</code> — get/set access token, clientId, userId</td></tr>
               <tr><td><code>src/utils/reportDownloader.ts</code></td><td>Downloads blob responses as files and automatically logs each download via <code>LogDataService</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><code>src/components/SnackbarNotification/store.ts</code></td><td>Redux store — used <em>only</em> for snackbar/notification state. No other global state in Redux.</td></tr>
+              <tr><td><code>src/components/SnackbarNotification/store.ts</code></td><td>Redux store — used <em>only</em> for snackbar/notification state. No other global state in Redux.</td></tr>
               <tr><td><code>vite.config.ts</code></td><td>Vite build config — sets dev server port to <code>3000</code>, enables SVG-as-React-component via <code>vite-plugin-svgr</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><code>vitest.config.ts</code></td><td>Test config — jsdom environment, V8 coverage provider</td></tr>
+              <tr><td><code>vitest.config.ts</code></td><td>Test config — jsdom environment, V8 coverage provider</td></tr>
               <tr><td><code>src/tests/setupTests.ts</code></td><td>Global test setup file — runs before all tests (mock registrations, polyfills)</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>.env.development</code></td><td>Dev environment variables (API URL, B2C config, AG Grid license key)</td></tr>
+              <tr><td><code>.env.development</code></td><td>Dev environment variables (API URL, B2C config, AG Grid license key)</td></tr>
               <tr><td><code>.env.uat</code></td><td>UAT environment variables</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>.env.production</code></td><td>Production environment variables</td></tr>
+              <tr><td><code>.env.production</code></td><td>Production environment variables</td></tr>
             </tbody>
           </table>
 
@@ -1252,15 +1492,15 @@
             <thead><tr><th>Variable</th><th>Dev Value</th><th>UAT Value</th><th>Prod Value</th></tr></thead>
             <tbody>
               <tr><td><code>VITE_REACT_APP_API_URL</code></td><td><code>https://devbdb.arcadis.com/api/bdbapi/api/</code></td><td><code>https://uatbdb.arcadis.com/api/bdbapi/api/</code></td><td><code>https://bdb.eu/api/bdbapi/api</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><code>VITE_REACT_APP_REDIRECT_URL</code></td><td><code>https://devbdb.arcadis.com/dashboard</code></td><td><code>https://uatbdb.arcadis.com/dashboard</code></td><td><code>https://bdb.eu/dashboard</code></td></tr>
+              <tr><td><code>VITE_REACT_APP_REDIRECT_URL</code></td><td><code>https://devbdb.arcadis.com/dashboard</code></td><td><code>https://uatbdb.arcadis.com/dashboard</code></td><td><code>https://bdb.eu/dashboard</code></td></tr>
               <tr><td><code>VITE_REACT_APP_POST_LOGOUT_REDIRECT_URL</code></td><td><code>https://devbdb.arcadis.com/</code></td><td><code>https://uatbdb.arcadis.com/</code></td><td><code>https://bdb.eu/dashboard</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><code>VITE_REACT_APP_TENANT_NAME</code></td><td><code>ArcadisB2CDEV</code></td><td><code>ArcadisB2CDEV</code></td><td><code>ArcadisB2C</code></td></tr>
+              <tr><td><code>VITE_REACT_APP_TENANT_NAME</code></td><td><code>ArcadisB2CDEV</code></td><td><code>ArcadisB2CDEV</code></td><td><code>ArcadisB2C</code></td></tr>
               <tr><td><code>VITE_REACT_APP_CLIENT_ID_LANDING</code></td><td><code>27848361-a66e-4158-856c-8414a88f7053</code></td><td><code>27848361-a66e-4158-856c-8414a88f7053</code></td><td><code>f176f4a6-61ee-41b9-a3ff-c93a6e09e188</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><code>VITE_REACT_APP_OAUTH_SCOPES</code></td><td><code>https://ArcadisB2CDEV.onmicrosoft.com/27848361-.../access-api</code></td><td><code>https://ArcadisB2CDEV.onmicrosoft.com/27848361-.../access-api</code></td><td><code>https://ArcadisB2C.onmicrosoft.com/f176f4a6-.../access-api</code></td></tr>
+              <tr><td><code>VITE_REACT_APP_OAUTH_SCOPES</code></td><td><code>https://ArcadisB2CDEV.onmicrosoft.com/27848361-.../access-api</code></td><td><code>https://ArcadisB2CDEV.onmicrosoft.com/27848361-.../access-api</code></td><td><code>https://ArcadisB2C.onmicrosoft.com/f176f4a6-.../access-api</code></td></tr>
               <tr><td><code>VITE_REACT_APP_SIGN_UP_SIGN_IN_POLICY</code></td><td colspan="3"><code>B2C_1A_BDB_SIGNUPSIGNIN</code> (same across all environments)</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>VITE_REACT_APP_B2C_METADATA</code></td><td colspan="3">Full B2C metadata JSON (issuer, token endpoint, logout endpoint, JWKS URI). Hardcoded in each <code>.env.*</code> file for reliability — see the env files for full JSON.</td></tr>
+              <tr><td><code>VITE_REACT_APP_B2C_METADATA</code></td><td colspan="3">Full B2C metadata JSON (issuer, token endpoint, logout endpoint, JWKS URI). Hardcoded in each <code>.env.*</code> file for reliability — see the env files for full JSON.</td></tr>
               <tr><td><code>VITE_AGGRID_LICENSE_KEY</code></td><td colspan="3">AG Grid Enterprise license key. Same key across all environments. Expires <strong>19 Sep 2026</strong>. Licensed to Arcadis Global B.V. for the BDB application.</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>REACT_APP_FEATURE_SEARCH</code></td><td colspan="3"><code>false</code> — feature flag in <code>src/utils/features.ts</code>, currently disabled (note: uses <code>REACT_APP_</code> prefix, not <code>VITE_</code>)</td></tr>
+              <tr><td><code>REACT_APP_FEATURE_SEARCH</code></td><td colspan="3"><code>false</code> — feature flag in <code>src/utils/features.ts</code>, currently disabled (note: uses <code>REACT_APP_</code> prefix, not <code>VITE_</code>)</td></tr>
               <tr><td><code>REACT_APP_FEATURE_NOTIFICATIONS</code></td><td colspan="3"><code>false</code> — controls <code>NotificationCenter</code> in header; currently disabled in all environments</td></tr>
             </tbody>
           </table>
@@ -1270,9 +1510,9 @@
             <thead><tr><th>Variable</th><th>Notes</th></tr></thead>
             <tbody>
               <tr><td><code>VITE_REACT_APP_PASSWORD_RESET_POLICY</code></td><td><code>B2C_1A_GLOBAL_PasswordReset</code> — not used in <code>auth-config.ts</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><code>VITE_REACT_APP_ENVIRONMENT</code></td><td>Environment label (<code>development</code> / <code>uat</code> / <code>production</code>)</td></tr>
+              <tr><td><code>VITE_REACT_APP_ENVIRONMENT</code></td><td>Environment label (<code>development</code> / <code>uat</code> / <code>production</code>)</td></tr>
               <tr><td><code>VITE_REACT_APP_API_ENDPOINT</code></td><td>Duplicate of API URL — use <code>VITE_REACT_APP_API_URL</code> instead</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>VITE_REACT_APP_PROXY_API_URL</code></td><td>Arcadis IAM proxy — not used by this app</td></tr>
+              <tr><td><code>VITE_REACT_APP_PROXY_API_URL</code></td><td>Arcadis IAM proxy — not used by this app</td></tr>
               <tr><td><code>VITE_REACT_APP_PROXY_API_LANDING_URL</code></td><td>Arcadis IAM apps proxy — not used by this app</td></tr>
             </tbody>
           </table>
@@ -1286,13 +1526,13 @@
             <thead><tr><th>Property</th><th>Value</th></tr></thead>
             <tbody>
               <tr><td>Config file</td><td><code>src/i18n.ts</code></td></tr>
-              <tr style="background:#f9f9f9;"><td>Translation API URL</td><td><code>https://i18n-api.arcadis.com/api/v1.0/{solutionId}/{lng}/namespaces/{ns}</code></td></tr>
+              <tr><td>Translation API URL</td><td><code>https://i18n-api.arcadis.com/api/v1.0/{solutionId}/{lng}/namespaces/{ns}</code></td></tr>
               <tr><td>Solution ID</td><td><code>021c7f6b-1b50-44da-8aa6-e6e9b269e360</code></td></tr>
-              <tr style="background:#f9f9f9;"><td>API Code (query param)</td><td><code>EjmzCv2V4mM9PmRf2zWSnWfLaZ7dQmj4W2HQgeUNT57htPh25bxT</code></td></tr>
+              <tr><td>API Code (query param)</td><td><code>EjmzCv2V4mM9PmRf2zWSnWfLaZ7dQmj4W2HQgeUNT57htPh25bxT</code></td></tr>
               <tr><td>Supported Languages</td><td>English (<code>en</code>) and Dutch (<code>nl</code>). Fallback: <code>en</code></td></tr>
-              <tr style="background:#f9f9f9;"><td>Namespaces</td><td><code>common</code> (default) and <code>pages</code></td></tr>
+              <tr><td>Namespaces</td><td><code>common</code> (default) and <code>pages</code></td></tr>
               <tr><td>How to use in a component</td><td><code>const { t } = useTranslation();</code> then <code>&lt;p&gt;{'{t("your.key")}'}&lt;/p&gt;</code></td></tr>
-              <tr style="background:#f9f9f9;"><td>Language switcher component</td><td><code>src/components/LanguageSelector/</code> — saves the selected language to <code>localStorage</code></td></tr>
+              <tr><td>Language switcher component</td><td><code>src/components/LanguageSelector/</code> — saves the selected language to <code>localStorage</code></td></tr>
             </tbody>
           </table>
         </section>
@@ -4329,7 +4569,7 @@ npm run build:prd      <span class="c-com"># Uses .env.production</span></code><
                 <td style="padding: 0.3rem;"><code>src/pages/</code></td>
                 <td style="padding: 0.3rem;">Full page components</td>
               </tr>
-              <tr style="background: #f9f9f9;">
+              <tr>
                 <td style="padding: 0.3rem;"><strong>Components</strong></td>
                 <td style="padding: 0.3rem;"><code>src/components/</code></td>
                 <td style="padding: 0.3rem;">Reusable UI pieces</td>
@@ -4339,7 +4579,7 @@ npm run build:prd      <span class="c-com"># Uses .env.production</span></code><
                 <td style="padding: 0.3rem;"><code>src/services/</code></td>
                 <td style="padding: 0.3rem;">API calls</td>
               </tr>
-              <tr style="background: #f9f9f9;">
+              <tr>
                 <td style="padding: 0.3rem;"><strong>Hooks</strong></td>
                 <td style="padding: 0.3rem;"><code>src/hooks/</code></td>
                 <td style="padding: 0.3rem;">Custom React hooks</td>
@@ -4349,7 +4589,7 @@ npm run build:prd      <span class="c-com"># Uses .env.production</span></code><
                 <td style="padding: 0.3rem;"><code>src/models/</code></td>
                 <td style="padding: 0.3rem;">TypeScript interfaces</td>
               </tr>
-              <tr style="background: #f9f9f9;">
+              <tr>
                 <td style="padding: 0.3rem;"><strong>Utils</strong></td>
                 <td style="padding: 0.3rem;"><code>src/utils/</code></td>
                 <td style="padding: 0.3rem;">Helper functions</td>
@@ -4374,7 +4614,7 @@ npm run build:prd      <span class="c-com"># Uses .env.production</span></code><
             <div class="card-title">Standard user vs Admin user?</div>
             <p>There are exactly <strong>2 roles</strong> in the system. The role is returned as a single string from <code>Auth/GetRoles</code> API and stored in sessionStorage.</p>
             <table style="width: 100%; margin-top: 0.5rem; border-collapse: collapse; font-size: 0.9em;">
-              <tr style="background: #f5f5f5;">
+              <tr>
                 <th style="padding: 0.5rem; border: 1px solid #ddd;">Feature</th>
                 <th style="padding: 0.5rem; border: 1px solid #ddd;"><code>"user"</code> — Standard</th>
                 <th style="padding: 0.5rem; border: 1px solid #ddd;"><code>"admin"</code> — Admin</th>
@@ -4384,7 +4624,7 @@ npm run build:prd      <span class="c-com"># Uses .env.production</span></code><
                 <td style="padding: 0.5rem; border: 1px solid #ddd;">✓ Only subscribed modules</td>
                 <td style="padding: 0.5rem; border: 1px solid #ddd;">✓ All modules (bypasses subscription checks)</td>
               </tr>
-              <tr style="background: #f9f9f9;">
+              <tr>
                 <td style="padding: 0.5rem; border: 1px solid #ddd;">Upload data pages</td>
                 <td style="padding: 0.5rem; border: 1px solid #ddd;">✗ Redirected to <code>/unauthorized</code></td>
                 <td style="padding: 0.5rem; border: 1px solid #ddd;">✓ Full access</td>
@@ -4394,7 +4634,7 @@ npm run build:prd      <span class="c-com"># Uses .env.production</span></code><
                 <td style="padding: 0.5rem; border: 1px solid #ddd;">✗</td>
                 <td style="padding: 0.5rem; border: 1px solid #ddd;">✓</td>
               </tr>
-              <tr style="background: #f9f9f9;">
+              <tr>
                 <td style="padding: 0.5rem; border: 1px solid #ddd;">Export data</td>
                 <td style="padding: 0.5rem; border: 1px solid #ddd;">✓ Based on subscription</td>
                 <td style="padding: 0.5rem; border: 1px solid #ddd;">✓ All data</td>
@@ -4583,7 +4823,7 @@ npm run test:ui</code></pre>
             <div class="card-title">What should I test?</div>
             <p><strong>Priority order:</strong></p>
             <table style="width: 100%; margin-top: 0.5rem; border-collapse: collapse; font-size: 0.9em;">
-              <tr style="background: #f5f5f5;">
+              <tr>
                 <th style="padding: 0.5rem; border: 1px solid #ddd;">Priority</th>
                 <th style="padding: 0.5rem; border: 1px solid #ddd;">What to Test</th>
                 <th style="padding: 0.5rem; border: 1px solid #ddd;">Target</th>
@@ -4593,7 +4833,7 @@ npm run test:ui</code></pre>
                 <td style="padding: 0.5rem; border: 1px solid #ddd;">Services, Hooks, Business Logic</td>
                 <td style="padding: 0.5rem; border: 1px solid #ddd;">80%+</td>
               </tr>
-              <tr style="background: #f9f9f9;">
+              <tr>
                 <td style="padding: 0.5rem; border: 1px solid #ddd;"><strong>MEDIUM</strong></td>
                 <td style="padding: 0.5rem; border: 1px solid #ddd;">Complex Components, Forms</td>
                 <td style="padding: 0.5rem; border: 1px solid #ddd;">60%+</td>
@@ -4697,7 +4937,7 @@ npm run test:ui</code></pre>
             <thead><tr><th>Variable</th><th>Initial Value</th><th>Current Value</th></tr></thead>
             <tbody>
               <tr><td><code>baseUrl</code></td><td><code>https://devbdb.arcadis.com/api/bdbapi/api</code></td><td>(same)</td></tr>
-              <tr style="background:#f9f9f9;"><td><code>token</code></td><td>(leave empty)</td><td>← paste your Bearer token here after login</td></tr>
+              <tr><td><code>token</code></td><td>(leave empty)</td><td>← paste your Bearer token here after login</td></tr>
             </tbody>
           </table>
           <p>5. Click <strong>Save</strong>.<br>
@@ -4753,9 +4993,9 @@ npm run test:ui</code></pre>
             <thead><tr><th>Field</th><th>Value</th></tr></thead>
             <tbody>
               <tr><td><strong>Method</strong></td><td><code>GET</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><strong>URL</strong></td><td><code>{{baseUrl}}/ReferenceProject</code></td></tr>
+              <tr><td><strong>URL</strong></td><td><code>{{baseUrl}}/ReferenceProject</code></td></tr>
               <tr><td><strong>Authorization</strong></td><td>Inherit from parent</td></tr>
-              <tr style="background:#f9f9f9;"><td><strong>Body</strong></td><td>None</td></tr>
+              <tr><td><strong>Body</strong></td><td>None</td></tr>
             </tbody>
           </table>
           <p>Click <strong>Send</strong>. Response panel shows JSON array of reference projects.</p>
@@ -4766,9 +5006,9 @@ npm run test:ui</code></pre>
             <thead><tr><th>Field</th><th>Value</th></tr></thead>
             <tbody>
               <tr><td><strong>Method</strong></td><td><code>GET</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><strong>URL</strong></td><td><code>{{baseUrl}}/Subscription/GetModulesByCountryAndYear/</code></td></tr>
+              <tr><td><strong>URL</strong></td><td><code>{{baseUrl}}/Subscription/GetModulesByCountryAndYear/</code></td></tr>
               <tr><td><strong>Params tab</strong></td><td>Add key <code>countryId</code> = <code>1</code>, key <code>year</code> = <code>2024</code>, key <code>includeCompanies</code> = <code>false</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><strong>Body</strong></td><td>None</td></tr>
+              <tr><td><strong>Body</strong></td><td>None</td></tr>
             </tbody>
           </table>
           <p>💡 Postman automatically appends params to the URL: <code>?countryId=1&amp;year=2024&amp;includeCompanies=false</code></p>
@@ -4779,9 +5019,9 @@ npm run test:ui</code></pre>
             <thead><tr><th>Field</th><th>Value</th></tr></thead>
             <tbody>
               <tr><td><strong>Method</strong></td><td><code>POST</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><strong>URL</strong></td><td><code>{{baseUrl}}/ReportForecastFigures/1?isForecastIncluded=false</code></td></tr>
+              <tr><td><strong>URL</strong></td><td><code>{{baseUrl}}/ReportForecastFigures/1?isForecastIncluded=false</code></td></tr>
               <tr><td><strong>Body tab</strong></td><td>Select <strong>raw</strong> → set format to <strong>JSON</strong></td></tr>
-              <tr style="background:#f9f9f9;"><td><strong>Body content</strong></td><td>See below</td></tr>
+              <tr><td><strong>Body content</strong></td><td>See below</td></tr>
             </tbody>
           </table>
           <pre style="background:#1e1e1e;color:#d4d4d4;padding:0.8rem;border-radius:4px;font-size:0.85em;"><code>[
@@ -4797,9 +5037,9 @@ npm run test:ui</code></pre>
             <thead><tr><th>Field</th><th>Value</th></tr></thead>
             <tbody>
               <tr><td><strong>Method</strong></td><td><code>POST</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><strong>URL</strong></td><td><code>{{baseUrl}}/ReferenceBudget/PostFiles</code></td></tr>
+              <tr><td><strong>URL</strong></td><td><code>{{baseUrl}}/ReferenceBudget/PostFiles</code></td></tr>
               <tr><td><strong>Body tab</strong></td><td>Select <strong>form-data</strong></td></tr>
-              <tr style="background:#f9f9f9;"><td><strong>Key</strong></td><td>Type <code>files</code> → hover the key → change type from Text to <strong>File</strong></td></tr>
+              <tr><td><strong>Key</strong></td><td>Type <code>files</code> → hover the key → change type from Text to <strong>File</strong></td></tr>
               <tr><td><strong>Value</strong></td><td>Click <strong>Select Files</strong> → pick your Excel file</td></tr>
             </tbody>
           </table>
@@ -4811,9 +5051,9 @@ npm run test:ui</code></pre>
             <thead><tr><th>Field</th><th>Value</th></tr></thead>
             <tbody>
               <tr><td><strong>Method</strong></td><td><code>POST</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><strong>URL</strong></td><td><code>{{baseUrl}}/ReportForecastFigures/report/1?isForecastIncluded=false&amp;format=excel</code></td></tr>
+              <tr><td><strong>URL</strong></td><td><code>{{baseUrl}}/ReportForecastFigures/report/1?isForecastIncluded=false&amp;format=excel</code></td></tr>
               <tr><td><strong>Body</strong></td><td>Same JSON array of date strings as the data endpoint above</td></tr>
-              <tr style="background:#f9f9f9;"><td><strong>To save the file</strong></td><td>After sending, click the <strong>⬇ Save Response</strong> dropdown → <strong>Save to a file</strong></td></tr>
+              <tr><td><strong>To save the file</strong></td><td>After sending, click the <strong>⬇ Save Response</strong> dropdown → <strong>Save to a file</strong></td></tr>
             </tbody>
           </table>
           <p>The response will show as binary in Postman. Use "Save to a file" to get the actual <code>.xlsx</code> file on your disk.</p>
@@ -4824,7 +5064,7 @@ npm run test:ui</code></pre>
             <thead><tr><th>Field</th><th>Value</th></tr></thead>
             <tbody>
               <tr><td><strong>Method</strong></td><td><code>PUT</code></td></tr>
-              <tr style="background:#f9f9f9;"><td><strong>URL</strong></td><td><code>{{baseUrl}}/Profile</code></td></tr>
+              <tr><td><strong>URL</strong></td><td><code>{{baseUrl}}/Profile</code></td></tr>
               <tr><td><strong>Body</strong></td><td>raw → JSON</td></tr>
             </tbody>
           </table>
@@ -4840,13 +5080,13 @@ npm run test:ui</code></pre>
             <thead><tr><th>Status Code</th><th>Meaning</th><th>What to do</th></tr></thead>
             <tbody>
               <tr><td><span style="color:#4caf50;font-weight:bold;">200 OK</span></td><td>Success — response body has data</td><td>Read the Body tab → Pretty view for formatted JSON</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#4caf50;font-weight:bold;">201 Created</span></td><td>Resource was created</td><td>Response body usually contains the new record with its ID</td></tr>
+              <tr><td><span style="color:#4caf50;font-weight:bold;">201 Created</span></td><td>Resource was created</td><td>Response body usually contains the new record with its ID</td></tr>
               <tr><td><span style="color:#4caf50;font-weight:bold;">204 No Content</span></td><td>Success but no response body (e.g. PUT/DELETE)</td><td>Empty body is expected — it worked</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#ff9800;font-weight:bold;">400 Bad Request</span></td><td>Your request body or params are wrong</td><td>Check the response body — it usually says which field failed</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">400 Bad Request</span></td><td>Your request body or params are wrong</td><td>Check the response body — it usually says which field failed</td></tr>
               <tr><td><span style="color:#f44336;font-weight:bold;">401 Unauthorized</span></td><td>Token is missing or expired</td><td>Get a new token from browser (Step 2) and update environment variable</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#f44336;font-weight:bold;">403 Forbidden</span></td><td>You're authenticated but don't have permission</td><td>The endpoint may require <code>admin</code> role — check with your team</td></tr>
+              <tr><td><span style="color:#f44336;font-weight:bold;">403 Forbidden</span></td><td>You're authenticated but don't have permission</td><td>The endpoint may require <code>admin</code> role — check with your team</td></tr>
               <tr><td><span style="color:#f44336;font-weight:bold;">404 Not Found</span></td><td>The ID in the URL doesn't exist</td><td>Try a different ID. First call a list endpoint to get valid IDs</td></tr>
-              <tr style="background:#f9f9f9;"><td><span style="color:#f44336;font-weight:bold;">500 Internal Server Error</span></td><td>Backend crashed</td><td>Check the response body for a message, report to backend team</td></tr>
+              <tr><td><span style="color:#f44336;font-weight:bold;">500 Internal Server Error</span></td><td>Backend crashed</td><td>Check the response body for a message, report to backend team</td></tr>
             </tbody>
           </table>
 
@@ -4857,13 +5097,13 @@ npm run test:ui</code></pre>
             <thead><tr><th>#</th><th>Request</th><th>Why</th></tr></thead>
             <tbody>
               <tr><td>1</td><td><code>GET {{baseUrl}}/Auth/GetRoles</code></td><td>Confirm your auth is working and see your role</td></tr>
-              <tr style="background:#f9f9f9;"><td>2</td><td><code>GET {{baseUrl}}/Auth/GetSubscriptions</code></td><td>See which products you have access to</td></tr>
+              <tr><td>2</td><td><code>GET {{baseUrl}}/Auth/GetSubscriptions</code></td><td>See which products you have access to</td></tr>
               <tr><td>3</td><td><code>GET {{baseUrl}}/ReferenceProject</code></td><td>Get reference project list — you'll need IDs for other endpoints</td></tr>
-              <tr style="background:#f9f9f9;"><td>4</td><td><code>GET {{baseUrl}}/DataSeries/GetLastDefinitiveDataSeries</code></td><td>Get the current data series (latest version of data)</td></tr>
+              <tr><td>4</td><td><code>GET {{baseUrl}}/DataSeries/GetLastDefinitiveDataSeries</code></td><td>Get the current data series (latest version of data)</td></tr>
               <tr><td>5</td><td><code>GET {{baseUrl}}/ReferenceDate</code></td><td>Get all reference dates</td></tr>
-              <tr style="background:#f9f9f9;"><td>6</td><td><code>GET {{baseUrl}}/Country</code></td><td>Get country list with IDs</td></tr>
+              <tr><td>6</td><td><code>GET {{baseUrl}}/Country</code></td><td>Get country list with IDs</td></tr>
               <tr><td>7</td><td><code>GET {{baseUrl}}/Profile</code></td><td>See your own profile data</td></tr>
-              <tr style="background:#f9f9f9;"><td>8</td><td><code>POST {{baseUrl}}/ReportForecastFigures/{id}</code></td><td>Get monthly figures data (use a referenceProject ID from step 3)</td></tr>
+              <tr><td>8</td><td><code>POST {{baseUrl}}/ReportForecastFigures/{id}</code></td><td>Get monthly figures data (use a referenceProject ID from step 3)</td></tr>
             </tbody>
           </table>
 
@@ -4874,13 +5114,13 @@ npm run test:ui</code></pre>
             <thead><tr><th>#</th><th>Request</th><th>Why</th></tr></thead>
             <tbody>
               <tr><td>1</td><td><code>GET {{baseUrl}}/Auth/GetRoles</code></td><td>Confirm your auth is working and see your role</td></tr>
-              <tr style="background:#f9f9f9;"><td>2</td><td><code>GET {{baseUrl}}/Auth/GetSubscriptions</code></td><td>See which products you have access to</td></tr>
+              <tr><td>2</td><td><code>GET {{baseUrl}}/Auth/GetSubscriptions</code></td><td>See which products you have access to</td></tr>
               <tr><td>3</td><td><code>GET {{baseUrl}}/ReferenceProject</code></td><td>Get reference project list — you'll need IDs for other endpoints</td></tr>
-              <tr style="background:#f9f9f9;"><td>4</td><td><code>GET {{baseUrl}}/DataSeries/GetLastDefinitiveDataSeries</code></td><td>Get the current data series (latest version of data)</td></tr>
+              <tr><td>4</td><td><code>GET {{baseUrl}}/DataSeries/GetLastDefinitiveDataSeries</code></td><td>Get the current data series (latest version of data)</td></tr>
               <tr><td>5</td><td><code>GET {{baseUrl}}/ReferenceDate</code></td><td>Get all reference dates</td></tr>
-              <tr style="background:#f9f9f9;"><td>6</td><td><code>GET {{baseUrl}}/Country</code></td><td>Get country list with IDs</td></tr>
+              <tr><td>6</td><td><code>GET {{baseUrl}}/Country</code></td><td>Get country list with IDs</td></tr>
               <tr><td>7</td><td><code>GET {{baseUrl}}/Profile</code></td><td>See your own profile data</td></tr>
-              <tr style="background:#f9f9f9;"><td>8</td><td><code>POST {{baseUrl}}/ReportForecastFigures/{id}</code></td><td>Get monthly figures data (use a referenceProject ID from step 3)</td></tr>
+              <tr><td>8</td><td><code>POST {{baseUrl}}/ReportForecastFigures/{id}</code></td><td>Get monthly figures data (use a referenceProject ID from step 3)</td></tr>
             </tbody>
           </table>
 
@@ -4905,7 +5145,7 @@ npm run test:ui</code></pre>
                 <td><code>GET /ReferenceProject</code> → pick any <code>id</code> from the response array</td>
                 <td><code>ReportForecastFigures/{id}</code>, <code>ReferenceProject/getById/{id}</code>, <code>ReferenceDatePublished/getLatest/{id}</code></td>
               </tr>
-              <tr style="background:#f9f9f9;">
+              <tr>
                 <td><strong>Reference Date ID</strong></td>
                 <td>The ID of a specific publication date/quarter (e.g. Q1-2024)</td>
                 <td><code>GET /ReferenceDate</code> → pick any <code>id</code> from the response array</td>
@@ -4917,7 +5157,7 @@ npm run test:ui</code></pre>
                 <td><code>GET /DataSeries</code> or <code>GET /DataSeries/GetLastDefinitiveDataSeries</code> → use the <code>id</code> field</td>
                 <td><code>DataSeries/{id}</code></td>
               </tr>
-              <tr style="background:#f9f9f9;">
+              <tr>
                 <td><strong>Upload Record ID</strong> (ReferenceBudget)</td>
                 <td>The internal database row ID of a <em>previously uploaded</em> reference budget file. Does NOT exist until someone has uploaded files via the admin UI.</td>
                 <td><code>POST /ReferenceBudget/take</code> (see body below) → pick any <code>id</code> from <code>response.list</code></td>
@@ -4929,7 +5169,7 @@ npm run test:ui</code></pre>
                 <td><code>POST /ForcastFigure/take</code> → pick any <code>id</code> from response list</td>
                 <td><code>ForcastFigure/delete/{id}</code></td>
               </tr>
-              <tr style="background:#f9f9f9;">
+              <tr>
                 <td><strong>Parametric Node ID</strong></td>
                 <td>The ID of a parametric element node in the tree</td>
                 <td><code>GET /ParametricNode</code> → pick any <code>id</code> from the response array</td>
@@ -4988,11 +5228,11 @@ npm run test:ui</code></pre>
             <thead><tr><th>Step</th><th>Call this first (List)</th><th>Then call this (Detail)</th></tr></thead>
             <tbody>
               <tr><td>1 → 2</td><td><code>GET /ReferenceProject</code></td><td><code>GET /ReferenceProject/getById/{id}</code></td></tr>
-              <tr style="background:#f9f9f9;"><td>1 → 2</td><td><code>GET /ReferenceDate</code></td><td><code>GET /ReferenceDate/{id}</code></td></tr>
+              <tr><td>1 → 2</td><td><code>GET /ReferenceDate</code></td><td><code>GET /ReferenceDate/{id}</code></td></tr>
               <tr><td>1 → 2</td><td><code>GET /DataSeries</code></td><td><code>GET /DataSeries/{id}</code></td></tr>
-              <tr style="background:#f9f9f9;"><td>1 → 2</td><td><code>GET /ParametricNode</code></td><td><code>GET /ParametricNode/{id}</code></td></tr>
+              <tr><td>1 → 2</td><td><code>GET /ParametricNode</code></td><td><code>GET /ParametricNode/{id}</code></td></tr>
               <tr><td>1 → 2</td><td><code>POST /ReferenceBudget/take</code> (body: <code>{skip:0, take:20, sort:[], filter:null}</code>)</td><td><code>GET /ReferenceBudget/getAll/{id}</code></td></tr>
-              <tr style="background:#f9f9f9;"><td>1 → 2</td><td><code>GET /UserPreset/user/{email}</code></td><td><code>GET /UserPreset/preset/{id}</code></td></tr>
+              <tr><td>1 → 2</td><td><code>GET /UserPreset/user/{email}</code></td><td><code>GET /UserPreset/preset/{id}</code></td></tr>
             </tbody>
           </table>
 
@@ -5005,7 +5245,7 @@ npm run test:ui</code></pre>
                 <td><strong>Token expired? Refresh in one place</strong></td>
                 <td>Just update the <code>token</code> variable in the <strong>BDB Dev</strong> environment — all requests auto-pick it up</td>
               </tr>
-              <tr style="background:#f9f9f9;">
+              <tr>
                 <td><strong>Copy the actual URL a request is using</strong></td>
                 <td>After clicking Send, hover over the URL bar — Postman shows the resolved URL with all variables substituted</td>
               </tr>
@@ -5013,7 +5253,7 @@ npm run test:ui</code></pre>
                 <td><strong>See request/response history</strong></td>
                 <td>Click <strong>History</strong> in the left sidebar — every past request is saved</td>
               </tr>
-              <tr style="background:#f9f9f9;">
+              <tr>
                 <td><strong>Save a request to the collection</strong></td>
                 <td>After building a request → click <strong>Save</strong> → choose the <code>BDB API</code> collection → give it a name</td>
               </tr>
@@ -5021,7 +5261,7 @@ npm run test:ui</code></pre>
                 <td><strong>Format JSON body nicely</strong></td>
                 <td>In the Body tab (raw/JSON), click the <strong>Beautify</strong> button (top right of body editor) to auto-indent</td>
               </tr>
-              <tr style="background:#f9f9f9;">
+              <tr>
                 <td><strong>Switch between Dev / UAT / Prod</strong></td>
                 <td>Just change the environment dropdown (top right) — the <code>{{baseUrl}}</code> variable switches automatically</td>
               </tr>
@@ -5029,7 +5269,7 @@ npm run test:ui</code></pre>
                 <td><strong>Don't set Content-Type manually</strong></td>
                 <td>For JSON bodies, Postman sets it automatically. Only set <code>Content-Type: application/json</code> manually if Postman isn't detecting it.</td>
               </tr>
-              <tr style="background:#f9f9f9;">
+              <tr>
                 <td><strong>Blob/binary response looks garbled?</strong></td>
                 <td>That's normal for Excel/PDF responses. Use <strong>Save Response → Save to file</strong> instead of trying to read it in the body panel</td>
               </tr>
@@ -5047,29 +5287,29 @@ npm run test:ui</code></pre>
             <thead><tr><th>Name</th><th>Method</th><th>URL</th><th>Body Required?</th></tr></thead>
             <tbody>
               <tr><td>Get My Role</td><td><code>GET</code></td><td><code>{{baseUrl}}/Auth/GetRoles</code></td><td>No</td></tr>
-              <tr style="background:#f9f9f9;"><td>Get My Subscriptions</td><td><code>GET</code></td><td><code>{{baseUrl}}/Auth/GetSubscriptions</code></td><td>No</td></tr>
+              <tr><td>Get My Subscriptions</td><td><code>GET</code></td><td><code>{{baseUrl}}/Auth/GetSubscriptions</code></td><td>No</td></tr>
               <tr><td>Get My Profile</td><td><code>GET</code></td><td><code>{{baseUrl}}/Profile</code></td><td>No</td></tr>
-              <tr style="background:#f9f9f9;"><td>Update My Profile</td><td><code>PUT</code></td><td><code>{{baseUrl}}/Profile</code></td><td>Yes — JSON Profile object</td></tr>
+              <tr><td>Update My Profile</td><td><code>PUT</code></td><td><code>{{baseUrl}}/Profile</code></td><td>Yes — JSON Profile object</td></tr>
               <tr><td>Get All Countries</td><td><code>GET</code></td><td><code>{{baseUrl}}/Country</code></td><td>No</td></tr>
-              <tr style="background:#f9f9f9;"><td>Get All Reference Projects</td><td><code>GET</code></td><td><code>{{baseUrl}}/ReferenceProject</code></td><td>No</td></tr>
+              <tr><td>Get All Reference Projects</td><td><code>GET</code></td><td><code>{{baseUrl}}/ReferenceProject</code></td><td>No</td></tr>
               <tr><td>Get Reference Project by ID</td><td><code>GET</code></td><td><code>{{baseUrl}}/ReferenceProject/getById/1</code></td><td>No</td></tr>
-              <tr style="background:#f9f9f9;"><td>Get Latest Reference Project</td><td><code>GET</code></td><td><code>{{baseUrl}}/ReferenceProject/getByLastDataSeries</code></td><td>No</td></tr>
+              <tr><td>Get Latest Reference Project</td><td><code>GET</code></td><td><code>{{baseUrl}}/ReferenceProject/getByLastDataSeries</code></td><td>No</td></tr>
               <tr><td>Get All Reference Dates</td><td><code>GET</code></td><td><code>{{baseUrl}}/ReferenceDate</code></td><td>No</td></tr>
-              <tr style="background:#f9f9f9;"><td>Get Latest Data Series</td><td><code>GET</code></td><td><code>{{baseUrl}}/DataSeries/GetLastDefinitiveDataSeries</code></td><td>No</td></tr>
+              <tr><td>Get Latest Data Series</td><td><code>GET</code></td><td><code>{{baseUrl}}/DataSeries/GetLastDefinitiveDataSeries</code></td><td>No</td></tr>
               <tr><td>Get All Data Series</td><td><code>GET</code></td><td><code>{{baseUrl}}/DataSeries</code></td><td>No</td></tr>
-              <tr style="background:#f9f9f9;"><td>Get Subscription Years</td><td><code>GET</code></td><td><code>{{baseUrl}}/Subscription/GetYears</code></td><td>No</td></tr>
+              <tr><td>Get Subscription Years</td><td><code>GET</code></td><td><code>{{baseUrl}}/Subscription/GetYears</code></td><td>No</td></tr>
               <tr><td>Get Subscription Modules</td><td><code>GET</code></td><td><code>{{baseUrl}}/Subscription/GetModulesByCountryAndYear/?countryId=1&amp;year=2024&amp;includeCompanies=false</code></td><td>No</td></tr>
-              <tr style="background:#f9f9f9;"><td>Get Monthly Figures Data</td><td><code>POST</code></td><td><code>{{baseUrl}}/ReportForecastFigures/1?isForecastIncluded=false</code></td><td>Yes — <code>["2023-01-01","2023-04-01"]</code></td></tr>
+              <tr><td>Get Monthly Figures Data</td><td><code>POST</code></td><td><code>{{baseUrl}}/ReportForecastFigures/1?isForecastIncluded=false</code></td><td>Yes — <code>["2023-01-01","2023-04-01"]</code></td></tr>
               <tr><td>Download Monthly Figures Excel</td><td><code>POST</code></td><td><code>{{baseUrl}}/ReportForecastFigures/report/1?isForecastIncluded=false&amp;format=excel</code></td><td>Yes — same date array</td></tr>
-              <tr style="background:#f9f9f9;"><td>Get Market Indicator</td><td><code>GET</code></td><td><code>{{baseUrl}}/ReportMarketIndicator?startDate=2022-10-01&amp;endDate=2024-09-22</code></td><td>No</td></tr>
+              <tr><td>Get Market Indicator</td><td><code>GET</code></td><td><code>{{baseUrl}}/ReportMarketIndicator?startDate=2022-10-01&amp;endDate=2024-09-22</code></td><td>No</td></tr>
               <tr><td>Get Market Trends</td><td><code>GET</code></td><td><code>{{baseUrl}}/ReportTrends</code></td><td>No</td></tr>
-              <tr style="background:#f9f9f9;"><td>Get Indicator Trends</td><td><code>POST</code></td><td><code>{{baseUrl}}/ReportTrends?isTrendsIncluded=false</code></td><td>Yes — <code>["2023-01-01"]</code></td></tr>
+              <tr><td>Get Indicator Trends</td><td><code>POST</code></td><td><code>{{baseUrl}}/ReportTrends?isTrendsIncluded=false</code></td><td>Yes — <code>["2023-01-01"]</code></td></tr>
               <tr><td>Get Aspect Ratio Countries</td><td><code>GET</code></td><td><code>{{baseUrl}}/DesignKeyCostFigures/GetProjectAnalyseCountries</code></td><td>No</td></tr>
-              <tr style="background:#f9f9f9;"><td>Get Parametric Nodes</td><td><code>GET</code></td><td><code>{{baseUrl}}/ParametricNode</code></td><td>No</td></tr>
+              <tr><td>Get Parametric Nodes</td><td><code>GET</code></td><td><code>{{baseUrl}}/ParametricNode</code></td><td>No</td></tr>
               <tr><td>Search Parametric Nodes</td><td><code>GET</code></td><td><code>{{baseUrl}}/ParametricNode/search?description=beton</code></td><td>No</td></tr>
-              <tr style="background:#f9f9f9;"><td>Get Detailed Indices Products</td><td><code>GET</code></td><td><code>{{baseUrl}}/ReportElementClusters/GetProductList</code></td><td>No</td></tr>
+              <tr><td>Get Detailed Indices Products</td><td><code>GET</code></td><td><code>{{baseUrl}}/ReportElementClusters/GetProductList</code></td><td>No</td></tr>
               <tr><td>Get User Presets</td><td><code>GET</code></td><td><code>{{baseUrl}}/UserPreset/user/your.email@arcadis.com</code></td><td>No</td></tr>
-              <tr style="background:#f9f9f9;"><td>Get Latest Published Date</td><td><code>GET</code></td><td><code>{{baseUrl}}/ReferenceDatePublished/getLatest/1</code></td><td>No</td></tr>
+              <tr><td>Get Latest Published Date</td><td><code>GET</code></td><td><code>{{baseUrl}}/ReferenceDatePublished/getLatest/1</code></td><td>No</td></tr>
             </tbody>
           </table>
         </section>
