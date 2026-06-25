@@ -980,16 +980,68 @@
             <ul>
               <li><strong>.NET 8 SDK:</strong> Download from <code>https://dotnet.microsoft.com/download</code></li>
               <li><strong>SQL Server:</strong> 2019 or later (or SQL Server LocalDB for dev)</li>
-              <li><strong>Azure CLI:</strong> Required for Key Vault access during local dev</li>
+              <li><strong>Azure CLI:</strong> <strong></strong>Required</strong> for Key Vault access during local dev (see installation below)</li>
               <li><strong>Git:</strong> For cloning the repository</li>
               <li><strong>IDE:</strong> Visual Studio 2022 17.8+ or Rider recommended; VS Code works too</li>
             </ul>
           </div>
 
-          <p>Verify installed versions:</p>
+          <h4>Install Azure CLI</h4>
+          <p>
+            The Azure CLI is <strong>required</strong> for local development because the API uses <code>DefaultAzureCredential</code> 
+            to authenticate with Azure Key Vault and load secrets. Without it, the app cannot start locally.
+          </p>
+          <div class="compare">
+            <div class="col future">
+              <h4>macOS Installation</h4>
+              <pre style="margin-top: 0.5rem;"><code><span class="c-com"># Install via Homebrew</span>
+brew update
+brew install azure-cli
+
+<span class="c-com"># Verify installation</span>
+az --version</code></pre>
+            </div>
+            <div class="col today">
+              <h4>Windows Installation</h4>
+              <pre style="margin-top: 0.5rem;"><code><span class="c-com"># Download and run the MSI installer from:</span>
+<span class="c-str">https://aka.ms/installazurecliwindows</span>
+
+<span class="c-com"># Or via winget:</span>
+winget install -e --id Microsoft.AzureCLI
+
+<span class="c-com"># Verify installation</span>
+az --version</code></pre>
+            </div>
+          </div>
+          <p>
+            After installation, authenticate with your Azure account:
+          </p>
+          <pre><code>az login
+
+<span class="c-com"># Verify you're logged into the correct tenant</span>
+az account show</code></pre>
+
+          <div class="card brand">
+            <div class="card-title">Why Azure CLI is Required</div>
+            <p>
+              The BDB API uses <code>DefaultAzureCredential</code> in <code>Program.cs</code> to authenticate with Azure Key Vault. 
+              In local development, this credential chain checks for:
+            </p>
+            <ol>
+              <li>Environment variables (service principal credentials)</li>
+              <li><strong>Azure CLI credentials</strong> (from <code>az login</code>) ← Most common for local dev</li>
+              <li>Managed Identity (only works in Azure)</li>
+              <li>Visual Studio or VS Code credentials</li>
+            </ol>
+            <p>
+              Without <code>az login</code>, the app will fail to start with an authentication error when trying to load secrets from Key Vault.
+            </p>
+          </div>
+
+          <p>Verify all required tools are installed:</p>
           <pre><code>dotnet --version          <span class="c-com"># Should output 8.x.x</span>
-az --version              <span class="c-com"># Azure CLI version</span>
-git --version</code></pre>
+az --version              <span class="c-com"># Should show Azure CLI version (e.g., 2.x.x)</span>
+git --version             <span class="c-com"># Should show Git version</span></code></pre>
 
           <h3>Installation Steps</h3>
           <div class="example-grid">
