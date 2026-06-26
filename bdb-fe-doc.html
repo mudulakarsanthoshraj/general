@@ -939,6 +939,9 @@
 
         <div class="nav-section">
           <div class="nav-section-title">Development</div>
+          <a href="#sec-api" class="nav-link" onclick="showSection(event, 'sec-api')"
+            >All API Endpoints</a
+          >
           <a href="#sec-services" class="nav-link" onclick="showSection(event, 'sec-services')"
             >Services & API</a
           >
@@ -983,7 +986,7 @@
         <section id="sec-quickref" class="section">
           <h2>⚡ Quick Reference</h2>
           <p class="section-subtitle">
-            Everything a new team member needs in one place — start here. Sections are ordered from "first thing you need" to "deep reference".
+            Everything a new team member needs in one place — start here. Sections are ordered from "first thing you need" to "deep reference". API endpoints are listed in the dedicated <a href="#sec-api" onclick="showSection(event, 'sec-api')">All API Endpoints</a> section.
           </p>
 
           <!-- ══════════════════════════════════════════════
@@ -1173,287 +1176,15 @@
             </tbody>
           </table>
 
-          <!-- ══════════════════════════════════════════════
-               5. ALL API ENDPOINTS
-          ══════════════════════════════════════════════ -->
-          <h3>5 — 🔌 All API Endpoints</h3>
-          <p>
-            All API calls are made through <code>src/services/common/HttpCommon.ts</code> — an Axios instance that automatically injects the Bearer token.<br/>
-            Prepend the base URL for your environment:
-            <strong>Dev:</strong> <code>https://devbdb.arcadis.com/api/bdbapi/api/</code> &nbsp;|&nbsp;
-            <strong>UAT:</strong> <code>https://uatbdb.arcadis.com/api/bdbapi/api/</code> &nbsp;|&nbsp;
-            <strong>Prod:</strong> <code>https://bdb.eu/api/bdbapi/api</code>
-          </p>
-          <div class="card info" style="margin-bottom:1rem;">
-            <div class="card-title">⚠️ ID parameters — always get them from a list endpoint first</div>
-            Every <code>{id}</code> in a URL is an <strong>internal database ID</strong>. You cannot guess it. Always call the list version first (e.g. <code>GET /ReferenceProject</code>) to get valid IDs, then call the detail endpoint.
+          <div class="card accent">
+            <div class="card-title">🔌 API Endpoints</div>
+            <p style="margin-bottom:0;">The complete list of all backend API endpoints (grouped by service) is in the dedicated <a href="#sec-api" onclick="showSection(event, 'sec-api')">All API Endpoints</a> section under Development.</p>
           </div>
 
-          <h4>🔑 Auth — <code>AuthService.ts</code></h4>
-          <table>
-            <thead><tr><th>Method</th><th>Endpoint</th><th>Returns</th></tr></thead>
-            <tbody>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Auth/GetRoles</code></td><td>String — <code>"user"</code> or <code>"admin"</code></td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Auth/GetSubscriptions</code></td><td>Array of subscription name strings</td></tr>
-            </tbody>
-          </table>
-
-          <h4>👤 User Profile — <code>ProfileService.ts</code></h4>
-          <table>
-            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/Profile</code></td><td>Get current user's profile (name, email, company)</td></tr>
-              <tr><td><span style="color:#4caf50;font-weight:bold;">PUT</span></td><td><code>/Profile</code></td><td>Update current user's profile. Body: Profile object</td></tr>
-            </tbody>
-          </table>
-
-          <h4>🌍 Country — <code>CountryService.ts</code></h4>
-          <table>
-            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/Country</code></td><td>Get all countries. Used in aspect ratio, subscription lookups, and dropdowns across pages</td></tr>
-            </tbody>
-          </table>
-
-          <h4>📅 Data Series — <code>DataSeriesService.ts</code></h4>
-          <p style="font-size:0.9em;color:#555;">A "data series" is a versioned snapshot of the dataset (e.g. Q1-2024). Used as a selector on upload pages and reference project pages.</p>
-          <table>
-            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/DataSeries</code></td><td>Get all data series (all versions)</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/DataSeries/{id}</code></td><td>Get a specific data series by ID</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/DataSeries/GetLastDefinitiveDataSeries</code></td><td>Get the latest officially published data series — used as the default selection across the app</td></tr>
-            </tbody>
-          </table>
-
-          <h4>📌 Reference Projects — <code>ReferenceProjectService.ts</code></h4>
-          <p style="font-size:0.9em;color:#555;">Reference projects are the benchmark construction projects. Their IDs are used in many other endpoints (monthly figures, figures model, etc.).</p>
-          <table>
-            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject</code></td><td>Get all reference projects — <strong>start here to get valid IDs</strong></td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getById/{id}</code></td><td>Get a single reference project by ID</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getByName/{name}</code></td><td>Find a reference project by its name</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getByDataSeriesId/{id}</code></td><td>Get projects linked to a specific data series</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getByLastDataSeries</code></td><td>Get one project from the latest data series</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getListByLastDataSeries</code></td><td>Get all projects from the latest data series</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getListByLastDataSeriesBasedOnProduct/{name}</code></td><td>Get projects from latest data series filtered by product name</td></tr>
-            </tbody>
-          </table>
-
-          <h4>📅 Reference Dates — <code>ReferenceDateService.ts</code> &amp; <code>ReferenceDatePublishedService.ts</code></h4>
-          <p style="font-size:0.9em;color:#555;"><strong>ReferenceDateService</strong> — all dates (including unpublished). Used in admin upload workflow.<br>
-          <strong>ReferenceDatePublishedService</strong> — only the latest published date. Used on user-facing product pages.</p>
-          <table>
-            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceDate</code></td><td>Get all reference dates (including unpublished)</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceDate/{id}</code></td><td>Get a single reference date by ID</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceDate/GetUsedByForecastSerie</code></td><td>Get reference dates that are linked to a forecast series</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceDate/GetReferenceDateToBePublished/{budgetTypeId}</code></td><td>Get dates pending publish for a specific budget type</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceDatePublished/getLatest/{budgetTypeId}</code></td><td>Get the latest <em>published</em> reference date for a budget type. Used on product pages to show current data version.</td></tr>
-            </tbody>
-          </table>
-
-          <h4>📊 Subscriptions — <code>SubscriptionService.ts</code></h4>
-          <table>
-            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Subscription/GetYears</code></td><td>Get all years that have subscription data</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Subscription/GetModulesByCountryAndYear/?countryId={id}&amp;year={year}&amp;includeCompanies=false</code></td><td>Get subscription modules available for a country and year</td></tr>
-            </tbody>
-          </table>
-
-          <h4>📈 Monthly Figures — <code>MonthlyFiguresService.ts</code></h4>
-          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB Maandcijfers</code>. The <code>{id}</code> is a Reference Project ID — get it from <code>GET /ReferenceProject</code> first.</p>
-          <table>
-            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportForecastFigures/{id}?isForecastIncluded={bool}</code></td><td>Get monthly cost index data. Body: <code>string[]</code> of date strings (e.g. <code>["2023-01-01","2023-04-01"]</code>)</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportForecastFigures/report/{id}?isForecastIncluded={bool}&amp;format={excel|pdf}</code></td><td>Download monthly figures report as Excel or PDF blob. Body: same date array.</td></tr>
-            </tbody>
-          </table>
-
-          <h4>📉 Market Indicator — <code>common/MarketIndicatorService.ts</code></h4>
-          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB Marktindicator</code>. Note: date range is currently <strong>hardcoded</strong> in the service.</p>
-          <table>
-            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportMarketIndicator?startDate=2022-10-01&amp;endDate=2024-09-22</code></td><td>Get market indicator chart data</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportMarketIndicator/report?startDate=2022-10-01&amp;endDate=2024-09-22</code></td><td>Download market indicator Excel report</td></tr>
-            </tbody>
-          </table>
-
-          <h4>📉 Market Trends — <code>MarketTrendsService.ts</code></h4>
-          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB Trends</code>. Simple GET — no body, no date parameters.</p>
-          <table>
-            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportTrends</code></td><td>Get market trends data</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportTrends/report</code></td><td>Download market trends Excel report</td></tr>
-            </tbody>
-          </table>
-
-          <h4>📉 Market Indicator Trends — <code>common/MarketIndicatorTrendsService.ts</code></h4>
-          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB Marktindicator</code>. Different from <code>MarketTrendsService</code> — uses <strong>POST</strong> with a body of reference dates.</p>
-          <table>
-            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportTrends?isTrendsIncluded={bool}</code></td><td>Get indicator trend data for selected dates. Body: <code>string[]</code> of date strings</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportTrends/report?isTrendsIncluded={bool}&amp;format={excel|pdf}</code></td><td>Download indicator trends report. Body: same date array.</td></tr>
-            </tbody>
-          </table>
-
-          <h4>📐 Figures Model — <code>FiguresModelService.ts</code></h4>
-          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB Maandcijfers</code>. Generates a custom indexed project cost report for user-provided project details.</p>
-          <table>
-            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>FiguresModel/getFiguresModelExport?format={excel|pdf}</code></td><td>Export figures model report. Body: <code>{ projectName, projectNumber, city, levelOfDetail, referenceProjectId, dateList }</code></td></tr>
-            </tbody>
-          </table>
-
-          <h4>📐 Aspect Ratio — <code>AspectRatioService.ts</code> &amp; <code>AspectRatioExportService.ts</code></h4>
-          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB Vormfactoren en Kostenkengetallen</code>. Two services — one for fetching data, one for file exports.</p>
-          <table>
-            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/GetProjectAnalyseCountries</code></td><td>Get countries available for aspect ratio analysis</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/getCostCategories</code></td><td>Get available cost categories</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/getLevels?countryId={id}</code></td><td>Get levels for a country</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/getProjectUnderClasses?countryId={id}</code></td><td>Get project underclasses for a country</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/getProjects?countryId={id}</code></td><td>Get projects for a country</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportDesignKeyCostFigures/GetCountForDimensions</code></td><td>Get total record count for the selected filter combination</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportDesignKeyCostFigures/getData</code></td><td>Get paginated grid data for selected dimensions</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportDesignKeyCostFigures/GetDataForOneDimension</code></td><td>Get data for a single dimension (chart view)</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportDesignKeyCostFigures/exportDimensionGrid</code></td><td>Export grid as Excel blob</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportDesignKeyCostFigures/export</code></td><td>Export with dimensions. Body: <code>ExportWithDimensionRequestPayload</code></td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/downloadProjectAnalyseFile/{id}</code></td><td>Download a project analysis file by ID</td></tr>
-            </tbody>
-          </table>
-
-          <h4>📐 E235 Export — <code>common/E235ExportService.ts</code></h4>
-          <p style="font-size:0.9em;color:#555;">Subscription: <code>E235 RVB Benchmark</code>. Downloads company-specific reference budget files. The <code>companyId</code> is read from <code>appStorage.getSelectedClientId()</code> automatically.</p>
-          <table>
-            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/download/{companyId}/{fileName}</code></td><td>Download an E235 reference budget file for the selected company</td></tr>
-            </tbody>
-          </table>
-
-          <h4>📊 Detailed Indices — <code>DetailedIndicesService.ts</code></h4>
-          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB GI S HC - basic</code>. The <code>{id}</code> is a Reference Project ID. <code>giServiceEnum</code>: <code>1</code>=Element Clusters, <code>2</code>=Stabu Chapters, <code>3</code>=Product Groups.</p>
-          <table>
-            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportElementClusters/GetProductList</code></td><td>Get the list of subcategory options (product list)</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportElementClusters/{id}?giServiceEnum={1|2|3}</code></td><td>Get detailed index data. Body: filter parameters</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportElementClusters/report/{id}?giServiceEnum={enum}</code></td><td>Download detailed indices report as Excel blob</td></tr>
-            </tbody>
-          </table>
-
-          <h4>🔧 Parametric Elements — <code>ParametricElementsService.ts</code></h4>
-          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB Parametric</code>. Elements are structured in a tree — start with root nodes, then fetch children.</p>
-          <table>
-            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ParametricNode</code></td><td>Get all root-level parametric nodes — <strong>start here</strong></td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ParametricNode/GetByParent/{parentId}</code></td><td>Get child nodes for a given parent ID</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ParametricNode/{id}</code></td><td>Get a single node with full details and parameters</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ParametricNode/search?description={text}</code></td><td>Search nodes by description text</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ParametricNode/{id}/CalculatePrice</code></td><td>Calculate price using selected parameter values. Body: parameter input object</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ParametricNode/{id}/ExportExcel?format={excel|pdf}</code></td><td>Export a parametric node report</td></tr>
-            </tbody>
-          </table>
-
-          <h4>💾 User Presets — <code>UserPresetService.ts</code></h4>
-          <p style="font-size:0.9em;color:#555;">Used on <code>/products/flexible-indices</code>. Presets are named saved configurations of data-series selections.</p>
-          <table>
-            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>UserPreset/user/{email}</code></td><td>Get all presets for a user (by email address)</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>UserPreset/preset/{id}</code></td><td>Get a single preset by ID</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>UserPreset</code></td><td>Create a new preset. Body: <code>{ name, companyId, data: ApiData[] }</code>. Returns the created preset with its new ID.</td></tr>
-              <tr><td><span style="color:#4caf50;font-weight:bold;">PUT</span></td><td><code>UserPreset/preset/{id}</code></td><td>Update a preset. Body: <code>ApiPreset</code>. Returns 204 No Content.</td></tr>
-              <tr><td><span style="color:#f44336;font-weight:bold;">DELETE</span></td><td><code>UserPreset/{id}</code></td><td>Delete a preset by ID</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>UserPreset/user/preset/{id}</code></td><td>Associate an existing preset with the current user</td></tr>
-            </tbody>
-          </table>
-
-          <h4>🏗️ Ad Hoc Projects — <code>AdHocProjectsService.ts</code></h4>
-          <table>
-            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ProjectAdHoc/GetProjectTypes</code></td><td>Get all available project types</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ProjectAdHoc/GetProjectTypeUsed</code></td><td>Get project types currently in use</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ProjectAdHoc/take</code></td><td>Get paginated list of ad hoc projects. Body: filter, skip, take, sort</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ProjectAdHoc/takeindex?take={n}&amp;skip={n}</code></td><td>Get paginated index projects</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ProjectAdHoc/PostFile</code></td><td>Upload a file for an ad hoc project</td></tr>
-              <tr><td><span style="color:#4caf50;font-weight:bold;">PUT</span></td><td><code>ProjectAdHoc/{id}</code></td><td>Update an ad hoc project by ID</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ProjectAdHoc/allowDelete/{id}</code></td><td>Check if a project is eligible for deletion</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ProjectAdHoc/file/{id}</code></td><td>Download project file as Excel blob</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ProjectIndex/take</code></td><td>Get paginated project index data</td></tr>
-            </tbody>
-          </table>
-
-          <h4>🏠 WOV (Woningbouw Index) — <code>wovService.ts</code></h4>
-          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB WOV</code>. Admin upload + user data view for the housing renovation index.</p>
-          <table>
-            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>Wov/upload</code></td><td>Upload WOV Excel file. Body: multipart/form-data</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Wov/data?fileName={name}</code></td><td>Get WOV data for a specific uploaded filename</td></tr>
-            </tbody>
-          </table>
-
-          <h4>📤 Reference Budget Upload (Admin) — <code>ReferenceBudgetService.ts</code> &amp; <code>ReferenceBudgetUploadService.ts</code></h4>
-          <p style="font-size:0.9em;color:#555;">Admin only. Two services for the same API resource — <strong>ReferenceBudgetService</strong> handles basic operations; <strong>ReferenceBudgetUploadService</strong> handles the extended upload workflow (take, bulk, delete). The <code>{id}</code> is an internal upload record ID — get it from <code>POST ReferenceBudget/take</code> first.</p>
-          <table>
-            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/take</code></td><td>Get paginated list of uploaded records. Body: <code>{ skip, take, sort, filter }</code> → <strong>use this to find valid IDs</strong></td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/PostFiles</code></td><td>Upload reference budget files. Body: multipart/form-data with <code>files</code> field</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/validate-upload</code></td><td>Validate files before submission. Body: <code>{ referenceProjectIds, dataSeriesId, year, month }</code></td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/bulk</code></td><td>Submit a bulk create request. Body: <code>ReferenceBudgetBulkRequest</code> with files, dataSeriesId, referenceDateId</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/bulk/{status}</code></td><td>Poll the status of a bulk operation</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/getAll/{id}</code></td><td>Get full details of an uploaded record. <code>{id}</code> comes from <code>ReferenceBudget/take</code> response.</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/file/{id}</code></td><td>Download the uploaded Excel file for a record</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/summary</code></td><td>Get summary statistics</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/delete/{id}</code></td><td>Delete an uploaded record by ID</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/publish</code></td><td>Publish selected records. Body: <code>number[]</code> of IDs</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/bulkpublish</code></td><td>Bulk publish multiple records. Body: <code>number[]</code> of IDs</td></tr>
-            </tbody>
-          </table>
-
-          <h4>📤 Forecast Figure Upload (Admin) — <code>ForecastFigureService.ts</code></h4>
-          <p style="font-size:0.9em;color:#555;">Admin only. Note: the API path is spelled <code>ForcastFigure</code> (missing 'e') — this is a <strong>backend typo</strong>. Do not "fix" it in frontend code or it will break.</p>
-          <table>
-            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/PostFiles</code></td><td>Upload forecast figure files. Body: multipart/form-data</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/validate-upload</code></td><td>Validate uploaded files before submit</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/BulkGenerateFile</code></td><td>Trigger bulk file generation</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/GenerateFailedFile?requestId={id}</code></td><td>Retry generation for a specific failed request</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ForcastFigure/bulk/{statusId}</code></td><td>Poll bulk generation status by ID</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ForcastFigure/delete/{id}</code></td><td>Delete a forecast figure record by ID</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/publish</code></td><td>Publish forecast figures. Body: IDs array</td></tr>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/bulkpublish</code></td><td>Bulk publish forecast figures. Body: IDs array</td></tr>
-            </tbody>
-          </table>
-
-          <h4>📝 Download Logging — <code>LogDataService.ts</code></h4>
-          <p style="font-size:0.9em;color:#555;">Called automatically by <code>downloadAndLogReport()</code> in <code>src/utils/reportDownloader.ts</code> every time a user downloads a report. You do not call this directly.</p>
-          <table>
-            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>LogData</code></td><td>Log a download event. Body: multipart/form-data with report name, filename, file blob, and JSON metadata</td></tr>
-            </tbody>
-          </table>
-
           <!-- ══════════════════════════════════════════════
-               6. KEY SOURCE FILES
+               5. KEY SOURCE FILES
           ══════════════════════════════════════════════ -->
-          <h3>6 — 📁 Key Source Files</h3>
+          <h3>5 — 📁 Key Source Files</h3>
           <p>The most important files to know when navigating the codebase.</p>
           <table>
             <thead><tr><th>File</th><th>What it does</th></tr></thead>
@@ -1483,9 +1214,9 @@
           </table>
 
           <!-- ══════════════════════════════════════════════
-               7. ENVIRONMENT VARIABLES
+               6. ENVIRONMENT VARIABLES
           ══════════════════════════════════════════════ -->
-          <h3>7 — ⚙️ Environment Variables</h3>
+          <h3>6 — ⚙️ Environment Variables</h3>
           <p>Set in <code>.env.development</code>, <code>.env.uat</code>, and <code>.env.production</code>. Only <code>VITE_*</code> prefixed variables are exposed to the browser bundle by default.</p>
           <h4>Used in source code</h4>
           <table>
@@ -1518,9 +1249,9 @@
           </table>
 
           <!-- ══════════════════════════════════════════════
-               8. I18N
+               7. I18N
           ══════════════════════════════════════════════ -->
-          <h3>8 — 🌍 Translations (i18n)</h3>
+          <h3>7 — 🌍 Translations (i18n)</h3>
           <p>Translations are <strong>not stored locally</strong>. They are fetched at runtime from the Arcadis cloud translation platform.</p>
           <table>
             <thead><tr><th>Property</th><th>Value</th></tr></thead>
@@ -3329,6 +3060,293 @@ dispatch(showSnackbar({ message: <span class="c-str">"Data saved successfully"</
 ├── Header.test.tsx      <span class="c-com"># Unit tests</span>
 ├── Header.styles.ts     <span class="c-com"># Styled components (if any)</span>
 └── index.tsx            <span class="c-com"># Re-export</span></code></pre>
+        </section>
+
+
+        <!-- ─── All API Endpoints ─── -->
+        <section id="sec-api" class="section">
+          <h2>All API Endpoints</h2>
+          <p class="section-subtitle">
+            Complete reference of every backend API endpoint used by the frontend, grouped by service module.
+            All calls go through <code>src/services/common/HttpCommon.ts</code> with automatic Bearer token injection.
+          </p>
+          <!-- ══════════════════════════════════════════════
+               5. ALL API ENDPOINTS
+          ══════════════════════════════════════════════ -->
+          
+          <p>
+            All API calls are made through <code>src/services/common/HttpCommon.ts</code> — an Axios instance that automatically injects the Bearer token.<br/>
+            Prepend the base URL for your environment:
+            <strong>Dev:</strong> <code>https://devbdb.arcadis.com/api/bdbapi/api/</code> &nbsp;|&nbsp;
+            <strong>UAT:</strong> <code>https://uatbdb.arcadis.com/api/bdbapi/api/</code> &nbsp;|&nbsp;
+            <strong>Prod:</strong> <code>https://bdb.eu/api/bdbapi/api</code>
+          </p>
+          <div class="card warning" style="margin-bottom:1rem;">
+            <div class="card-title">⚠️ ID parameters — always get them from a list endpoint first</div>
+            Every <code>{id}</code> in a URL is an <strong>internal database ID</strong>. You cannot guess it. Always call the list version first (e.g. <code>GET /ReferenceProject</code>) to get valid IDs, then call the detail endpoint.
+          </div>
+
+          <h4>🔑 Auth — <code>AuthService.ts</code></h4>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Returns</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Auth/GetRoles</code></td><td>String — <code>"user"</code> or <code>"admin"</code></td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Auth/GetSubscriptions</code></td><td>Array of subscription name strings</td></tr>
+            </tbody>
+          </table>
+
+          <h4>👤 User Profile — <code>ProfileService.ts</code></h4>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/Profile</code></td><td>Get current user's profile (name, email, company)</td></tr>
+              <tr><td><span style="color:#4caf50;font-weight:bold;">PUT</span></td><td><code>/Profile</code></td><td>Update current user's profile. Body: Profile object</td></tr>
+            </tbody>
+          </table>
+
+          <h4>🌍 Country — <code>CountryService.ts</code></h4>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/Country</code></td><td>Get all countries. Used in aspect ratio, subscription lookups, and dropdowns across pages</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📅 Data Series — <code>DataSeriesService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">A "data series" is a versioned snapshot of the dataset (e.g. Q1-2024). Used as a selector on upload pages and reference project pages.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/DataSeries</code></td><td>Get all data series (all versions)</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/DataSeries/{id}</code></td><td>Get a specific data series by ID</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/DataSeries/GetLastDefinitiveDataSeries</code></td><td>Get the latest officially published data series — used as the default selection across the app</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📌 Reference Projects — <code>ReferenceProjectService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Reference projects are the benchmark construction projects. Their IDs are used in many other endpoints (monthly figures, figures model, etc.).</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject</code></td><td>Get all reference projects — <strong>start here to get valid IDs</strong></td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getById/{id}</code></td><td>Get a single reference project by ID</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getByName/{name}</code></td><td>Find a reference project by its name</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getByDataSeriesId/{id}</code></td><td>Get projects linked to a specific data series</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getByLastDataSeries</code></td><td>Get one project from the latest data series</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getListByLastDataSeries</code></td><td>Get all projects from the latest data series</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceProject/getListByLastDataSeriesBasedOnProduct/{name}</code></td><td>Get projects from latest data series filtered by product name</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📅 Reference Dates — <code>ReferenceDateService.ts</code> &amp; <code>ReferenceDatePublishedService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;"><strong>ReferenceDateService</strong> — all dates (including unpublished). Used in admin upload workflow.<br>
+          <strong>ReferenceDatePublishedService</strong> — only the latest published date. Used on user-facing product pages.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceDate</code></td><td>Get all reference dates (including unpublished)</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceDate/{id}</code></td><td>Get a single reference date by ID</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceDate/GetUsedByForecastSerie</code></td><td>Get reference dates that are linked to a forecast series</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceDate/GetReferenceDateToBePublished/{budgetTypeId}</code></td><td>Get dates pending publish for a specific budget type</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>/ReferenceDatePublished/getLatest/{budgetTypeId}</code></td><td>Get the latest <em>published</em> reference date for a budget type. Used on product pages to show current data version.</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📊 Subscriptions — <code>SubscriptionService.ts</code></h4>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Subscription/GetYears</code></td><td>Get all years that have subscription data</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Subscription/GetModulesByCountryAndYear/?countryId={id}&amp;year={year}&amp;includeCompanies=false</code></td><td>Get subscription modules available for a country and year</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📈 Monthly Figures — <code>MonthlyFiguresService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB Maandcijfers</code>. The <code>{id}</code> is a Reference Project ID — get it from <code>GET /ReferenceProject</code> first.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportForecastFigures/{id}?isForecastIncluded={bool}</code></td><td>Get monthly cost index data. Body: <code>string[]</code> of date strings (e.g. <code>["2023-01-01","2023-04-01"]</code>)</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportForecastFigures/report/{id}?isForecastIncluded={bool}&amp;format={excel|pdf}</code></td><td>Download monthly figures report as Excel or PDF blob. Body: same date array.</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📉 Market Indicator — <code>common/MarketIndicatorService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB Marktindicator</code>. Note: date range is currently <strong>hardcoded</strong> in the service.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportMarketIndicator?startDate=2022-10-01&amp;endDate=2024-09-22</code></td><td>Get market indicator chart data</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportMarketIndicator/report?startDate=2022-10-01&amp;endDate=2024-09-22</code></td><td>Download market indicator Excel report</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📉 Market Trends — <code>MarketTrendsService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB Trends</code>. Simple GET — no body, no date parameters.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportTrends</code></td><td>Get market trends data</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportTrends/report</code></td><td>Download market trends Excel report</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📉 Market Indicator Trends — <code>common/MarketIndicatorTrendsService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB Marktindicator</code>. Different from <code>MarketTrendsService</code> — uses <strong>POST</strong> with a body of reference dates.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportTrends?isTrendsIncluded={bool}</code></td><td>Get indicator trend data for selected dates. Body: <code>string[]</code> of date strings</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportTrends/report?isTrendsIncluded={bool}&amp;format={excel|pdf}</code></td><td>Download indicator trends report. Body: same date array.</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📐 Figures Model — <code>FiguresModelService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB Maandcijfers</code>. Generates a custom indexed project cost report for user-provided project details.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>FiguresModel/getFiguresModelExport?format={excel|pdf}</code></td><td>Export figures model report. Body: <code>{ projectName, projectNumber, city, levelOfDetail, referenceProjectId, dateList }</code></td></tr>
+            </tbody>
+          </table>
+
+          <h4>📐 Aspect Ratio — <code>AspectRatioService.ts</code> &amp; <code>AspectRatioExportService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB Vormfactoren en Kostenkengetallen</code>. Two services — one for fetching data, one for file exports.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/GetProjectAnalyseCountries</code></td><td>Get countries available for aspect ratio analysis</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/getCostCategories</code></td><td>Get available cost categories</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/getLevels?countryId={id}</code></td><td>Get levels for a country</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/getProjectUnderClasses?countryId={id}</code></td><td>Get project underclasses for a country</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/getProjects?countryId={id}</code></td><td>Get projects for a country</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportDesignKeyCostFigures/GetCountForDimensions</code></td><td>Get total record count for the selected filter combination</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportDesignKeyCostFigures/getData</code></td><td>Get paginated grid data for selected dimensions</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportDesignKeyCostFigures/GetDataForOneDimension</code></td><td>Get data for a single dimension (chart view)</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportDesignKeyCostFigures/exportDimensionGrid</code></td><td>Export grid as Excel blob</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportDesignKeyCostFigures/export</code></td><td>Export with dimensions. Body: <code>ExportWithDimensionRequestPayload</code></td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>DesignKeyCostFigures/downloadProjectAnalyseFile/{id}</code></td><td>Download a project analysis file by ID</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📐 E235 Export — <code>common/E235ExportService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Subscription: <code>E235 RVB Benchmark</code>. Downloads company-specific reference budget files. The <code>companyId</code> is read from <code>appStorage.getSelectedClientId()</code> automatically.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/download/{companyId}/{fileName}</code></td><td>Download an E235 reference budget file for the selected company</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📊 Detailed Indices — <code>DetailedIndicesService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB GI S HC - basic</code>. The <code>{id}</code> is a Reference Project ID. <code>giServiceEnum</code>: <code>1</code>=Element Clusters, <code>2</code>=Stabu Chapters, <code>3</code>=Product Groups.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportElementClusters/GetProductList</code></td><td>Get the list of subcategory options (product list)</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportElementClusters/{id}?giServiceEnum={1|2|3}</code></td><td>Get detailed index data. Body: filter parameters</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportElementClusters/report/{id}?giServiceEnum={enum}</code></td><td>Download detailed indices report as Excel blob</td></tr>
+            </tbody>
+          </table>
+
+          <h4>🔧 Parametric Elements — <code>ParametricElementsService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB Parametric</code>. Elements are structured in a tree — start with root nodes, then fetch children.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ParametricNode</code></td><td>Get all root-level parametric nodes — <strong>start here</strong></td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ParametricNode/GetByParent/{parentId}</code></td><td>Get child nodes for a given parent ID</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ParametricNode/{id}</code></td><td>Get a single node with full details and parameters</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ParametricNode/search?description={text}</code></td><td>Search nodes by description text</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ParametricNode/{id}/CalculatePrice</code></td><td>Calculate price using selected parameter values. Body: parameter input object</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ParametricNode/{id}/ExportExcel?format={excel|pdf}</code></td><td>Export a parametric node report</td></tr>
+            </tbody>
+          </table>
+
+          <h4>💾 User Presets — <code>UserPresetService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Used on <code>/products/flexible-indices</code>. Presets are named saved configurations of data-series selections.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>UserPreset/user/{email}</code></td><td>Get all presets for a user (by email address)</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>UserPreset/preset/{id}</code></td><td>Get a single preset by ID</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>UserPreset</code></td><td>Create a new preset. Body: <code>{ name, companyId, data: ApiData[] }</code>. Returns the created preset with its new ID.</td></tr>
+              <tr><td><span style="color:#4caf50;font-weight:bold;">PUT</span></td><td><code>UserPreset/preset/{id}</code></td><td>Update a preset. Body: <code>ApiPreset</code>. Returns 204 No Content.</td></tr>
+              <tr><td><span style="color:#f44336;font-weight:bold;">DELETE</span></td><td><code>UserPreset/{id}</code></td><td>Delete a preset by ID</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>UserPreset/user/preset/{id}</code></td><td>Associate an existing preset with the current user</td></tr>
+            </tbody>
+          </table>
+
+          <h4>🏗️ Ad Hoc Projects — <code>AdHocProjectsService.ts</code></h4>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ProjectAdHoc/GetProjectTypes</code></td><td>Get all available project types</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ProjectAdHoc/GetProjectTypeUsed</code></td><td>Get project types currently in use</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ProjectAdHoc/take</code></td><td>Get paginated list of ad hoc projects. Body: filter, skip, take, sort</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ProjectAdHoc/takeindex?take={n}&amp;skip={n}</code></td><td>Get paginated index projects</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ProjectAdHoc/PostFile</code></td><td>Upload a file for an ad hoc project</td></tr>
+              <tr><td><span style="color:#4caf50;font-weight:bold;">PUT</span></td><td><code>ProjectAdHoc/{id}</code></td><td>Update an ad hoc project by ID</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ProjectAdHoc/allowDelete/{id}</code></td><td>Check if a project is eligible for deletion</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ProjectAdHoc/file/{id}</code></td><td>Download project file as Excel blob</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ProjectIndex/take</code></td><td>Get paginated project index data</td></tr>
+            </tbody>
+          </table>
+
+          <h4>🏠 WOV (Woningbouw Index) — <code>wovService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Subscription: <code>BDB WOV</code>. Admin upload + user data view for the housing renovation index.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>Wov/upload</code></td><td>Upload WOV Excel file. Body: multipart/form-data</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Wov/data?fileName={name}</code></td><td>Get WOV data for a specific uploaded filename</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📤 Reference Budget Upload (Admin) — <code>ReferenceBudgetService.ts</code> &amp; <code>ReferenceBudgetUploadService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Admin only. Two services for the same API resource — <strong>ReferenceBudgetService</strong> handles basic operations; <strong>ReferenceBudgetUploadService</strong> handles the extended upload workflow (take, bulk, delete). The <code>{id}</code> is an internal upload record ID — get it from <code>POST ReferenceBudget/take</code> first.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/take</code></td><td>Get paginated list of uploaded records. Body: <code>{ skip, take, sort, filter }</code> → <strong>use this to find valid IDs</strong></td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/PostFiles</code></td><td>Upload reference budget files. Body: multipart/form-data with <code>files</code> field</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/validate-upload</code></td><td>Validate files before submission. Body: <code>{ referenceProjectIds, dataSeriesId, year, month }</code></td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/bulk</code></td><td>Submit a bulk create request. Body: <code>ReferenceBudgetBulkRequest</code> with files, dataSeriesId, referenceDateId</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/bulk/{status}</code></td><td>Poll the status of a bulk operation</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/getAll/{id}</code></td><td>Get full details of an uploaded record. <code>{id}</code> comes from <code>ReferenceBudget/take</code> response.</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/file/{id}</code></td><td>Download the uploaded Excel file for a record</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/summary</code></td><td>Get summary statistics</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReferenceBudget/delete/{id}</code></td><td>Delete an uploaded record by ID</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/publish</code></td><td>Publish selected records. Body: <code>number[]</code> of IDs</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReferenceBudget/bulkpublish</code></td><td>Bulk publish multiple records. Body: <code>number[]</code> of IDs</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📤 Forecast Figure Upload (Admin) — <code>ForecastFigureService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Admin only. Note: the API path is spelled <code>ForcastFigure</code> (missing 'e') — this is a <strong>backend typo</strong>. Do not "fix" it in frontend code or it will break.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/PostFiles</code></td><td>Upload forecast figure files. Body: multipart/form-data</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/validate-upload</code></td><td>Validate uploaded files before submit</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/BulkGenerateFile</code></td><td>Trigger bulk file generation</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/GenerateFailedFile?requestId={id}</code></td><td>Retry generation for a specific failed request</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ForcastFigure/bulk/{statusId}</code></td><td>Poll bulk generation status by ID</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ForcastFigure/delete/{id}</code></td><td>Delete a forecast figure record by ID</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/publish</code></td><td>Publish forecast figures. Body: IDs array</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/bulkpublish</code></td><td>Bulk publish forecast figures. Body: IDs array</td></tr>
+            </tbody>
+          </table>
+
+          <h4>📝 Download Logging — <code>LogDataService.ts</code></h4>
+          <p style="font-size:0.9em;color:#555;">Called automatically by <code>downloadAndLogReport()</code> in <code>src/utils/reportDownloader.ts</code> every time a user downloads a report. You do not call this directly.</p>
+          <table>
+            <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>LogData</code></td><td>Log a download event. Body: multipart/form-data with report name, filename, file blob, and JSON metadata</td></tr>
+            </tbody>
+          </table>
+
         </section>
 
         <!-- ─── Services & API Integration ─── -->
