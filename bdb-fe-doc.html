@@ -3246,6 +3246,9 @@ dispatch(showSnackbar({ message: <span class="c-str">"Data saved successfully"</
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportElementClusters/GetProductList</code></td><td>Get the list of subcategory options (product list)</td></tr>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportElementClusters/{id}?giServiceEnum={1|2|3}</code></td><td>Get detailed index data. Body: filter parameters</td></tr>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ReportElementClusters/report/{id}?giServiceEnum={enum}</code></td><td>Download detailed indices report as Excel blob</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportElementClusters/advancedReport/{id}?giServiceEnum={enum}</code></td><td>Download advanced detailed indices report as Excel blob</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportElementClusters/rimBasic/{id}?giServiceEnum={enum}</code></td><td>Download RIM basic report as Excel blob</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ReportElementClusters/rimAdvanced/{id}</code></td><td>Download RIM advanced report as Excel blob</td></tr>
             </tbody>
           </table>
 
@@ -3299,7 +3302,11 @@ dispatch(showSnackbar({ message: <span class="c-str">"Data saved successfully"</
             <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
             <tbody>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>Wov/upload</code></td><td>Upload WOV Excel file. Body: multipart/form-data</td></tr>
-              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Wov/data?fileName={name}</code></td><td>Get WOV data for a specific uploaded filename</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Wov/uploads</code></td><td>List all uploaded JSON blob filenames</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>Wov/data?fileName={name}</code></td><td>Get WOV chart data JSON for a specific uploaded filename (use <code>active</code> for the published dataset)</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>Wov/download?fileName={name}</code></td><td>Download WOV Excel file as blob. Omit or pass <code>active</code> for the currently published file</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>Wov/activate?fileName={name}</code></td><td>Activate (publish) a specific uploaded JSON blob — admin only</td></tr>
+              <tr><td><span style="color:#f44336;font-weight:bold;">DELETE</span></td><td><code>Wov/delete?fileName={name}</code></td><td>Delete an uploaded JSON blob — admin only</td></tr>
             </tbody>
           </table>
 
@@ -3327,12 +3334,19 @@ dispatch(showSnackbar({ message: <span class="c-str">"Data saved successfully"</
           <table>
             <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
             <tbody>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/take</code></td><td>Get paginated list of forecast figure records. Body: <code>{ skip, take, sort, filter }</code> → <strong>use this to find valid IDs</strong></td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ForcastFigure/getAll/{id}</code></td><td>Get full details of a forecast figure record by ID</td></tr>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/PostFiles</code></td><td>Upload forecast figure files. Body: multipart/form-data</td></tr>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/validate-upload</code></td><td>Validate uploaded files before submit</td></tr>
+              <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/bulk</code></td><td>Submit a bulk upload request. Body: array of <code>ForecastFigureBulkUploadItem</code></td></tr>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/BulkGenerateFile</code></td><td>Trigger bulk file generation</td></tr>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/GenerateFailedFile?requestId={id}</code></td><td>Retry generation for a specific failed request</td></tr>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ForcastFigure/bulk/{statusId}</code></td><td>Poll bulk generation status by ID</td></tr>
               <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ForcastFigure/delete/{id}</code></td><td>Delete a forecast figure record by ID</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ForcastFigure/download/{fileName}</code></td><td>Download a forecast figure file by filename as blob</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ForcastFigure/file/{id}</code></td><td>Download uploaded forecast file for a record (base64-encoded response)</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ForcastFigure/fileInput/{id}</code></td><td>Download published forecast input file for a record (base64-encoded response)</td></tr>
+              <tr><td><span style="color:#2196f3;font-weight:bold;">GET</span></td><td><code>ForcastFigure/bulkdownload?files={fileName}&amp;files={fileName}</code></td><td>Download multiple forecast files as a single blob</td></tr>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/publish</code></td><td>Publish forecast figures. Body: IDs array</td></tr>
               <tr><td><span style="color:#ff9800;font-weight:bold;">POST</span></td><td><code>ForcastFigure/bulkpublish</code></td><td>Bulk publish forecast figures. Body: IDs array</td></tr>
             </tbody>
