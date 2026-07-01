@@ -3733,15 +3733,30 @@ downloadAndLogReport({
         <section id="sec-i18n" class="section">
           <h2>Internationalization (i18n)</h2>
           <p class="section-subtitle">
-            Multi-language support using i18next with remote translation management.
+            Multi-language support using i18next with remote translation management from Arcadis i18n platform.
           </p>
 
-          <h3>i18n Setup</h3>
-          <pre><code><span class="c-com">// i18n.ts</span>
+          <div class="card accent">
+            <div class="card-title">🌐 How Translations Work</div>
+            <p>
+              Translations are <strong>loaded at runtime from a remote API</strong>, not from local files.
+              When the app starts, i18next automatically fetches translation JSONs from the Arcadis translation service
+              based on the user's detected language.
+            </p>
+          </div>
+
+          <h3>📁 Configuration File</h3>
+          <p>
+            All i18n setup is in <code>src/i18n.ts</code>:
+          </p>
+          <pre><code><span class="c-com">// src/i18n.ts</span>
 <span class="c-key">import</span> i18n <span class="c-key">from</span> <span class="c-str">"i18next"</span>;
 <span class="c-key">import</span> { initReactI18next } <span class="c-key">from</span> <span class="c-str">"react-i18next"</span>;
 <span class="c-key">import</span> Backend <span class="c-key">from</span> <span class="c-str">"i18next-http-backend"</span>;
 <span class="c-key">import</span> LanguageDetector <span class="c-key">from</span> <span class="c-str">"i18next-browser-languagedetector"</span>;
+
+<span class="c-key">const</span> solutionId = <span class="c-str">"021c7f6b-1b50-44da-8aa6-e6e9b269e360"</span>;
+<span class="c-key">const</span> code = <span class="c-str">"EjmzCv2V4mM9PmRf2zWSnWfLaZ7dQmj4W2HQgeUNT57htPh25bxT"</span>;
 
 i18n
   .use(Backend)
@@ -3753,25 +3768,86 @@ i18n
       queryStringParams: { code: code }
     },
     fallbackLng: <span class="c-str">"en"</span>,
+    debug: <span class="c-key">false</span>,
     ns: [<span class="c-str">'common'</span>, <span class="c-str">'pages'</span>],
     defaultNS: <span class="c-str">'common'</span>,
+    interpolation: {
+      escapeValue: <span class="c-key">false</span>, <span class="c-com">// not needed for react</span>
+    },
   });</code></pre>
 
           <div class="card brand">
-            <div class="card-title">Translation Management</div>
-            <p>
-              Translations are managed via <strong>Arcadis i18n platform</strong>:<br />
-              <code>https://i18n.arcadis.com/021c7f6b-1b50-44da-8aa6-e6e9b269e360/namespaces</code>
-            </p>
+            <div class="card-title">🔐 Translation API Details</div>
+            <table>
+              <tbody>
+                <tr>
+                  <td><strong>Solution ID:</strong></td>
+                  <td><code>021c7f6b-1b50-44da-8aa6-e6e9b269e360</code></td>
+                </tr>
+                <tr>
+                  <td><strong>API Code:</strong></td>
+                  <td><code>EjmzCv2V4mM9PmRf2zWSnWfLaZ7dQmj4W2HQgeUNT57htPh25bxT</code></td>
+                </tr>
+                <tr>
+                  <td><strong>Base URL:</strong></td>
+                  <td><code>https://i18n-api.arcadis.com/api/v1.0/</code></td>
+                </tr>
+                <tr>
+                  <td><strong>Management Portal:</strong></td>
+                  <td><a href="https://i18n.arcadis.com/021c7f6b-1b50-44da-8aa6-e6e9b269e360/namespaces" target="_blank">i18n.arcadis.com</a></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
-          <h3>Supported Languages</h3>
-          <ul>
-            <li><strong>Dutch (nl):</strong> Primary language for Dutch market</li>
-            <li><strong>English (en):</strong> Fallback and international users</li>
-          </ul>
+          <h3>🌍 Supported Languages</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Language</th>
+                <th>Code</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>🇳🇱 Dutch</td>
+                <td><code>nl</code></td>
+                <td>Primary language for Dutch market</td>
+              </tr>
+              <tr>
+                <td>🇬🇧 English</td>
+                <td><code>en</code></td>
+                <td>Fallback and international users</td>
+              </tr>
+            </tbody>
+          </table>
 
-          <h3>Using Translations in Components</h3>
+          <h3>📦 Namespaces</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Namespace</th>
+                <th>Purpose</th>
+                <th>Example Keys</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>common</code></td>
+                <td>Shared UI text, buttons, labels, navigation</td>
+                <td><code>save</code>, <code>cancel</code>, <code>loading</code></td>
+              </tr>
+              <tr>
+                <td><code>pages</code></td>
+                <td>Page-specific titles, subtitles, descriptions</td>
+                <td><code>indicatorTrends.title</code>, <code>monthlyFigures.subtitle</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>💻 Using Translations in Components</h3>
+          <p><strong>Basic usage with default namespace (<code>common</code>):</strong></p>
           <pre><code><span class="c-key">import</span> { useTranslation } <span class="c-key">from</span> <span class="c-str">"react-i18next"</span>;
 
 <span class="c-key">function</span> MyComponent() {
@@ -3779,37 +3855,223 @@ i18n
 
   <span class="c-key">return</span> (
     <span class="c-key">&lt;div&gt;</span>
-      <span class="c-key">&lt;h1&gt;</span>{t(<span class="c-str">"welcomeMessage"</span>)}<span class="c-key">&lt;/h1&gt;</span>
-      <span class="c-key">&lt;p&gt;</span>{t(<span class="c-str">"description"</span>, { defaultValue: <span class="c-str">"Default text"</span> })}<span class="c-key">&lt;/p&gt;</span>
+      <span class="c-key">&lt;button&gt;</span>{t(<span class="c-str">"save"</span>)}<span class="c-key">&lt;/button&gt;</span>
+      <span class="c-key">&lt;span&gt;</span>{t(<span class="c-str">"loading"</span>)}<span class="c-key">&lt;/span&gt;</span>
     <span class="c-key">&lt;/div&gt;</span>
   );
 }</code></pre>
 
-          <h3>Namespaces</h3>
+          <p><strong>Using a specific namespace (<code>pages</code>):</strong></p>
+          <pre><code><span class="c-key">import</span> { useTranslation } <span class="c-key">from</span> <span class="c-str">"react-i18next"</span>;
+
+<span class="c-key">function</span> PageHeader() {
+  <span class="c-key">const</span> { t } = useTranslation();
+
+  <span class="c-key">return</span> (
+    <span class="c-key">&lt;PageBasics</span>
+      title={t(<span class="c-str">"indicatorTrends.title"</span>, { ns: <span class="c-str">"pages"</span> })}
+      subtitle={t(<span class="c-str">"marketIndicator.subtitle"</span>, { ns: <span class="c-str">"pages"</span> })}
+    <span class="c-key">/&gt;</span>
+  );
+}
+
+<span class="c-com">// Translation key "indicatorTrends.title" resolves to:</span>
+<span class="c-com">// "Market Indicator &amp; Trends"</span></code></pre>
+
+          <p><strong>With default fallback text:</strong></p>
+          <pre><code><span class="c-key">const</span> text = t(<span class="c-str">"missingKey"</span>, { 
+  defaultValue: <span class="c-str">"Fallback text if key not found"</span> 
+});</code></pre>
+
+          <h3>🔍 How to View Translations</h3>
+          
+          <h4>Option 1: Fetch via API (Recommended for Development)</h4>
+          <p>Fetch and save translation files to your local machine for easy inspection:</p>
+          <pre><code><span class="c-com"># Fetch English translations for 'pages' namespace</span>
+curl -s "https://i18n-api.arcadis.com/api/v1.0/021c7f6b-1b50-44da-8aa6-e6e9b269e360/en/namespaces/pages?code=EjmzCv2V4mM9PmRf2zWSnWfLaZ7dQmj4W2HQgeUNT57htPh25bxT" \
+  | jq '.' > translations-pages-en.json
+
+<span class="c-com"># Fetch English translations for 'common' namespace</span>
+curl -s "https://i18n-api.arcadis.com/api/v1.0/021c7f6b-1b50-44da-8aa6-e6e9b269e360/en/namespaces/common?code=EjmzCv2V4mM9PmRf2zWSnWfLaZ7dQmj4W2HQgeUNT57htPh25bxT" \
+  | jq '.' > translations-common-en.json
+
+<span class="c-com"># Fetch Dutch translations</span>
+curl -s "https://i18n-api.arcadis.com/api/v1.0/021c7f6b-1b50-44da-8aa6-e6e9b269e360/nl/namespaces/pages?code=EjmzCv2V4mM9PmRf2zWSnWfLaZ7dQmj4W2HQgeUNT57htPh25bxT" \
+  | jq '.' > translations-pages-nl.json</code></pre>
+
+          <p><strong>Then search in VS Code:</strong></p>
+          <ul>
+            <li>Press <kbd>Cmd+Shift+F</kbd> to search across files</li>
+            <li>Search for the English text (e.g., <code>"Market Indicator"</code>)</li>
+            <li>Find the corresponding key (e.g., <code>"indicatorTrends.title"</code>)</li>
+          </ul>
+
+          <h4>Option 2: Inspect Network Requests (Runtime)</h4>
+          <ol>
+            <li>Run the app: <code>npm run dev</code></li>
+            <li>Open DevTools → Network tab</li>
+            <li>Filter for <code>i18n-api.arcadis.com</code></li>
+            <li>Click on the request → Preview/Response tab</li>
+            <li>See the full JSON response with all translation keys</li>
+          </ol>
+
+          <h4>Option 3: Use the Arcadis i18n Portal</h4>
+          <ul>
+            <li>Visit: <a href="https://i18n.arcadis.com/021c7f6b-1b50-44da-8aa6-e6e9b269e360/namespaces" target="_blank">https://i18n.arcadis.com/021c7f6b-1b50-44da-8aa6-e6e9b269e360/namespaces</a></li>
+            <li>View and edit translations in the web interface</li>
+            <li>Changes are immediately available to all apps using this solution ID</li>
+          </ul>
+
+          <h3>🛠️ How to Handle Translation Keys</h3>
+
+          <h4>Finding What Text a Key Translates To</h4>
+          <div class="card">
+            <p><strong>Problem:</strong> You see <code>t("indicatorTrends.title", { ns: "pages" })</code> in code but don't know what it displays.</p>
+            <p><strong>Solution 1:</strong> Fetch translations locally and grep:</p>
+            <pre><code>curl -s "https://i18n-api.arcadis.com/api/v1.0/021c7f6b-1b50-44da-8aa6-e6e9b269e360/en/namespaces/pages?code=EjmzCv2V4mM9PmRf2zWSnWfLaZ7dQmj4W2HQgeUNT57htPh25bxT" \
+  | jq '.["indicatorTrends.title"]'
+
+<span class="c-com"># Output: "Market Indicator &amp; Trends"</span></code></pre>
+            <p><strong>Solution 2:</strong> Run the app and see it in the UI at <code>http://localhost:3000</code></p>
+          </div>
+
+          <h4>Finding Which Key Produces Specific Text</h4>
+          <div class="card">
+            <p><strong>Problem:</strong> You see "Market Indicator &amp; Trends" in the UI and want to find the translation key.</p>
+            <p><strong>Solution:</strong> Download translations and search in VS Code:</p>
+            <pre><code><span class="c-com"># Download translations</span>
+curl -s "https://i18n-api.arcadis.com/api/v1.0/021c7f6b-1b50-44da-8aa6-e6e9b269e360/en/namespaces/pages?code=EjmzCv2V4mM9PmRf2zWSnWfLaZ7dQmj4W2HQgeUNT57htPh25bxT" \
+  | jq '.' > translations-pages-en.json
+
+<span class="c-com"># Search for the text</span>
+grep -i "market indicator" translations-pages-en.json
+
+<span class="c-com"># Result shows: "indicatorTrends.title": "Market Indicator &amp; Trends"</span></code></pre>
+          </div>
+
+          <h4>Adding or Updating Translations</h4>
+          <div class="card accent">
+            <div class="card-title">⚠️ Important</div>
+            <p>
+              Translations are <strong>not stored in this repository</strong>. To add or update translations:
+            </p>
+            <ol>
+              <li>Go to <a href="https://i18n.arcadis.com" target="_blank">i18n.arcadis.com</a></li>
+              <li>Navigate to solution <code>021c7f6b-1b50-44da-8aa6-e6e9b269e360</code></li>
+              <li>Select the namespace (<code>common</code> or <code>pages</code>)</li>
+              <li>Add/edit the key and provide translations for all languages</li>
+              <li>Changes take effect immediately (no deployment needed)</li>
+            </ol>
+          </div>
+
+          <h3>🔄 Runtime Translation Flow</h3>
+          <ol>
+            <li><strong>App starts</strong> → <code>src/i18n.ts</code> initializes i18next with http-backend plugin</li>
+            <li><strong>Language detected</strong> → Browser language detector determines user's language (<code>en</code>, <code>nl</code>)</li>
+            <li><strong>HTTP requests fired</strong> → i18next fetches translation JSONs from API:
+              <pre><code>GET https://i18n-api.arcadis.com/api/v1.0/021c7f6b-1b50-44da-8aa6-e6e9b269e360/en/namespaces/common?code=...
+GET https://i18n-api.arcadis.com/api/v1.0/021c7f6b-1b50-44da-8aa6-e6e9b269e360/en/namespaces/pages?code=...</code></pre>
+            </li>
+            <li><strong>Translations cached in memory</strong> → i18next stores them for the session</li>
+            <li><strong>Components render</strong> → When <code>t("key")</code> is called, it looks up the key in the cached translations</li>
+          </ol>
+
+          <h3>🎨 Language Selector Component</h3>
+          <p>
+            The <code>LanguageSelector</code> component in the header allows users to switch languages:
+          </p>
+          <ul>
+            <li>Located in <code>src/components/LanguageSelector/</code></li>
+            <li>Displays language options (Dutch, English)</li>
+            <li>Selection is persisted to <code>localStorage</code></li>
+            <li>Changes are applied immediately (i18next reloads translations for new language)</li>
+          </ul>
+
+          <h3>✅ Benefits of Remote Translations</h3>
+          <ul>
+            <li>✅ <strong>Centralized management:</strong> Translation team can update content without code changes</li>
+            <li>✅ <strong>Multi-app support:</strong> Same solution ID shared across multiple Arcadis products</li>
+            <li>✅ <strong>No repo bloat:</strong> Avoids committing large translation files to git</li>
+            <li>✅ <strong>Dynamic languages:</strong> Add new languages server-side without code deployment</li>
+            <li>✅ <strong>Instant updates:</strong> Changes to translations appear immediately</li>
+          </ul>
+
+          <h3>⚠️ Trade-offs</h3>
+          <ul>
+            <li>❌ Requires network connection (can't work fully offline unless cached locally)</li>
+            <li>❌ Can't easily see all translation keys in IDE/repo</li>
+            <li>❌ Adds latency on initial load (usually minimal)</li>
+            <li>❌ Developers need to fetch translations separately to know what keys display</li>
+          </ul>
+
+          <h3>🐛 Troubleshooting</h3>
           <table>
             <thead>
               <tr>
-                <th>Namespace</th>
-                <th>Purpose</th>
+                <th>Issue</th>
+                <th>Cause</th>
+                <th>Solution</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td><code>common</code></td>
-                <td>Shared UI text, buttons, labels, navigation</td>
+                <td>Translation key shows as literal text</td>
+                <td>Key doesn't exist in namespace or wrong namespace used</td>
+                <td>Check namespace: <code>t("key", { ns: "pages" })</code>. Verify key exists in API response.</td>
               </tr>
               <tr>
-                <td><code>pages</code></td>
-                <td>Page-specific content and terminology</td>
+                <td>Translations not loading</td>
+                <td>Network error or invalid API code</td>
+                <td>Check Network tab for failed requests. Verify <code>code</code> query param is correct.</td>
+              </tr>
+              <tr>
+                <td>Wrong language displayed</td>
+                <td>Browser language detection or localStorage override</td>
+                <td>Clear localStorage or use LanguageSelector to change language manually.</td>
+              </tr>
+              <tr>
+                <td>Can't find translation key</td>
+                <td>Don't know which key produces specific text</td>
+                <td>Fetch translations locally and grep/search in VS Code.</td>
               </tr>
             </tbody>
           </table>
 
-          <h3>Language Selector</h3>
-          <p>
-            <code>LanguageSelector</code> component in header allows users to switch languages.
-            Selection is persisted to localStorage and applied immediately.
-          </p>
+          <h3>📚 Quick Reference</h3>
+          <div class="card brand">
+            <table>
+              <tbody>
+                <tr>
+                  <td><strong>Config file:</strong></td>
+                  <td><code>src/i18n.ts</code></td>
+                </tr>
+                <tr>
+                  <td><strong>Namespaces:</strong></td>
+                  <td><code>common</code>, <code>pages</code></td>
+                </tr>
+                <tr>
+                  <td><strong>Languages:</strong></td>
+                  <td><code>en</code> (English), <code>nl</code> (Dutch)</td>
+                </tr>
+                <tr>
+                  <td><strong>Hook:</strong></td>
+                  <td><code>const { t } = useTranslation();</code></td>
+                </tr>
+                <tr>
+                  <td><strong>Basic usage:</strong></td>
+                  <td><code>t("key")</code> → uses default namespace (<code>common</code>)</td>
+                </tr>
+                <tr>
+                  <td><strong>With namespace:</strong></td>
+                  <td><code>t("key", { ns: "pages" })</code></td>
+                </tr>
+                <tr>
+                  <td><strong>Fetch translations:</strong></td>
+                  <td><code>curl "https://i18n-api.arcadis.com/api/v1.0/021c7f6b-1b50-44da-8aa6-e6e9b269e360/en/namespaces/pages?code=EjmzCv2V4mM9PmRf2zWSnWfLaZ7dQmj4W2HQgeUNT57htPh25bxT"</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </section>
 
         <!-- ─── Testing Strategy ─── -->
