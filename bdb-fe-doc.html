@@ -929,6 +929,9 @@
           <a href="#sec-routing" class="nav-link" onclick="showSection(event, 'sec-routing')"
             >Routing & Navigation</a
           >
+          <a href="#sec-routes-api-mapping" class="nav-link" onclick="showSection(event, 'sec-routes-api-mapping')"
+            >Routes & API Mapping</a
+          >
           <a href="#sec-pages" class="nav-link" onclick="showSection(event, 'sec-pages')"
             >Pages & Features</a
           >
@@ -2402,12 +2405,722 @@ dispatch(showSnackbar({ message: <span class="c-str">"Data saved successfully"</
 <span class="c-key">&lt;/Box&gt;</span></code></pre>
         </section>
 
-        <!-- ─── Pages & Features ─── -->
-        <section id="sec-pages" class="section">
-          <h2>Pages & Features</h2>
+        <!-- ─── Routes & API Mapping ─── -->
+        <section id="sec-routes-api-mapping" class="section">
+          <h2>🗺️ Routes & API Mapping Reference</h2>
           <p class="section-subtitle">
-            Overview of the main application pages and their functionality.
-            <strong>Each page is a complete feature module with its own data fetching, state management, and UI components.</strong>
+            Complete reference guide showing which API endpoints, services, and data are used by each page route.
+            <strong>Use this guide when working on existing features or adding new functionality.</strong>
+          </p>
+
+          <div class="card accent">
+            <div class="card-title">📍 Purpose</div>
+            <p>
+              This section maps each application route to:
+            </p>
+            <ul>
+              <li><strong>Component file:</strong> Location in <code>src/pages/</code></li>
+              <li><strong>Service file:</strong> Location in <code>src/services/</code></li>
+              <li><strong>API endpoints:</strong> Backend routes being called</li>
+              <li><strong>Data structure:</strong> What data is fetched and displayed</li>
+              <li><strong>Hooks used:</strong> Custom hooks for data management</li>
+            </ul>
+          </div>
+
+          <h3>📊 Product Pages (Data-Heavy Features)</h3>
+
+          <h4>1️⃣ Monthly & Forecast Figures</h4>
+          <table>
+            <tbody>
+              <tr>
+                <td><strong>Route:</strong></td>
+                <td><code>/products/monthly-figures</code></td>
+              </tr>
+              <tr>
+                <td><strong>Component:</strong></td>
+                <td><code>src/pages/MonthlyFigures/index.tsx</code></td>
+              </tr>
+              <tr>
+                <td><strong>Service:</strong></td>
+                <td><code>src/services/MonthlyFiguresService.ts</code></td>
+              </tr>
+              <tr>
+                <td><strong>Hook:</strong></td>
+                <td><code>useMonthlyFigures()</code> in <code>src/hooks/useMonthlyFigures.hook.ts</code></td>
+              </tr>
+              <tr>
+                <td><strong>API Endpoints:</strong></td>
+                <td>
+                  <code>POST ReportForecastFigures/{id}?isForecastIncluded={bool}</code><br/>
+                  <code>POST ReportForecastFigures/report/{id}?isForecastIncluded={bool}&format={format}</code>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Data Fetched:</strong></td>
+                <td>
+                  • Monthly figures (labor index, material index, total sum incl/excl VAT)<br/>
+                  • Forecast figures (future projections)<br/>
+                  • Reference dates and reference projects
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Table Columns:</strong></td>
+                <td><code>referenceDate</code>, <code>laborIndex</code>, <code>materialIndex</code>, <code>totalSumInclVat</code>, <code>totalSumExclVat</code></td>
+              </tr>
+              <tr>
+                <td><strong>Chart Type:</strong></td>
+                <td>BasicLineChart with multiple datasets (monthly + forecast)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>2️⃣ Market Indicator & Trends</h4>
+          <table>
+            <tbody>
+              <tr>
+                <td><strong>Route:</strong></td>
+                <td><code>/products/indicator-trends</code></td>
+              </tr>
+              <tr>
+                <td><strong>Component:</strong></td>
+                <td><code>src/pages/MarketIndicator&Trends/index.tsx</code></td>
+              </tr>
+              <tr>
+                <td><strong>Service:</strong></td>
+                <td><code>src/services/common/MarketIndicatorTrendsService.ts</code></td>
+              </tr>
+              <tr>
+                <td><strong>Hook:</strong></td>
+                <td><code>useMarketChartData()</code> in <code>src/hooks/useMarketChartData.hook.ts</code></td>
+              </tr>
+              <tr>
+                <td><strong>API Endpoints:</strong></td>
+                <td>
+                  <code>POST ReportMarketIndicator/{id}</code><br/>
+                  <code>POST ReportMarketTrends/{id}</code><br/>
+                  <code>GET ReportTrends/isIncluded/{id}?dates={dates}</code>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Data Fetched:</strong></td>
+                <td>
+                  • Market indicator data (historical cyclical cost developments)<br/>
+                  • Market trends data (future cyclical cost projections)<br/>
+                  • Merged quarterly data with absolute differences
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Table Columns:</strong></td>
+                <td><code>quarter</code>, <code>marketIndicator(%)</code>, <code>marketTrend(%)</code></td>
+              </tr>
+              <tr>
+                <td><strong>Chart Type:</strong></td>
+                <td>BasicLineChart with segmented dashed lines for trends</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>3️⃣ Detailed Indices</h4>
+          <table>
+            <tbody>
+              <tr>
+                <td><strong>Route:</strong></td>
+                <td><code>/products/detailed-indices</code></td>
+              </tr>
+              <tr>
+                <td><strong>Component:</strong></td>
+                <td><code>src/pages/DetailedIndices/index.tsx</code></td>
+              </tr>
+              <tr>
+                <td><strong>Service:</strong></td>
+                <td><code>src/services/DetailedIndicesService.ts</code></td>
+              </tr>
+              <tr>
+                <td><strong>API Endpoints:</strong></td>
+                <td>
+                  <code>POST ReportElementClusters/{id}?giServiceEnum={enum}</code><br/>
+                  <code>GET ReportElementClusters/GetProductList</code><br/>
+                  <code>POST ReportElementClusters/report/{id}?giServiceEnum={enum}</code><br/>
+                  <code>GET ReportElementClusters/advancedReport/{id}?giServiceEnum={enum}</code><br/>
+                  <code>GET ReportElementClusters/rimBasic/{id}?giServiceEnum={enum}</code>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Service Enums:</strong></td>
+                <td>
+                  <code>1</code> = Element Clusters<br/>
+                  <code>2</code> = Stabu Chapters<br/>
+                  <code>3</code> = Product Groups
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Data Fetched:</strong></td>
+                <td>
+                  • Hierarchical cost development data at detailed levels<br/>
+                  • Element clusters, STABU chapters, or product groups<br/>
+                  • Historical and forecast indices with percentage changes<br/>
+                  • Subcategory filtering options
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Grid Type:</strong></td>
+                <td>AG Grid with dynamic columns, grouping, percentage cell renderer</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>4️⃣ Parametric Elements</h4>
+          <table>
+            <tbody>
+              <tr>
+                <td><strong>Routes:</strong></td>
+                <td>
+                  <code>/products/parametric-elements</code> (overview)<br/>
+                  <code>/products/parametric-elements/:elementId</code> (detail)
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Components:</strong></td>
+                <td>
+                  <code>src/pages/ParametricElementOverview/index.tsx</code><br/>
+                  <code>src/pages/ParametricElement/index.tsx</code>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Service:</strong></td>
+                <td><code>src/services/ParametricElementsService.ts</code></td>
+              </tr>
+              <tr>
+                <td><strong>API Endpoints:</strong></td>
+                <td>
+                  <code>GET ParametricOverview</code><br/>
+                  <code>GET ParametricDetails/{elementId}</code><br/>
+                  <code>POST ParametricDetails/calculate</code><br/>
+                  <code>POST ParametricSearch/parametric-node-search</code>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Data Fetched:</strong></td>
+                <td>
+                  • Overview: List of parametric cost elements with categories<br/>
+                  • Detail: Element specifications, parameters, cost data<br/>
+                  • Calculate: Dynamic price calculation based on parameters<br/>
+                  • Search: Node-based parametric element search
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Features:</strong></td>
+                <td>Interactive parametric cost library with calculations</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>5️⃣ Index Figures Model</h4>
+          <table>
+            <tbody>
+              <tr>
+                <td><strong>Route:</strong></td>
+                <td><code>/products/figures-model</code></td>
+              </tr>
+              <tr>
+                <td><strong>Component:</strong></td>
+                <td><code>src/pages/FigureModel/index.tsx</code></td>
+              </tr>
+              <tr>
+                <td><strong>Service:</strong></td>
+                <td><code>src/services/FiguresModelService.ts</code></td>
+              </tr>
+              <tr>
+                <td><strong>API Endpoints:</strong></td>
+                <td>
+                  <code>POST FiguresModel/{id}?baseYear={year}&format={format}</code>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Data Fetched:</strong></td>
+                <td>
+                  • Price development calculation at object level<br/>
+                  • Index figure model with multiple reference dates<br/>
+                  • Export report (Excel format)
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Form Inputs:</strong></td>
+                <td>Project name, project number, reference project, base year, up to 4 reference dates</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>6️⃣ Aspect Ratio (Benchmark / Key Cost Figures)</h4>
+          <table>
+            <tbody>
+              <tr>
+                <td><strong>Routes:</strong></td>
+                <td>
+                  <code>/products/aspect-ratio</code><br/>
+                  <code>/products/aspect-ratio/search</code><br/>
+                  <code>/products/e235-aspect-ratio</code><br/>
+                  <code>/products/e235-aspect-ratio/search</code>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Components:</strong></td>
+                <td>
+                  <code>src/pages/AspectRatio/AspectRatioPage.tsx</code><br/>
+                  <code>src/pages/AspectRatio/E235AspectRatioPage.tsx</code><br/>
+                  <code>src/pages/AspectRatioSearch/</code>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Services:</strong></td>
+                <td>
+                  <code>src/services/AspectRatioService.ts</code><br/>
+                  <code>src/services/AspectRatioExportService.ts</code>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>API Endpoints:</strong></td>
+                <td>
+                  <code>POST DesignKeyFigures/getData</code><br/>
+                  <code>POST DesignKeyFigures/ExportAdvanced</code><br/>
+                  <code>POST DesignKeyFigures/ExportDesignFactors</code><br/>
+                  <code>POST DesignKeyFigures/ExportKeyCostFigure</code><br/>
+                  <code>GET DesignKeyFigures/GetMeasures</code>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Data Fetched:</strong></td>
+                <td>
+                  • Design factors and key cost figures<br/>
+                  • Generic design factors for building types<br/>
+                  • Measures data (hierarchical cost breakdown)<br/>
+                  • Export formats: advanced, design factors, key cost figures
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Grid Type:</strong></td>
+                <td>AG Grid Enterprise with measure hierarchy</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>7️⃣ IndexLab (Flexible Indices)</h4>
+          <table>
+            <tbody>
+              <tr>
+                <td><strong>Route:</strong></td>
+                <td><code>/products/flexible-indices</code></td>
+              </tr>
+              <tr>
+                <td><strong>Component:</strong></td>
+                <td><code>src/pages/FlexibleIndices/index.tsx</code></td>
+              </tr>
+              <tr>
+                <td><strong>Services:</strong></td>
+                <td>
+                  <code>MonthlyFiguresService</code><br/>
+                  <code>DetailedIndicesService</code>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>API Endpoints:</strong></td>
+                <td>
+                  Uses same endpoints as Monthly Figures and Detailed Indices<br/>
+                  (Combined data from both services)
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Data Fetched:</strong></td>
+                <td>
+                  • Combined monthly figures and detailed indices data<br/>
+                  • Comparative cost development analysis<br/>
+                  • Multi-level abstraction comparison
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Features:</strong></td>
+                <td>Compare cost developments across various levels of abstraction</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>8️⃣ Woningbouw, onderhoud en verduurzamingsindex (WOV)</h4>
+          <table>
+            <tbody>
+              <tr>
+                <td><strong>Route:</strong></td>
+                <td><code>/products/woningbouw-onderhoud-en-verduurzamingsindex</code></td>
+              </tr>
+              <tr>
+                <td><strong>Component:</strong></td>
+                <td><code>src/pages/WoningbouwOnderhoudVerduurzamingsindex/index.tsx</code></td>
+              </tr>
+              <tr>
+                <td><strong>Service:</strong></td>
+                <td><code>src/services/wovService.ts</code></td>
+              </tr>
+              <tr>
+                <td><strong>API Endpoints:</strong></td>
+                <td>
+                  <code>POST WoningbouwOnderhoudVerduurzaming/take</code><br/>
+                  <code>POST WoningbouwOnderhoudVerduurzaming/getAll/{id}</code><br/>
+                  <code>POST WoningbouwOnderhoudVerduurzaming/report/{id}?format={format}</code>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Data Fetched:</strong></td>
+                <td>
+                  • Housing maintenance and sustainability indices<br/>
+                  • Intervention-cluster or measure-level cost developments<br/>
+                  • Common maintenance/sustainability works data
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Features:</strong></td>
+                <td>Reconcile projects and budgets at measure level</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>📄 Other Pages</h3>
+
+          <h4>9️⃣ Projects (Ad Hoc)</h4>
+          <table>
+            <tbody>
+              <tr>
+                <td><strong>Route:</strong></td>
+                <td><code>/projects</code></td>
+              </tr>
+              <tr>
+                <td><strong>Component:</strong></td>
+                <td><code>src/pages/AdHocProjects/index.tsx</code></td>
+              </tr>
+              <tr>
+                <td><strong>Service:</strong></td>
+                <td><code>src/services/AdHocProjectsService.ts</code></td>
+              </tr>
+              <tr>
+                <td><strong>API Endpoints:</strong></td>
+                <td>
+                  <code>POST ProjectAdHoc/take</code><br/>
+                  <code>POST ProjectAdHoc/takeindex?take={n}&skip={n}</code><br/>
+                  <code>PUT ProjectAdHoc/{id}</code><br/>
+                  <code>POST ProjectAdHoc/PostFile</code><br/>
+                  <code>GET ProjectAdHoc/file/{id}</code><br/>
+                  <code>GET ProjectAdHoc/allowDelete/{id}</code><br/>
+                  <code>GET ProjectAdHoc/GetProjectTypeUsed</code><br/>
+                  <code>GET ProjectAdHoc/GetProjectTypes</code>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Data Fetched:</strong></td>
+                <td>
+                  • Ad hoc project reports<br/>
+                  • Project description, invoice number, reference date, order date, classification<br/>
+                  • Download project files
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Grid Type:</strong></td>
+                <td>AG Grid with infinite scroll (pagination)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>🔟 Dashboard</h4>
+          <table>
+            <tbody>
+              <tr>
+                <td><strong>Route:</strong></td>
+                <td><code>/dashboard</code></td>
+              </tr>
+              <tr>
+                <td><strong>Component:</strong></td>
+                <td><code>src/pages/Dashboard/index.tsx</code></td>
+              </tr>
+              <tr>
+                <td><strong>Services Used:</strong></td>
+                <td>Multiple services for tiles and widgets</td>
+              </tr>
+              <tr>
+                <td><strong>Data Fetched:</strong></td>
+                <td>
+                  • User subscription info<br/>
+                  • Product tiles<br/>
+                  • Market indicator trends (mini charts)<br/>
+                  • News/updates<br/>
+                  • Quick access to products
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>🔒 Admin Upload Pages</h3>
+
+          <h4>1️⃣1️⃣ Reference Budget Upload</h4>
+          <table>
+            <tbody>
+              <tr>
+                <td><strong>Route:</strong></td>
+                <td><code>/uploads/referenceBudgets</code></td>
+              </tr>
+              <tr>
+                <td><strong>Component:</strong></td>
+                <td><code>src/pages/Uploads/ReferenceBudgets.tsx</code></td>
+              </tr>
+              <tr>
+                <td><strong>Service:</strong></td>
+                <td><code>src/services/ReferenceBudgetUploadService.ts</code></td>
+              </tr>
+              <tr>
+                <td><strong>API Endpoints:</strong></td>
+                <td>
+                  <code>POST ReferenceBudget/take</code> (list uploads)<br/>
+                  <code>GET ReferenceBudget/getAll/{id}</code> (get specific upload)<br/>
+                  <code>POST ReferenceBudget/upload</code> (upload file)<br/>
+                  <code>POST ReferenceBudget/bulkpublish</code> (bulk publish)
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Data Fetched:</strong></td>
+                <td>
+                  • Uploaded reference budget files<br/>
+                  • Upload status, reference date, file info<br/>
+                  • Publish status
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Note:</strong></td>
+                <td><strong>ID Chaining Required:</strong> Use <code>take</code> to get list entries with <code>id</code>, then use that <code>id</code> with <code>getAll/{id}</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>1️⃣2️⃣ Forecast Figures Upload</h4>
+          <table>
+            <tbody>
+              <tr>
+                <td><strong>Route:</strong></td>
+                <td><code>/uploads/forecastFigures</code></td>
+              </tr>
+              <tr>
+                <td><strong>Component:</strong></td>
+                <td><code>src/pages/Uploads/ForecastFigures.tsx</code></td>
+              </tr>
+              <tr>
+                <td><strong>Service:</strong></td>
+                <td><code>src/services/ForecastFigureService.ts</code></td>
+              </tr>
+              <tr>
+                <td><strong>API Endpoints:</strong></td>
+                <td>
+                  <code>POST ForecastFigure/take</code><br/>
+                  <code>GET ForecastFigure/getAll/{id}</code><br/>
+                  <code>POST ForecastFigure/upload</code><br/>
+                  <code>POST ForecastFigure/bulkpublish</code>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>1️⃣3️⃣ WOV Upload</h4>
+          <table>
+            <tbody>
+              <tr>
+                <td><strong>Route:</strong></td>
+                <td><code>/uploads/woningbouw-onderhoud-en-verduurzamingsindex</code></td>
+              </tr>
+              <tr>
+                <td><strong>Component:</strong></td>
+                <td><code>src/pages/Uploads/WoningbouwOnderhoudVerduurzamingsindex.tsx</code></td>
+              </tr>
+              <tr>
+                <td><strong>Service:</strong></td>
+                <td><code>src/services/wovService.ts</code></td>
+              </tr>
+              <tr>
+                <td><strong>API Endpoints:</strong></td>
+                <td>
+                  <code>POST WoningbouwOnderhoudVerduurzaming/take</code><br/>
+                  <code>POST WoningbouwOnderhoudVerduurzaming/upload</code><br/>
+                  <code>POST WoningbouwOnderhoudVerduurzaming/bulkpublish</code>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>🔧 Common Services (Shared Utilities)</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th>Purpose</th>
+                <th>Key Endpoints</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>ReferenceProjectService</code></td>
+                <td>Fetch reference projects for dropdowns</td>
+                <td><code>GET ReferenceProject</code></td>
+              </tr>
+              <tr>
+                <td><code>ReferenceDatePublishedService</code></td>
+                <td>Get latest published reference dates</td>
+                <td><code>GET ReferenceDatePublished/{id}</code></td>
+              </tr>
+              <tr>
+                <td><code>ReferenceDateService</code></td>
+                <td>Fetch available reference dates</td>
+                <td><code>GET ReferenceDate</code></td>
+              </tr>
+              <tr>
+                <td><code>DataSeriesService</code></td>
+                <td>Get data series metadata</td>
+                <td><code>GET DataSeries/{id}</code></td>
+              </tr>
+              <tr>
+                <td><code>SubscriptionService</code></td>
+                <td>User subscription data</td>
+                <td><code>GET Subscription</code></td>
+              </tr>
+              <tr>
+                <td><code>ProfileService</code></td>
+                <td>User profile CRUD</td>
+                <td><code>GET/PUT Profile</code></td>
+              </tr>
+              <tr>
+                <td><code>CountryService</code></td>
+                <td>Country list for forms</td>
+                <td><code>GET Country</code></td>
+              </tr>
+              <tr>
+                <td><code>LogDataService</code></td>
+                <td>Log user actions/downloads</td>
+                <td><code>POST LogData</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>🎯 Quick Lookup: Route → Service → API</h3>
+          <div class="card brand">
+            <table>
+              <thead>
+                <tr>
+                  <th>Route</th>
+                  <th>Primary Service</th>
+                  <th>Main API Endpoint</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>/products/monthly-figures</code></td>
+                  <td><code>MonthlyFiguresService</code></td>
+                  <td><code>POST ReportForecastFigures/{id}</code></td>
+                </tr>
+                <tr>
+                  <td><code>/products/indicator-trends</code></td>
+                  <td><code>MarketIndicatorTrendsService</code></td>
+                  <td><code>POST ReportMarketIndicator/{id}</code> + <code>POST ReportMarketTrends/{id}</code></td>
+                </tr>
+                <tr>
+                  <td><code>/products/detailed-indices</code></td>
+                  <td><code>DetailedIndicesService</code></td>
+                  <td><code>POST ReportElementClusters/{id}?giServiceEnum={enum}</code></td>
+                </tr>
+                <tr>
+                  <td><code>/products/parametric-elements</code></td>
+                  <td><code>ParametricElementsService</code></td>
+                  <td><code>GET ParametricOverview</code> + <code>GET ParametricDetails/{id}</code></td>
+                </tr>
+                <tr>
+                  <td><code>/products/figures-model</code></td>
+                  <td><code>FiguresModelService</code></td>
+                  <td><code>POST FiguresModel/{id}?baseYear={year}</code></td>
+                </tr>
+                <tr>
+                  <td><code>/products/aspect-ratio</code></td>
+                  <td><code>AspectRatioService</code></td>
+                  <td><code>POST DesignKeyFigures/getData</code></td>
+                </tr>
+                <tr>
+                  <td><code>/products/flexible-indices</code></td>
+                  <td>Monthly + Detailed Services</td>
+                  <td>Combined endpoints</td>
+                </tr>
+                <tr>
+                  <td><code>/products/woningbouw-...</code></td>
+                  <td><code>wovService</code></td>
+                  <td><code>POST WoningbouwOnderhoudVerduurzaming/take</code></td>
+                </tr>
+                <tr>
+                  <td><code>/projects</code></td>
+                  <td><code>AdHocProjectsService</code></td>
+                  <td><code>POST ProjectAdHoc/take</code></td>
+                </tr>
+                <tr>
+                  <td><code>/uploads/referenceBudgets</code></td>
+                  <td><code>ReferenceBudgetUploadService</code></td>
+                  <td><code>POST ReferenceBudget/take</code> → <code>GET getAll/{id}</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>💡 How to Use This Reference</h3>
+          <div class="card accent">
+            <p><strong>When adding a new feature or modifying existing data:</strong></p>
+            <ol>
+              <li>Find the route in the table above</li>
+              <li>Locate the component file in <code>src/pages/</code></li>
+              <li>Open the corresponding service file in <code>src/services/</code></li>
+              <li>Check the API endpoint being called</li>
+              <li>Inspect the data structure returned (interfaces in <code>src/models/</code>)</li>
+              <li>Check if a custom hook is used (in <code>src/hooks/</code>)</li>
+              <li>Modify data fetching, add new columns, or extend functionality</li>
+            </ol>
+          </div>
+
+          <h3>🧪 Testing API Endpoints in Postman</h3>
+          <div class="card">
+            <p><strong>Base URL:</strong> <code>{{VITE_REACT_APP_API_URL}}</code> (from environment variables)</p>
+            <p><strong>Authorization:</strong> Bearer token (get from localStorage after login)</p>
+            <p><strong>Steps:</strong></p>
+            <ol>
+              <li>Login to the app and open DevTools → Application → Local Storage</li>
+              <li>Copy the <code>accessToken</code> value</li>
+              <li>In Postman, add header: <code>Authorization: Bearer {token}</code></li>
+              <li>Use endpoint from table above (e.g., <code>POST {{baseUrl}}/ReportForecastFigures/11</code>)</li>
+              <li>Send request body if POST (check service file for payload structure)</li>
+            </ol>
+            <p><strong>Common payload structures:</strong></p>
+            <pre><code><span class="c-com">// For date-based endpoints</span>
+{
+  <span class="c-str">"datelist"</span>: [<span class="c-str">"2024-01-01"</span>, <span class="c-str">"2024-02-01"</span>, ...],
+  <span class="c-str">"desiredDescriptionList"</span>: [<span class="c-str">"category1"</span>, ...]
+}
+
+<span class="c-com">// For take/pagination endpoints</span>
+{
+  <span class="c-str">"skip"</span>: 0,
+  <span class="c-str">"take"</span>: 50,
+  <span class="c-str">"sort"</span>: [],
+  <span class="c-str">"filter"</span>: {}
+}</code></pre>
+          </div>
+
+          <h3>📝 Notes for Developers</h3>
+          <ul>
+            <li><strong>List-before-Detail Pattern:</strong> Many upload endpoints require calling <code>take</code> first to get an internal <code>id</code>, then using that <code>id</code> with <code>getAll/{id}</code></li>
+            <li><strong>Reference Projects:</strong> Most data endpoints require a <code>referenceProjectId</code> (typically <code>11</code> for default project)</li>
+            <li><strong>Date Formats:</strong> Use ISO format <code>YYYY-MM-DD</code> for all date parameters</li>
+            <li><strong>Forecast vs Regular Data:</strong> Many services return both regular and forecast data; use <code>isForecast</code> flag to distinguish</li>
+            <li><strong>Export Formats:</strong> Most reports support <code>format=excel</code> or <code>format=pdf</code> query params</li>
+            <li><strong>Subscription Checks:</strong> All product routes are protected by <code>requiredSubscription</code> checks in the router</li>
+          </ul>
+        </section>
+
+        <!-- ─── Pages & Features ─── -->
           </p>
 
           <h3>Dashboard</h3>
