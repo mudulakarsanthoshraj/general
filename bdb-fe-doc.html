@@ -967,6 +967,9 @@
           <a href="#sec-build" class="nav-link" onclick="showSection(event, 'sec-build')"
             >Build & Deployment</a
           >
+          <a href="#sec-folder-structure" class="nav-link" onclick="showSection(event, 'sec-folder-structure')"
+            >Folder Structure & Migration</a
+          >
           <a href="#sec-conventions" class="nav-link" onclick="showSection(event, 'sec-conventions')"
             >Coding Conventions</a
           >
@@ -5357,6 +5360,608 @@ npm run build:prd      <span class="c-com"># Uses .env.production</span></code><
               <li><strong>Asset Optimization:</strong> Images and fonts optimized</li>
             </ul>
           </div>
+        </section>
+
+        <!-- ─── Folder Structure & Migration ─── -->
+        <section id="sec-folder-structure" class="section">
+          <h2>📁 Recommended Folder Structure & Migration Guide</h2>
+          <p class="section-subtitle">
+            Clean, scalable folder organization following industry best practices.
+            <strong>This section provides a migration plan to improve the current structure.</strong>
+          </p>
+
+          <div class="card accent">
+            <div class="card-title">⚠️ Current Issues</div>
+            <p>The existing folder structure has some organizational problems:</p>
+            <ul>
+              <li><strong>Generic components mixed with feature-specific ones:</strong> <code>SimpleTable</code> is a reusable component but lives in <code>components/</code> alongside page-specific components</li>
+              <li><strong>No clear separation:</strong> Hard to distinguish between UI primitives, shared business components, and feature-specific components</li>
+              <li><strong>Flat structure:</strong> All components in one folder makes navigation difficult</li>
+              <li><strong>Inconsistent grouping:</strong> Related components scattered across different folders</li>
+            </ul>
+          </div>
+
+          <h3>🎯 Recommended Folder Structure</h3>
+          
+          <pre><code>src/
+├── assets/                    <span class="c-com"># Static assets (images, fonts, data files)</span>
+│   ├── images/
+│   ├── fonts/
+│   └── data.json
+│
+├── components/                <span class="c-com"># Reusable UI components (organized by type)</span>
+│   ├── ui/                   <span class="c-com"># Generic, reusable UI primitives</span>
+│   │   ├── Button/
+│   │   │   ├── Button.tsx
+│   │   │   ├── Button.test.tsx
+│   │   │   └── Button.styles.ts
+│   │   ├── Table/
+│   │   │   ├── SimpleTable.tsx        <span class="c-com"># ← Move from components/SimpleTable/</span>
+│   │   │   ├── SimpleTable.test.tsx
+│   │   │   └── index.ts
+│   │   ├── Chart/
+│   │   │   ├── BasicLineChart.tsx     <span class="c-com"># ← Move from components/BasicLineChart/</span>
+│   │   │   └── ChartLegendTooltip.tsx
+│   │   ├── LoadingOverlay/
+│   │   │   └── LoadingOverlay.tsx     <span class="c-com"># ← Move from components/LoadingOverlay.tsx/</span>
+│   │   ├── Notification/
+│   │   │   ├── SnackbarNotification.tsx
+│   │   │   └── NotificationCenter.tsx
+│   │   └── index.ts              <span class="c-com"># Barrel export for all UI components</span>
+│   │
+│   ├── forms/                 <span class="c-com"># Form-related components</span>
+│   │   ├── FormField/
+│   │   ├── FormSection/
+│   │   ├── DynamicParametricForm/
+│   │   └── index.ts
+│   │
+│   ├── layout/                <span class="c-com"># Layout components</span>
+│   │   ├── Header/
+│   │   ├── Footer/
+│   │   ├── SideBar/
+│   │   ├── Breadcrumbs/
+│   │   └── index.ts
+│   │
+│   ├── selectors/             <span class="c-com"># Specialized selector components</span>
+│   │   ├── ReferenceDateSelector/
+│   │   ├── ReferenceProjectSelector/
+│   │   ├── CurrencySelector/
+│   │   ├── LanguageSelector/
+│   │   ├── PresetSelector/
+│   │   └── index.ts
+│   │
+│   ├── business/              <span class="c-com"># Business logic components (shared across features)</span>
+│   │   ├── DatasetSelection/
+│   │   ├── IndexFigureTile/
+│   │   ├── TrendsTile/
+│   │   ├── SubscriptionTile/
+│   │   └── index.ts
+│   │
+│   ├── navigation/            <span class="c-com"># Navigation-related components</span>
+│   │   ├── StepNavigation/
+│   │   ├── E235Buttons/
+│   │   └── index.ts
+│   │
+│   └── shared/                <span class="c-com"># Other shared components</span>
+│       ├── Logo/
+│       ├── ThemeToggle/
+│       ├── UserBox/
+│       ├── TruncatedText/
+│       └── index.ts
+│
+├── pages/                     <span class="c-com"># Page components (feature modules)</span>
+│   ├── Dashboard/
+│   │   ├── index.tsx
+│   │   ├── Dashboard.test.tsx
+│   │   └── components/        <span class="c-com"># Page-specific components</span>
+│   │       ├── DashboardTile.tsx
+│   │       └── CustomizeDashboardDialog.tsx  <span class="c-com"># ← Move from components/</span>
+│   │
+│   ├── MonthlyFigures/
+│   │   ├── index.tsx
+│   │   └── components/
+│   │
+│   ├── MarketIndicator&Trends/
+│   │   ├── index.tsx
+│   │   └── components/
+│   │
+│   ├── DetailedIndices/
+│   │   ├── index.tsx
+│   │   ├── DetailedIndices.css
+│   │   └── components/
+│   │       ├── DetailHeader.tsx       <span class="c-com"># ← Move from components/DetailedIndices/</span>
+│   │       ├── DownloadButtons.tsx
+│   │       └── PercentageCellRenderer.tsx
+│   │
+│   ├── ParametricElementOverview/
+│   │   └── index.tsx
+│   │
+│   ├── ParametricElement/
+│   │   ├── index.tsx
+│   │   └── components/
+│   │       └── ParametricNodeSearchPopup.tsx  <span class="c-com"># ← Move from components/</span>
+│   │
+│   ├── AspectRatio/
+│   │   ├── AspectRatioPage.tsx
+│   │   ├── E235AspectRatioPage.tsx
+│   │   ├── AspectRatioHeader.tsx
+│   │   └── components/
+│   │
+│   ├── WelcomePage/
+│   │   ├── index.tsx
+│   │   └── components/
+│   │       ├── Hero.tsx              <span class="c-com"># ← Move from components/Hero/</span>
+│   │       ├── FAQ.tsx               <span class="c-com"># ← Move from components/FAQ/</span>
+│   │       ├── ProductsPanel.tsx     <span class="c-com"># ← Move from components/ProductsPanel/</span>
+│   │       ├── ProjectPanel.tsx
+│   │       ├── NewsPanel.tsx
+│   │       └── InfoPanel.tsx
+│   │
+│   ├── Uploads/               <span class="c-com"># Admin upload pages</span>
+│   │   ├── ReferenceBudgets.tsx
+│   │   ├── ForecastFigures.tsx
+│   │   └── WoningbouwOnderhoudVerduurzamingsindex.tsx
+│   │
+│   ├── AccountSettings/
+│   │   ├── PersonalDetails.tsx
+│   │   ├── CompanyDetails.tsx
+│   │   ├── SubscriptionDetails.tsx
+│   │   └── components/
+│   │       └── ProfileForm.tsx       <span class="c-com"># ← Move from components/ProfileForm/</span>
+│   │
+│   └── [OtherPages]/
+│
+├── layout/                    <span class="c-com"># Top-level layout wrappers</span>
+│   ├── index.tsx             <span class="c-com"># BaseLayout</span>
+│   └── AccountSettings/
+│       └── AccountSettings.tsx
+│
+├── hooks/                     <span class="c-com"># Custom React hooks</span>
+│   ├── auth.hook.ts
+│   ├── subscription.hook.ts
+│   ├── useMonthlyFigures.hook.ts
+│   ├── useMarketChartData.hook.ts
+│   ├── useMarketIndicator.hook.ts
+│   ├── useBulkPublish.hook.ts
+│   ├── useExportHandler.hook.ts
+│   └── usePrompt.ts
+│
+├── services/                  <span class="c-com"># API service layer</span>
+│   ├── common/
+│   │   ├── HttpCommon.ts
+│   │   └── MarketIndicatorTrendsService.ts
+│   ├── MonthlyFiguresService.ts
+│   ├── DetailedIndicesService.ts
+│   ├── ParametricElementsService.ts
+│   ├── AspectRatioService.ts
+│   ├── AdHocProjectsService.ts
+│   ├── AuthService.ts
+│   ├── SubscriptionService.ts
+│   ├── ProfileService.ts
+│   └── [OtherServices].ts
+│
+├── context/                   <span class="c-com"># React Context providers</span>
+│   └── appState.context.tsx
+│
+├── store/                     <span class="c-com"># Redux store (if using Redux)</span>
+│   ├── index.ts
+│   ├── slices/
+│   │   ├── snackbarSlice.ts
+│   │   └── [otherSlices].ts
+│   └── hooks.ts              <span class="c-com"># Typed Redux hooks</span>
+│
+├── models/                    <span class="c-com"># TypeScript interfaces & types</span>
+│   ├── IAspectRatio.ts
+│   ├── ICountry.ts
+│   ├── IDataSeries.ts
+│   ├── IDetailedIndices.ts
+│   ├── IMonthlyFigures.ts
+│   ├── IProject.ts
+│   └── [OtherModels].ts
+│
+├── utils/                     <span class="c-com"># Utility functions</span>
+│   ├── agGridConfig.ts
+│   ├── detailed-indices-utils.ts
+│   ├── reportDownloader.ts
+│   ├── formatters.ts         <span class="c-com"># Date, number, currency formatters</span>
+│   └── validators.ts
+│
+├── themes/                    <span class="c-com"># Theme configurations</span>
+│   ├── AgGridTheme.ts
+│   ├── lightTheme.ts
+│   └── darkTheme.ts
+│
+├── auth/                      <span class="c-com"># Authentication logic</span>
+│   ├── auth.operations.ts
+│   └── auth-config.ts
+│
+├── types/                     <span class="c-com"># Global TypeScript types</span>
+│   └── [globalTypes].ts
+│
+├── tests/                     <span class="c-com"># Test utilities & setup</span>
+│   └── setup.ts
+│
+├── i18n.ts                    <span class="c-com"># i18n configuration</span>
+├── router.tsx                 <span class="c-com"># React Router configuration</span>
+├── App.tsx                    <span class="c-com"># Root App component</span>
+├── main.tsx                   <span class="c-com"># Application entry point</span>
+└── vite-env.d.ts             <span class="c-com"># Vite type definitions</span></code></pre>
+
+          <h3>📊 Component Classification Guide</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Definition</th>
+                <th>Examples</th>
+                <th>Location</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>UI Primitives</strong></td>
+                <td>Generic, reusable components with no business logic</td>
+                <td>SimpleTable, BasicLineChart, LoadingOverlay, Button</td>
+                <td><code>components/ui/</code></td>
+              </tr>
+              <tr>
+                <td><strong>Form Components</strong></td>
+                <td>Form fields, inputs, and form-related utilities</td>
+                <td>FormField, FormSection, DynamicParametricForm</td>
+                <td><code>components/forms/</code></td>
+              </tr>
+              <tr>
+                <td><strong>Layout Components</strong></td>
+                <td>Page structure and navigation</td>
+                <td>Header, Footer, SideBar, Breadcrumbs</td>
+                <td><code>components/layout/</code></td>
+              </tr>
+              <tr>
+                <td><strong>Selectors</strong></td>
+                <td>Specialized dropdown/selection components</td>
+                <td>ReferenceDateSelector, CurrencySelector, LanguageSelector</td>
+                <td><code>components/selectors/</code></td>
+              </tr>
+              <tr>
+                <td><strong>Business Components</strong></td>
+                <td>Shared components with business logic</td>
+                <td>DatasetSelection, IndexFigureTile, TrendsTile</td>
+                <td><code>components/business/</code></td>
+              </tr>
+              <tr>
+                <td><strong>Page-Specific</strong></td>
+                <td>Used only within one page/feature</td>
+                <td>CustomizeDashboardDialog, FAQ (for Welcome page)</td>
+                <td><code>pages/[PageName]/components/</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>🔄 Migration Strategy</h3>
+
+          <h4>Phase 1: UI Primitives (Low Risk, High Impact)</h4>
+          <div class="card">
+            <p><strong>Goal:</strong> Extract truly generic components</p>
+            <ol>
+              <li>Create <code>src/components/ui/</code> folder</li>
+              <li>Move generic components:
+                <pre><code><span class="c-com"># Components to move to ui/</span>
+components/SimpleTable/          → components/ui/Table/SimpleTable.tsx
+components/BasicLineChart/       → components/ui/Chart/BasicLineChart.tsx
+components/ChartLegendTooltip/   → components/ui/Chart/ChartLegendTooltip.tsx
+components/LoadingOverlay.tsx/   → components/ui/LoadingOverlay/
+components/SnackbarNotification/ → components/ui/Notification/
+components/NotificationCenter/   → components/ui/Notification/
+components/TruncatedText/        → components/ui/TruncatedText/</code></pre>
+              </li>
+              <li>Update imports across codebase (use Find & Replace):
+                <pre><code><span class="c-com">// Old import</span>
+<span class="c-key">import</span> SimpleTable <span class="c-key">from</span> <span class="c-str">"../../components/SimpleTable/SimpleTable"</span>;
+
+<span class="c-com">// New import</span>
+<span class="c-key">import</span> { SimpleTable } <span class="c-key">from</span> <span class="c-str">"@/components/ui"</span>;</code></pre>
+              </li>
+              <li>Create barrel exports in <code>components/ui/index.ts</code></li>
+              <li>Test all pages to ensure imports work</li>
+            </ol>
+          </div>
+
+          <h4>Phase 2: Categorize Remaining Components (Medium Risk)</h4>
+          <div class="card">
+            <p><strong>Goal:</strong> Organize by component type</p>
+            <ol>
+              <li>Create category folders: <code>forms/</code>, <code>selectors/</code>, <code>layout/</code>, <code>business/</code>, <code>navigation/</code>, <code>shared/</code></li>
+              <li>Move components to appropriate categories:
+                <pre><code><span class="c-com"># Form components</span>
+components/FormField/            → components/forms/FormField/
+components/FormSection/          → components/forms/FormSection/
+components/DynamicParametricForm/ → components/forms/DynamicParametricForm/
+
+<span class="c-com"># Selectors</span>
+components/ReferenceDateSelector/   → components/selectors/ReferenceDateSelector/
+components/ReferenceProjectSelector/ → components/selectors/ReferenceProjectSelector/
+components/CurrencySelector/         → components/selectors/CurrencySelector/
+components/LanguageSelector/         → components/selectors/LanguageSelector/
+components/PresetSelector/           → components/selectors/PresetSelector/
+
+<span class="c-com"># Layout</span>
+components/Header/               → components/layout/Header/
+components/Footer/               → components/layout/Footer/
+components/SideBar/              → components/layout/SideBar/
+components/Breadcrumbs/          → components/layout/Breadcrumbs/
+
+<span class="c-com"># Business</span>
+components/DatasetSelection/     → components/business/DatasetSelection/
+components/IndexFigureTile/      → components/business/IndexFigureTile/
+components/TrendsTile/           → components/business/TrendsTile/
+components/SubscriptionTile/     → components/business/SubscriptionTile/
+
+<span class="c-com"># Navigation</span>
+components/StepNavigation/       → components/navigation/StepNavigation/
+components/E235Buttons/          → components/navigation/E235Buttons/
+
+<span class="c-com"># Shared</span>
+components/Logo/                 → components/shared/Logo/
+components/ThemeToggle/          → components/shared/ThemeToggle/
+components/UserBox/              → components/shared/UserBox/</code></pre>
+              </li>
+              <li>Update imports</li>
+              <li>Create barrel exports for each category</li>
+            </ol>
+          </div>
+
+          <h4>Phase 3: Move Page-Specific Components (Low Risk)</h4>
+          <div class="card">
+            <p><strong>Goal:</strong> Co-locate page-specific components with their pages</p>
+            <ol>
+              <li>Identify components used by only one page</li>
+              <li>Move them to <code>pages/[PageName]/components/</code>:
+                <pre><code><span class="c-com"># Dashboard-specific</span>
+components/CustomizeDashboardDialog/ → pages/Dashboard/components/
+
+<span class="c-com"># Welcome page-specific</span>
+components/Hero/                 → pages/WelcomePage/components/
+components/FAQ/                  → pages/WelcomePage/components/
+components/ProductsPanel/        → pages/WelcomePage/components/
+components/ProjectPanel/         → pages/WelcomePage/components/
+components/NewsPanel/            → pages/WelcomePage/components/
+components/InfoPanel/            → pages/WelcomePage/components/
+
+<span class="c-com"># DetailedIndices-specific</span>
+components/DetailedIndices/DetailHeader.tsx → pages/DetailedIndices/components/
+components/DetailedIndices/DownloadButtons.tsx → pages/DetailedIndices/components/
+
+<span class="c-com"># ParametricElement-specific</span>
+components/ParametricNodeSearchPopup/ → pages/ParametricElement/components/
+
+<span class="c-com"># AccountSettings-specific</span>
+components/ProfileForm/          → pages/AccountSettings/components/</code></pre>
+              </li>
+              <li>Update imports (simpler now - relative paths within page)</li>
+            </ol>
+          </div>
+
+          <h4>Phase 4: Add Path Aliases (Optional but Recommended)</h4>
+          <div class="card">
+            <p><strong>Goal:</strong> Clean import paths using <code>@</code> alias</p>
+            <ol>
+              <li>Update <code>tsconfig.json</code>:
+                <pre><code>{
+  <span class="c-str">"compilerOptions"</span>: {
+    <span class="c-str">"baseUrl"</span>: <span class="c-str">"."</span>,
+    <span class="c-str">"paths"</span>: {
+      <span class="c-str">"@/*"</span>: [<span class="c-str">"src/*"</span>],
+      <span class="c-str">"@/components/*"</span>: [<span class="c-str">"src/components/*"</span>],
+      <span class="c-str">"@/pages/*"</span>: [<span class="c-str">"src/pages/*"</span>],
+      <span class="c-str">"@/hooks/*"</span>: [<span class="c-str">"src/hooks/*"</span>],
+      <span class="c-str">"@/services/*"</span>: [<span class="c-str">"src/services/*"</span>],
+      <span class="c-str">"@/models/*"</span>: [<span class="c-str">"src/models/*"</span>],
+      <span class="c-str">"@/utils/*"</span>: [<span class="c-str">"src/utils/*"</span>]
+    }
+  }
+}</code></pre>
+              </li>
+              <li>Update <code>vite.config.ts</code>:
+                <pre><code><span class="c-key">import</span> path <span class="c-key">from</span> <span class="c-str">"path"</span>;
+
+<span class="c-key">export default</span> defineConfig({
+  resolve: {
+    alias: {
+      <span class="c-str">"@"</span>: path.resolve(__dirname, <span class="c-str">"./src"</span>),
+    },
+  },
+});</code></pre>
+              </li>
+              <li>Now you can use clean imports:
+                <pre><code><span class="c-com">// Before</span>
+<span class="c-key">import</span> SimpleTable <span class="c-key">from</span> <span class="c-str">"../../../components/SimpleTable/SimpleTable"</span>;
+
+<span class="c-com">// After</span>
+<span class="c-key">import</span> { SimpleTable } <span class="c-key">from</span> <span class="c-str">"@/components/ui"</span>;</code></pre>
+              </li>
+            </ol>
+          </div>
+
+          <h3>📋 Component Migration Checklist</h3>
+          <div class="card brand">
+            <p>For each component you move:</p>
+            <ul>
+              <li>☐ Create new folder structure</li>
+              <li>☐ Move component file(s)</li>
+              <li>☐ Move test file(s) if they exist</li>
+              <li>☐ Update imports in the moved component</li>
+              <li>☐ Find all files that import this component (use VS Code search: <kbd>Cmd+Shift+F</kbd>)</li>
+              <li>☐ Update all import paths</li>
+              <li>☐ Add to barrel export (<code>index.ts</code>)</li>
+              <li>☐ Run tests: <code>npm run test</code></li>
+              <li>☐ Build to check for errors: <code>npm run build</code></li>
+              <li>☐ Test affected pages in browser</li>
+              <li>☐ Delete old folder once verified</li>
+            </ul>
+          </div>
+
+          <h3>🛠️ VS Code Tips for Migration</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Task</th>
+                <th>Shortcut/Command</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Find all usages</td>
+                <td><kbd>Cmd+Shift+F</kbd></td>
+                <td>Search for import statements before moving</td>
+              </tr>
+              <tr>
+                <td>Rename/Move</td>
+                <td><kbd>F2</kbd> (on file)</td>
+                <td>VS Code will update imports automatically</td>
+              </tr>
+              <tr>
+                <td>Multi-cursor edit</td>
+                <td><kbd>Cmd+D</kbd></td>
+                <td>Select multiple occurrences to edit at once</td>
+              </tr>
+              <tr>
+                <td>Find & Replace</td>
+                <td><kbd>Cmd+Shift+H</kbd></td>
+                <td>Replace old import paths with new ones</td>
+              </tr>
+              <tr>
+                <td>Go to definition</td>
+                <td><kbd>Cmd+Click</kbd></td>
+                <td>Verify imports are resolving correctly</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>✅ Benefits of This Structure</h3>
+          <ul>
+            <li>✅ <strong>Clear separation of concerns:</strong> Easy to find components by type</li>
+            <li>✅ <strong>Scalability:</strong> Can add new components without cluttering</li>
+            <li>✅ <strong>Better code reuse:</strong> Developers know where to look for reusable components</li>
+            <li>✅ <strong>Improved onboarding:</strong> New developers understand structure quickly</li>
+            <li>✅ <strong>Easier maintenance:</strong> Related components are grouped together</li>
+            <li>✅ <strong>Better testing:</strong> Co-located tests with components</li>
+            <li>✅ <strong>Cleaner imports:</strong> With path aliases and barrel exports</li>
+            <li>✅ <strong>Page isolation:</strong> Page-specific components don't pollute shared components</li>
+          </ul>
+
+          <h3>⚠️ Migration Best Practices</h3>
+          <div class="card accent">
+            <ul>
+              <li><strong>Do it incrementally:</strong> Don't try to move everything at once</li>
+              <li><strong>Start with low-risk moves:</strong> Begin with UI primitives that are rarely changed</li>
+              <li><strong>Test after each move:</strong> Don't accumulate untested changes</li>
+              <li><strong>Use feature branches:</strong> One PR per phase for easier review</li>
+              <li><strong>Communicate with team:</strong> Coordinate to avoid merge conflicts</li>
+              <li><strong>Update documentation:</strong> Keep component location docs current</li>
+              <li><strong>Consider code freeze:</strong> Migrate during low-activity periods</li>
+              <li><strong>Automate where possible:</strong> Use scripts for bulk import updates</li>
+            </ul>
+          </div>
+
+          <h3>🔗 Example Barrel Exports</h3>
+          <pre><code><span class="c-com">// components/ui/index.ts</span>
+<span class="c-key">export</span> { <span class="c-key">default</span> <span class="c-key">as</span> SimpleTable } <span class="c-key">from</span> <span class="c-str">"./Table/SimpleTable"</span>;
+<span class="c-key">export</span> { <span class="c-key">default</span> <span class="c-key">as</span> BasicLineChart } <span class="c-key">from</span> <span class="c-str">"./Chart/BasicLineChart"</span>;
+<span class="c-key">export</span> { <span class="c-key">default</span> <span class="c-key">as</span> ChartLegendTooltip } <span class="c-key">from</span> <span class="c-str">"./Chart/ChartLegendTooltip"</span>;
+<span class="c-key">export</span> { <span class="c-key">default</span> <span class="c-key">as</span> LoadingOverlay } <span class="c-key">from</span> <span class="c-str">"./LoadingOverlay/LoadingOverlay"</span>;
+<span class="c-key">export</span> { <span class="c-key">default</span> <span class="c-key">as</span> SnackbarNotification } <span class="c-key">from</span> <span class="c-str">"./Notification/SnackbarNotification"</span>;
+
+<span class="c-com">// components/selectors/index.ts</span>
+<span class="c-key">export</span> { <span class="c-key">default</span> <span class="c-key">as</span> ReferenceDateSelector } <span class="c-key">from</span> <span class="c-str">"./ReferenceDateSelector/ReferenceDateSelector"</span>;
+<span class="c-key">export</span> { <span class="c-key">default</span> <span class="c-key">as</span> ReferenceProjectSelector } <span class="c-key">from</span> <span class="c-str">"./ReferenceProjectSelector/ReferenceProjectSelector"</span>;
+<span class="c-key">export</span> { <span class="c-key">default</span> <span class="c-key">as</span> CurrencySelector } <span class="c-key">from</span> <span class="c-str">"./CurrencySelector/CurrencySelector"</span>;
+
+<span class="c-com">// Usage in pages</span>
+<span class="c-key">import</span> { SimpleTable, BasicLineChart } <span class="c-key">from</span> <span class="c-str">"@/components/ui"</span>;
+<span class="c-key">import</span> { ReferenceDateSelector } <span class="c-key">from</span> <span class="c-str">"@/components/selectors"</span>;</code></pre>
+
+          <h3>📊 Priority Order for Migration</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Priority</th>
+                <th>Category</th>
+                <th>Reason</th>
+                <th>Risk</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>🔴 High</td>
+                <td>UI Primitives</td>
+                <td>Most reusable, high impact on code clarity</td>
+                <td>Low (well-tested, stable)</td>
+              </tr>
+              <tr>
+                <td>🟠 Medium</td>
+                <td>Selectors & Forms</td>
+                <td>Frequently used, good ROI</td>
+                <td>Low-Medium</td>
+              </tr>
+              <tr>
+                <td>🟡 Medium</td>
+                <td>Page-Specific Components</td>
+                <td>Improves page organization</td>
+                <td>Low (isolated changes)</td>
+              </tr>
+              <tr>
+                <td>🟢 Low</td>
+                <td>Layout & Navigation</td>
+                <td>Less frequently changed</td>
+                <td>Medium (affects all pages)</td>
+              </tr>
+              <tr>
+                <td>🔵 Optional</td>
+                <td>Path Aliases</td>
+                <td>Quality of life improvement</td>
+                <td>Low (config change only)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>📝 Sample Migration Script</h3>
+          <p>You can create a Node.js script to help automate import path updates:</p>
+          <pre><code><span class="c-com">// scripts/update-imports.js</span>
+<span class="c-key">const</span> fs = <span class="c-key">require</span>(<span class="c-str">"fs"</span>);
+<span class="c-key">const</span> path = <span class="c-key">require</span>(<span class="c-str">"path"</span>);
+
+<span class="c-key">const</span> replacements = [
+  {
+    old: <span class="c-str">'from "../../components/SimpleTable/SimpleTable"'</span>,
+    new: <span class="c-str">'from "@/components/ui"'</span>,
+  },
+  {
+    old: <span class="c-str">'from "../../../components/BasicLineChart/BasicLineChart"'</span>,
+    new: <span class="c-str">'from "@/components/ui"'</span>,
+  },
+  <span class="c-com">// Add more replacements...</span>
+];
+
+<span class="c-key">function</span> updateFile(filePath) {
+  <span class="c-key">let</span> content = fs.readFileSync(filePath, <span class="c-str">"utf8"</span>);
+  <span class="c-key">let</span> updated = <span class="c-key">false</span>;
+
+  replacements.forEach(({ old, new: newPath }) => {
+    <span class="c-key">if</span> (content.includes(old)) {
+      content = content.replace(<span class="c-key">new</span> RegExp(old, <span class="c-str">"g"</span>), newPath);
+      updated = <span class="c-key">true</span>;
+    }
+  });
+
+  <span class="c-key">if</span> (updated) {
+    fs.writeFileSync(filePath, content);
+    console.log(<span class="c-str">`Updated: ${filePath}`</span>);
+  }
+}
+
+<span class="c-com">// Run on all .tsx and .ts files in src/</span>
+<span class="c-com">// ...</span></code></pre>
         </section>
 
         <!-- ─── Coding Conventions ─── -->
